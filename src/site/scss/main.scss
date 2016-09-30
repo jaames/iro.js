@@ -1,0 +1,75 @@
+@import "_foundation.scss";
+
+$body-background: #2a3241;
+$body-font-family: "Montserrat";
+
+$default-color: #44FF9E;
+
+@include foundation-global-styles;
+@include foundation-typography-base;
+
+.wrap {
+  margin: 0 auto;
+  max-width: 320px;
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+}
+
+.wheel {
+  margin: 24px auto;
+  cursor: default;
+  position: relative;
+  height: 320px;
+  width: 320px;
+}
+
+#logo {
+  display: block;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: $default-color;
+  stroke-width: 0.2em;
+}
+
+.subtitle {
+  font-size: 1.2em;
+  text-align: center;
+  color: $default-color;
+}
+
+.button-grid {
+  @include clearfix;
+  margin-left: -12px;
+}
+
+.button-box {
+  padding-left: 12px;
+  float: left;
+  width: 50%;
+}
+
+.button {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
+  line-height: 2em;
+  border-radius: 0.25em;
+  color: $default-color;
+  border: 0.2em solid $default-color;
+
+  &:hover {
+    color: inherit;
+  }
+
+}
+
+#readout {
+  font-size: 1em;
+  padding: 8px 12px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  color: $default-color;
+}
