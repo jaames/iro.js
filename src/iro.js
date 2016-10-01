@@ -252,16 +252,26 @@
 
     var active;
 
-    document.body.addEventListener('mousemove', function (e) {
-      if (active) active._mousemoveHandler(e);
-    }, false);
-
-    document.body.addEventListener('mouseup', function (e) {
+    function bodyInputMoveHandler(e) {
       if (active){
+        e.preventDefault();
+        e = (e.type === "touchmove") ? e.changedTouches[0] : e;
+        active._inputMoveHandler(e.clientX, e.clientY);
+      }
+    }
+
+    function bodyInputEndHandler(e) {
+      if (active){
+        e.preventDefault();
         active._mouseTarget = undefined;
         active = undefined;
       }
-    }, false);
+    }
+
+    document.body.addEventListener('touchmove', bodyInputMoveHandler, false);
+    document.body.addEventListener('touchend', bodyInputEndHandler, false);
+    document.body.addEventListener('mousemove', bodyInputMoveHandler, false);
+    document.body.addEventListener('mouseup', bodyInputEndHandler, false);
 
     function _createCanvas(width, height, useInlineStyles) {
       var canvas = document.createElement("canvas");
@@ -279,20 +289,18 @@
       if (!(this instanceof IroColorWheel)) return new IroColorWheel(el, opts);
       if (!el) {
         console.warn("IroColorPicker error - no element specified");
-        return false;
+        return undefined;
       }
-      this.el = (typeof el === "string") ? (document.querySelector(el)) : (el);
-      this.width = opts.width || parseInt(this.el.getAttribute("width")) || 500;
-      this.height = opts.height || parseInt(this.el.getAttribute("height")) || 500;
+      this.el = ("string" == typeof el) ? (document.querySelector(el)) : (el);
+      this.width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
+      this.height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
 
-      var useInlineStyles = opts.useInlineStyles || true;
-
-      this.main = _createCanvas(this.width, this.height, useInlineStyles);
+      this.el.style.position = "relative";
+      this.main = _createCanvas(this.width, this.height, false);
       this.el.appendChild(this.main);
-      this.overlay = _createCanvas(this.width, this.height, useInlineStyles);
-      this.el.appendChild(this.overlay);
-
       this.mainCtx = this.main.getContext("2d");
+      this.overlay = _createCanvas(this.width, this.height, true);
+      this.el.appendChild(this.overlay);
       this.overlayCtx = this.overlay.getContext("2d");
 
       var padding = 6;
@@ -357,13 +365,21 @@
         }
       }
 
+      this._drawSlider();
+
       this.css = opts.css || undefined;
       this._watchCallback = opts.watchCallback || undefined;
       this._overlayMarkers = {};
       this._mouseTarget;
 
-      this.el.addEventListener("mousedown", this._mousedownHandler.bind(this), false);
-      this._drawSlider();
+      this.el.addEventListener("touchstart", function (e) {
+        var point = e.changedTouches[0];
+        this._inputStartHandler(point.clientX, point.clientY);
+      }.bind(this), false);
+
+      this.el.addEventListener("mousedown", function (e) {
+        this._inputStartHandler(e.clientX, e.clientY);
+      }.bind(this), false);
       this.color = ExtendedColor();
       this.color.watch(this._update.bind(this));
       // prevent the color watch callback from accidentally being overwritten
@@ -400,25 +416,27 @@
       }
     };
 
-    IroColorWheel.prototype._mousedownHandler = function (e) {
-      active = this;
+    IroColorWheel.prototype._inputStartHandler = function (x, y) {
       var rect = this.main.getBoundingClientRect();
-      var x = e.clientX - rect.left;
-      var y = e.clientY - rect.top;
+      x -= rect.left;
+      y -= rect.top;
       if (this._layout.isPointInSlider(x, y)) {
         this._mouseTarget = "slider";
-        this._inputHandler(x, y);
       }
       else if (this._layout.isPointInRing(x, y)) {
         this._mouseTarget = "ring";
-        this._inputHandler(x, y);
       }
+      else {
+        return false;
+      }
+      active = this;
+      this._inputHandler(x, y);
     };
 
-    IroColorWheel.prototype._mousemoveHandler = function (e) {
+    IroColorWheel.prototype._inputMoveHandler = function (x, y) {
       if (active) {
         var rect = this.main.getBoundingClientRect();
-        this._inputHandler(e.clientX - rect.left, e.clientY - rect.top);
+        this._inputHandler(x - rect.left, y - rect.top);
       }
     };
 
