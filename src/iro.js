@@ -193,7 +193,7 @@
       // if the value has changed, call hook callback
       if(changed.h || changed.s || changed.v) {
         // call the dev-set callback if there is one
-        if (typeof this._watchCallback === "function") this._watchCallback(this.value, this._oldValue, changed);
+        if (typeof this._watchCallback == "function") this._watchCallback(this.value, this._oldValue, changed);
       };
       // update the old value
       this._oldValue = newValue;
@@ -214,12 +214,11 @@
         return function () {
           if (!sheet) {
             var style = document.createElement("style");
-            style.setAttribute("media", "screen");
             style.appendChild(document.createTextNode(""));
             style.title = "iroStyleSheet";
             document.head.appendChild(style);
             sheet = style.sheet;
-            supportsInsertRule = (sheet.insertRule) ? true : false;
+            supportsInsertRule = (sheet.insertRule == undefined) ? false : true;
           };
           return sheet;
         }
@@ -252,28 +251,24 @@
 
     var active;
 
-    function bodyInputMoveHandler(e) {
-      if (active){
-        e.preventDefault();
-        e = (e.type === "touchmove") ? e.changedTouches[0] : e;
-        active._inputMoveHandler(e.clientX, e.clientY);
-      }
+    function bodyInputMove(e) {
+      if (active) active._inputMove(e);
     }
 
     function bodyInputEndHandler(e) {
       if (active){
         e.preventDefault();
-        active._mouseTarget = undefined;
+        active._target = undefined;
         active = undefined;
       }
     }
 
-    document.body.addEventListener('touchmove', bodyInputMoveHandler, false);
+    document.body.addEventListener('touchmove', bodyInputMove, false);
     document.body.addEventListener('touchend', bodyInputEndHandler, false);
-    document.body.addEventListener('mousemove', bodyInputMoveHandler, false);
+    document.body.addEventListener('mousemove', bodyInputMove, false);
     document.body.addEventListener('mouseup', bodyInputEndHandler, false);
 
-    function _createCanvas(width, height, useInlineStyles) {
+    function createCanvas(width, height, useInlineStyles) {
       var canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
@@ -287,72 +282,84 @@
 
     function IroColorWheel(el, opts) {
       if (!(this instanceof IroColorWheel)) return new IroColorWheel(el, opts);
-      if (!el) {
-        console.warn("IroColorPicker error - no element specified");
-        return undefined;
-      }
       this.el = ("string" == typeof el) ? (document.querySelector(el)) : (el);
       this.width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
       this.height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
 
       this.el.style.position = "relative";
-      this.main = _createCanvas(this.width, this.height, false);
-      this.el.appendChild(this.main);
+      this.main = this.el.appendChild(createCanvas(this.width, this.height, false));
       this.mainCtx = this.main.getContext("2d");
-      this.overlay = _createCanvas(this.width, this.height, true);
-      this.el.appendChild(this.overlay);
+      this.overlay = this.el.appendChild(createCanvas(this.width, this.height, true));
       this.overlayCtx = this.overlay.getContext("2d");
 
-      var padding = 6;
-      var sliderMargin = 24;
-      var markerRadius = 8;
-      var sliderHeight = (markerRadius * 2) + (padding * 2);
-      // d = the max diameter for the ring that fits the remaining space
-      var d = Math.min(this.height - sliderHeight - sliderMargin, this.width);
-      // m = the horizontal margin
-      var m = (this.width - d) / 2;
+      this._layout = this._solveLayout(opts);
 
-      this._layout = {
+      this._drawSlider();
+
+      this.css = opts.css || undefined;
+      this._watchCallback = opts.watchCallback || undefined;
+      this._overlayMarkers = {};
+      this._target;
+
+      this.el.addEventListener("touchstart", this._inputStart.bind(this), false);
+      this.el.addEventListener("mousedown", this._inputStart.bind(this), false);
+
+      this.color = ExtendedColor();
+      this.color.watch(this._update.bind(this));
+      // prevent the color watch callback from accidentally being overwritten
+      this.color.watch = this.color.unwatch = undefined;
+      this.color.setFromString(opts.color || "#fff");
+    };
+
+    IroColorWheel.prototype._solveLayout = function (opts) {
+      var padding = opts.padding + 2 || 6;
+      var sliderMargin = opts.sliderMargin || 24;
+      var markerRadius = opts.markerRadius || 8;
+      var sliderHeight = opts.sliderHeight || (markerRadius * 2) + (padding * 2);
+      var ringDiameter = Math.min(this.height - sliderHeight - sliderMargin, this.width);
+      var horizontalMargin = (this.width - ringDiameter) / 2;
+
+      return {
         // marker radius
         Mr: markerRadius,
         // ring diameter
-        Rd: d,
+        Rd: ringDiameter,
         // ring radius
-        Rr: d/2,
+        Rr: ringDiameter / 2,
         // ring marker limit (Ring End)
-        Re: (d/2) - (markerRadius + padding),
+        Re: (ringDiameter / 2) - (markerRadius + padding),
         // ring center x
-        Rcx: m + d/2,
+        Rcx: horizontalMargin + (ringDiameter / 2),
         // ring center y
-        Rcy: d/2,
+        Rcy: ringDiameter / 2,
         // ring bounds x1 (left)
-        Rx1: m,
+        Rx1: horizontalMargin,
         // ring bounds x2 (right)
-        Rx2: m + d,
+        Rx2: horizontalMargin + ringDiameter,
         // ring bounds y1 (top)
         Ry1: 0,
         // ring bounds y2 (bottom)
-        Ry2: d,
+        Ry2: ringDiameter,
         // slider width
-        Sw: d,
+        Sw: ringDiameter,
         // slider height
         Sh: sliderHeight,
         // slider radius
         Sr: sliderHeight / 2,
         // slider rail width
-        Srw: d - ((markerRadius + padding) * 2),
+        Srw: ringDiameter - sliderHeight,
         // slider rail start
-        Srs: m + (markerRadius + padding),
+        Srs: horizontalMargin + (sliderHeight / 2),
         // slider rail end
-        Sre: (m + d) - (markerRadius + padding),
+        Sre: (horizontalMargin + ringDiameter) - (sliderHeight / 2),
         // slider bounds x1 (left)
-        Sx1: m,
+        Sx1: horizontalMargin,
         // slider bounds x1 (right)
-        Sx2: m + d,
+        Sx2: horizontalMargin + ringDiameter,
         // slider bounds y1 (top)
-        Sy1: d + sliderMargin,
+        Sy1: ringDiameter + sliderMargin,
         // slider bounds y2 (bottom)
-        Sy2: d + sliderHeight + sliderMargin,
+        Sy2: ringDiameter + sliderHeight + sliderMargin,
         // test if point x,y falls within the slider area (ignores border radius for simplicity)
         isPointInSlider: function (x, y) {
           return ((x > this.Sx1) && (x < this.Sx2) && (y > this.Sy1) && (y < this.Sy2));
@@ -364,28 +371,18 @@
           return (Math.sqrt(dx*dx + dy*dy) < this.Rr);
         }
       }
-
-      this._drawSlider();
-
-      this.css = opts.css || undefined;
-      this._watchCallback = opts.watchCallback || undefined;
-      this._overlayMarkers = {};
-      this._mouseTarget;
-
-      this.el.addEventListener("touchstart", function (e) {
-        var point = e.changedTouches[0];
-        this._inputStartHandler(point.clientX, point.clientY);
-      }.bind(this), false);
-
-      this.el.addEventListener("mousedown", function (e) {
-        this._inputStartHandler(e.clientX, e.clientY);
-      }.bind(this), false);
-      this.color = ExtendedColor();
-      this.color.watch(this._update.bind(this));
-      // prevent the color watch callback from accidentally being overwritten
-      this.color.watch = this.color.unwatch = undefined;
-      this.color.setFromString(opts.color || "#fff");
     };
+
+    IroColorWheel.prototype.resize = function (opts) {
+      if (opts && opts.width && opts.height){
+        this.mainCtx.clearRect(0, 0, this.width, this.height);
+        this.main.width = this.overlay.width = this.width = opts.width;
+        this.main.height = this.overlay.height = this.height = opts.height;
+        this._layout = this._solveLayout(opts);
+        this._drawSlider();
+        this._update(this.color.value, null, {h:true, s:true, v:true});
+      }
+    }
 
     IroColorWheel.prototype.watch = function (callback) {
       if (!this._watchCallback && "function" == typeof callback) {
@@ -399,12 +396,12 @@
 
     IroColorWheel.prototype._inputHandler = function (x, y) {
       var layout = this._layout;
-      if (this._mouseTarget == 'slider') {
+      if (this._target == 'slider') {
         x = Math.max(Math.min(x, layout.Sre), layout.Srs) - layout.Srs;
         // update color
         this.color.set({v: ~~((100 / layout.Srw) * x)});
       }
-      else if (this._mouseTarget == 'ring') {
+      else if (this._target == 'ring') {
         // angle in radians, anticlockwise starting at 12 o'clock
         var r = Math.atan2(x - layout.Rcx, y - layout.Rcy);
         // hue in degrees, clockwise from 3 o'clock
@@ -416,15 +413,17 @@
       }
     };
 
-    IroColorWheel.prototype._inputStartHandler = function (x, y) {
-      var rect = this.main.getBoundingClientRect();
-      x -= rect.left;
-      y -= rect.top;
+    IroColorWheel.prototype._inputStart = function (e) {
+      e.preventDefault();
+      e = (e.touches) ? e.changedTouches[0] : e;
+      var rect = this.main.getBoundingClientRect(),
+          x = e.clientX - rect.left,
+          y = e.clientY - rect.top;
       if (this._layout.isPointInSlider(x, y)) {
-        this._mouseTarget = "slider";
+        this._target = "slider";
       }
       else if (this._layout.isPointInRing(x, y)) {
-        this._mouseTarget = "ring";
+        this._target = "ring";
       }
       else {
         return false;
@@ -433,10 +432,12 @@
       this._inputHandler(x, y);
     };
 
-    IroColorWheel.prototype._inputMoveHandler = function (x, y) {
+    IroColorWheel.prototype._inputMove = function (e) {
       if (active) {
+        e.preventDefault();
+        e = (e.touches) ? e.changedTouches[0] : e;
         var rect = this.main.getBoundingClientRect();
-        this._inputHandler(x - rect.left, y - rect.top);
+        this._inputHandler(e.clientX - rect.left, e.clientY - rect.top);
       }
     };
 
@@ -469,7 +470,7 @@
       v = (v === undefined) ? 100 : Math.min(Math.max(v, 0), 100);
       var layout = this._layout;
       // approximate a suitable line width based on the ring diameter
-      this.mainCtx.lineWidth = Math.round(layout.Rd / 100);
+      this.mainCtx.lineWidth = Math.round(1 + layout.Rd / 100);
       this.mainCtx.clearRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
       // draw the ring with a series of line segments
       for (var h = 0; h < 360; h++) {

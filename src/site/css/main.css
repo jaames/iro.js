@@ -607,10 +607,7 @@ kbd {
 
 .wheel {
   margin: 24px auto;
-  cursor: default;
-  position: relative;
-  height: 320px;
-  width: 320px; }
+  cursor: default; }
 
 #logo {
   display: block;

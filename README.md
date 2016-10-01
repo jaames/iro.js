@@ -11,7 +11,7 @@ Iro is a new Javascript color picker library, it boasts a sleek UI with a whole 
 * Attach your own hook function to listen for changes to the color value
 * Override CSS rules with the picker's color value
 * Zero dependencies -- not even jQuery!
-* Lightweight, at 9KB minified (or ~3KB minified + gzipped)
+* Lightweight, at just over 9KB minified (or 3KB minified + gzipped)
 
 ### Todo
 
