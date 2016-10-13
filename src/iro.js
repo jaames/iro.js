@@ -2,6 +2,23 @@
 
   'use strict';
 
+  // when the DOM is ready, callback will be called
+  var whenReady = function (callback) {
+    // if the document is ready, call callback immediately
+    if (document.readyState === "complete"){
+      callback();
+    }
+    // else wait for DOM content
+    else {
+      document.addEventListener('readystatechange', function stateChange(e) {
+        if (e.target.readyState === 'complete'){
+          callback();
+          e.target.removeEventListener('readystatechange', stateChange);
+        }
+      }, false);
+    }
+  };
+
   var Color = (function () {
 
     // color utility functions
@@ -66,16 +83,25 @@
     IroColor.prototype.set = function (val) {
       this.value = val;
     };
+    IroColor.prototype.setFromRgb = function (val) {
+      this.set(rgbToHsv(val));
+    };
+    IroColor.prototype.setFromHsl = function (val) {
+      this.set(hslToHsv(val));
+    };
     // set color from CSS color string
     // supports rgb hexadecimal (including shorthands), rgb(a) and hsl(a)
     IroColor.prototype.setFromString = function (str) {
       var value;
       // (try to) detect the type of the color string using regex -- needs a lof of improvement
       var parsed = str.match(/(^rgba?|^hsla?)(?=\(.*?\))|(^#)(?=[a-f0-9])/i);
+      // once we have an idea of what the string type is, we can then parse it:
       switch (parsed ? parsed[0] : null) {
+        // HEX color notation; e.g #ffff00, #FFFF00, #ff0, etc...
         case "#":
           value = rgbToHsv(hexSringToRgb(str));
           break;
+        // rgb color notation; e.g rgb(255, 255, 0), rgba(255, 255, 0, 1)
         case "rgb":
         case "rgba":
           var parsedStr = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
@@ -85,6 +111,7 @@
             b: parseInt(parsedStr[4])
           });
           break;
+        // hsl color notation; e.g hsl(60, 100%, 50%), hsla(60, 100%, 50%, 1)
         case "hsl":
         case "hsla":
           var parsedStr = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
@@ -97,6 +124,7 @@
         default:
           console.warn("Error: '", str, "' could not be parsed as a CSS color");
       };
+      // if the string has been parsed then set it as the value of this color instance
       if (value) this.set(value);
     }
     // modified from https://gist.github.com/mjackson/5311256#file-color-conversion-algorithms-js-L119
@@ -145,11 +173,7 @@
       var s = (this.value.s / 100), v = (this.value.v / 100);
       var p = (2 - s) * v;
       s = (s == 0) ? (0) : (s * v / (p < 1 ? p : 2 - p));
-      return {
-        h: this.value.h,
-        s: ~~(s * 100),
-        l: ~~(p * 50),
-      };
+      return {h: this.value.h, s: ~~(s * 100), l: ~~(p * 50)};
     };
     IroColor.prototype.getHslString = function () {
       var val = this.getHsl();
@@ -203,31 +227,37 @@
 
   })();
 
-  var styleSheetWriter = (function () {
+  var StylesheetWriter = (function () {
+    var sheet;
     // CSSRule index reference storage
     var selectorMap = {};
     var supportsInsertRule;
 
     return {
-      getSheet: (function () {
-        var sheet = false;
-        return function () {
-          if (!sheet) {
-            var style = document.createElement("style");
-            style.appendChild(document.createTextNode(""));
-            style.title = "iroStyleSheet";
-            document.head.appendChild(style);
-            sheet = style.sheet;
-            supportsInsertRule = (sheet.insertRule == undefined) ? false : true;
-          };
-          return sheet;
-        }
-      })(),
-      setRule: function (selector, property, value) {
+      snakeCase: function (str) {
+        return str.replace(/([A-Z])/g, function($1) {
+          return "-" + $1.toLowerCase();
+        });
+      },
+      getSheet: function () {
+        if (!sheet) {
+          var style = document.createElement("style");
+          style.appendChild(document.createTextNode(""));
+          style.title = "iroStyleSheet";
+          document.head.appendChild(style);
+          sheet = style.sheet;
+          supportsInsertRule = (sheet.insertRule == undefined) ? false : true;
+        };
+        return sheet;
+      },
+      getRules: function () {
         var sheet = this.getSheet();
-        var rules = sheet.rules || sheet.cssRules;
+        return sheet.rules || sheet.cssRules;
+      },
+      setRule: function (selector, property, value) {
+        var rules = this.getRules();
         // convert property to snake-case
-        property = property.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+        property = this.snakeCase(property);
         // if the selector hasn't been used yet
         if (!selectorMap.hasOwnProperty(selector)){
           var index = rules.length;
@@ -263,10 +293,12 @@
       }
     }
 
-    document.body.addEventListener('touchmove', bodyInputMove, false);
-    document.body.addEventListener('touchend', bodyInputEndHandler, false);
-    document.body.addEventListener('mousemove', bodyInputMove, false);
-    document.body.addEventListener('mouseup', bodyInputEndHandler, false);
+    whenReady(function () {
+      document.body.addEventListener('touchmove', bodyInputMove, false);
+      document.body.addEventListener('touchend', bodyInputEndHandler, false);
+      document.body.addEventListener('mousemove', bodyInputMove, false);
+      document.body.addEventListener('mouseup', bodyInputEndHandler, false);
+    }.bind(this));
 
     function createCanvas(width, height, useInlineStyles) {
       var canvas = document.createElement("canvas");
@@ -301,14 +333,17 @@
       this._overlayMarkers = {};
       this._target;
 
-      this.el.addEventListener("touchstart", this._inputStart.bind(this), false);
-      this.el.addEventListener("mousedown", this._inputStart.bind(this), false);
+      whenReady(function () {
+        this.el.addEventListener("touchstart", this._inputStart.bind(this), false);
+        this.el.addEventListener("mousedown", this._inputStart.bind(this), false);
+      }.bind(this));
 
       this.color = ExtendedColor();
       this.color.watch(this._update.bind(this));
       // prevent the color watch callback from accidentally being overwritten
       this.color.watch = this.color.unwatch = undefined;
       this.color.setFromString(opts.color || "#fff");
+
     };
 
     IroColorWheel.prototype._solveLayout = function (opts) {
@@ -465,30 +500,27 @@
       }
     };
 
-    IroColorWheel.prototype._drawWheel = function (v) {
+    IroColorWheel.prototype._drawWheel = function (value) {
       // clamp value between 0 and 100
-      v = (v === undefined) ? 100 : Math.min(Math.max(v, 0), 100);
+      value = (value === undefined) ? 100 : Math.min(Math.max(value, 0), 100);
       var layout = this._layout;
       // approximate a suitable line width based on the ring diameter
       this.mainCtx.lineWidth = Math.round(1 + layout.Rd / 100);
       this.mainCtx.clearRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
       // draw the ring with a series of line segments
-      for (var h = 0; h < 360; h++) {
+      for (var hue = 0; hue < 360; hue++) {
         // h = hue, a = hue angle in radians
-        var a = h * Math.PI / 180;
-        // c = cosine value, s = sine value
-        var c = Math.cos(a),
-            s = Math.sin(a);
+        var hueRadians = hue * Math.PI / 180;
         this.mainCtx.beginPath();
-        this.mainCtx.strokeStyle=["hsl(", h, ", 100%, ", v/2, "%)"].join("");
+        this.mainCtx.strokeStyle=["hsl(", hue, ", 100%, ", value / 2, "%)"].join("");
         this.mainCtx.moveTo(layout.Rcx, layout.Rcy);
-        this.mainCtx.lineTo(layout.Rcx + layout.Rr * c, layout.Rcy + layout.Rr * s);
+        this.mainCtx.lineTo(layout.Rcx + layout.Rr * Math.cos(hueRadians), layout.Rcy + layout.Rr * Math.sin(hueRadians));
         this.mainCtx.stroke();
       }
       // draw saturation gradient
       var grad = this.mainCtx.createRadialGradient(layout.Rcx, layout.Rcy, 2, layout.Rcx, layout.Rcy, layout.Re);
-      grad.addColorStop(0, "hsla(0, 0%, " + v + "%, 1)");
-      grad.addColorStop(1, "hsla(0, 0%, " + v + "%, 0)");
+      grad.addColorStop(0, "hsla(0, 0%, " + value + "%, 1)");
+      grad.addColorStop(1, "hsla(0, 0%, " + value + "%, 0)");
       this.mainCtx.fillStyle = grad;
       this.mainCtx.fillRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
     };
@@ -521,11 +553,11 @@
         this._updateMarker('slider', layout.Srs + x, layout.Sy1 + (layout.Sh / 2));
       }
       if (changed.h || changed.s) {
-        var h = changed.h ? newValue.h : oldValue.h;
-        var s = changed.s ? newValue.s : oldValue.s;
-        var hR = h * (Math.PI/180);
-        var d = (s / 100) * layout.Re;
-        this._updateMarker('ring', layout.Rcx + d * Math.cos(hR), layout.Rcy + d * Math.sin(hR));
+        var hue = changed.h ? newValue.h : oldValue.h;
+        var saturation = changed.s ? newValue.s : oldValue.s;
+        var hueRadians = hue * (Math.PI/180);
+        var distance = (saturation / 100) * layout.Re;
+        this._updateMarker('ring', layout.Rcx + distance * Math.cos(hueRadians), layout.Rcy + distance * Math.sin(hueRadians));
       }
       if (this.css) {
         var color = this.color.getRgbString();
@@ -534,7 +566,7 @@
           var ruleSet = css[selector];
           for (var property in ruleSet) {
             // var value = ruleSet[property];
-            styleSheetWriter.setRule(selector, property, color);
+            StylesheetWriter.setRule(selector, property, color);
           }
         }
       }
@@ -546,7 +578,7 @@
 
   // assign iro to a global object
   window.iro = {
-    styleSheetWriter: styleSheetWriter,
+    StylesheetWriter: StylesheetWriter,
     Color: Color,
     ExtendedColor: ExtendedColor,
     ColorWheel: ColorWheel
