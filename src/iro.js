@@ -1,26 +1,25 @@
-(function () {
+"use strict";
 
-  'use strict';
+(function (window) {
 
   // when the DOM is ready, callback will be called
   var whenReady = function (callback) {
     // if the document is ready, call callback immediately
-    if (document.readyState === "complete"){
+    if (document.readyState === "interactive"){
       callback();
     }
     // else wait for DOM content
     else {
-      document.addEventListener('readystatechange', function stateChange(e) {
-        if (e.target.readyState === 'complete'){
+      document.addEventListener("readystatechange", function stateChange(e) {
+        if (e.target.readyState === "interactive"){
           callback();
-          e.target.removeEventListener('readystatechange', stateChange);
+          e.target.removeEventListener("readystatechange", stateChange);
         }
       }, false);
     }
   };
 
   var Color = (function () {
-
     // color utility functions
 
     // convert rgb to hsv:
@@ -294,10 +293,10 @@
     }
 
     whenReady(function () {
-      document.body.addEventListener('touchmove', bodyInputMove, false);
-      document.body.addEventListener('touchend', bodyInputEndHandler, false);
-      document.body.addEventListener('mousemove', bodyInputMove, false);
-      document.body.addEventListener('mouseup', bodyInputEndHandler, false);
+      document.body.addEventListener("touchmove", bodyInputMove, false);
+      document.body.addEventListener("touchend", bodyInputEndHandler, false);
+      document.body.addEventListener("mousemove", bodyInputMove, false);
+      document.body.addEventListener("mouseup", bodyInputEndHandler, false);
     }.bind(this));
 
     function createCanvas(width, height, useInlineStyles) {
@@ -431,12 +430,12 @@
 
     IroColorWheel.prototype._inputHandler = function (x, y) {
       var layout = this._layout;
-      if (this._target == 'slider') {
+      if (this._target == "slider") {
         x = Math.max(Math.min(x, layout.Sre), layout.Srs) - layout.Srs;
         // update color
         this.color.set({v: ~~((100 / layout.Srw) * x)});
       }
-      else if (this._target == 'ring') {
+      else if (this._target == "ring") {
         // angle in radians, anticlockwise starting at 12 o'clock
         var r = Math.atan2(x - layout.Rcx, y - layout.Rcy);
         // hue in degrees, clockwise from 3 o'clock
@@ -479,13 +478,13 @@
     IroColorWheel.prototype._drawMarkerAtPos = function (x, y) {
       this.overlayCtx.lineWidth = 4;
       this.overlayCtx.beginPath();
-      this.overlayCtx.strokeStyle="#333";
-      this.overlayCtx.arc(x, y, this._layout.Mr, 0, 2*Math.PI);
+      this.overlayCtx.strokeStyle = "#333";
+      this.overlayCtx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
       this.overlayCtx.stroke();
       this.overlayCtx.lineWidth = 2;
       this.overlayCtx.beginPath();
-      this.overlayCtx.strokeStyle="#fff";
-      this.overlayCtx.arc(x, y, this._layout.Mr, 0, 2*Math.PI);
+      this.overlayCtx.strokeStyle = "#fff";
+      this.overlayCtx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
       this.overlayCtx.stroke();
     };
 
@@ -550,14 +549,14 @@
       if (changed.v) {
         this._drawWheel(newValue.v);
         var x = ((newValue.v / 100) * layout.Srw);
-        this._updateMarker('slider', layout.Srs + x, layout.Sy1 + (layout.Sh / 2));
+        this._updateMarker("slider", layout.Srs + x, layout.Sy1 + (layout.Sh / 2));
       }
       if (changed.h || changed.s) {
         var hue = changed.h ? newValue.h : oldValue.h;
         var saturation = changed.s ? newValue.s : oldValue.s;
         var hueRadians = hue * (Math.PI/180);
         var distance = (saturation / 100) * layout.Re;
-        this._updateMarker('ring', layout.Rcx + distance * Math.cos(hueRadians), layout.Rcy + distance * Math.sin(hueRadians));
+        this._updateMarker("ring", layout.Rcx + distance * Math.cos(hueRadians), layout.Rcy + distance * Math.sin(hueRadians));
       }
       if (this.css) {
         var color = this.color.getRgbString();
@@ -576,12 +575,24 @@
 
   })();
 
-  // assign iro to a global object
-  window.iro = {
+  // Export
+
+  var iro = {
     StylesheetWriter: StylesheetWriter,
     Color: Color,
     ExtendedColor: ExtendedColor,
     ColorWheel: ColorWheel
   }
 
-})();
+  if ("function" == typeof define && define.amd) {
+    // AMD
+    define(iro);
+  } else if ("object" == typeof exports) {
+    // CommonJS
+    module.exports = iro;
+  } else {
+    // browser global
+    window.iro = iro;
+  }
+
+})(window);
