@@ -5,19 +5,22 @@
   // when the DOM is ready, callback will be called
   var whenReady = function (callback) {
     // if the document is ready, call callback immediately
-    if (document.readyState === "interactive"){
+    if (document.readyState === "complete"){
       callback();
     }
     // else wait for DOM content
     else {
       document.addEventListener("readystatechange", function stateChange(e) {
-        if (e.target.readyState === "interactive"){
+        if (e.target.readyState === "complete"){
           callback();
           e.target.removeEventListener("readystatechange", stateChange);
         }
       }, false);
     }
   };
+
+  // test if browser is internet explorer 11 or earlier
+  var browserIsIE = (/MSIE ([0-9]+)/g.test(navigator.userAgent));
 
   var Color = (function () {
     // color utility functions
@@ -327,7 +330,7 @@
 
       this._drawSlider();
 
-      this.css = opts.css || undefined;
+      this.styles = opts.css || opts.styles || undefined;
       this._watchCallback = opts.watchCallback || undefined;
       this._overlayMarkers = {};
       this._target;
@@ -526,20 +529,38 @@
 
     IroColorWheel.prototype._drawSlider = function () {
       var layout = this._layout;
-      this.mainCtx.clearRect(layout.Sx1, layout.Sy1, layout.Sw, layout.Sh);
-      this.mainCtx.beginPath();
-      this.mainCtx.moveTo(layout.Sx1 + layout.Sr, layout.Sy1);
-      this.mainCtx.arcTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy2, layout.Sr);
-      this.mainCtx.arcTo(layout.Sx2, layout.Sy2, layout.Sx1, layout.Sy2, layout.Sr);
-      this.mainCtx.arcTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy1, layout.Sr);
-      this.mainCtx.arcTo(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1, layout.Sr);
-      this.mainCtx.closePath();
-
       var grad = this.mainCtx.createLinearGradient(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1);
       grad.addColorStop(0, "#000");
       grad.addColorStop(1, "#fff");
-
       this.mainCtx.fillStyle = grad;
+      this.mainCtx.clearRect(layout.Sx1, layout.Sy1, layout.Sw, layout.Sh);
+      this.mainCtx.beginPath();
+      this.mainCtx.moveTo(layout.Sx1 + layout.Sr, layout.Sy1);
+      // IE 9 has an issue with arcTo() not working properly, so we have to use the slightly-less-accurate quadraticCurveTo method
+      if (browserIsIE) {
+        // top edge
+        this.mainCtx.lineTo(layout.Sx2 - layout.Sr, layout.Sy1);
+        // top-right corner
+        this.mainCtx.quadraticCurveTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy1 + layout.Sr);
+        // right edge
+        this.mainCtx.lineTo(layout.Sx2, layout.Sy2 - layout.Sr);
+        // bottom-right corner
+        this.mainCtx.quadraticCurveTo(layout.Sx2, layout.Sy2, layout.Sx2 - layout.Sr, layout.Sy2);
+        // bottom edge
+        this.mainCtx.lineTo(layout.Sx1 + layout.Sr, layout.Sy2);
+        // bottom-left corner
+        this.mainCtx.quadraticCurveTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy2 - layout.Sr);
+        // left edge
+        this.mainCtx.lineTo(layout.Sx1, layout.Sy1 + layout.Sr);
+        // top-left corner
+        this.mainCtx.quadraticCurveTo(layout.Sx1, layout.Sy1, layout.Sx1 + layout.Sr, layout.Sy1);
+      } else {
+        this.mainCtx.arcTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy2, layout.Sr);
+        this.mainCtx.arcTo(layout.Sx2, layout.Sy2, layout.Sx1, layout.Sy2, layout.Sr);
+        this.mainCtx.arcTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy1, layout.Sr);
+        this.mainCtx.arcTo(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1, layout.Sr);
+      }
+      this.mainCtx.closePath();
       this.mainCtx.fill();
     };
 
@@ -558,9 +579,9 @@
         var distance = (saturation / 100) * layout.Re;
         this._updateMarker("ring", layout.Rcx + distance * Math.cos(hueRadians), layout.Rcy + distance * Math.sin(hueRadians));
       }
-      if (this.css) {
+      if (this.styles) {
         var color = this.color.getRgbString();
-        var css = this.css;
+        var css = this.styles;
         for (var selector in css){
           var ruleSet = css[selector];
           for (var property in ruleSet) {
