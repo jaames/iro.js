@@ -1,7 +1,6 @@
 "use strict";
 
 (function (window) {
-
   // when the DOM is ready, callback will be called
   var whenReady = function (callback) {
     // if the document is ready, call callback immediately
@@ -20,7 +19,7 @@
   };
 
   // test if browser is internet explorer 11 or earlier
-  var browserIsIE = (/MSIE ([0-9]+)/g.test(navigator.userAgent));
+  var browserIsIE = /MSIE ([0-9]+)/g.test(navigator.userAgent);
 
   var Color = (function () {
     // color utility functions
@@ -34,7 +33,7 @@
           min = Math.min(r, g, b),
           d = max - min,
           h,
-          s = (max === 0 ? 0 : d / max),
+          s = max === 0 ? 0 : d / max,
           v = max / 255;
       switch (max) {
         case min: h = 0; break;
@@ -43,19 +42,19 @@
         case b: h = (r - g) + d * 4; h /= 6 * d; break;
       }
       return {h: ~~(h * 360), s: ~~(s * 100), v: ~~(v * 100)};
-    };
+    }
     // convert hsl to hsv:
     // e,g, {h:50, s:100, l: 50} -> {h:50, s:100, v:100}
     // modified from https://gist.github.com/xpansive/1337890
     function hslToHsv(val) {
       var s = val.s/100, l = val.l/100;
-      s *= (l < 0.5) ? (l) : (1-l);
+      s *= l < 0.5 ? l : 1-l;
       return {
         h: val.h,
         s: ~~((2 * s / (l+s))*100),
-        v: ~~((l+s)*100),
+        v: ~~((l+s)*100)
       };
-    };
+    }
     // convert a HEX color code to RGB:
     // e.g. #FF0000 -> {r:255, g:255, b:255}
     function hexSringToRgb(hex) {
@@ -64,16 +63,16 @@
       // convert to an integer
       var int = ~~("0x" + hex);
       // if hex is in shorthand format, we need to multiply each channel value by 17
-      return (hex.length === 3) ? ({
+      return hex.length === 3 ? {
         r: (int >> 8) * 17,
         g: (int >> 4 & 0xF) * 17,
         b: (int & 0xF) * 17
-      }) : ({
-        r: (int >> 16),
-        g: (int >> 8 & 0xFF),
-        b: (int & 0xFF)
-      });
-    };
+      } : {
+        r: int >> 16,
+        g: int >> 8 & 0xFF,
+        b: int & 0xFF
+      };
+    }
 
     // iro color constructor
 
@@ -81,7 +80,7 @@
       if (!(this instanceof IroColor)) return new IroColor(str);
       this.value = {};
       if (str) this.setFromString(str);
-    };
+    }
     IroColor.prototype.set = function (val) {
       this.value = val;
     };
@@ -97,6 +96,7 @@
       var value;
       // (try to) detect the type of the color string using regex -- needs a lof of improvement
       var parsed = str.match(/(^rgba?|^hsla?)(?=\(.*?\))|(^#)(?=[a-f0-9])/i);
+      var parsedStr;
       // once we have an idea of what the string type is, we can then parse it:
       switch (parsed ? parsed[0] : null) {
         // HEX color notation; e.g #ffff00, #FFFF00, #ff0, etc...
@@ -106,7 +106,7 @@
         // rgb color notation; e.g rgb(255, 255, 0), rgba(255, 255, 0, 1)
         case "rgb":
         case "rgba":
-          var parsedStr = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+          parsedStr = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
           value = rgbToHsv({
             r: parseInt(parsedStr[2]),
             g: parseInt(parsedStr[3]),
@@ -116,7 +116,7 @@
         // hsl color notation; e.g hsl(60, 100%, 50%), hsla(60, 100%, 50%, 1)
         case "hsl":
         case "hsla":
-          var parsedStr = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+          parsedStr = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
           value = hslToHsv({
             h: parseInt(parsedStr[2]),
             s: parseInt(parsedStr[3]),
@@ -125,7 +125,7 @@
           break;
         default:
           console.warn("Error: '", str, "' could not be parsed as a CSS color");
-      };
+      }
       // if the string has been parsed then set it as the value of this color instance
       if (value) this.set(value);
     }
@@ -158,7 +158,7 @@
       var int, len;
       // check if value can be compressed to shorthand format (if useShort === true)
       // in shorthand, all channels should be able to be divided by 17 cleanly
-      if ((useShort) && (val.r % 17 === 0) && (val.g % 17 === 0) && (val.b % 17 === 0)) {
+      if (useShort && (val.r % 17 === 0) && (val.g % 17 === 0) && (val.b % 17 === 0)) {
         int = (val.r / 17) << 8 | (val.g / 17) << 4 | (val.b / 17);
         len = 4;
       } else {
@@ -172,9 +172,10 @@
     };
     // modified from https://gist.github.com/xpansive/1337890
     IroColor.prototype.getHsl = function () {
-      var s = (this.value.s / 100), v = (this.value.v / 100);
+      var s = this.value.s / 100,
+          v = this.value.v / 100;
       var p = (2 - s) * v;
-      s = (s == 0) ? (0) : (s * v / (p < 1 ? p : 2 - p));
+      s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
       return {h: this.value.h, s: ~~(s * 100), l: ~~(p * 50)};
     };
     IroColor.prototype.getHslString = function () {
@@ -213,14 +214,11 @@
       for (var channel in this._oldValue){
         if (!newValue.hasOwnProperty(channel)) newValue[channel] = this._oldValue[channel];
         changed[channel] = !(newValue[channel] == this._oldValue[channel]);
-      };
+      }
       // update the current value
       this.value = newValue;
       // if the value has changed, call hook callback
-      if(changed.h || changed.s || changed.v) {
-        // call the dev-set callback if there is one
-        if (typeof this._watchCallback == "function") this._watchCallback(this.value, this._oldValue, changed);
-      };
+      if ((changed.h || changed.s || changed.v) && ("function" == typeof this._watchCallback)) this._watchCallback(this.value, this._oldValue, changed);
       // update the old value
       this._oldValue = newValue;
     };
@@ -248,8 +246,8 @@
           style.title = "iroStyleSheet";
           document.head.appendChild(style);
           sheet = style.sheet;
-          supportsInsertRule = (sheet.insertRule == undefined) ? false : true;
-        };
+          supportsInsertRule = sheet.insertRule == undefined ? false : true;
+        }
         return sheet;
       },
       getRules: function () {
@@ -312,11 +310,11 @@
         canvas.style.left = "0";
       }
       return canvas;
-    };
+    }
 
     function IroColorWheel(el, opts) {
       if (!(this instanceof IroColorWheel)) return new IroColorWheel(el, opts);
-      this.el = ("string" == typeof el) ? (document.querySelector(el)) : (el);
+      this.el = "string" == typeof el ? document.querySelector(el) : el;
       this.width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
       this.height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
 
@@ -345,8 +343,7 @@
       // prevent the color watch callback from accidentally being overwritten
       this.color.watch = this.color.unwatch = undefined;
       this.color.setFromString(opts.color || "#fff");
-
-    };
+    }
 
     IroColorWheel.prototype._solveLayout = function (opts) {
       var padding = opts.padding + 2 || 6;
@@ -399,13 +396,13 @@
         Sy2: ringDiameter + sliderHeight + sliderMargin,
         // test if point x,y falls within the slider area (ignores border radius for simplicity)
         isPointInSlider: function (x, y) {
-          return ((x > this.Sx1) && (x < this.Sx2) && (y > this.Sy1) && (y < this.Sy2));
+          return (x > this.Sx1) && (x < this.Sx2) && (y > this.Sy1) && (y < this.Sy2);
         },
         // test if point x,y falls within the ring area
         isPointInRing: function (x, y) {
           var dx = Math.abs(x-this.Rcx),
               dy = Math.abs(y-this.Rcy);
-          return (Math.sqrt(dx*dx + dy*dy) < this.Rr);
+          return Math.sqrt(dx*dx + dy*dy) < this.Rr;
         }
       }
     };
@@ -452,7 +449,7 @@
 
     IroColorWheel.prototype._inputStart = function (e) {
       e.preventDefault();
-      e = (e.touches) ? e.changedTouches[0] : e;
+      e = e.touches ? e.changedTouches[0] : e;
       var rect = this.main.getBoundingClientRect(),
           x = e.clientX - rect.left,
           y = e.clientY - rect.top;
@@ -472,96 +469,99 @@
     IroColorWheel.prototype._inputMove = function (e) {
       if (active) {
         e.preventDefault();
-        e = (e.touches) ? e.changedTouches[0] : e;
+        e = e.touches ? e.changedTouches[0] : e;
         var rect = this.main.getBoundingClientRect();
         this._inputHandler(e.clientX - rect.left, e.clientY - rect.top);
       }
     };
 
-    IroColorWheel.prototype._drawMarkerAtPos = function (x, y) {
-      this.overlayCtx.lineWidth = 4;
-      this.overlayCtx.beginPath();
-      this.overlayCtx.strokeStyle = "#333";
-      this.overlayCtx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
-      this.overlayCtx.stroke();
-      this.overlayCtx.lineWidth = 2;
-      this.overlayCtx.beginPath();
-      this.overlayCtx.strokeStyle = "#fff";
-      this.overlayCtx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
-      this.overlayCtx.stroke();
+    IroColorWheel.prototype._drawMarker = function (x, y) {
+      var ctx = this.overlayCtx;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.strokeStyle = "#333";
+      ctx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.strokeStyle = "#fff";
+      ctx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
+      ctx.stroke();
     };
 
     IroColorWheel.prototype._updateMarker = function (marker, x, y) {
       this._overlayMarkers[marker] = {x:x, y:y};
       this.overlayCtx.clearRect(0, 0, this.width, this.height);
       if (this._overlayMarkers.ring){
-        this._drawMarkerAtPos(this._overlayMarkers.ring.x, this._overlayMarkers.ring.y);
+        this._drawMarker(this._overlayMarkers.ring.x, this._overlayMarkers.ring.y);
       }
       if (this._overlayMarkers.slider){
-        this._drawMarkerAtPos(this._overlayMarkers.slider.x, this._overlayMarkers.slider.y);
+        this._drawMarker(this._overlayMarkers.slider.x, this._overlayMarkers.slider.y);
       }
     };
 
     IroColorWheel.prototype._drawWheel = function (value) {
       // clamp value between 0 and 100
-      value = (value === undefined) ? 100 : Math.min(Math.max(value, 0), 100);
+      value = value === undefined ? 100 : Math.min(Math.max(value, 0), 100);
       var layout = this._layout;
+      var ctx = this.mainCtx;
       // approximate a suitable line width based on the ring diameter
-      this.mainCtx.lineWidth = Math.round(1 + layout.Rd / 100);
-      this.mainCtx.clearRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
+      ctx.lineWidth = Math.round(1 + layout.Rd / 100);
+      ctx.clearRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
       // draw the ring with a series of line segments
       for (var hue = 0; hue < 360; hue++) {
         // h = hue, a = hue angle in radians
         var hueRadians = hue * Math.PI / 180;
-        this.mainCtx.beginPath();
-        this.mainCtx.strokeStyle=["hsl(", hue, ", 100%, ", value / 2, "%)"].join("");
-        this.mainCtx.moveTo(layout.Rcx, layout.Rcy);
-        this.mainCtx.lineTo(layout.Rcx + layout.Rr * Math.cos(hueRadians), layout.Rcy + layout.Rr * Math.sin(hueRadians));
-        this.mainCtx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle=["hsl(", hue, ", 100%, ", value / 2, "%)"].join("");
+        ctx.moveTo(layout.Rcx, layout.Rcy);
+        ctx.lineTo(layout.Rcx + layout.Rr * Math.cos(hueRadians), layout.Rcy + layout.Rr * Math.sin(hueRadians));
+        ctx.stroke();
       }
       // draw saturation gradient
-      var grad = this.mainCtx.createRadialGradient(layout.Rcx, layout.Rcy, 2, layout.Rcx, layout.Rcy, layout.Re);
+      var grad = ctx.createRadialGradient(layout.Rcx, layout.Rcy, 2, layout.Rcx, layout.Rcy, layout.Re);
       grad.addColorStop(0, "hsla(0, 0%, " + value + "%, 1)");
       grad.addColorStop(1, "hsla(0, 0%, " + value + "%, 0)");
-      this.mainCtx.fillStyle = grad;
-      this.mainCtx.fillRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
+      ctx.fillStyle = grad;
+      ctx.fillRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
     };
 
     IroColorWheel.prototype._drawSlider = function () {
       var layout = this._layout;
-      var grad = this.mainCtx.createLinearGradient(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1);
+      var ctx = this.mainCtx;
+      var grad = ctx.createLinearGradient(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1);
       grad.addColorStop(0, "#000");
       grad.addColorStop(1, "#fff");
-      this.mainCtx.fillStyle = grad;
-      this.mainCtx.clearRect(layout.Sx1, layout.Sy1, layout.Sw, layout.Sh);
-      this.mainCtx.beginPath();
-      this.mainCtx.moveTo(layout.Sx1 + layout.Sr, layout.Sy1);
+      ctx.fillStyle = grad;
+      ctx.clearRect(layout.Sx1, layout.Sy1, layout.Sw, layout.Sh);
+      ctx.beginPath();
+      ctx.moveTo(layout.Sx1 + layout.Sr, layout.Sy1);
       // IE 9 has an issue with arcTo() not working properly, so we have to use the slightly-less-accurate quadraticCurveTo method
       if (browserIsIE) {
         // top edge
-        this.mainCtx.lineTo(layout.Sx2 - layout.Sr, layout.Sy1);
+        ctx.lineTo(layout.Sx2 - layout.Sr, layout.Sy1);
         // top-right corner
-        this.mainCtx.quadraticCurveTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy1 + layout.Sr);
+        ctx.quadraticCurveTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy1 + layout.Sr);
         // right edge
-        this.mainCtx.lineTo(layout.Sx2, layout.Sy2 - layout.Sr);
+        ctx.lineTo(layout.Sx2, layout.Sy2 - layout.Sr);
         // bottom-right corner
-        this.mainCtx.quadraticCurveTo(layout.Sx2, layout.Sy2, layout.Sx2 - layout.Sr, layout.Sy2);
+        ctx.quadraticCurveTo(layout.Sx2, layout.Sy2, layout.Sx2 - layout.Sr, layout.Sy2);
         // bottom edge
-        this.mainCtx.lineTo(layout.Sx1 + layout.Sr, layout.Sy2);
+        ctx.lineTo(layout.Sx1 + layout.Sr, layout.Sy2);
         // bottom-left corner
-        this.mainCtx.quadraticCurveTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy2 - layout.Sr);
+        ctx.quadraticCurveTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy2 - layout.Sr);
         // left edge
-        this.mainCtx.lineTo(layout.Sx1, layout.Sy1 + layout.Sr);
+        ctx.lineTo(layout.Sx1, layout.Sy1 + layout.Sr);
         // top-left corner
-        this.mainCtx.quadraticCurveTo(layout.Sx1, layout.Sy1, layout.Sx1 + layout.Sr, layout.Sy1);
+        ctx.quadraticCurveTo(layout.Sx1, layout.Sy1, layout.Sx1 + layout.Sr, layout.Sy1);
       } else {
-        this.mainCtx.arcTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy2, layout.Sr);
-        this.mainCtx.arcTo(layout.Sx2, layout.Sy2, layout.Sx1, layout.Sy2, layout.Sr);
-        this.mainCtx.arcTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy1, layout.Sr);
-        this.mainCtx.arcTo(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1, layout.Sr);
+        ctx.arcTo(layout.Sx2, layout.Sy1, layout.Sx2, layout.Sy2, layout.Sr);
+        ctx.arcTo(layout.Sx2, layout.Sy2, layout.Sx1, layout.Sy2, layout.Sr);
+        ctx.arcTo(layout.Sx1, layout.Sy2, layout.Sx1, layout.Sy1, layout.Sr);
+        ctx.arcTo(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1, layout.Sr);
       }
-      this.mainCtx.closePath();
-      this.mainCtx.fill();
+      ctx.closePath();
+      ctx.fill();
     };
 
     IroColorWheel.prototype._update = function (newValue, oldValue, changed) {
@@ -569,7 +569,7 @@
       if ("function" == typeof this._watchCallback) this._watchCallback.call(this, this.color, changed);
       if (changed.v) {
         this._drawWheel(newValue.v);
-        var x = ((newValue.v / 100) * layout.Srw);
+        var x = (newValue.v / 100) * layout.Srw;
         this._updateMarker("slider", layout.Srs + x, layout.Sy1 + (layout.Sh / 2));
       }
       if (changed.h || changed.s) {
