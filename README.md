@@ -1,26 +1,20 @@
 <p align="center"><a href="https://rakujira.jp/projects/iro/" target="_blank"><img width="888"src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"></a></p>
 
-### Intro
+Iro is a new Javascript color picker library, it boasts a sleek UI with a whole host of features, all in a small ~10KB package.
 
-Iro is a new Javascript color picker library, it boasts a sleek UI with a whole host of features, all in a tidy ~9KB package.
+### Main Features
 
-### Features
-
-* Fancy color wheel UI with touch support
-* Based on the HSV color model, with color conversion between RGB, HSV, HSL and hexadecimal RGB
-* Attach your own hook function to listen for changes to the color value
-* Override CSS rules with the picker's color value
-* Zero dependencies -- not even jQuery!
-* Lightweight, at just over 9KB minified (or 3KB minified + gzipped)
+* Pretty color wheel UI with touch support
+* Color model conversion between RGB, HSV, HSL and hexadecimal RGB
+* Dynamically update CSS styles based on the color picker's value
+* Zero dependencies (not even jQuery, or extra stylesheets/images!)
+* Lightweight, at just under 10KB minified (or ~4KB minified + gzipped)
+* Full support for all major browsers from IE9 up
+* Compatible with AMD and CommonJS module loaders
+* Buzzword buzzword buzzword, you get the idea
 
 ### Todo
 
-**before first full release:**
-* Improve color string parsing
-* Finalize API
-* Write documentation
-
-**later:**
 * Add alpha / transparency support
 * Add support for high-pixel-density displays
 * Add high dynamic range (values higher than 100 / lower than 0) support

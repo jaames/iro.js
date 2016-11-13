@@ -90,6 +90,7 @@
     IroColor.prototype.setFromHsl = function (val) {
       this.set(hslToHsv(val));
     };
+    IroColor.prototype.setFromHsv = IroColor.prototype.set;
     // set color from CSS color string
     // supports rgb hexadecimal (including shorthands), rgb(a) and hsl(a)
     IroColor.prototype.setFromString = function (str) {
@@ -223,6 +224,8 @@
       this._oldValue = newValue;
     };
 
+    IroExtendedColor.prototype.setFromHsv = IroExtendedColor.prototype.set;
+
     return IroExtendedColor;
 
   })();
@@ -324,7 +327,7 @@
       this.overlay = this.el.appendChild(createCanvas(this.width, this.height, true));
       this.overlayCtx = this.overlay.getContext("2d");
 
-      this._layout = this._solveLayout(opts);
+      this._layout = this._solveLayout(opts || {});
 
       this._drawSlider();
 
@@ -566,7 +569,7 @@
 
     IroColorWheel.prototype._update = function (newValue, oldValue, changed) {
       var layout = this._layout;
-      if ("function" == typeof this._watchCallback) this._watchCallback.call(this, this.color, changed);
+      if ("function" == typeof this._watchCallback) this._watchCallback.call(null, this.color, changed);
       if (changed.v) {
         this._drawWheel(newValue.v);
         var x = (newValue.v / 100) * layout.Srw;
