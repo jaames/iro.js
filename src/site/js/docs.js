@@ -93,10 +93,13 @@
         if (toRoute.path != fromRoute.path){
           this.loadPage(toRoute.params.page);
         }
-        // this is a VERY lazy way of doing scroll-to-element but it works for my needs so hey \o/
         if (toRoute.hash){
+          // this is a VERY lazy way of doing scroll-to-element but it works for my needs so hey \o/
           var target = document.querySelector(toRoute.hash);
           if (target) target.scrollIntoView();
+        } else {
+          // else scroll to the top of the page
+          window.scrollTo(0, 0);
         }
       }
     },
