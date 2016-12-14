@@ -78,15 +78,42 @@
 
     function IroColor (str) {
       if (!(this instanceof IroColor)) return new IroColor(str);
-      this._value = {h: undefined, s: undefined, v: undefined};
       this._watchCallback;
-      this._oldValue = {h: undefined, s: undefined, v: undefined};
-      Object.defineProperty(this, "value", {
-        get: function () {
-          return this._value;
+      this._hsv = {};
+      this._oldHsv = {h: undefined, s: undefined, v: undefined};
+      Object.defineProperties(this, {
+        "hsv": {
+          set: this.setHsv,
+          get: function () {
+            return this._hsv;
+          },
+          enumerable: true
         },
-        set: this._valueSetter,
-        configurable: false,
+        "hex": {
+          set: this.setFromString,
+          get: this.getHexString,
+          enumerable: true
+        },
+        "rgb": {
+          set: this.setFromRgb,
+          get: this.getRgb,
+          enumerable: true
+        },
+        "rgbString": {
+          set: this.setFromString,
+          get: this.getRgbString,
+          enumerable: true
+        },
+        "hsl": {
+          set: this.setFromHsl,
+          get: this.getHsl,
+          enumerable: true
+        },
+        "hslString": {
+          set: this.setFromString,
+          get: this.setFromHsl,
+          enumerable: true
+        }
       });
       if (str) this.setFromString(str);
     }
@@ -99,25 +126,25 @@
     IroColorPrototype.unwatch = function () {
       this._watchCallback = undefined;
     };
-    IroColorPrototype._valueSetter = function (newValue) {
+    IroColorPrototype.setHsv = function (newValue) {
       // loop through the channels and check if any of them have changed
       var changed = {};
-      for (var channel in this._oldValue){
-        if (!newValue.hasOwnProperty(channel)) newValue[channel] = this._oldValue[channel];
-        changed[channel] = !(newValue[channel] == this._oldValue[channel]);
+      for (var channel in this._oldHsv){
+        if (!newValue.hasOwnProperty(channel)) newValue[channel] = this._oldHsv[channel];
+        changed[channel] = !(newValue[channel] == this._oldHsv[channel]);
       }
-      this._value = newValue;
+      this._hsv = newValue;
       // if the value has changed, call hook callback
-      if ((changed.h || changed.s || changed.v) && ("function" == typeof this._watchCallback)) this._watchCallback(newValue, this._oldValue, changed);
+      if ((changed.h || changed.s || changed.v) && ("function" == typeof this._watchCallback)) this._watchCallback(newValue, this._oldHsv, changed);
       // update the old value
-      this._oldValue = newValue;
+      this._oldHsv = newValue;
     };
 
     IroColorPrototype.setFromRgb = function (val) {
-      this.value = rgbToHsv(val);
+      this.hsv = rgbToHsv(val);
     };
     IroColorPrototype.setFromHsl = function (val) {
-      this.value = hslToHsv(val);
+      this.hsv = hslToHsv(val);
     };
     IroColorPrototype.setFromHsv = IroColorPrototype.set;
     // set color from CSS color string
@@ -157,11 +184,11 @@
           console.warn("Error: '", str, "' could not be parsed as a CSS color");
       }
       // if the string has been parsed then set it as the value of this color instance
-      if (value) this.value = value;
+      if (value) this.hsv = value;
     }
     // modified from https://gist.github.com/mjackson/5311256#file-color-conversion-algorithms-js-L119
     IroColorPrototype.getRgb = function () {
-      var val = this.value;
+      var val = this.hsv;
       var r, g, b, i, f, p, q, t;
       var h = val.h/360, s = val.s/100, v = val.v/100;
       i = Math.floor(h * 6);
@@ -202,11 +229,11 @@
     };
     // modified from https://gist.github.com/xpansive/1337890
     IroColorPrototype.getHsl = function () {
-      var s = this.value.s / 100,
-          v = this.value.v / 100;
+      var s = this.hsv.s / 100,
+          v = this.hsv.v / 100;
       var p = (2 - s) * v;
       s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
-      return {h: this.value.h, s: ~~(s * 100), l: ~~(p * 50)};
+      return {h: this.hsv.h, s: ~~(s * 100), l: ~~(p * 50)};
     };
     IroColorPrototype.getHslString = function () {
       var val = this.getHsl();
@@ -284,10 +311,11 @@
     }
 
     whenReady(function () {
-      document.body.addEventListener("touchmove", bodyInputMove, false);
-      document.body.addEventListener("touchend", bodyInputEndHandler, false);
-      document.body.addEventListener("mousemove", bodyInputMove, false);
-      document.body.addEventListener("mouseup", bodyInputEndHandler, false);
+      var body = document.body;
+      body.addEventListener("touchmove", bodyInputMove, false);
+      body.addEventListener("touchend", bodyInputEndHandler, false);
+      body.addEventListener("mousemove", bodyInputMove, false);
+      body.addEventListener("mouseup", bodyInputEndHandler, false);
     }.bind(this));
 
     function createCanvas(width, height, useInlineStyles) {
@@ -324,8 +352,9 @@
       this._target;
 
       whenReady(function () {
-        this.el.addEventListener("touchstart", this._inputStart.bind(this), false);
-        this.el.addEventListener("mousedown", this._inputStart.bind(this), false);
+        var el = this.el;
+        el.addEventListener("touchstart", this._inputStart.bind(this), false);
+        el.addEventListener("mousedown", this._inputStart.bind(this), false);
       }.bind(this));
 
       this.color = Color();
@@ -406,7 +435,7 @@
         this.main.height = this.overlay.height = this.height = opts.height;
         this._layout = this._solveLayout(opts);
         this._drawSlider();
-        this._update(this.color.value, null, {h:true, s:true, v:true});
+        this._update(this.color.hsv, null, {h:true, s:true, v:true});
       }
     }
 
@@ -425,7 +454,7 @@
       if (this._target == "slider") {
         x = Math.max(Math.min(x, layout.Sre), layout.Srs) - layout.Srs;
         // update color
-        this.color.value = {v: ~~((100 / layout.Srw) * x)};
+        this.color.hsv = {v: ~~((100 / layout.Srw) * x)};
       }
       else if (this._target == "ring") {
         // angle in radians, anticlockwise starting at 12 o'clock
@@ -435,7 +464,7 @@
         // distance from center
         var d = Math.min(Math.sqrt((layout.Rcx-x) * (layout.Rcx-x) + (layout.Rcy-y) * (layout.Rcy-y)), layout.Re);
         // update color
-        this.color.value = {h: h, s: ~~((100 / layout.Re) * d)};
+        this.color.hsv = {h: h, s: ~~((100 / layout.Re) * d)};
       }
     };
 
