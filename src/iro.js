@@ -1,6 +1,12 @@
 "use strict";
 
 (function (window) {
+
+  // add event listener util
+  var addEventListener = function (el, ev, callback) {
+    el.addEventListener(ev, callback, false);
+  };
+
   // when the DOM is ready, callback will be called
   var whenReady = function (callback) {
     // if the document is ready, call callback immediately
@@ -95,7 +101,7 @@
           enumerable: true
         },
         "rgb": {
-          set: this.setFromRgb,
+          set: this.setRgb,
           get: this.getRgb,
           enumerable: true
         },
@@ -105,13 +111,13 @@
           enumerable: true
         },
         "hsl": {
-          set: this.setFromHsl,
+          set: this.setHsl,
           get: this.getHsl,
           enumerable: true
         },
         "hslString": {
           set: this.setFromString,
-          get: this.setFromHsl,
+          get: this.setHsl,
           enumerable: true
         }
       });
@@ -140,13 +146,12 @@
       this._oldHsv = newValue;
     };
 
-    IroColorPrototype.setFromRgb = function (val) {
+    IroColorPrototype.setRgb = function (val) {
       this.hsv = rgbToHsv(val);
     };
-    IroColorPrototype.setFromHsl = function (val) {
+    IroColorPrototype.setHsl = function (val) {
       this.hsv = hslToHsv(val);
     };
-    IroColorPrototype.setFromHsv = IroColorPrototype.set;
     // set color from CSS color string
     // supports rgb hexadecimal (including shorthands), rgb(a) and hsl(a)
     IroColorPrototype.setFromString = function (str) {
@@ -312,16 +317,26 @@
 
     whenReady(function () {
       var body = document.body;
-      body.addEventListener("touchmove", bodyInputMove, false);
-      body.addEventListener("touchend", bodyInputEndHandler, false);
-      body.addEventListener("mousemove", bodyInputMove, false);
-      body.addEventListener("mouseup", bodyInputEndHandler, false);
+      addEventListener(body, "touchmove", bodyInputMove);
+      addEventListener(body, "touchend", bodyInputEndHandler);
+      addEventListener(body, "mousemove", bodyInputMove);
+      addEventListener(body, "mouseup", bodyInputEndHandler);
     }.bind(this));
 
-    function createCanvas(width, height, useInlineStyles) {
+    function createCanvas(width, height, pxRatio, useInlineStyles) {
       var canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
+
+      var pxWidth = width * pxRatio;
+      var pxHeight = height * pxRatio;
+
+      canvas.width = pxWidth;
+      canvas.height = pxHeight;
+
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+
+      var ratio = pxWidth / width;
+      canvas.getContext("2d").scale(pxRatio, pxRatio);
       if (useInlineStyles) {
         canvas.style.position = "absolute";
         canvas.style.top = "0";
@@ -333,13 +348,19 @@
     function IroColorWheel(el, opts) {
       if (!(this instanceof IroColorWheel)) return new IroColorWheel(el, opts);
       this.el = "string" == typeof el ? document.querySelector(el) : el;
-      this.width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
-      this.height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
+      var width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
+      var height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
+      var pxRatio =  window.devicePixelRatio || 1;
+
+      this.width = width;
+      this.height = height;
+      this.pxRatio = pxRatio;
 
       this.el.style.position = "relative";
-      this.main = this.el.appendChild(createCanvas(this.width, this.height, false));
+
+      this.main = this.el.appendChild(createCanvas(width, height, pxRatio, false));
       this.mainCtx = this.main.getContext("2d");
-      this.overlay = this.el.appendChild(createCanvas(this.width, this.height, true));
+      this.overlay = this.el.appendChild(createCanvas(width, height, pxRatio, true));
       this.overlayCtx = this.overlay.getContext("2d");
 
       this._layout = this._solveLayout(opts || {});
@@ -353,8 +374,8 @@
 
       whenReady(function () {
         var el = this.el;
-        el.addEventListener("touchstart", this._inputStart.bind(this), false);
-        el.addEventListener("mousedown", this._inputStart.bind(this), false);
+        addEventListener(el, "touchstart", this._inputStart.bind(this));
+        addEventListener(el, "mousedown", this._inputStart.bind(this));
       }.bind(this));
 
       this.color = Color();
@@ -496,18 +517,18 @@
       }
     };
 
-    IroColorWheelPrototype._drawMarker = function (x, y) {
+    IroColorWheelPrototype._drawMarkerRing = function (x, y, color, lineWidth) {
       var ctx = this.overlayCtx;
-      ctx.lineWidth = 4;
+      ctx.lineWidth = lineWidth;
       ctx.beginPath();
-      ctx.strokeStyle = "#333";
+      ctx.strokeStyle = color;
       ctx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
       ctx.stroke();
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.strokeStyle = "#fff";
-      ctx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
-      ctx.stroke();
+    };
+
+    IroColorWheelPrototype._drawMarker = function (x, y) {
+      this._drawMarkerRing(x, y, "#333", 4);
+      this._drawMarkerRing(x, y, "#fff", 2);
     };
 
     IroColorWheelPrototype._updateMarker = function (marker, x, y) {
@@ -522,8 +543,6 @@
     };
 
     IroColorWheelPrototype._drawWheel = function (value) {
-      // clamp value between 0 and 100
-      value = value === undefined ? 100 : Math.min(Math.max(value, 0), 100);
       var layout = this._layout;
       var ctx = this.mainCtx;
       // approximate a suitable line width based on the ring diameter
