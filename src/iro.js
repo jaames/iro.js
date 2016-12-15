@@ -95,7 +95,7 @@
           },
           enumerable: true
         },
-        "hex": {
+        "hexString": {
           set: this.setFromString,
           get: this.getHexString,
           enumerable: true
@@ -321,7 +321,7 @@
       addEventListener(body, "mouseup", bodyInputEndHandler);
     }.bind(this));
 
-    function createCanvas(width, height, pxRatio, useInlineStyles) {
+    function createCanvas(width, height, pxRatio, positionAbsolute) {
       var canvas = document.createElement("canvas");
 
       var pxWidth = width * pxRatio;
@@ -330,15 +330,12 @@
       canvas.width = pxWidth;
       canvas.height = pxHeight;
 
-      canvas.style.width = width + "px";
-      canvas.style.height = height + "px";
+      canvas.style.cssText += "width:" + width + "px;" + "height" + height + "px";
 
       var ratio = pxWidth / width;
       canvas.getContext("2d").scale(pxRatio, pxRatio);
-      if (useInlineStyles) {
-        canvas.style.position = "absolute";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
+      if (positionAbsolute) {
+        canvas.style.cssText += "position:absolute;top:0;left:0";
       }
       return canvas;
     }
