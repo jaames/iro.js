@@ -56,87 +56,63 @@ var demoWheel = new iro.ColorWheel("#colorWheelDemo", {
   // Space between the hue/saturation ring and the value slider:
   sliderMargin: 24,
 
-  // Initial color value (any valid CSS color string works!):
+  // Initial color value -- any valid CSS color string works:
   color: "#fff"
 });
 ```
 
-### Working with the Color Value
+### Using the Wheel's Color Value
 
-Each color wheel instance has a 'color' property which - as you might expect - stores the currently selected color. It has a variety of methods attached to it to set and get the color value.
+Each color wheel instance has a `color` object which - as you might expect - stores current color of the wheel.
 
-#### Programmatically setting the selected color
+#### Getting and Setting the Color
 
-Whenever the selected color is set with one of these methods, the color wheel UI will update to show the new value.
-
-It should be noted that Iro doesn't support transparency yet, so any alpha channel values will be ignored.
+The current color can be accessed in a variety of formats from the following `color` properties:
 
 ```javascript
 var demoWheel = new iro.ColorWheel("#colorWheelDemo");
 
-/* Set the color from a CSS color string */
+// hsv object:
+var hsv = demoWheel.color.hsv
+// hsv =  { h: 60, s: 100, v: 100 }
 
-// set from HEX (in either full or shorthand form):
-demoWheel.color.setFromString("#fff");
-demoWheel.color.setFromString("#ffffff");
-// set from RGB or RGBA:
-demoWheel.color.setFromString("rgb(255, 255, 255)");
-demoWheel.color.setFromString("rgba(255, 255, 255, 1)");
-// set from HSL or HSLA:
-demoWheel.color.setFromString("hsl(0, 0%, 100%)");
-demoWheel.color.setFromString("hsla(0, 0%, 100%, 1)");
+// hsl object:
+var hsl = demoWheel.color.hsl;
+// hsl = { h: 60, s: 100, l: 50 }
 
-/* Set the color from numeric values */
+// hsl string:
+var hslString = demoWheel.color.hslString;
+// hslString = "hsl(60, 100%, 50%)"
 
-// set from RGB:
-demoWheel.color.setFromRgb({
-  r: 255,
-  g: 255,
-  b: 255
-});
-// set from HSL:
-demoWheel.color.setFromHsl({
-  h: 0,
-  s: 0,
-  l: 100
-});
-// set from HSV:
-demoWheel.color.setFromHsv({
-  h: 0,
-  s: 0,
-  v: 100
-});
+// rgb object:
+var rgb = demoWheel.color.rgb;
+// rgb = { r: 255, g: 255, b: 0 }
+
+// rgb string:
+var rgbString = demoWheel.color.rgbString;
+// rgbString = "rgb(255, 250, 0)"
+
+// hex string:
+var hexString = demoWheel.color.hexString;
+// hexString = "#ffff00"
 ```
 
-#### Getting the currently selected color
+In addition, the current color can be changed by setting any of these properties to a new value, as long as the value given is valid, the color wheel UI will update to match:
 
 ```javascript
 var demoWheel = new iro.ColorWheel("#colorWheelDemo");
 
-// Return the color as a HEX string:
-demoWheel.color.getHexString();
-// -> "#ffffff"
+// set the color wheel to red (in rgb notation):
+demoWheel.color.hexString = "rgb(255, 0, 0)"
 
-// Return the color as a HEX string, using shorthand form when possible:
-demoWheel.color.getHexString(true);
-// -> "#fff"
+// set the color wheel to red (in hex notation):
+demoWheel.color.hexString = "#ff0000";
 
-// Return the color as an RGB string:
-demoWheel.color.getRgbString();
-// -> "rgb(255, 255, 255)"
+// set the color wheel to red (in hsv notation, from an object):
+demoWheel.color.hsv = { h: 0, s: 100, v: 100 }
 
-// Return the color as an RGB string:
-demoWheel.color.getRgb();
-// -> {r: 255, g: 255, b: 255}
-
-// Return the color as an RGB string:
-demoWheel.color.getHslString();
-// -> "hsl(0, 0%, 100%)"
-
-// Return the color as an RGB string:
-demoWheel.color.getHsl();
-// -> {h: 0, s: 0, l: 100}
 ```
+
 
 #### Watching the color for changes
 
@@ -149,7 +125,7 @@ var demoWheel = new iro.ColorWheel("#colorWheelDemo");
 
 // Whenever it changes, log the selected color to the dev console as a HEX string
 demoWheel.watch(function(color) {
-  console.log(color.getHexString());
+  console.log(color.hexString);
 });
 
 // If you ever want to remove the watch function, use:

@@ -1,6 +1,12 @@
 "use strict";
 
 (function (window) {
+
+  // add event listener util
+  var addEventListener = function (el, ev, callback) {
+    el.addEventListener(ev, callback, false);
+  };
+
   // when the DOM is ready, callback will be called
   var whenReady = function (callback) {
     // if the document is ready, call callback immediately
@@ -78,23 +84,77 @@
 
     function IroColor (str) {
       if (!(this instanceof IroColor)) return new IroColor(str);
-      this.value = {};
+      this._watchCallback;
+      this._hsv = {};
+      this._oldHsv = {h: undefined, s: undefined, v: undefined};
+      Object.defineProperties(this, {
+        "hsv": {
+          set: this.setHsv,
+          get: function () {
+            return this._hsv;
+          },
+          enumerable: true
+        },
+        "hexString": {
+          set: this.setFromString,
+          get: this.getHexString,
+          enumerable: true
+        },
+        "rgb": {
+          set: this.setRgb,
+          get: this.getRgb,
+          enumerable: true
+        },
+        "rgbString": {
+          set: this.setFromString,
+          get: this.getRgbString,
+          enumerable: true
+        },
+        "hsl": {
+          set: this.setHsl,
+          get: this.getHsl,
+          enumerable: true
+        },
+        "hslString": {
+          set: this.setFromString,
+          get: this.getHslString,
+          enumerable: true
+        }
+      });
       if (str) this.setFromString(str);
     }
-    IroColor.prototype.set = function (val) {
-      this.value = val;
+
+    var IroColorPrototype = IroColor.prototype;
+
+    IroColorPrototype.watch = function (callback) {
+      this._watchCallback = callback;
     };
-    IroColor.prototype.setFromRgb = function (val) {
-      this.set(rgbToHsv(val));
+    IroColorPrototype.unwatch = function () {
+      this._watchCallback = undefined;
     };
-    IroColor.prototype.setFromHsl = function (val) {
-      this.set(hslToHsv(val));
+    IroColorPrototype.setHsv = function (newValue) {
+      // loop through the channels and check if any of them have changed
+      var changed = {};
+      for (var channel in this._oldHsv){
+        if (!newValue.hasOwnProperty(channel)) newValue[channel] = this._oldHsv[channel];
+        changed[channel] = !(newValue[channel] == this._oldHsv[channel]);
+      }
+      this._hsv = newValue;
+      // if the value has changed, call hook callback
+      if ((changed.h || changed.s || changed.v) && ("function" == typeof this._watchCallback)) this._watchCallback(newValue, this._oldHsv, changed);
+      // update the old value
+      this._oldHsv = newValue;
     };
-    IroColor.prototype.setFromHsv = IroColor.prototype.set;
+
+    IroColorPrototype.setRgb = function (val) {
+      this.hsv = rgbToHsv(val);
+    };
+    IroColorPrototype.setHsl = function (val) {
+      this.hsv = hslToHsv(val);
+    };
     // set color from CSS color string
     // supports rgb hexadecimal (including shorthands), rgb(a) and hsl(a)
-    IroColor.prototype.setFromString = function (str) {
-      var value;
+    IroColorPrototype.setFromString = function (str) {
       // (try to) detect the type of the color string using regex -- needs a lof of improvement
       var parsed = str.match(/(^rgba?|^hsla?)(?=\(.*?\))|(^#)(?=[a-f0-9])/i);
       var parsedStr;
@@ -102,13 +162,13 @@
       switch (parsed ? parsed[0] : null) {
         // HEX color notation; e.g #ffff00, #FFFF00, #ff0, etc...
         case "#":
-          value = rgbToHsv(hexSringToRgb(str));
+          this.hsv = rgbToHsv(hexSringToRgb(str));
           break;
         // rgb color notation; e.g rgb(255, 255, 0), rgba(255, 255, 0, 1)
         case "rgb":
         case "rgba":
           parsedStr = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-          value = rgbToHsv({
+          this.hsv = rgbToHsv({
             r: parseInt(parsedStr[2]),
             g: parseInt(parsedStr[3]),
             b: parseInt(parsedStr[4])
@@ -118,7 +178,7 @@
         case "hsl":
         case "hsla":
           parsedStr = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-          value = hslToHsv({
+          this.hsv = hslToHsv({
             h: parseInt(parsedStr[2]),
             s: parseInt(parsedStr[3]),
             l: parseInt(parsedStr[4])
@@ -127,14 +187,12 @@
         default:
           console.warn("Error: '", str, "' could not be parsed as a CSS color");
       }
-      // if the string has been parsed then set it as the value of this color instance
-      if (value) this.set(value);
     }
     // modified from https://gist.github.com/mjackson/5311256#file-color-conversion-algorithms-js-L119
-    IroColor.prototype.getRgb = function () {
-      var val = this.value;
+    IroColorPrototype.getRgb = function () {
+      var hsv = this.hsv;
       var r, g, b, i, f, p, q, t;
-      var h = val.h/360, s = val.s/100, v = val.v/100;
+      var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
       i = Math.floor(h * 6);
       f = h * 6 - i;
       p = v * (1 - s);
@@ -150,83 +208,42 @@
       }
       return {r: ~~(r * 255), g: ~~(g * 255), b: ~~(b * 255)};
     };
-    IroColor.prototype.getRgbString = function () {
-      var val = this.getRgb();
-      return [val.a ? "rgba" : "rgb", "(", val.r, ", ", val.g, ", ", val.b, val.a ? ", " + val.a : "", ")"].join("");
+    IroColorPrototype.getRgbString = function () {
+      var rgb = this.rgb;
+      return [rgb.a ? "rgba" : "rgb", "(", rgb.r, ", ", rgb.g, ", ", rgb.b, rgb.a ? ", " + rgb.a : "", ")"].join("");
     };
-    IroColor.prototype.getHexString = function (useShort) {
-      var val = this.getRgb();
+    IroColorPrototype.getHexString = function (useShort) {
+      var rgb = this.rgb;
       var int, len;
       // check if value can be compressed to shorthand format (if useShort === true)
       // in shorthand, all channels should be able to be divided by 17 cleanly
-      if (useShort && (val.r % 17 === 0) && (val.g % 17 === 0) && (val.b % 17 === 0)) {
-        int = (val.r / 17) << 8 | (val.g / 17) << 4 | (val.b / 17);
+      if (useShort && (rgb.r % 17 === 0) && (rgb.g % 17 === 0) && (rgb.b % 17 === 0)) {
+        int = (rgb.r / 17) << 8 | (rgb.g / 17) << 4 | (rgb.b / 17);
         len = 4;
       } else {
-        int = val.r << 16 | val.g << 8 | val.b;
+        int = rgb.r << 16 | rgb.g << 8 | rgb.b;
         len = 7;
       }
       return "#" + (function(h){
         // add right amount of left-padding
         return new Array(len-h.length).join("0")+h
-      })(int.toString(16).toUpperCase());
+      })(int.toString(16));
     };
     // modified from https://gist.github.com/xpansive/1337890
-    IroColor.prototype.getHsl = function () {
-      var s = this.value.s / 100,
-          v = this.value.v / 100;
+    IroColorPrototype.getHsl = function () {
+      var hsv = this.hsv;
+      var s = hsv.s / 100,
+          v = hsv.v / 100;
       var p = (2 - s) * v;
       s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
-      return {h: this.value.h, s: ~~(s * 100), l: ~~(p * 50)};
+      return {h: hsv.h, s: ~~(s * 100), l: ~~(p * 50)};
     };
-    IroColor.prototype.getHslString = function () {
-      var val = this.getHsl();
-      return [val.a ? "hsla" : "hsl", "(", val.h, ", ", val.s, "%, ", val.l, "%", val.a ? ", " + val.a : "", ")"].join("");
+    IroColorPrototype.getHslString = function () {
+      var hsl = this.hsl;
+      return [hsl.a ? "hsla" : "hsl", "(", hsl.h, ", ", hsl.s, "%, ", hsl.l, "%", hsl.a ? ", " + hsl.a : "", ")"].join("");
     };
 
     return IroColor;
-
-  })();
-
-  var ExtendedColor = (function () {
-
-    function IroExtendedColor (str) {
-      if (!(this instanceof IroExtendedColor)) return new IroExtendedColor(str);
-      this._watchCallback;
-      this._oldValue = {h: undefined, s: undefined, v: undefined};
-      Color.call(this, str);
-    }
-
-    // inherit prototype from Color
-    IroExtendedColor.prototype = Object.create(Color.prototype);
-    IroExtendedColor.prototype.constructor = IroExtendedColor;
-
-    IroExtendedColor.prototype.watch = function (callback) {
-      this._watchCallback = callback;
-    };
-
-    IroExtendedColor.prototype.unwatch = function () {
-      this._watchCallback = undefined;
-    };
-
-    IroExtendedColor.prototype.set = function (newValue) {
-      // loop through the channels and check if any of them have changed
-      var changed = {};
-      for (var channel in this._oldValue){
-        if (!newValue.hasOwnProperty(channel)) newValue[channel] = this._oldValue[channel];
-        changed[channel] = !(newValue[channel] == this._oldValue[channel]);
-      }
-      // update the current value
-      this.value = newValue;
-      // if the value has changed, call hook callback
-      if ((changed.h || changed.s || changed.v) && ("function" == typeof this._watchCallback)) this._watchCallback(this.value, this._oldValue, changed);
-      // update the old value
-      this._oldValue = newValue;
-    };
-
-    IroExtendedColor.prototype.setFromHsv = IroExtendedColor.prototype.set;
-
-    return IroExtendedColor;
 
   })();
 
@@ -297,20 +314,28 @@
     }
 
     whenReady(function () {
-      document.body.addEventListener("touchmove", bodyInputMove, false);
-      document.body.addEventListener("touchend", bodyInputEndHandler, false);
-      document.body.addEventListener("mousemove", bodyInputMove, false);
-      document.body.addEventListener("mouseup", bodyInputEndHandler, false);
+      var body = document.body;
+      addEventListener(body, "touchmove", bodyInputMove);
+      addEventListener(body, "touchend", bodyInputEndHandler);
+      addEventListener(body, "mousemove", bodyInputMove);
+      addEventListener(body, "mouseup", bodyInputEndHandler);
     }.bind(this));
 
-    function createCanvas(width, height, useInlineStyles) {
+    function createCanvas(width, height, pxRatio, positionAbsolute) {
       var canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      if (useInlineStyles) {
-        canvas.style.position = "absolute";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
+
+      var pxWidth = width * pxRatio;
+      var pxHeight = height * pxRatio;
+
+      canvas.width = pxWidth;
+      canvas.height = pxHeight;
+
+      canvas.style.cssText += "width:" + width + "px;" + "height" + height + "px";
+
+      var ratio = pxWidth / width;
+      canvas.getContext("2d").scale(pxRatio, pxRatio);
+      if (positionAbsolute) {
+        canvas.style.cssText += "position:absolute;top:0;left:0";
       }
       return canvas;
     }
@@ -318,13 +343,19 @@
     function IroColorWheel(el, opts) {
       if (!(this instanceof IroColorWheel)) return new IroColorWheel(el, opts);
       this.el = "string" == typeof el ? document.querySelector(el) : el;
-      this.width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
-      this.height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
+      var width = opts.width || parseInt(this.el.getAttribute("width")) || 320;
+      var height = opts.height || parseInt(this.el.getAttribute("height")) || 320;
+      var pxRatio =  window.devicePixelRatio || 1;
+
+      this.width = width;
+      this.height = height;
+      this.pxRatio = pxRatio;
 
       this.el.style.position = "relative";
-      this.main = this.el.appendChild(createCanvas(this.width, this.height, false));
+
+      this.main = this.el.appendChild(createCanvas(width, height, pxRatio, false));
       this.mainCtx = this.main.getContext("2d");
-      this.overlay = this.el.appendChild(createCanvas(this.width, this.height, true));
+      this.overlay = this.el.appendChild(createCanvas(width, height, pxRatio, true));
       this.overlayCtx = this.overlay.getContext("2d");
 
       this._layout = this._solveLayout(opts || {});
@@ -337,18 +368,21 @@
       this._target;
 
       whenReady(function () {
-        this.el.addEventListener("touchstart", this._inputStart.bind(this), false);
-        this.el.addEventListener("mousedown", this._inputStart.bind(this), false);
+        var el = this.el;
+        addEventListener(el, "touchstart", this._inputStart.bind(this));
+        addEventListener(el, "mousedown", this._inputStart.bind(this));
       }.bind(this));
 
-      this.color = ExtendedColor();
+      this.color = Color();
       this.color.watch(this._update.bind(this));
       // prevent the color watch callback from accidentally being overwritten
       this.color.watch = this.color.unwatch = undefined;
       this.color.setFromString(opts.color || "#fff");
     }
 
-    IroColorWheel.prototype._solveLayout = function (opts) {
+    var IroColorWheelPrototype = IroColorWheel.prototype;
+
+    IroColorWheelPrototype._solveLayout = function (opts) {
       var padding = opts.padding + 2 || 6;
       var sliderMargin = opts.sliderMargin || 24;
       var markerRadius = opts.markerRadius || 8;
@@ -410,33 +444,33 @@
       }
     };
 
-    IroColorWheel.prototype.resize = function (opts) {
+    IroColorWheelPrototype.resize = function (opts) {
       if (opts && opts.width && opts.height){
         this.mainCtx.clearRect(0, 0, this.width, this.height);
         this.main.width = this.overlay.width = this.width = opts.width;
         this.main.height = this.overlay.height = this.height = opts.height;
         this._layout = this._solveLayout(opts);
         this._drawSlider();
-        this._update(this.color.value, null, {h:true, s:true, v:true});
+        this._update(this.color.hsv, null, {h:true, s:true, v:true});
       }
     }
 
-    IroColorWheel.prototype.watch = function (callback) {
+    IroColorWheelPrototype.watch = function (callback) {
       if (!this._watchCallback && "function" == typeof callback) {
         this._watchCallback = callback;
       }
     };
 
-    IroColorWheel.prototype.unwatch = function () {
+    IroColorWheelPrototype.unwatch = function () {
       this._watchCallback = undefined;
     };
 
-    IroColorWheel.prototype._inputHandler = function (x, y) {
+    IroColorWheelPrototype._inputHandler = function (x, y) {
       var layout = this._layout;
       if (this._target == "slider") {
         x = Math.max(Math.min(x, layout.Sre), layout.Srs) - layout.Srs;
         // update color
-        this.color.set({v: ~~((100 / layout.Srw) * x)});
+        this.color.hsv = {v: ~~((100 / layout.Srw) * x)};
       }
       else if (this._target == "ring") {
         // angle in radians, anticlockwise starting at 12 o'clock
@@ -446,11 +480,11 @@
         // distance from center
         var d = Math.min(Math.sqrt((layout.Rcx-x) * (layout.Rcx-x) + (layout.Rcy-y) * (layout.Rcy-y)), layout.Re);
         // update color
-        this.color.set({h: h, s: ~~((100 / layout.Re) * d)});
+        this.color.hsv = {h: h, s: ~~((100 / layout.Re) * d)};
       }
     };
 
-    IroColorWheel.prototype._inputStart = function (e) {
+    IroColorWheelPrototype._inputStart = function (e) {
       e.preventDefault();
       e = e.touches ? e.changedTouches[0] : e;
       var rect = this.main.getBoundingClientRect(),
@@ -469,7 +503,7 @@
       this._inputHandler(x, y);
     };
 
-    IroColorWheel.prototype._inputMove = function (e) {
+    IroColorWheelPrototype._inputMove = function (e) {
       if (active) {
         e.preventDefault();
         e = e.touches ? e.changedTouches[0] : e;
@@ -478,21 +512,21 @@
       }
     };
 
-    IroColorWheel.prototype._drawMarker = function (x, y) {
+    IroColorWheelPrototype._drawMarkerRing = function (x, y, color, lineWidth) {
       var ctx = this.overlayCtx;
-      ctx.lineWidth = 4;
+      ctx.lineWidth = lineWidth;
       ctx.beginPath();
-      ctx.strokeStyle = "#333";
-      ctx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.strokeStyle = "#fff";
+      ctx.strokeStyle = color;
       ctx.arc(x, y, this._layout.Mr, 0, 2 * Math.PI);
       ctx.stroke();
     };
 
-    IroColorWheel.prototype._updateMarker = function (marker, x, y) {
+    IroColorWheelPrototype._drawMarker = function (x, y) {
+      this._drawMarkerRing(x, y, "#333", 4);
+      this._drawMarkerRing(x, y, "#fff", 2);
+    };
+
+    IroColorWheelPrototype._updateMarker = function (marker, x, y) {
       this._overlayMarkers[marker] = {x:x, y:y};
       this.overlayCtx.clearRect(0, 0, this.width, this.height);
       if (this._overlayMarkers.ring){
@@ -503,9 +537,7 @@
       }
     };
 
-    IroColorWheel.prototype._drawWheel = function (value) {
-      // clamp value between 0 and 100
-      value = value === undefined ? 100 : Math.min(Math.max(value, 0), 100);
+    IroColorWheelPrototype._drawWheel = function (value) {
       var layout = this._layout;
       var ctx = this.mainCtx;
       // approximate a suitable line width based on the ring diameter
@@ -529,7 +561,7 @@
       ctx.fillRect(layout.Rx1, layout.Ry1, layout.Rd, layout.Rd);
     };
 
-    IroColorWheel.prototype._drawSlider = function () {
+    IroColorWheelPrototype._drawSlider = function () {
       var layout = this._layout;
       var ctx = this.mainCtx;
       var grad = ctx.createLinearGradient(layout.Sx1, layout.Sy1, layout.Sx2, layout.Sy1);
@@ -567,7 +599,7 @@
       ctx.fill();
     };
 
-    IroColorWheel.prototype._update = function (newValue, oldValue, changed) {
+    IroColorWheelPrototype._update = function (newValue, oldValue, changed) {
       var layout = this._layout;
       if ("function" == typeof this._watchCallback) this._watchCallback.call(null, this.color, changed);
       if (changed.v) {
@@ -604,7 +636,6 @@
   var iro = {
     StylesheetWriter: StylesheetWriter,
     Color: Color,
-    ExtendedColor: ExtendedColor,
     ColorWheel: ColorWheel
   }
 

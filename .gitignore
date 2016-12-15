@@ -1,7 +1,12 @@
 *.*-cache
 readme.html
 *.codekit
+*.codekit3
 docs/*.html
 !docs/index.html
 src/site/js/libs/
 src/site/js/libs.js
+
+*.codekit3
+
+config.codekit3
