@@ -117,7 +117,7 @@
         },
         "hslString": {
           set: this.setFromString,
-          get: this.setHsl,
+          get: this.getHslString,
           enumerable: true
         }
       });
@@ -155,7 +155,6 @@
     // set color from CSS color string
     // supports rgb hexadecimal (including shorthands), rgb(a) and hsl(a)
     IroColorPrototype.setFromString = function (str) {
-      var value;
       // (try to) detect the type of the color string using regex -- needs a lof of improvement
       var parsed = str.match(/(^rgba?|^hsla?)(?=\(.*?\))|(^#)(?=[a-f0-9])/i);
       var parsedStr;
@@ -163,13 +162,13 @@
       switch (parsed ? parsed[0] : null) {
         // HEX color notation; e.g #ffff00, #FFFF00, #ff0, etc...
         case "#":
-          value = rgbToHsv(hexSringToRgb(str));
+          this.hsv = rgbToHsv(hexSringToRgb(str));
           break;
         // rgb color notation; e.g rgb(255, 255, 0), rgba(255, 255, 0, 1)
         case "rgb":
         case "rgba":
           parsedStr = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-          value = rgbToHsv({
+          this.hsv = rgbToHsv({
             r: parseInt(parsedStr[2]),
             g: parseInt(parsedStr[3]),
             b: parseInt(parsedStr[4])
@@ -179,7 +178,7 @@
         case "hsl":
         case "hsla":
           parsedStr = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-          value = hslToHsv({
+          this.hsv = hslToHsv({
             h: parseInt(parsedStr[2]),
             s: parseInt(parsedStr[3]),
             l: parseInt(parsedStr[4])
@@ -188,14 +187,12 @@
         default:
           console.warn("Error: '", str, "' could not be parsed as a CSS color");
       }
-      // if the string has been parsed then set it as the value of this color instance
-      if (value) this.hsv = value;
     }
     // modified from https://gist.github.com/mjackson/5311256#file-color-conversion-algorithms-js-L119
     IroColorPrototype.getRgb = function () {
-      var val = this.hsv;
+      var hsv = this.hsv;
       var r, g, b, i, f, p, q, t;
-      var h = val.h/360, s = val.s/100, v = val.v/100;
+      var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
       i = Math.floor(h * 6);
       f = h * 6 - i;
       p = v * (1 - s);
@@ -212,37 +209,38 @@
       return {r: ~~(r * 255), g: ~~(g * 255), b: ~~(b * 255)};
     };
     IroColorPrototype.getRgbString = function () {
-      var val = this.getRgb();
-      return [val.a ? "rgba" : "rgb", "(", val.r, ", ", val.g, ", ", val.b, val.a ? ", " + val.a : "", ")"].join("");
+      var rgb = this.rgb;
+      return [rgb.a ? "rgba" : "rgb", "(", rgb.r, ", ", rgb.g, ", ", rgb.b, rgb.a ? ", " + rgb.a : "", ")"].join("");
     };
     IroColorPrototype.getHexString = function (useShort) {
-      var val = this.getRgb();
+      var rgb = this.rgb;
       var int, len;
       // check if value can be compressed to shorthand format (if useShort === true)
       // in shorthand, all channels should be able to be divided by 17 cleanly
-      if (useShort && (val.r % 17 === 0) && (val.g % 17 === 0) && (val.b % 17 === 0)) {
-        int = (val.r / 17) << 8 | (val.g / 17) << 4 | (val.b / 17);
+      if (useShort && (rgb.r % 17 === 0) && (rgb.g % 17 === 0) && (rgb.b % 17 === 0)) {
+        int = (rgb.r / 17) << 8 | (rgb.g / 17) << 4 | (rgb.b / 17);
         len = 4;
       } else {
-        int = val.r << 16 | val.g << 8 | val.b;
+        int = rgb.r << 16 | rgb.g << 8 | rgb.b;
         len = 7;
       }
       return "#" + (function(h){
         // add right amount of left-padding
         return new Array(len-h.length).join("0")+h
-      })(int.toString(16).toUpperCase());
+      })(int.toString(16));
     };
     // modified from https://gist.github.com/xpansive/1337890
     IroColorPrototype.getHsl = function () {
-      var s = this.hsv.s / 100,
-          v = this.hsv.v / 100;
+      var hsv = this.hsv;
+      var s = hsv.s / 100,
+          v = hsv.v / 100;
       var p = (2 - s) * v;
       s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
-      return {h: this.hsv.h, s: ~~(s * 100), l: ~~(p * 50)};
+      return {h: hsv.h, s: ~~(s * 100), l: ~~(p * 50)};
     };
     IroColorPrototype.getHslString = function () {
-      var val = this.getHsl();
-      return [val.a ? "hsla" : "hsl", "(", val.h, ", ", val.s, "%, ", val.l, "%", val.a ? ", " + val.a : "", ")"].join("");
+      var hsl = this.hsl;
+      return [hsl.a ? "hsla" : "hsl", "(", hsl.h, ", ", hsl.s, "%, ", hsl.l, "%", hsl.a ? ", " + hsl.a : "", ")"].join("");
     };
 
     return IroColor;
