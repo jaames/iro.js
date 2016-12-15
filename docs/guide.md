@@ -103,13 +103,13 @@ In addition, the current color can be changed by setting any of these properties
 var demoWheel = new iro.ColorWheel("#colorWheelDemo");
 
 // set the color wheel to red (in rgb notation):
-demoWHeel.color.hexString = "rgb(255, 0, 0)"
+demoWheel.color.hexString = "rgb(255, 0, 0)"
 
 // set the color wheel to red (in hex notation):
-demoWHeel.color.hexString = "#ff0000";
+demoWheel.color.hexString = "#ff0000";
 
 // set the color wheel to red (in hsv notation, from an object):
-demoWHeel.color.hsv = { h: 0, s: 100, v: 100 }
+demoWheel.color.hsv = { h: 0, s: 100, v: 100 }
 
 ```
 
@@ -125,7 +125,7 @@ var demoWheel = new iro.ColorWheel("#colorWheelDemo");
 
 // Whenever it changes, log the selected color to the dev console as a HEX string
 demoWheel.watch(function(color) {
-  console.log(color.hex);
+  console.log(color.hexString);
 });
 
 // If you ever want to remove the watch function, use:
