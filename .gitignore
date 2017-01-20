@@ -1,4 +1,5 @@
 *.*-cache
+node_modules
 readme.html
 *.codekit
 *.codekit3
