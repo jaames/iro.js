@@ -19,3 +19,21 @@ Iro is a new Javascript color picker library, it boasts a sleek UI with a whole 
 * Add alpha / transparency support
 * Add high dynamic range (values higher than 100 / lower than 0) support
 * Add more color models, like CMYK?
+
+### Building
+
+#### Install dependencies:
+
+`npm install`
+
+#### Generate /build directory:
+
+`npm run build`
+
+#### Run dev server:
+
+`npm run dev`
+
+#### Run tests:
+
+`npm t`
