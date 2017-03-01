@@ -1,34 +1,59 @@
 "use strict";
 
 const path = require('path');
-const config = require('./package.json');
-
 const webpack = require('webpack');
+
+const config = require('./package.json');
 require('dotenv').config();
 
 const PROD = process.env.NODE_ENV === 'production';
 
-let plugins = [];
+const CONFIG = {
+  sourceDir: "src",
+  buildDir: "dist",
+  js: {
+    input: "iro.js",
+    output: (PROD) ? "iro.min.js" : "iro.js",
+  },
+  bannerText: [
+    "iro.js",
+    "----------------",
+    "Author: James Daniel (github.com/jaames | rakujira.jp)",
+    "Last updated: " + new Date().toDateString(),
+  ].join("\n")
+}
 
-PROD ? [
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false }
-    }))
-  ] : '';
+const prependBanner = new webpack.BannerPlugin({
+  banner: CONFIG.bannerText,
+  raw: false,
+  entryOnly: true
+});
+
+const uglifyJs = new webpack.optimize.UglifyJsPlugin({
+  compress: { warnings: false }
+});
+
+const productionMode = new webpack.DefinePlugin({
+  "process.env": {
+    NODE_ENV: '"production"'
+  }
+});
+
+let plugins = (PROD) ? [prependBanner, productionMode, uglifyJs] : [prependBanner];
 
 module.exports = {
-  entry: ["webpack/hot/dev-server", "./src/iro.es6"],
+  entry: path.resolve(__dirname, CONFIG.sourceDir, CONFIG.js.input),
   devtool: 'source-map',
   output: {
     library: process.env.NAME,
     libraryTarget: process.env.TARGET,
-    path: __dirname + "/build",
-    filename: (PROD) ? 'iro.min.js' : 'iro.js',
-    publicPath: "/build/"
+    path: path.resolve(__dirname, CONFIG.buildDir),
+    filename: CONFIG.js.output,
+    //publicPath: "/build/"
   },
   module: {
     loaders: [
-      {test: /\.es6?$/, exclude: /node_modules/, loader: 'babel'}
+      {test: /\.js?$/, exclude: /node_modules/, loader: 'babel-loader'}
     ]
   },
   plugins: plugins,
