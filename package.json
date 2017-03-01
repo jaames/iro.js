@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "NODE_ENV=development webpack && NODE_ENV=production webpack",
-    "dev": "webpack-dev-server --content-base dist/",
+    "dev": "NODE_ENV=development webpack-dev-server --content-base ./",
     "test": "mocha",
     "test:cover": "istanbul cover _mocha -- --compilers js:babel-core/register",
     "coverage": "babel-node ./node_modules/.bin/isparta cover mocha -- --compilers js:babel-core/register"

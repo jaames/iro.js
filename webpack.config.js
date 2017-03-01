@@ -48,8 +48,9 @@ module.exports = {
     library: process.env.NAME,
     libraryTarget: process.env.TARGET,
     path: path.resolve(__dirname, CONFIG.buildDir),
+    //path: __dirname,
     filename: CONFIG.js.output,
-    //publicPath: "/build/"
+    publicPath: CONFIG.buildDir
   },
   module: {
     loaders: [
