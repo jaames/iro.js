@@ -3,6 +3,23 @@ import wheel from "./canvas/wheel.js";
 import slider from "./canvas/slider.js";
 import dom from "./util/dom.js";
 
+let active = false;
+
+function globalMouseMove(e) {
+  if (active) active._mouseMove(e);
+}
+
+function globalMouseUp(e) {
+  if (active){
+    e.preventDefault();
+    active._mouseTarget = false;
+    active = false;
+  }
+}
+
+dom.listen(document, ["mousemove", "touchmove"], globalMouseMove);
+dom.listen(document, ["mouseup", "touchend"], globalMouseUp);
+
 let colorWheel = function (el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
   el = ("string" == typeof el) ? dom.$(el) : el;
@@ -44,37 +61,50 @@ let colorWheel = function (el, opts) {
   }
 
   this.set({v: 100, h: 120, s: 100});
-
+  this._mouseTarget = false;
   dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
-
 };
 
 colorWheel.prototype = {
-  _getPoint: function (x, y, globalSpace) {
-    var rect = this.layers.main.canvas.getBoundingClientRect();
-    var left = rect.left,
-        top = rect.top;
-    return globalSpace ? {
-      x: left + x,
-      y: top + y
-    } : {
-      x: x - left,
-      y: y - top
-    }
-  },
   _iterateUi: function (callback) {
     let ui = this.ui;
-    for (var object in ui) {
-      if (ui.hasOwnProperty(object)) {
-        callback(object, ui[object]);
-      }
+    Object.keys(ui).forEach(function(key) {
+      callback(key, ui[key]);
+    });
+  },
+  _getPoint: function (x, y) {
+    var rect = this.layers.main.canvas.getBoundingClientRect();
+    return {
+      x: x - rect.left,
+      y: y - rect.top
     }
   },
+  _input: function (x, y) {
+    var target = this._mouseTarget;
+    var val = target.input(x, y);
+    console.log(val);
+  },
   _mouseDown: function (e) {
+    e.preventDefault();
+    e = e.touches ? e.changedTouches[0] : e;
     var point = this._getPoint(e.clientX, e.clientY);
+    var target = false;
     this._iterateUi(function (name, object) {
-      if (object.checkHit(point.x, point.y)) return false // set this ui element as the click target;
+      if (object.checkHit(point.x, point.y)) target = object;
     });
+    if (target) {
+      active = this;
+      this._mouseTarget = target;
+      this._input(point.x, point.y);
+    }
+  },
+  _mouseMove: function (e) {
+    if (active) {
+      e.preventDefault();
+      e = e.touches ? e.changedTouches[0] : e;
+      var point = this._getPoint(e.clientX, e.clientY);
+      this._input(point.x, point.y);
+    }
   },
   set: function (hsv) {
     this._iterateUi(function (name, object) {

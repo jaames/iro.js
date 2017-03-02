@@ -36,6 +36,23 @@ wheel.prototype = {
     var dist = (color.s / 100) * opts.rMax;
     this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
   },
+  input: function (x, y) {
+    var opts = this.opts;
+    var cX = opts.cX,
+        cY = opts.cY,
+        radius = opts.r,
+        rangeMax = opts.rMax;
+    // angle in radians, anticlockwise starting at 12 o'clock
+    var angle = Math.atan2(x - cX, y - cY);
+    // hue in degrees, clockwise from 3 o'clock
+    var hue = 360 - ~~(((angle * (180 / Math.PI)) + 270) % 360);
+    // distance from center
+    var dist = Math.min(Math.sqrt((cX - x) * (cX-x) + (cY-y) * (cY-y)), rangeMax);
+    return {
+      h: hue,
+      s: ~~((100 / rangeMax) * dist)
+    };
+  },
   checkHit: function (x, y) {
     var opts = this.opts;
     var dx = Math.abs(x - opts.cX),

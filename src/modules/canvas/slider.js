@@ -67,6 +67,14 @@ slider.prototype = {
     }
     this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
   },
+  input: function (x, y) {
+    var opts = this.opts;
+    var range = opts.range;
+    var val = Math.max(Math.min(x, range.max), range.min) - range.min;
+    return {
+      v: val,
+    };
+  },
   checkHit: function (x, y) {
     var opts = this.opts;
     return (x > opts.x1) && (x < opts.x2) && (y > opts.y1) && (y < opts.y2);
