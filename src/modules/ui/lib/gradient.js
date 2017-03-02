@@ -5,7 +5,7 @@ function addColorStops(gradient, colorStops) {
   return gradient;
 };
 
-export default {
+module.exports = {
   linear: function (ctx, x1, y1, x2, y2, colorStops) {
     return addColorStops(ctx.createLinearGradient(x1, y1, x2, y1), colorStops);
   },

@@ -31,12 +31,9 @@ wheel.prototype = {
   },
   set: function (color) {
     var opts = this.opts;
-    var hue = color.h,
-        sat = color.s,
-        val = color.v;
-    this.draw(val);
-    var hueAngle = hue * (Math.PI/180);
-    var dist = (sat / 100) * opts.rMax;
+    this.draw(color.v);
+    var hueAngle = color.h * (Math.PI/180);
+    var dist = (color.s / 100) * opts.rMax;
     this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
   },
   checkHit: function (x, y) {
@@ -47,4 +44,4 @@ wheel.prototype = {
   }
 };
 
-export default wheel;
+module.exports = wheel;

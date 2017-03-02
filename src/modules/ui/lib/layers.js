@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   create: function (wrapper, width, height, names) {
     wrapper.style.cssText += "position:relative";
     var pxRatio = window.devicePixelRatio || 1;

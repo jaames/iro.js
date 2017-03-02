@@ -62,8 +62,6 @@ slider.prototype = {
       case "v":
         markerX = range.min + ((color.v / 100) * range.w);
         break;
-      default:
-        break;
     }
     this.marker.move(markerX, markerY);
   },
@@ -72,4 +70,4 @@ slider.prototype = {
   }
 };
 
-export default slider;
+module.exports = slider;

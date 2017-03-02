@@ -26,4 +26,4 @@ marker.prototype = {
   }
 };
 
-export default marker;
+module.exports = marker;
