@@ -11,11 +11,9 @@ wheel.prototype = {
   draw: function (value) {
     var ctx = this.ctx;
     var opts = this.opts;
-    var x = opts.x,
-        y = opts.y,
-        radius = opts.r,
-        radiusLimit = opts.rLimit,
-        padding = opts.p;
+    var x = opts.cX,
+        y = opts.cY,
+        radius = opts.r;
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
     var segmentAngle = (2 * Math.PI) / 360;
     ctx.lineWidth = radius;
@@ -25,7 +23,7 @@ wheel.prototype = {
       ctx.arc(x, y, radius / 2, segment - 0.01, segment + segmentAngle + 0.01);
       ctx.stroke();
     }
-    ctx.fillStyle = gradient.radial(ctx, x, y, 0, radiusLimit, [
+    ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, [
       {at: 0, color: "hsla(0, 0%, " + value + "%, 1)"},
       {at: 1, color: "hsla(0, 0%, " + value + "%, 0)"},
     ]);
@@ -38,13 +36,13 @@ wheel.prototype = {
         val = color.v;
     this.draw(val);
     var hueAngle = hue * (Math.PI/180);
-    var dist = (sat / 100) * opts.rLimit;
-    this.marker.move(opts.x + dist * Math.cos(hueAngle), opts.y + dist * Math.sin(hueAngle));
+    var dist = (sat / 100) * opts.rMax;
+    this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
   },
   checkHit: function (x, y) {
     var opts = this.opts;
-    var dx = Math.abs(x - opts.x),
-        dy = Math.abs(y - opts.y);
+    var dx = Math.abs(x - opts.cX),
+        dy = Math.abs(y - opts.cY);
     return Math.sqrt(dx * dx + dy * dy) < opts.r;
   }
 };

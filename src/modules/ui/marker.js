@@ -1,6 +1,7 @@
 let marker = function (ctx, opts) {
   this.ctx = ctx;
   this.opts = opts;
+  this.last = false;
 };
 
 marker.prototype = {
@@ -17,9 +18,11 @@ marker.prototype = {
     this._ring(x, y, "#fff", 2);
   },
   move: function (x, y) {
-    //var ctx = this.ctx;
-    //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    var last = this.last;
+    var radius = (this.opts.r + 4);
+    if (last) this.ctx.clearRect(last.x - radius, last.y - radius, radius * 2, radius * 2);
     this.draw(x, y);
+    this.last = {x, y};
   }
 };
 

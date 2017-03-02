@@ -7,8 +7,11 @@ let slider = function (layers, opts) {
   opts.y1 = opts.y;
   opts.x2 = opts.x + opts.w;
   opts.y2 = opts.y + opts.h;
-  this.type = opts.type;
-  this.marker = new marker(layers.over.ctx, opts.marker);
+  opts.range = {
+    min: opts.x + opts.r,
+    max: opts.x2 - opts.r,
+    w: opts.w - (opts.r * 2)
+  };
   switch (opts.type) {
     case "v":
       var fill = gradient.linear(this.ctx, opts.x1, opts.y1, opts.x2, opts.y2, [
@@ -19,6 +22,8 @@ let slider = function (layers, opts) {
     default:
       var fill = null;
   };
+  this.type = opts.type;
+  this.marker = new marker(layers.over.ctx, opts.marker);
   opts.fill = fill;
   this.opts = opts;
 };
@@ -49,12 +54,13 @@ slider.prototype = {
   },
   set: function (color) {
     var opts = this.opts;
+    var range = opts.range;
     this.draw();
     var markerX = 0,
         markerY = opts.y1 + (opts.h / 2);
     switch (this.type) {
       case "v":
-        markerX = opts.x1 + ((color.v / 100) * opts.w);
+        markerX = range.min + ((color.v / 100) * range.w);
         break;
       default:
         break;
