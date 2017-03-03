@@ -3,6 +3,8 @@ import wheel from "./canvas/wheel.js";
 import slider from "./canvas/slider.js";
 import dom from "./util/dom.js";
 
+import color from "./color.js";
+
 let active = false;
 
 function globalMouseMove(e) {
@@ -60,7 +62,9 @@ let colorWheel = function (el, opts) {
     })
   }
 
-  this.set({v: 100, h: 120, s: 100});
+  this.color = new color();
+  this.color.watch(this.set.bind(this));
+  this.color.setHsv({v: 100, h: 120, s: 100});
   this._mouseTarget = false;
   dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
 };
@@ -82,7 +86,7 @@ colorWheel.prototype = {
   _input: function (x, y) {
     var target = this._mouseTarget;
     var val = target.input(x, y);
-    console.log(val);
+    this.color.setHsv(val);
   },
   _mouseDown: function (e) {
     e.preventDefault();

@@ -70,9 +70,9 @@ slider.prototype = {
   input: function (x, y) {
     var opts = this.opts;
     var range = opts.range;
-    var val = Math.max(Math.min(x, range.max), range.min) - range.min;
+    var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
     return {
-      v: val,
+      v: ~~((100 / range.w) * dist),
     };
   },
   checkHit: function (x, y) {
