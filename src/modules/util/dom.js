@@ -18,9 +18,9 @@ module.exports = {
   attr: function (el, attrName) {
     return el.getAttribute(attrName);
   },
-  listen: function (el, eventList, callback, bubble) {
+  listen: function (el, eventList, callback) {
     iterateList(eventList, function (eventName) {
-      el.addEventListener(eventName, callback, bubble ? true : false);
+      el.addEventListener(eventName, callback);
     });
   },
   unlisten: function (el, eventList, callback) {

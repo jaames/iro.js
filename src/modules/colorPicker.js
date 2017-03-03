@@ -3,7 +3,7 @@ import wheel from "./canvas/wheel.js";
 import slider from "./canvas/slider.js";
 import dom from "./util/dom.js";
 
-import color from "./color.js";
+import iroColor from "./color.js";
 
 let active = false;
 
@@ -62,9 +62,10 @@ let colorWheel = function (el, opts) {
     })
   }
 
-  this.color = new color();
-  this.color.watch(this.set.bind(this));
-  this.color.setHsv({v: 100, h: 120, s: 100});
+  let color = new iroColor();
+  color.watch(this._update.bind(this));
+  color.setHsv({v: 100, h: 120, s: 100});
+  this.color = color;
   this._mouseTarget = false;
   dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
 };
@@ -110,9 +111,9 @@ colorWheel.prototype = {
       this._input(point.x, point.y);
     }
   },
-  set: function (hsv) {
+  _update: function (newValue, oldValue, changes) {
     this._iterateUi(function (name, object) {
-      object.set(hsv);
+      object.set(newValue);
     });
   },
 };

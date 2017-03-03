@@ -47,7 +47,7 @@ wheel.prototype = {
     // hue in degrees, clockwise from 3 o'clock
     var hue = 360 - ~~(((angle * (180 / Math.PI)) + 270) % 360);
     // distance from center
-    var dist = Math.min(Math.sqrt((cX - x) * (cX-x) + (cY-y) * (cY-y)), rangeMax);
+    var dist = Math.min(Math.sqrt(Math.pow(cX-x, 2) + Math.pow(cY-y, 2)), rangeMax);
     return {
       h: hue,
       s: ~~((100 / rangeMax) * dist)
