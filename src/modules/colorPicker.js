@@ -62,9 +62,9 @@ let colorWheel = function (el, opts) {
     })
   }
 
-  let color = new iroColor();
+  var color = new iroColor();
   color.watch(this._update.bind(this));
-  color.hsv = {v: 100, h: 120, s: 100};
+  color.fromString(opts.color || "#fff");
   this.color = color;
   this._mouseTarget = false;
   dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));

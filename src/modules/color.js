@@ -12,8 +12,8 @@ const colorModels = {
   hexString,
 };
 
-let color = function (opts) {
-  if (!(this instanceof color)) return new color(opts);
+let color = function (str) {
+  if (!(this instanceof color)) return new color(str);
   this._onChange = false;
   this._value = {h: undefined, s: undefined, v: undefined};
   Object.defineProperties(this, Object.keys(colorModels).reduce((props, model) => {
@@ -30,6 +30,7 @@ let color = function (opts) {
       enumerable: true
     }
   }));
+  if (str) this.fromString(str);
 };
 
 color.prototype = {
@@ -54,6 +55,17 @@ color.prototype = {
   },
   get: function () {
     return this._value;
+  },
+  fromString: function (str) {
+    if (/^rgb/.test(str)) {
+      this.rgbString = str
+    }
+    else if (/^hsl/.test(str)) {
+      this.hslString = str;
+    }
+    else if (/^#[0-9A-Fa-f]/.test(str)) {
+      this.hexString = str;
+    }
   }
 };
 
