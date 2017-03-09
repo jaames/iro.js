@@ -1,5 +1,8 @@
 import gradient from "./lib/gradient.js";
 import marker from "./marker.js";
+import hsl from "../colorModels/hsl.js";
+
+const PI = Math.PI;
 
 let wheel = function (layers, opts) {
   this.ctx = layers.main.ctx;
@@ -14,25 +17,30 @@ wheel.prototype = {
     var x = opts.cX,
         y = opts.cY,
         radius = opts.r;
+    var color = hsl.from({h: hue, s: 100, v: value});
+
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
-    var segmentAngle = (2 * Math.PI) / 360;
+
+    var segmentAngle = (2 * PI) / 360;
     ctx.lineWidth = radius;
+
     for (var hue = 0, segment = 0; hue < 360; hue++, segment += segmentAngle) {
-      ctx.strokeStyle = "hsl(" + hue + ", 100%, " + value / 2 + "%)";
+      ctx.strokeStyle = "hsl(" + hue + "," + color.s + "%," + color.l + "%)";
       ctx.beginPath();
       ctx.arc(x, y, radius / 2, segment - 0.01, segment + segmentAngle + 0.01);
       ctx.stroke();
     }
+
     ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, [
-      {at: 0, color: "hsla(0, 0%, " + value + "%, 1)"},
-      {at: 1, color: "hsla(0, 0%, " + value + "%, 0)"},
+      {at: 0, color: "hsla(0,0%," + value + "%,1)" },
+      {at: 1, color: "hsla(0,0%," + value + "%,0)" },
     ]);
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },
   set: function (color) {
     var opts = this.opts;
     this.draw(color.v);
-    var hueAngle = color.h * (Math.PI/180);
+    var hueAngle = color.h * (PI/180);
     var dist = (color.s / 100) * opts.rMax;
     this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
   },
@@ -45,7 +53,7 @@ wheel.prototype = {
     // angle in radians, anticlockwise starting at 12 o'clock
     var angle = Math.atan2(x - cX, y - cY);
     // hue in degrees, clockwise from 3 o'clock
-    var hue = 360 - ~~(((angle * (180 / Math.PI)) + 270) % 360);
+    var hue = 360 - ~~(((angle * (180 / PI)) + 270) % 360);
     // distance from center
     var dist = Math.min(Math.sqrt(Math.pow(cX-x, 2) + Math.pow(cY-y, 2)), rangeMax);
     return {
