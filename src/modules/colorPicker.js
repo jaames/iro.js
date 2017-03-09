@@ -64,7 +64,7 @@ let colorWheel = function (el, opts) {
 
   let color = new iroColor();
   color.watch(this._update.bind(this));
-  color.setHsv({v: 100, h: 120, s: 100});
+  color.hsv = {v: 100, h: 120, s: 100};
   this.color = color;
   this._mouseTarget = false;
   dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
@@ -87,7 +87,7 @@ colorWheel.prototype = {
   _input: function (x, y) {
     var target = this._mouseTarget;
     var val = target.input(x, y);
-    this.color.setHsv(val);
+    this.color.hsv = val;
   },
   _mouseDown: function (e) {
     e.preventDefault();
