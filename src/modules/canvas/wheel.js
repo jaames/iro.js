@@ -37,12 +37,16 @@ wheel.prototype = {
     ]);
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },
-  set: function (color) {
+  set: function (color, changes) {
     var opts = this.opts;
-    this.draw(color.v);
-    var hueAngle = color.h * (PI/180);
-    var dist = (color.s / 100) * opts.rMax;
-    this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+    if (changes.v) {
+      this.draw(color.v);
+    }
+    if (changes.h || changes.s) {
+      var hueAngle = color.h * (PI/180);
+      var dist = (color.s / 100) * opts.rMax;
+      this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+    }
   },
   input: function (x, y) {
     var opts = this.opts;

@@ -113,7 +113,7 @@ colorWheel.prototype = {
   },
   _update: function (newValue, oldValue, changes) {
     this._iterateUi(function (name, object) {
-      object.set(newValue);
+      object.set(newValue, changes);
     });
   },
 };

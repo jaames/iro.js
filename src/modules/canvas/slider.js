@@ -14,6 +14,7 @@ let slider = function (layers, opts) {
   };
   this.marker = new marker(layers.over.ctx, opts.marker);
   this.opts = opts;
+  this.draw();
 };
 
 slider.prototype = {
@@ -36,36 +37,25 @@ slider.prototype = {
     ctx.arcTo(x1, y1, x2, y1, r);
     ctx.closePath();
     var fill;
-    switch (opts.type) {
-      case "v":
-        fill = gradient.linear(ctx, x1, y1, x2, y2, [
-          {at: 0, color: "#000"},
-          {at: 1, color: "#fff"},
-        ]);
-        break;
-      // case "a":
-      //   fill = gradient.linear(ctx, x1, y1, x2, y2, [
-      //     {at: 0, color: "#000"},
-      //     {at: 1, color: "#fff"},
-      //   ]);
-      //   break;
-      default:
-        fill = null;
-    };
+    if (opts.type == "v") {
+      fill = gradient.linear(ctx, x1, y1, x2, y2, [
+        {at: 0, color: "#000"},
+        {at: 1, color: "#fff"},
+      ]);
+    }
+    // else if (ops.type == "a") {
+    //
+    // }
     ctx.fillStyle = fill;
     ctx.fill();
   },
-  set: function (color) {
+  set: function (color, changes) {
     var opts = this.opts;
     var range = opts.range;
-    this.draw();
-    var percent = 0;
-    switch (opts.type) {
-      case "v":
-        percent = (color.v / 100);
-        break;
+    if (changes.v && opts.type == "v") {
+      var percent = (color.v / 100);
+      this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
     }
-    this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
   },
   input: function (x, y) {
     var opts = this.opts;
