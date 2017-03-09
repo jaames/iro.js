@@ -20,22 +20,22 @@ let color = function (str) {
     props[model] = {
       set: this["set_" + model],
       get: this["get_" + model],
-      enumerable: true
     };
     return props;
   }, {
     hsv: {
       set: this.set,
       get: this.get,
-      enumerable: true
     }
   }));
   if (str) this.fromString(str);
 };
 
 color.prototype = {
-  watch: function (callback) {
+  watch: function (callback, callImmediately) {
     this._onChange = callback;
+    var value = this._value;
+    if (callImmediately) this._onChange(value, value, {h: true, s: true, v: true});
   },
   unwatch: function () {
     this.watch(false);

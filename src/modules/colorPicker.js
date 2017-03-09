@@ -39,7 +39,7 @@ let colorWheel = function (el, opts) {
       bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
       leftMargin = (width - bodyWidth) / 2;
 
-  this.ui = {
+  this._ui = {
     hueSat: new wheel(this.layers, {
       cX: leftMargin + (bodyWidth / 2),
       cY: bodyWidth / 2,
@@ -61,18 +61,23 @@ let colorWheel = function (el, opts) {
       }
     })
   }
-
-  var color = new iroColor();
-  color.watch(this._update.bind(this));
-  color.fromString(opts.color || "#fff");
-  this.color = color;
+  this.color = new iroColor(opts.color || "#fff");
+  this.color.watch(this._update.bind(this), true);
   this._mouseTarget = false;
+  this._onChange = false;
   dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
 };
 
 colorWheel.prototype = {
+  watch: function (callback, callImmediately) {
+    this._onChange = callback;
+    if (callImmediately) this._onChange(this.color);
+  },
+  unwatch: function () {
+    this.watch(null);
+  },
   _iterateUi: function (callback) {
-    let ui = this.ui;
+    let ui = this._ui;
     Object.keys(ui).forEach(function(key) {
       callback(key, ui[key]);
     });
