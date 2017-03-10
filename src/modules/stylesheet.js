@@ -50,12 +50,36 @@ stylesheet.prototype = {
       } catch(e) {
         sheet.addRule(selector, property + ": " + value, index);
       } finally {
-        map[selector] = rules[index];
+        map[selector] = rules[index].style;
       }
     }
     else {
-      map[selector].style.setProperty(property, value);
+      map[selector].setProperty(property, value);
     }
+  },
+  _iterRules: function (fn) {
+    var map = this._map;
+    for (var selector in map) {
+      fn(selector, map[selector]);
+    }
+  },
+  getCSS: function () {
+    var ret = {};
+    this._iterRules((selector, ruleSet) => {
+      ret[selector] = {};
+      for (var i = 0; i < ruleSet.length; i++) {
+        var property = ruleSet[i];
+        ret[selector][property] = ruleSet.getPropertyValue(property);
+      }
+    });
+    return ret;
+  },
+  getCSSText: function () {
+    var ret = [];
+    this._iterRules((selector, ruleSet) => {
+      ret.push(selector + " {\n\t" + ruleSet.cssText.replace(/;\W/g, ";\n\t") + "\n}");
+    });
+    return ret.join("\n");
   },
   update: function (color) {
     var overrides = this.overrides;
