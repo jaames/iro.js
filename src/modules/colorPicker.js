@@ -4,6 +4,7 @@ import slider from "./canvas/slider.js";
 import dom from "./util/dom.js";
 
 import iroColor from "./color.js";
+import iroStyleSheet from "./stylesheet.js";
 
 let active = false;
 
@@ -62,6 +63,7 @@ let colorWheel = function (el, opts) {
     })
   }
   this.color = new iroColor(opts.color || "#fff");
+  this.stylesheet = new iroStyleSheet(opts.css || opts.styles || undefined);
   this.color.watch(this._update.bind(this), true);
   this._mouseTarget = false;
   this._onChange = false;
@@ -120,6 +122,7 @@ colorWheel.prototype = {
     this._iterateUi(function (name, object) {
       object.set(newValue, changes);
     });
+    this.stylesheet.update(this.color);
   },
 };
 
