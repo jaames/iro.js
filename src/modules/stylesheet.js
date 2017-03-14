@@ -10,22 +10,8 @@ let stylesheet = function (overrides) {
   let sheet = style.sheet;
   this.sheet = sheet;
   this.rules = sheet.rules || sheet.cssRules;
-  this._map = {};
-  overrides = overrides || {};
-  this.overrides = Object.keys(overrides).reduce(function (arr, selector) {
-    var ruleSet = overrides[selector];
-    for (var property in ruleSet) {
-      let type = ruleSet[property];
-      arr.push({selector, property, type})
-    }
-    return arr;
-  }, []);
-};
-
-let snakeCase = function (str) {
-  return str.replace(/([A-Z])/g, function($1) {
-    return "-" + $1.toLowerCase();
-  });
+  this.map = {};
+  this.overrides = overrides || {};
 };
 
 stylesheet.prototype = {
@@ -38,17 +24,20 @@ stylesheet.prototype = {
   setRule: function (selector, property, value) {
     var rules = this.rules;
     var sheet = this.sheet;
-    var map = this._map;
+    var map = this.map;
     // convert property to snake-case
-    property = snakeCase(property);
+    property = property.replace(/([A-Z])/g, function($1) {
+      return "-" + $1.toLowerCase();
+    });
     // if the selector hasn't been used yet
     if (!map.hasOwnProperty(selector)){
       var index = rules.length;
+      var declaration = property + ": " + value;
       // insert the new rule into the stylesheet
       try {
-        sheet.insertRule(selector + " {" + property + ": " + value + ";}", index);
+        sheet.insertRule(selector + " {" + declaration + ";}", index);
       } catch(e) {
-        sheet.addRule(selector, property + ": " + value, index);
+        sheet.addRule(selector, declaration, index);
       } finally {
         map[selector] = rules[index].style;
       }
@@ -57,36 +46,36 @@ stylesheet.prototype = {
       map[selector].setProperty(property, value);
     }
   },
-  _iterRules: function (fn) {
-    var map = this._map;
-    for (var selector in map) {
-      fn(selector, map[selector]);
-    }
-  },
-  getCSS: function () {
+  getCss: function () {
+    var map = this.map;
     var ret = {};
-    this._iterRules((selector, ruleSet) => {
+    for (var selector in map) {
+      var ruleSet = map[selector];
       ret[selector] = {};
       for (var i = 0; i < ruleSet.length; i++) {
         var property = ruleSet[i];
         ret[selector][property] = ruleSet.getPropertyValue(property);
       }
-    });
+    }
     return ret;
   },
-  getCSSText: function () {
+  getCssText: function () {
+    var map = this.map;
     var ret = [];
-    this._iterRules((selector, ruleSet) => {
-      ret.push(selector + " {\n\t" + ruleSet.cssText.replace(/;\W/g, ";\n\t") + "\n}");
-    });
+    for (var selector in map) {
+      ret.push(selector + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
+    }
     return ret.join("\n");
   },
   update: function (color) {
     var overrides = this.overrides;
     var rgb = color.rgbString;
-    overrides.forEach((obj) => {
-      this.setRule(obj.selector, obj.property, rgb);
-    });
+    for (var selector in overrides) {
+      var properties = overrides[selector];
+      for (var prop in properties) {
+        this.setRule(selector, prop, rgb);
+      }
+    }
   }
 };
 

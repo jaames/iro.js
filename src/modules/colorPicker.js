@@ -40,15 +40,17 @@ let colorWheel = function (el, opts) {
       bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
       leftMargin = (width - bodyWidth) / 2;
 
+  var marker = {
+    r: markerRadius
+  };
+
   this._ui = {
     hueSat: new wheel(this.layers, {
       cX: leftMargin + (bodyWidth / 2),
       cY: bodyWidth / 2,
       r: bodyWidth / 2,
       rMax: (bodyWidth / 2) - (markerRadius + padding),
-      marker: {
-        r: markerRadius
-      }
+      marker: marker
     }),
     val: new slider(this.layers, {
       type: "v",
@@ -57,13 +59,11 @@ let colorWheel = function (el, opts) {
       w: bodyWidth,
       h: sliderHeight,
       r: sliderHeight / 2,
-      marker: {
-        r: markerRadius
-      }
+      marker: marker
     })
   }
-  this.color = new iroColor(opts.color || "#fff");
   this.stylesheet = new iroStyleSheet(opts.css || opts.styles || undefined);
+  this.color = new iroColor(opts.color || "#fff");
   this.color.watch(this._update.bind(this), true);
   this._mouseTarget = false;
   this._onChange = false;
@@ -73,16 +73,10 @@ let colorWheel = function (el, opts) {
 colorWheel.prototype = {
   watch: function (callback, callImmediately) {
     this._onChange = callback;
-    if (callImmediately) this._onChange(this.color);
+    if (callImmediately) callback(this.color);
   },
   unwatch: function () {
     this.watch(null);
-  },
-  _iterateUi: function (callback) {
-    let ui = this._ui;
-    Object.keys(ui).forEach(function(key) {
-      callback(key, ui[key]);
-    });
   },
   _getPoint: function (x, y) {
     var rect = this.layers.main.canvas.getBoundingClientRect();
@@ -97,13 +91,15 @@ colorWheel.prototype = {
     this.color.hsv = val;
   },
   _mouseDown: function (e) {
+    var ui = this._ui;
     e.preventDefault();
     e = e.touches ? e.changedTouches[0] : e;
     var point = this._getPoint(e.clientX, e.clientY);
     var target = false;
-    this._iterateUi(function (name, object) {
-      if (object.checkHit(point.x, point.y)) target = object;
-    });
+    for (var key in ui) {
+      var uiElement = ui[key];
+      if (uiElement.checkHit(point.x, point.y)) target = uiElement;
+    }
     if (target) {
       active = this;
       this._mouseTarget = target;
@@ -119,9 +115,10 @@ colorWheel.prototype = {
     }
   },
   _update: function (newValue, oldValue, changes) {
-    this._iterateUi(function (name, object) {
-      object.set(newValue, changes);
-    });
+    var ui = this._ui;
+    for (var key in ui) {
+      ui[key].set(newValue, changes);
+    }
     this.stylesheet.update(this.color);
   },
 };

@@ -35,7 +35,7 @@ color.prototype = {
   watch: function (callback, callImmediately) {
     this._onChange = callback;
     var value = this._value;
-    if (callImmediately) this._onChange(value, value, {h: true, s: true, v: true});
+    if (callImmediately) callback(value, value, {h: true, s: true, v: true});
   },
   unwatch: function () {
     this.watch(false);
@@ -48,10 +48,10 @@ color.prototype = {
       if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
       changes[channel] = !(newValue[channel] == oldValue[channel]);
     }
-    // if the value has changed, call hook callback
-    if ((changes.h || changes.s || changes.v) && ("function" == typeof this._onChange)) this._onChange(newValue, oldValue, changes);
     // update the old value
     this._value = newValue;
+    // if the value has changed, call hook callback
+    if ((changes.h || changes.s || changes.v) && ("function" == typeof this._onChange)) this._onChange(newValue, oldValue, changes);
   },
   get: function () {
     return this._value;
