@@ -1,4 +1,4 @@
-import hsl from "./colorModels/hsl.js";
+ import hsl from "./colorModels/hsl.js";
 import rgb from "./colorModels/rgb.js";
 import hslString from "./colorModels/hslString.js";
 import rgbString from "./colorModels/rgbString.js";
@@ -16,18 +16,23 @@ let color = function (str) {
   if (!(this instanceof color)) return new color(str);
   this._onChange = false;
   this._value = {h: undefined, s: undefined, v: undefined};
-  Object.defineProperties(this, Object.keys(colorModels).reduce((props, model) => {
-    props[model] = {
-      set: this["set_" + model],
-      get: this["get_" + model],
-    };
-    return props;
-  }, {
+  var base = {
     hsv: {
       set: this.set,
-      get: this.get,
+      get: this.get
     }
-  }));
+  };
+  Object.defineProperties(this, Object.keys(colorModels).reduce((props, model) => {
+    props[model] = {
+      set: function (value) {
+        this.hsv = model.to(value);
+      },
+      get: function () {
+        return model.from(this.hsv);
+      },
+    };
+    return props;
+  }, base));
   if (str) this.fromString(str);
 };
 
@@ -51,7 +56,8 @@ color.prototype = {
     // update the old value
     this._value = newValue;
     // if the value has changed, call hook callback
-    if ((changes.h || changes.s || changes.v) && ("function" == typeof this._onChange)) this._onChange(newValue, oldValue, changes);
+    var callback = this._onChange;
+    if ((changes.h || changes.s || changes.v) && ("function" == typeof callback)) callback(newValue, oldValue, changes);
   },
   get: function () {
     return this._value;
@@ -68,17 +74,5 @@ color.prototype = {
     }
   }
 };
-
-let colorPrototype = color.prototype;
-
-Object.keys(colorModels).forEach(function (key) {
-  let model = colorModels[key];
-  colorPrototype["set_" + key] = function (value) {
-    this.hsv = model.to(value);
-  };
-  colorPrototype["get_" + key] = function () {
-    return model.from(this.hsv);
-  };
-});
 
 module.exports = color;
