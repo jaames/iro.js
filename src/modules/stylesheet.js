@@ -22,8 +22,8 @@ stylesheet.prototype = {
     this.sheet.disabled = true;
   },
   setRule: function (selector, property, value) {
-    var rules = this.rules;
     var sheet = this.sheet;
+    var rules = sheet.rules || sheet.cssRules;
     var map = this.map;
     // convert property to snake-case
     property = property.replace(/([A-Z])/g, function($1) {
@@ -39,6 +39,7 @@ stylesheet.prototype = {
       } catch(e) {
         sheet.addRule(selector, declaration, index);
       } finally {
+        rules = sheet.rules || sheet.cssRules;
         map[selector] = rules[index].style;
       }
     }
