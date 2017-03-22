@@ -1,4 +1,4 @@
- import hsl from "../colorModels/hsl.js";
+import hsl from "../colorModels/hsl.js";
 import rgb from "../colorModels/rgb.js";
 import hslString from "../colorModels/hslString.js";
 import rgbString from "../colorModels/rgbString.js";
@@ -6,8 +6,8 @@ import hexString from "../colorModels/hexString.js";
 
 const colorModels = {
   hsl,
-  hslString,
   rgb,
+  hslString,
   rgbString,
   hexString,
 };
@@ -25,10 +25,10 @@ let color = function (str) {
   Object.defineProperties(this, Object.keys(colorModels).reduce((props, model) => {
     props[model] = {
       set: function (value) {
-        this.hsv = model.to(value);
+        this.hsv = colorModels[model].to(value);
       },
       get: function () {
-        return model.from(this.hsv);
+        return colorModels[model].from(this.hsv);
       },
     };
     return props;
