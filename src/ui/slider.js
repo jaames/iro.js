@@ -1,4 +1,4 @@
-import gradient from "./lib/gradient.js";
+import gradient from "./gradient.js";
 import marker from "./marker.js";
 
 let slider = function (layers, opts) {

@@ -1,7 +1,7 @@
-import layers from "./canvas/lib/layers.js";
-import wheel from "./canvas/wheel.js";
-import slider from "./canvas/slider.js";
-import dom from "./util/dom.js";
+import layers from "../ui/layers.js";
+import wheel from "../ui/wheel.js";
+import slider from "../ui/slider.js";
+import dom from "../util/dom.js";
 
 import iroColor from "./color.js";
 import iroStyleSheet from "./stylesheet.js";

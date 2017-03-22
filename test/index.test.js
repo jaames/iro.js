@@ -5,11 +5,11 @@ require("jsdom-global")();
 // import the iro class instance
 import iro from "../src/iro.js";
 // import the color models
-import hsl from "../src/modules/colorModels/hsl.js";
-import rgb from "../src/modules/colorModels/rgb.js";
-import hslString from "../src/modules/colorModels/hslString.js";
-import rgbString from "../src/modules/colorModels/rgbString.js";
-import hexString from "../src/modules/colorModels/hexString.js";
+import hsl from "../src/colorModels/hsl.js";
+import rgb from "../src/colorModels/rgb.js";
+import hslString from "../src/colorModels/hslString.js";
+import rgbString from "../src/colorModels/rgbString.js";
+import hexString from "../src/colorModels/hexString.js";
 
 chai.should();
 

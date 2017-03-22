@@ -1,4 +1,4 @@
-import dom from "../../util/dom.js";
+import dom from "../util/dom.js";
 
 module.exports = {
   create: function (wrapper, width, height, names) {
@@ -8,7 +8,7 @@ module.exports = {
     var pxHeight = height * pxRatio;
     var ret = {};
     names.forEach(function (name, index) {
-      var canvas = dom.append(wrapper, dom.create("canvas")); 
+      var canvas = dom.append(wrapper, dom.create("canvas"));
       var ctx = canvas.getContext("2d");
       canvas.width = pxWidth;
       canvas.height = pxHeight;
