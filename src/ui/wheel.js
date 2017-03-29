@@ -2,7 +2,10 @@ import gradient from "./gradient.js";
 import marker from "./marker.js";
 import hsl from "../colorModels/hsl.js";
 
-const PI = Math.PI;
+var PI = Math.PI,
+    pow = Math.pow,
+    sqrt = Math.sqrt,
+    abs = Math.abs;
 
 let wheel = function (layers, opts) {
   this.ctx = layers.main.ctx;
@@ -31,9 +34,11 @@ wheel.prototype = {
       ctx.stroke();
     }
 
+    var hslString = "hsla(0,0%," + value + "%,";
+
     ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, [
-      {at: 0, color: "hsla(0,0%," + value + "%,1)" },
-      {at: 1, color: "hsla(0,0%," + value + "%,0)" },
+      {at: 0, color: hslString + "1)" },
+      {at: 1, color: hslString + "0)" },
     ]);
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },
@@ -59,7 +64,7 @@ wheel.prototype = {
     // hue in degrees, clockwise from 3 o'clock
     var hue = 360 - ~~(((angle * (180 / PI)) + 270) % 360);
     // distance from center
-    var dist = Math.min(Math.sqrt(Math.pow(cX-x, 2) + Math.pow(cY-y, 2)), rangeMax);
+    var dist = Math.min(sqrt(pow(cX-x, 2) + pow(cY-y, 2)), rangeMax);
     return {
       h: hue,
       s: ~~((100 / rangeMax) * dist)
@@ -67,9 +72,9 @@ wheel.prototype = {
   },
   checkHit: function (x, y) {
     var opts = this.opts;
-    var dx = Math.abs(x - opts.cX),
-        dy = Math.abs(y - opts.cY);
-    return Math.sqrt(dx * dx + dy * dy) < opts.r;
+    var dx = abs(x - opts.cX),
+        dy = abs(y - opts.cY);
+    return sqrt(dx * dx + dy * dy) < opts.r;
   }
 };
 

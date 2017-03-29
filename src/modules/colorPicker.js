@@ -86,9 +86,7 @@ colorWheel.prototype = {
     }
   },
   _input: function (x, y) {
-    var target = this._mouseTarget;
-    var val = target.input(x, y);
-    this.color.hsv = val;
+    this.color.hsv = this._mouseTarget.input(x, y);
   },
   _mouseDown: function (e) {
     var ui = this._ui;
