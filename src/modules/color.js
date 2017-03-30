@@ -10,6 +10,7 @@ const colorModels = {
   hslString,
   rgbString,
   hexString,
+  hex: hexString
 };
 
 let color = function (str) {

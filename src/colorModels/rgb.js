@@ -17,20 +17,40 @@ module.exports = {
     }
     return {r: ~~(r * 255), g: ~~(g * 255), b: ~~(b * 255)};
   },
+  // https://github.com/qix-/color-convert/blob/master/conversions.js#L97
   to: function (rgb) {
-    var r = rgb.r, g = rgb.g, b = rgb.b;
+    var r = rgb.r,
+        g = rgb.g,
+        b = rgb.b;
+
     var max = Math.max(r, g, b),
         min = Math.min(r, g, b),
-        d = max - min,
-        h,
-        s = max === 0 ? 0 : d / max,
-        v = max / 255;
+        delta = max - min;
+
+    var hue;
+
     switch (max) {
-      case min: h = 0; break;
-      case r: h = (g - b) + d * (g < b ? 6: 0); h /= 6 * d; break;
-      case g: h = (b - r) + d * 2; h /= 6 * d; break;
-      case b: h = (r - g) + d * 4; h /= 6 * d; break;
+      case min:
+        hue = 0;
+        break;
+      case r:
+        hue = (g - b) / delta;
+        break;
+      case g:
+        hue = 2 + (b - r) / delta;
+        break;
+      case b:
+        hue = 4 + (r - g) / delta;
+        break;
     }
-    return {h: ~~(h * 360), s: ~~(s * 100), v: ~~(v * 100)};
+
+    hue *= 60;
+    hue = hue > 360 ? 360 : hue < 0 ? hue += 360 : 0;
+
+    return {
+      h: ~~hue,
+      s: max == 0 ? 0 : (delta / max * 1000) / 10,
+      v: ((max / 255) * 1000) / 10
+    };
   }
 };
