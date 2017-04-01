@@ -14,6 +14,7 @@ const CONFIG = {
   js: {
     input: "iro.js",
     output: (PROD) ? "iro.min.js" : "iro.js",
+    babelPresets: ["es2015", "stage-2"]
   },
   bannerText: [
     "iro.js",
@@ -54,7 +55,15 @@ module.exports = {
   },
   module: {
     loaders: [
-      {test: /\.js?$/, exclude: /node_modules/, loader: 'babel-loader'}
+      {
+        test: /\.js?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          babelrc: false,
+          presets: CONFIG.js.babelPresets,
+        }
+      }
     ]
   },
   plugins: plugins,
