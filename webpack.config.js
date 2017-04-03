@@ -31,7 +31,14 @@ const prependBanner = new webpack.BannerPlugin({
 });
 
 const uglifyJs = new webpack.optimize.UglifyJsPlugin({
-  compress: { warnings: false }
+  compress: {
+    warnings: false,
+  },
+  mangle: {
+    props: {
+      regex: /^_/,
+    },
+  }
 });
 
 const productionMode = new webpack.DefinePlugin({
@@ -40,7 +47,7 @@ const productionMode = new webpack.DefinePlugin({
   }
 });
 
-let plugins = (PROD) ? [prependBanner, productionMode, uglifyJs] : [prependBanner];
+let plugins = (PROD) ? [productionMode, uglifyJs, prependBanner] : [prependBanner];
 
 module.exports = {
   entry: path.resolve(__dirname, CONFIG.sourceDir, CONFIG.js.input),
