@@ -554,7 +554,7 @@
         ctx.stroke();
       }
       // draw saturation gradient
-      var grad = ctx.createRadialGradient(layout.Rcx, layout.Rcy, 2, layout.Rcx, layout.Rcy, layout.Re);
+      var grad = ctx.createRadialGradient(layout.Rcx, layout.Rcy, 0, layout.Rcx, layout.Rcy, layout.Re);
       grad.addColorStop(0, "hsla(0, 0%, " + value + "%, 1)");
       grad.addColorStop(1, "hsla(0, 0%, " + value + "%, 0)");
       ctx.fillStyle = grad;
