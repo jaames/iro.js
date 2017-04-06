@@ -214,12 +214,13 @@ colorWheel.prototype = {
     * @access protected
   */
   _update: function (newValue, oldValue, changes) {
+    var color = this.color;
     // Loop through each UI element and update it
     this.ui.forEach(function (uiElement) {
-      uiElement.set(newValue, changes);
+      uiElement.update(color, changes);
     });
     // Update the stylesheet too
-    this.stylesheet.update(this.color);
+    this.stylesheet.update(color);
   },
 };
 

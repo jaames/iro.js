@@ -62,22 +62,23 @@ wheel.prototype = {
   },
 
   /**
-    * @desc redraws this element based on a new color value
-    * @param {Object} color - a HSV object for the new color
+    * @desc updates this element to represent a new color value
+    * @param {Object} color - an iroColor object with the new color value
     * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
   */
-  set: function (color, changes) {
+  update: function (color, changes) {
     var opts = this.opts;
+    var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this.draw(color.v);
+      this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = color.h * (PI/180);
+      var hueAngle = hsv.h * (PI/180);
       // convert the saturation value to a distance between the center of the ring and the edge
-      var dist = (color.s / 100) * opts.rMax;
+      var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
       this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
     }

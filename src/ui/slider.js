@@ -68,15 +68,16 @@ slider.prototype = {
   },
 
   /**
-    * @desc redraws this element based on a new color value
-    * @param {Object} color - a HSV object for the new color
+    * @desc updates this element to represent a new color value
+    * @param {Object} color - an iroColor object with the new color value
     * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
   */
-  set: function (color, changes) {
+  update: function (color, changes) {
     var opts = this.opts;
     var range = opts.range;
+    var hsv = color.hsv;
     if (opts.type == "v" && changes.v) {
-      var percent = (color.v / 100);
+      var percent = (hsv.v / 100);
       this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
     }
   },
