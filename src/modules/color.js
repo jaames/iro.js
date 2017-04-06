@@ -4,13 +4,13 @@ import hslString from "../colorModels/hslString.js";
 import rgbString from "../colorModels/rgbString.js";
 import hexString from "../colorModels/hexString.js";
 
-const colorModels = {
+const colorModels = [
   hsl,
   rgb,
   hslString,
   rgbString,
-  hexString,
-};
+  hexString
+];
 
 /**
   @constructor color object
@@ -27,14 +27,13 @@ let color = function (str) {
     set: this.set
   });
   // Loop through each external color model and register it
-  Object.keys(colorModels).forEach((name) => {
-    var model = colorModels[name];
-    this.register(name, {
+  colorModels.forEach((model) => {
+    this.register(model.name, {
       set: function (value) {
-        this.hsv = model.to(value);
+        this.hsv = model.toHsv(value);
       },
       get: function () {
-        return model.from(this.hsv);
+        return model.fromHsv(this.hsv);
       },
     });
   });

@@ -14,7 +14,23 @@ const CONFIG = {
   js: {
     input: "iro.js",
     output: (PROD) ? "iro.min.js" : "iro.js",
-    babelPresets: ["es2015", "stage-2"]
+    babelPresets: ["es2015", "stage-2"],
+    // We can mangle (compress) the following props for better minification, since they aren't used publicly
+    mangleProps: [
+      // colorModels/*.js
+      "toHsv",
+      "fromHsv",
+      "name",
+      // util.dom.js
+      "create",
+      "attr",
+      "append",
+      "listen",
+      "unlisten",
+      // ui/gradient.js
+      "radial",
+      "linear"
+    ]
   },
   bannerText: [
     "iro.js",
@@ -36,7 +52,8 @@ const uglifyJs = new webpack.optimize.UglifyJsPlugin({
   },
   mangle: {
     props: {
-      regex: /^_/,
+      // Mangle protected properties (which start with "_"), and combine all the ones listed in the config
+      regex: new RegExp("^_|" + CONFIG.js.mangleProps.join("|"))
     },
   }
 });

@@ -1,8 +1,10 @@
 import rgb from "./rgb.js";
 
 module.exports = {
-  from: function (hsv) {
-    var color = rgb.from(hsv),
+  name: "hexString",
+
+  fromHsv: function (hsv) {
+    var color = rgb.fromHsv(hsv),
         r = color.r,
         g = color.g,
         b = color.b;
@@ -21,7 +23,8 @@ module.exports = {
     // Add right amount of left-padding
     return "#" + (new Array(strLength - str.length).join("0")) + str;
   },
-  to: function (hex) {
+
+  toHsv: function (hex) {
     // Strip any "#" characters
     hex = hex.replace(/#/g, '');
     // Prefix the hex string with "0x" which indicates a number in hex notation, then convert to an integer
@@ -35,7 +38,7 @@ module.exports = {
         // If we're using shorthand notation, multiply each channel by 17
         multiplier  = isShorthand ? 17 : 1;
 
-    return rgb.to({
+    return rgb.toHsv({
       r: ((int >> (bitLength * 2)) & bitMask) * multiplier,
       g: ((int >> bitLength) & bitMask) * multiplier,
       b: (int & bitMask) * multiplier,

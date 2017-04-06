@@ -1,7 +1,9 @@
 var round = Math.round;
 
 module.exports = {
-  from: function (hsv) {
+  name: "rgb",
+
+  fromHsv: function (hsv) {
     var r, g, b, i, f, p, q, t;
     var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
     i = Math.floor(h * 6);
@@ -19,7 +21,8 @@ module.exports = {
     }
     return {r: round(r * 255), g: round(g * 255), b: round(b * 255)};
   },
-  to: function (rgb) {
+  
+  toHsv: function (rgb) {
     // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
     var r = rgb.r / 255,
         g = rgb.g / 255,

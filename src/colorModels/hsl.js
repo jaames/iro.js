@@ -1,7 +1,9 @@
 var round = Math.round;
 
 module.exports = {
-  from: function (hsv) {
+  name: "hsl",
+
+  fromHsv: function (hsv) {
     var s = hsv.s / 100,
         v = hsv.v / 100;
     var p = (2 - s) * v;
@@ -12,7 +14,8 @@ module.exports = {
       l: round(p * 50)
     };
   },
-  to: function (hsl) {
+
+  toHsv: function (hsl) {
     var s = hsl.s / 50,
         l = hsl.l / 100;
     s *= (l <= 1) ? l : 2 - l;
