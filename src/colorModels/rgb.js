@@ -1,3 +1,5 @@
+var round = Math.round;
+
 module.exports = {
   from: function (hsv) {
     var r, g, b, i, f, p, q, t;
@@ -15,42 +17,36 @@ module.exports = {
       case 4: r = t, g = p, b = v; break;
       case 5: r = v, g = p, b = q; break;
     }
-    return {r: ~~(r * 255), g: ~~(g * 255), b: ~~(b * 255)};
+    return {r: round(r * 255), g: round(g * 255), b: round(b * 255)};
   },
-  // https://github.com/qix-/color-convert/blob/master/conversions.js#L97
   to: function (rgb) {
-    var r = rgb.r,
-        g = rgb.g,
-        b = rgb.b;
-
+    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
+    var r = rgb.r / 255,
+        g = rgb.g / 255,
+        b = rgb.b / 255;
     var max = Math.max(r, g, b),
         min = Math.min(r, g, b),
         delta = max - min;
-
     var hue;
-
     switch (max) {
       case min:
         hue = 0;
         break;
       case r:
-        hue = (g - b) / delta;
+        hue = (g - b) / delta + (g < b ? 6 : 0);
         break;
       case g:
-        hue = 2 + (b - r) / delta;
+        hue = (b - r) / delta + 2
         break;
       case b:
-        hue = 4 + (r - g) / delta;
+        hue = (r - g) / delta + 4;
         break;
     }
-
-    hue *= 60;
-    hue = hue > 360 ? 360 : hue < 0 ? hue += 360 : 0;
-
+    hue /= 6;
     return {
-      h: ~~hue,
-      s: max == 0 ? 0 : (delta / max * 1000) / 10,
-      v: ((max / 255) * 1000) / 10
+      h: round(hue * 360),
+      s: round(max === 0 ? 0 : (delta / max) * 100),
+      v: round(max * 100)
     };
   }
 };
