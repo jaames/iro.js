@@ -3,7 +3,7 @@ import rgb from "./rgb.js";
 module.exports = {
   from: function (hsv) {
     var color = rgb.from(hsv);
-    return ["rgb", color.a ? "a" : "", "(", color.r, ", ", color.g, ", ", color.b, color.a ? ", " + color.a : "", ")"].join("");
+    return "rgb" + (color.a ? "a" : "") + "(" + color.r + ", " + color.g + ", " + color.b + (color.a ? ", " + color.a : "") + ")";
   },
   to: function (rgbString) {
     var parsed = rgbString.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
