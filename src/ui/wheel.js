@@ -1,6 +1,5 @@
 import gradient from "./gradient.js";
 import marker from "./marker.js";
-import hsl from "../colorModels/hsl.js";
 
 // Quick references to reused math functions
 var PI = Math.PI,
@@ -37,16 +36,12 @@ wheel.prototype = {
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
     // Here we calculate the angle for each slice, in radians
-    var sliceAngle = (2 * PI) / 360,
-    // Internally, iro.js uses the HSV model for colors, but the HTML5 canvas api doesn't understand HSV colors, only RGB and HSL
-    // So, to counter this, we create a dummy HSL color from HSV so we can get the right HSL S and L channel values from the HSV V value he have
-    // Boy, is that difficult to explain
-        color = hsl.from({h: 0, s: 100, v: value});
+    var sliceAngle = (2 * PI) / 360;
 
     // Create a loop to draw each slice
     for (var hue = 0, sliceStart = 0; hue < 360; hue++, sliceStart += sliceAngle) {
       // Create a HSL color for the slice using the current hue value
-      ctx.strokeStyle = "hsl(" + hue + "," + color.s + "%," + color.l + "%)";
+      ctx.strokeStyle = "hsl(" + hue + ",100%," + (value / 2) + "%)";
       ctx.beginPath();
       // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
       // So we make them overlap ever so slightly by adding a tiny value to the slice angle
