@@ -10,7 +10,6 @@ const colorModels = {
   hslString,
   rgbString,
   hexString,
-  hex: hexString
 };
 
 /**
@@ -23,31 +22,36 @@ let color = function (str) {
   this._onChange = false;
   // The default color value
   this._value = {h: undefined, s: undefined, v: undefined};
-  // We use Object.defineProperties for color models, which means we can call functions as they're set / get
-  var props = {
-    hsv: {
-      set: this.set,
-      get: this.get
-    }
-  };
-  // Loop through each external color model and set getter/setter functions for it
-  // TODO: improve this... I'm sure this can be shorter than it is right now
-  props = Object.keys(colorModels).reduce((props, model) => {
-    props[model] = {
+  this.register("hsv", {
+    get: this.get,
+    set: this.set
+  });
+  // Loop through each external color model and register it
+  Object.keys(colorModels).forEach((name) => {
+    var model = colorModels[name];
+    this.register(name, {
       set: function (value) {
-        this.hsv = colorModels[model].to(value);
+        this.hsv = model.to(value);
       },
       get: function () {
-        return colorModels[model].from(this.hsv);
+        return model.from(this.hsv);
       },
-    };
-    return props;
-  }, props);
-  Object.defineProperties(this, props);
+    });
+  });
   if (str) this.fromString(str);
 };
 
 color.prototype = {
+
+  /**
+    * @desc Register a new color model on this instance
+    * @param {String} name The name of the color model
+    * @param {Object} descriptor The property descriptor (see https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Description)
+  */
+  register: function (name, descriptor) {
+    Object.defineProperty(this, name, descriptor);
+  },
+
   /**
     * @desc Set a callback function that gets called whenever the selected color changes
     * @param {Function} callback The watch callback
@@ -55,8 +59,7 @@ color.prototype = {
   */
   watch: function (callback, callImmediately) {
     this._onChange = callback;
-    var value = this._value;
-    if (callImmediately) callback(value, value, {h: true, s: true, v: true});
+    if (callImmediately) this.forceUpdate();
   },
 
   /**
@@ -64,6 +67,14 @@ color.prototype = {
   */
   unwatch: function () {
     this.watch(false);
+  },
+
+  /**
+    * @desc Force an update
+  */
+  forceUpdate: function () {
+    var value = this._value;
+    this._onChange(value, value, {h: true, s: true, v: true});
   },
 
   /**
