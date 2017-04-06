@@ -221,6 +221,9 @@ colorWheel.prototype = {
     });
     // Update the stylesheet too
     this.stylesheet.update(color);
+    // Call the watch callback if one is set
+    var callback = this._onChange;
+    if ("function" == typeof callback) callback(this.color, changes);
   },
 };
 
