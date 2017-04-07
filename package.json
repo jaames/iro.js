@@ -1,16 +1,8 @@
 {
-  "name": "iro-color-picker",
-  "version": "1.0.0",
-  "description": "A sleek JavaScript color picker",
-  "main": "src/iro.es6",
-  "dependencies": {
-    "jsdom": "9.6.0",
-    "jsdom-global": "2.1.0",
-    "babel-core": "^6.17.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-stage-2": "^6.22.0"
-  },
+  "name": "iro.js",
+  "version": "2.0.0",
+  "description": "A sleek and lightweight JS color picker - with zero dependencies",
+  "main": "src/iro.js",
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "chai": "^3.5.0",
@@ -19,14 +11,18 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
     "webpack": "2",
-    "webpack-dev-server": "2"
+    "webpack-dev-server": "2",
+    "jsdom": "9.6.0",
+    "jsdom-global": "2.1.0",
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-2": "^6.22.0"
   },
   "scripts": {
     "build": "NODE_ENV=development webpack && NODE_ENV=production webpack",
     "dev": "NODE_ENV=development webpack-dev-server --content-base ./",
-    "test": "mocha",
-    "test:cover": "istanbul cover _mocha -- --compilers js:babel-core/register",
-    "coverage": "babel-node ./node_modules/.bin/isparta cover mocha -- --compilers js:babel-core/register"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -37,5 +33,5 @@
   "bugs": {
     "url": "https://github.com/jaames/iro.js/issues"
   },
-  "homepage": "https://github.com/jaames/iro.js#readme"
+  "homepage": "https://rakujira.jp/projects/iro/"
 }
