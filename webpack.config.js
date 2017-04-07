@@ -53,7 +53,7 @@ const uglifyJs = new webpack.optimize.UglifyJsPlugin({
   mangle: {
     props: {
       // Mangle protected properties (which start with "_"), and combine all the ones listed in the config
-      regex: new RegExp("^_|" + CONFIG.js.mangleProps.join("|"))
+      regex: new RegExp("^_|" + CONFIG.js.mangleProps.join("$|"))
     },
   }
 });
