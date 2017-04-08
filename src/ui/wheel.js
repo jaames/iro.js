@@ -13,7 +13,8 @@ var PI = Math.PI,
 */
 let wheel = function (layers, opts) {
   this._ctx = layers.main.ctx;
-  this.opts = opts;
+  this._opts = opts;
+  this.type = "wheel";
   this.marker = new marker(layers.over.ctx, opts.marker);
 };
 
@@ -25,7 +26,7 @@ wheel.prototype = {
   */
   draw: function (value) {
     var ctx = this._ctx;
-    var opts = this.opts;
+    var opts = this._opts;
     var x = opts.cX,
         y = opts.cY,
         radius = opts.r;
@@ -67,7 +68,7 @@ wheel.prototype = {
     * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
   */
   update: function (color, changes) {
-    var opts = this.opts;
+    var opts = this._opts;
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
@@ -91,7 +92,7 @@ wheel.prototype = {
     * @return {Object} - new HSV color values (some channels may be missing)
   */
   input: function (x, y) {
-    var opts = this.opts,
+    var opts = this._opts,
         cX = opts.cX,
         cY = opts.cY,
         radius = opts.r,
@@ -119,7 +120,7 @@ wheel.prototype = {
     * @return {Boolean} - true if the point is a "hit", else false
   */
   checkHit: function (x, y) {
-    var opts = this.opts;
+    var opts = this._opts;
 
     // Check if the point is within the hue ring by comparing the point's distance from the centre to the ring's radius
     // If the distance is smaller than the radius, then we have a hit

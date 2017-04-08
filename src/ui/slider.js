@@ -17,10 +17,10 @@ let slider = function (layers, opts) {
     max: opts.x2 - opts.r,
     w: opts.w - (opts.r * 2)
   };
-  opts.type = opts.type || "v";
+  opts.sliderType = opts.sliderType || "v";
+  this.type = "slider";
   this.marker = new marker(layers.over.ctx, opts.marker);
-  this.opts = opts;
-  this.draw();
+  this._opts = opts;
 };
 
 slider.prototype = {
@@ -29,7 +29,7 @@ slider.prototype = {
   */
   draw: function () {
     var ctx = this._ctx;
-    var opts = this.opts;
+    var opts = this._opts;
     var x1 = opts.x1,
         y1 = opts.y1,
         x2 = opts.x2,
@@ -56,7 +56,7 @@ slider.prototype = {
     var fill;
 
     // For now the only type is "V", meaning this slider adjusts the HSV V channel
-    if (opts.type == "v") {
+    if (opts.sliderType == "v") {
       fill = gradient.linear(ctx, x1, y1, x2, y2, [
         {at: 0, color: "#000"},
         {at: 1, color: "#fff"},
@@ -73,12 +73,16 @@ slider.prototype = {
     * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
   */
   update: function (color, changes) {
-    var opts = this.opts;
+    var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    if (opts.type == "v" && changes.v) {
+    if (opts.sliderType == "v" && changes.v) {
       var percent = (hsv.v / 100);
       this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
+      if (!this._hasDrawn) {
+        this.draw();
+        this._hasDrawn = true;
+      }
     }
   },
 
@@ -89,7 +93,7 @@ slider.prototype = {
     * @return {Object} - new HSV color values (some channels may be missing)
   */
   input: function (x, y) {
-    var opts = this.opts;
+    var opts = this._opts;
     var range = opts.range;
     var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
     return {
@@ -104,7 +108,7 @@ slider.prototype = {
     * @return {Boolean} - true if the point is a "hit", else false
   */
   checkHit: function (x, y) {
-    var opts = this.opts;
+    var opts = this._opts;
     return (x > opts.x1) && (x < opts.x2) && (y > opts.y1) && (y < opts.y2);
   }
 };
