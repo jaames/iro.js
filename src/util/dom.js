@@ -1,5 +1,7 @@
-// Quick reference to the document object since we use it more than once
-const doc = document;
+// Quick reference to the document object and some strings since we usethem more than once
+const doc = document,
+      READYSTATE_COMPLETE = "complete",
+      READYSTATE_CHANGE = "readystatechange";
 
 /**
  * @desc iterate a list (or create a one-item list from a string), calling callback with each item
@@ -73,5 +75,24 @@ module.exports = {
     iterateList(eventList, function (eventName) {
       el.removeEventListener(eventName, callback);
     });
+  },
+
+  /**
+   * @desc call callback when the page document is ready
+   * @param {Function} callback callback function to be called
+  */
+  whenReady: function (callback) {
+    var _this = this;
+    if (doc.readyState == READYSTATE_COMPLETE) {
+      callback();
+    }
+    else {
+      _this.listen(doc, READYSTATE_CHANGE, function stateChange(e) {
+        if (doc.readyState == READYSTATE_COMPLETE) {
+          callback();
+          _this.unlisten(doc, READYSTATE_CHANGE, stateChange);
+        }
+      });
+    }
   },
 }

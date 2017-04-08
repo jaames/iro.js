@@ -27,6 +27,7 @@ const CONFIG = {
       "append",
       "listen",
       "unlisten",
+      "whenReady",
       // ui/gradient.js
       "radial",
       "linear"

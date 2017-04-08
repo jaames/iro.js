@@ -31,89 +31,94 @@ dom.listen(document, ["mouseup", "touchend"], function (e) {
 */
 let colorWheel = function (el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
-  // If `el` is a string, use it to select an Element, else assume it's an element
-  el = ("string" == typeof el) ? dom.$(el) : el;
-  // Make sure the canvas wrapper is position:relative
-  // This is because we'll be using position:absolute to stack the canvas layers
-  el.style.cssText += "position:relative";
-  // Find the width and height for the UI
-  // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-  var width = opts.width || parseInt(dom.attr(el, "width")) || 320;
-  var height = opts.height || parseInt(dom.attr(el, "height")) || 320;
-  // Create UI layers
-  // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
-  // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-  var pxRatio = devicePixelRatio || 1;
-  // Multiply the visual width and height by the pixel ratio
-  // These dimensions will be used as the internal pixel dimensions for the canvas
-  var pxWidth = width * pxRatio;
-  var pxHeight = height * pxRatio;
-  // When we make new layers we'll add them to this object
-  var layers = {};
-  var layerNames = ["main", "over"];
-  // Create a layer for each name
-  layerNames.forEach(function (name, index) {
-    // Create a new canvas and add it to the page
-    var canvas = dom.append(el, dom.create("canvas"));
-    var ctx = canvas.getContext("2d");
-    var style = canvas.style;
-    // Set the internal dimensions for the canvas
-    canvas.width = pxWidth;
-    canvas.height = pxHeight;
-    // Set the visual dimensions for the canvas
-    style.cssText += "width:" + width + "px;height:" + height + "px";
-    // Scale the canvas context to counter the manual scaling of the element
-    ctx.scale(pxRatio, pxRatio);
-    // Since we're creating multiple "layers" from seperate canvas we need them to be visually stacked ontop of eachother
-    // Here, any layer that isn't the first will be forced to the same position relative to their wrapper element
-    // The first layer isn't forced, so the space it takes up will still be considered in page layout
-    if (index != 0) style.cssText += "position:absolute;top:0;left:0";
-    layers[name] = {
-      ctx,
-      canvas
-    };
-  });
-  this.el = el;
-  this.layers = layers;
-  // Calculate layout variables
-  var padding = opts.padding + 2 || 6,
-      sliderMargin = opts.sliderMargin || 24,
-      markerRadius = opts.markerRadius || 8,
-      sliderHeight = opts.sliderHeight || (markerRadius * 2) + (padding * 2),
-      bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
-      leftMargin = (width - bodyWidth) / 2;
-  var marker = {
-    r: markerRadius
-  };
-  // Create UI elements
-  this.ui = [
-    new wheel(layers, {
-      cX: leftMargin + (bodyWidth / 2),
-      cY: bodyWidth / 2,
-      r: bodyWidth / 2,
-      rMax: (bodyWidth / 2) - (markerRadius + padding),
-      marker: marker
-    }),
-    new slider(layers, {
-      type: "v",
-      x: leftMargin,
-      y: bodyWidth + sliderMargin,
-      w: bodyWidth,
-      h: sliderHeight,
-      r: sliderHeight / 2,
-      marker: marker
-    })
-  ];
+
+  this._mouseTarget = false;
+  this._onChange = false;
   // Create an iroStyleSheet for this colorWheel's CSS overrides
   this.stylesheet = new iroStyleSheet(opts.css || opts.styles || undefined);
   // Create an iroColor to store this colorWheel's selected color
   this.color = new iroColor(opts.color || "#fff");
-  // Whenever the selected color changes, trigger a colorWheel update too
-  this.color.watch(this._update.bind(this), true);
-  this._mouseTarget = false;
-  this._onChange = false;
-  // Add handler for mousedown + touchdown events on this element
-  dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
+
+  // Wait for the document to be ready, then init the UI
+  dom.whenReady(function () {
+    // If `el` is a string, use it to select an Element, else assume it's an element
+    el = ("string" == typeof el) ? dom.$(el) : el;
+    // Make sure the canvas wrapper is position:relative
+    // This is because we'll be using position:absolute to stack the canvas layers
+    el.style.cssText += "position:relative";
+    // Find the width and height for the UI
+    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
+    var width = opts.width || parseInt(dom.attr(el, "width")) || 320;
+    var height = opts.height || parseInt(dom.attr(el, "height")) || 320;
+    // Create UI layers
+    // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
+    // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
+    var pxRatio = devicePixelRatio || 1;
+    // Multiply the visual width and height by the pixel ratio
+    // These dimensions will be used as the internal pixel dimensions for the canvas
+    var pxWidth = width * pxRatio;
+    var pxHeight = height * pxRatio;
+    // When we make new layers we'll add them to this object
+    var layers = {};
+    var layerNames = ["main", "over"];
+    // Create a layer for each name
+    layerNames.forEach(function (name, index) {
+      // Create a new canvas and add it to the page
+      var canvas = dom.append(el, dom.create("canvas"));
+      var ctx = canvas.getContext("2d");
+      var style = canvas.style;
+      // Set the internal dimensions for the canvas
+      canvas.width = pxWidth;
+      canvas.height = pxHeight;
+      // Set the visual dimensions for the canvas
+      style.cssText += "width:" + width + "px;height:" + height + "px";
+      // Scale the canvas context to counter the manual scaling of the element
+      ctx.scale(pxRatio, pxRatio);
+      // Since we're creating multiple "layers" from seperate canvas we need them to be visually stacked ontop of eachother
+      // Here, any layer that isn't the first will be forced to the same position relative to their wrapper element
+      // The first layer isn't forced, so the space it takes up will still be considered in page layout
+      if (index != 0) style.cssText += "position:absolute;top:0;left:0";
+      layers[name] = {
+        ctx,
+        canvas
+      };
+    });
+    this.el = el;
+    this.layers = layers;
+    // Calculate layout variables
+    var padding = opts.padding + 2 || 6,
+        sliderMargin = opts.sliderMargin || 24,
+        markerRadius = opts.markerRadius || 8,
+        sliderHeight = opts.sliderHeight || (markerRadius * 2) + (padding * 2),
+        bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
+        leftMargin = (width - bodyWidth) / 2;
+    var marker = {
+      r: markerRadius
+    };
+    // Create UI elements
+    this.ui = [
+      new wheel(layers, {
+        cX: leftMargin + (bodyWidth / 2),
+        cY: bodyWidth / 2,
+        r: bodyWidth / 2,
+        rMax: (bodyWidth / 2) - (markerRadius + padding),
+        marker: marker
+      }),
+      new slider(layers, {
+        type: "v",
+        x: leftMargin,
+        y: bodyWidth + sliderMargin,
+        w: bodyWidth,
+        h: sliderHeight,
+        r: sliderHeight / 2,
+        marker: marker
+      })
+    ];
+    // Whenever the selected color changes, trigger a colorWheel update too
+    this.color.watch(this._update.bind(this), true);
+    // Add handler for mousedown + touchdown events on this element
+    dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
+  }.bind(this));
 };
 
 colorWheel.prototype = {
