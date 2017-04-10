@@ -35,7 +35,8 @@ let colorWheel = function (el, opts) {
   this._mouseTarget = false;
   this._onChange = false;
   // Create an iroStyleSheet for this colorWheel's CSS overrides
-  this.stylesheet = new iroStyleSheet(opts.css || opts.styles || undefined);
+  this.stylesheet = new iroStyleSheet();
+  this.css = opts.css || opts.styles || undefined;
   // Create an iroColor to store this colorWheel's selected color
   this.color = new iroColor(opts.color || "#fff");
 
@@ -220,15 +221,22 @@ colorWheel.prototype = {
   */
   _update: function (newValue, oldValue, changes) {
     var color = this.color;
+    var rgb = color.rgbString;
+    var css = this.css;
     // Loop through each UI element and update it
     this.ui.forEach(function (uiElement) {
       uiElement.update(color, changes);
     });
     // Update the stylesheet too
-    this.stylesheet.update(color);
+    for (var selector in css) {
+      var properties = css[selector];
+      for (var prop in properties) {
+        this.stylesheet.setRule(selector, prop, rgb);
+      }
+    }
     // Call the watch callback if one is set
     var callback = this._onChange;
-    if ("function" == typeof callback) callback(this.color, changes);
+    if ("function" == typeof callback) callback(color, changes);
   },
 };
 

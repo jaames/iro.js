@@ -25,8 +25,6 @@ let stylesheet = function (overrides) {
   // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
   // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
   this.map = {};
-  // 'overrides' is an object representing the css that gets updated with a new rgb value every time the update() method is called
-  this.overrides = overrides || {};
 };
 
 stylesheet.prototype = {
@@ -111,21 +109,6 @@ stylesheet.prototype = {
       ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
     }
     return ret.join("\n");
-  },
-
-  /**
-    * @desc Update the styles with a new color
-    * @param {Object} color - iro.color instance
-  */
-  update: function (color) {
-    var overrides = this.overrides;
-    var rgb = color.rgbString;
-    for (var selector in overrides) {
-      var properties = overrides[selector];
-      for (var prop in properties) {
-        this.setRule(selector, prop, rgb);
-      }
-    }
   }
 };
 
