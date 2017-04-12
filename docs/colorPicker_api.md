@@ -17,7 +17,6 @@
   * `{String} color`
   * `{Object} css`
 
-
 ### Methods
 
 #### `watch`
@@ -33,11 +32,13 @@ Set a function to be called whenever the selected color changes. When called, th
 **Example:**
 
 ```js
-// add a watch callback to exampleWheel
-exampleWheel.watch(function(color){
-	// log the color's hex value to the console
-    console.log(color.hexString)
-})
+// make a handler function that will log the color's hex value to the console
+function colorChangeHandler(color) {
+  console.log(color.hexString)
+}
+
+// add the function to a color picker instance
+example.watch(colorChangeHandler)
 ```
 
 #### `unwatch`
@@ -52,7 +53,7 @@ Removes any callback added with `watch`.
 
 **Details:**
 
-An [`iro.Color`]() object representing the currently selected color. It is tied to the color picker, as such updating this color object will update the color picker UI.
+An [`iro.Color`](../color_api.md) object representing the currently selected color. It is tied to the color picker, as such updating this color object will also update the color picker.
 
 **See also:** [Using the selected color]()
 
@@ -60,7 +61,7 @@ An [`iro.Color`]() object representing the currently selected color. It is tied 
 
 **Details:**
 
-An [`iro.Stylesheet`]() object representing the dynamic CSS stylesheet for this color picker.
+An [`iro.Stylesheet`](../stylesheet_api.md) object representing the dynamic CSS stylesheet for the color picker.
 
 **See also:** [Dynamic CSS]()
 
@@ -74,7 +75,7 @@ The DOM object for the HTML element being used as a wrapper for the color picker
 
 **Details:**
 
-An array of UI elements used to make up the color picker's UI.
+An array of "components" used to make up the color picker's UI.
 
 #### `layers`
 

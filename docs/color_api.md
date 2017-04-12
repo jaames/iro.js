@@ -1,6 +1,6 @@
 ## Color API
 
-The color API is used by colorPicker objects to store the selected color and to handle convertions between different color models.
+The color API is used by `colorPicker` objects to store the selected color and to handle conversions between different color models.
 
 The API is made accessible via the `iro.Color` constructor so that developers can make use of it should they wish, however if you're looking for more functionality, then I highly recommend using something like [cssobj](https://github.com/cssobj/cssobj). Iro is a color picker widget, not a fancy CSS-in-JS library. :P
 
@@ -35,14 +35,14 @@ Set a function to be called whenever the selected color changes. When called, th
 
 ```js
 // add a watch callback to exampleColor
-exampleColor.watch(function(newHsv, oldHsv, changes) {
+exampleColor.watch(function(newHsv, oldHsv, changed) {
 	// if the hue channel changed, log the new hue value to the console:
-    if(changes.h) {
+    if(changed.h) {
 		console.log(newHsv.h)
     }
 
     // if the saturation channel changed, log the old saturation value to the console:
-    if(changes.s) {
+    if(changed.s) {
 		console.log(oldHsv.s)
     }
 })

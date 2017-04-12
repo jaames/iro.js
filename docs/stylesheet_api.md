@@ -42,7 +42,7 @@ stylesheet.setRule(".example", "border", "1px solid red")
 
 **Details:**
 
-Get the stylesheet's current CSS rules as an object. E.g:
+Get the stylesheet's current CSS rules as an object. For example:
 
 ```js
 
@@ -59,7 +59,7 @@ Get the stylesheet's current CSS rules as an object. E.g:
 
 **Details:**
 
-Get the stylesheet's current CSS as a string. E.g:
+Get the stylesheet's current CSS as a string. For example:
 
 ``css
 body {
