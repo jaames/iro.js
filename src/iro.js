@@ -1,11 +1,11 @@
-import ColorPicker from "./modules/colorPicker.js";
-import Color from "./modules/color.js";
-import Stylesheet from "./modules/stylesheet.js";
+import colorPicker from "./modules/colorPicker.js";
+import color from "./modules/color.js";
+import stylesheet from "./modules/stylesheet.js";
 
 module.exports = {
-  Color,
-  ColorPicker,
-  Stylesheet,
+  Color: color,
+  ColorPicker: colorPicker,
+  Stylesheet: stylesheet,
   // for backwards compat
-  ColorWheel: ColorPicker,
+  ColorWheel: colorPicker,
 };
