@@ -2,7 +2,7 @@
 
 ### Create a Color Picker
 
-To set up a color picker, first we need to make a HTML element act as a container for it:
+To set up a color picker, first we need to make a HTML element to act as a container for it:
 
 ```html
 <div id="example">
@@ -18,7 +18,7 @@ var exampleColorPicker = new iro.ColorPicker("#example");
 
 ### Options
 
-Color pickers can be customized by passing an option object to the `iro.ColorPicker` constructor. All options are, uh, optional:
+Color pickers can be customized by passing an option object into the second parameter of the `iro.ColorPicker` constructor. All options are, uh, optional:
 
 ```javascript
 var exampleColorPicker = new iro.ColorPicker("#example", {

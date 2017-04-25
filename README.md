@@ -8,12 +8,12 @@
 
 * Pretty color wheel UI with touch support
 * Color model conversion between RGB, HSV, HSL and hexadecimal RGB
-* Dynamically update CSS styles based on the color picker's value
-* Zero dependencies (not even jQuery or extra stylesheets/images!)
+* Dynamically update CSS styles as the selected color changes
+* Zero dependencies (not even jQuery or extra stylesheets/images)
 * HiDPI / retina screen support
 * Supports all major browsers from IE10 up
 * Lightweight, at just under 11KB minified (or ~4KB minified + gzipped)
-* Compatible with AMD and CommonJS module loaders
+* Can be used standalone or bundled with AMD / CommonJS / etc
 * Buzzword buzzword buzzword, you get the idea
 
 ### Install
@@ -24,7 +24,7 @@
 
 ### Quick Start
 
-To set up a color picker, first we need to make a HTML element act as a container for it:
+To set up a color picker, first we need to make a HTML element to act as a container for it:
 
 ```html
 <div id="example">
