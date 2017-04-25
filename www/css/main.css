@@ -1,0 +1,171 @@
+
+/* basic CSS resets + utils */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: rgb(115, 173, 255);
+}
+
+* {
+  box-sizing: inherit;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+
+/* page layout (mobile) */
+
+.half {
+  padding: 2rem 0;
+  position: relative;
+}
+
+.iroLogo {
+  height: 100px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 48px;
+}
+
+.subheading {
+  text-align: center;
+  margin: 1.5rem;
+}
+
+.wheel {
+  width: 280px;
+  margin: 0 auto;
+}
+
+.buttonGroup {
+  text-align: center;
+  margin: 0 -4px;
+  margin-top: 36px;
+}
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  padding: .5rem 1rem;
+}
+
+.buttonGroup .button {
+  margin: 0 4px;
+}
+
+/* page layout (desktop) */
+
+@media screen and (min-width: 960px) {
+
+  main {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .half {
+    width: 50%;
+    height: 100vh;
+    float: right;
+    position: relative;
+  }
+
+  .verticalCenter {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+  }
+
+  .iroLogo {
+    height: 130px;
+    margin: 0;
+    margin-top: 48px;
+  }
+
+  .subheading {
+    text-align: left;
+    margin: 1.5rem 0;
+  }
+
+  .buttonGroup {
+    text-align: left;
+  }
+}
+
+/* page "frame" effect */
+
+.frame {
+  display: block;
+  z-index: 100;
+  position: fixed;
+}
+
+.frame.frame--left, .frame.frame--right {
+  height: 100vh;
+  width: 8px;
+  top: 0;
+  bottom: 0; }
+
+.frame.frame--top, .frame.frame--bottom {
+  width: 100vw;
+  height: 8px;
+  left: 0;
+  right: 0; }
+
+.frame.frame--left {
+  left: 0; }
+
+.frame.frame--right {
+  right: 0; }
+
+.frame.frame--top {
+  top: 0; }
+
+.frame.frame--bottom {
+  bottom: 0; }
+
+/* styling */
+
+body {
+  background: #fff;
+  color: #fff;
+  font-family: "Rubik", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+}
+
+.iroLogo {
+  stroke: #fff;
+}
+
+.subheading {
+  font-weight: normal;
+}
+
+.frame {
+  background-color: #fff;
+}
+
+.button {
+  cursor: pointer;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  background: transparent;
+  transition: background-color .15s ease-out
+}
+
+.button:hover {
+  border-color: #fff;
+  color: #000;
+  background-color: #fff;
+}

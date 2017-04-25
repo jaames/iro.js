@@ -9,13 +9,13 @@ The goal is not to be a direct one-to-one replacement for established libraries 
 ### Core Features
 
 * Pretty color wheel UI with touch support
-* Color model conversion between RGB, HSV, HSL and hexadecimal RGB
-* Dynamically update CSS styles based on the color picker's value
-* Zero dependencies (not even jQuery or extra stylesheets/images!)
+* Color model conversion between RGB, HSV, HSL and hex RGB
+* Dynamically update CSS styles as the selected color changes
+* Zero dependencies (not even jQuery or extra stylesheets/images)
 * HiDPI / retina screen support
-* Full support for all major browsers from IE9 up
-* Lightweight, at just under 10KB minified (or ~4KB minified + gzipped)
-* Compatible with AMD and CommonJS module loaders
+* Supports all major browsers from IE10 up
+* Lightweight, at just under 11KB minified (or ~4KB minified + gzipped)
+* Can be used standalone or bundled with AMD / CommonJS / etc
 * Buzzword buzzword buzzword, you get the idea
 
 ### Get Started
