@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://rakujira.jp/projects/iro/"">
-    <img width="666" src="https://raw.githubusercontent.com/jaames/iro.js/v2/assets/animated_logo.gif"/>
+    <img width="666" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
   </a>
 </p>
 
