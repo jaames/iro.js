@@ -36,7 +36,8 @@ slider.prototype = {
         y2 = opts.y2,
         w = opts.w,
         h = opts.h,
-        r = opts.r;
+        r = opts.r,
+        border = opts.border;
 
     // Clear the existing UI
     ctx.clearRect(x1, y1, w, h);
@@ -63,6 +64,14 @@ slider.prototype = {
       ]);
     }
 
+    // Draw border
+    if (border.w) {
+      ctx.strokeStyle = border.color;
+      ctx.lineWidth = border.w * 2;
+      ctx.stroke();
+    }
+
+    // Draw gradient
     ctx.fillStyle = fill;
     ctx.fill();
   },

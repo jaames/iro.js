@@ -88,31 +88,39 @@ let colorWheel = function (el, opts) {
     this.layers = layers;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
-        sliderMargin = opts.sliderMargin || 24,
+        borderWidth = opts.borderWidth || 0,
         markerRadius = opts.markerRadius || 8,
-        sliderHeight = opts.sliderHeight || (markerRadius * 2) + (padding * 2),
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || (markerRadius * 2) + (padding * 2) + (borderWidth * 2),
         bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
+        wheelRadius = (bodyWidth / 2) - borderWidth,
         leftMargin = (width - bodyWidth) / 2;
     var marker = {
       r: markerRadius
+    };
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff",
     };
     // Create UI elements
     this.ui = [
       new wheel(layers, {
         cX: leftMargin + (bodyWidth / 2),
         cY: bodyWidth / 2,
-        r: bodyWidth / 2,
-        rMax: (bodyWidth / 2) - (markerRadius + padding),
-        marker: marker
+        r: wheelRadius,
+        rMax: wheelRadius - (markerRadius + padding),
+        marker: marker,
+        border: borderStyles
       }),
       new slider(layers, {
         sliderType: "v",
         x: leftMargin,
         y: bodyWidth + sliderMargin,
         w: bodyWidth,
-        h: sliderHeight,
-        r: sliderHeight / 2,
-        marker: marker
+        h: sliderHeight - (borderWidth * 2),
+        r: (sliderHeight / 2) - borderWidth,
+        marker: marker,
+        border: borderStyles
       })
     ];
     // Whenever the selected color changes, trigger a colorWheel update too

@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Mon Apr 24 2017
+ * Last updated: Tue Jun 20 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -753,29 +753,37 @@ var colorWheel = function colorWheel(el, opts) {
     this.layers = layers;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
-        sliderMargin = opts.sliderMargin || 24,
+        borderWidth = opts.borderWidth || 0,
         markerRadius = opts.markerRadius || 8,
-        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2,
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
         bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
+        wheelRadius = bodyWidth / 2 - borderWidth,
         leftMargin = (width - bodyWidth) / 2;
     var marker = {
       r: markerRadius
+    };
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff"
     };
     // Create UI elements
     this.ui = [new _wheel2.default(layers, {
       cX: leftMargin + bodyWidth / 2,
       cY: bodyWidth / 2,
-      r: bodyWidth / 2,
-      rMax: bodyWidth / 2 - (markerRadius + padding),
-      marker: marker
+      r: wheelRadius,
+      rMax: wheelRadius - (markerRadius + padding),
+      marker: marker,
+      border: borderStyles
     }), new _slider2.default(layers, {
       sliderType: "v",
       x: leftMargin,
       y: bodyWidth + sliderMargin,
       w: bodyWidth,
-      h: sliderHeight,
-      r: sliderHeight / 2,
-      marker: marker
+      h: sliderHeight - borderWidth * 2,
+      r: sliderHeight / 2 - borderWidth,
+      marker: marker,
+      border: borderStyles
     })];
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color.watch(this._update.bind(this), true);
@@ -1089,7 +1097,8 @@ slider.prototype = {
         y2 = opts.y2,
         w = opts.w,
         h = opts.h,
-        r = opts.r;
+        r = opts.r,
+        border = opts.border;
 
     // Clear the existing UI
     ctx.clearRect(x1, y1, w, h);
@@ -1111,6 +1120,12 @@ slider.prototype = {
     // For now the only type is "V", meaning this slider adjusts the HSV V channel
     if (opts.sliderType == "v") {
       fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, [{ at: 0, color: "#000" }, { at: 1, color: "#fff" }]);
+    }
+
+    if (border.w) {
+      ctx.strokeStyle = border.color;
+      ctx.lineWidth = border.w * 2;
+      ctx.stroke();
     }
 
     ctx.fillStyle = fill;
@@ -1210,10 +1225,21 @@ wheel.prototype = {
     var opts = this._opts;
     var x = opts.cX,
         y = opts.cY,
+        border = opts.border,
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+
+    // Draw border
+    if (border.w) {
+      ctx.lineWidth = radius + border.w * 2;
+      ctx.strokeStyle = border.color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius / 2, 0, 2 * PI);
+      ctx.stroke();
+    }
+
     ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
@@ -1227,7 +1253,7 @@ wheel.prototype = {
       ctx.beginPath();
       // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
       // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.02);
+      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
       ctx.stroke();
     }
 

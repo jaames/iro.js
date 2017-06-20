@@ -29,10 +29,21 @@ wheel.prototype = {
     var opts = this._opts;
     var x = opts.cX,
         y = opts.cY,
+        border = opts.border,
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+
+    // Draw border
+    if (border.w) {
+      ctx.lineWidth = radius + (border.w * 2);
+      ctx.strokeStyle = border.color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius / 2, 0, 2 * PI);
+      ctx.stroke();
+    }
+
     ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
@@ -46,7 +57,7 @@ wheel.prototype = {
       ctx.beginPath();
       // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
       // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.02);
+      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
       ctx.stroke();
     }
 
