@@ -464,9 +464,9 @@ module.exports = {
 
 
 function addColorStops(gradient, colorStops) {
-  colorStops.forEach(function (stop) {
-    gradient.addColorStop(stop.at, stop.color);
-  });
+  for (stop in colorStops) {
+    gradient.addColorStop(stop, colorStops[stop]);
+  }
   return gradient;
 };
 
@@ -1119,7 +1119,10 @@ slider.prototype = {
 
     // For now the only type is "V", meaning this slider adjusts the HSV V channel
     if (opts.sliderType == "v") {
-      fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, [{ at: 0, color: "#000" }, { at: 1, color: "#fff" }]);
+      fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, {
+        0: "#000",
+        1: "#fff"
+      });
     }
 
     // Draw border
@@ -1261,11 +1264,12 @@ wheel.prototype = {
 
     // Create a radial gradient for "saturation"
     var hslString = "hsla(0,0%," + value + "%,";
-    ctx.fillStyle = _gradient2.default.radial(ctx, x, y, 0, opts.rMax, [
-    // The center of the color wheel should be pure white (0% saturation)
-    { at: 0, color: hslString + "1)" },
-    // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-    { at: 1, color: hslString + "0)" }]);
+    ctx.fillStyle = _gradient2.default.radial(ctx, x, y, 0, opts.rMax, {
+      // The center of the color wheel should be pure white (0% saturation)
+      0: hslString + "1)",
+      // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
+      1: hslString + "0)"
+    });
     // Draw a rect using the gradient as a fill style
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },

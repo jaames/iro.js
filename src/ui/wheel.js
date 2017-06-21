@@ -63,12 +63,12 @@ wheel.prototype = {
 
     // Create a radial gradient for "saturation"
     var hslString = "hsla(0,0%," + value + "%,";
-    ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, [
+    ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, {
       // The center of the color wheel should be pure white (0% saturation)
-      {at: 0, color: hslString + "1)" },
+      0: hslString + "1)",
       // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-      {at: 1, color: hslString + "0)" },
-    ]);
+      1: hslString + "0)",
+    });
     // Draw a rect using the gradient as a fill style
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },

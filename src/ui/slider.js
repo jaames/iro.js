@@ -58,10 +58,10 @@ slider.prototype = {
 
     // For now the only type is "V", meaning this slider adjusts the HSV V channel
     if (opts.sliderType == "v") {
-      fill = gradient.linear(ctx, x1, y1, x2, y2, [
-        {at: 0, color: "#000"},
-        {at: 1, color: "#fff"},
-      ]);
+      fill = gradient.linear(ctx, x1, y1, x2, y2, {
+        0: "#000",
+        1: "#fff",
+      });
     }
 
     // Draw border
