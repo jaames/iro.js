@@ -168,7 +168,7 @@ var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
-var _hslString = __webpack_require__(9);
+var _hslString = __webpack_require__(4);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
@@ -176,7 +176,7 @@ var _rgbString = __webpack_require__(10);
 
 var _rgbString2 = _interopRequireDefault(_rgbString);
 
-var _hexString = __webpack_require__(8);
+var _hexString = __webpack_require__(9);
 
 var _hexString2 = _interopRequireDefault(_hexString);
 
@@ -301,7 +301,7 @@ module.exports = color;
 "use strict";
 
 
-var _dom = __webpack_require__(6);
+var _dom = __webpack_require__(7);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -463,6 +463,37 @@ module.exports = {
 "use strict";
 
 
+var _hsl = __webpack_require__(3);
+
+var _hsl2 = _interopRequireDefault(_hsl);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  name: "hslString",
+
+  fromHsv: function fromHsv(hsv) {
+    var color = _hsl2.default.fromHsv(hsv);
+    return "hsl" + (color.a ? "a" : "") + "(" + color.h + ", " + color.s + "%, " + color.l + "%" + (color.a ? ", " + color.a : "") + ")";
+  },
+
+  toHsv: function toHsv(hslString) {
+    var parsed = hslString.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+    return _hsl2.default.toHsv({
+      h: parseInt(parsed[2]),
+      s: parseInt(parsed[3]),
+      l: parseInt(parsed[4])
+    });
+  }
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 function addColorStops(gradient, colorStops) {
   for (stop in colorStops) {
     gradient.addColorStop(stop, colorStops[stop]);
@@ -480,7 +511,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -537,7 +568,7 @@ marker.prototype = {
 module.exports = marker;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -642,7 +673,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -656,7 +687,7 @@ var _slider = __webpack_require__(11);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(6);
+var _dom = __webpack_require__(7);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -916,7 +947,7 @@ colorWheel.prototype = {
 module.exports = colorWheel;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -984,37 +1015,6 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _hsl = __webpack_require__(3);
-
-var _hsl2 = _interopRequireDefault(_hsl);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  name: "hslString",
-
-  fromHsv: function fromHsv(hsv) {
-    var color = _hsl2.default.fromHsv(hsv);
-    return "hsl" + (color.a ? "a" : "") + "(" + color.h + ", " + color.s + "%, " + color.l + "%" + (color.a ? ", " + color.a : "") + ")";
-  },
-
-  toHsv: function toHsv(hslString) {
-    var parsed = hslString.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-    return _hsl2.default.toHsv({
-      h: parseInt(parsed[2]),
-      s: parseInt(parsed[3]),
-      l: parseInt(parsed[4])
-    });
-  }
-};
-
-/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1052,13 +1052,17 @@ module.exports = {
 "use strict";
 
 
-var _gradient = __webpack_require__(4);
+var _gradient = __webpack_require__(5);
 
 var _gradient2 = _interopRequireDefault(_gradient);
 
-var _marker = __webpack_require__(5);
+var _marker = __webpack_require__(6);
 
 var _marker2 = _interopRequireDefault(_marker);
+
+var _hslString = __webpack_require__(4);
+
+var _hslString2 = _interopRequireDefault(_hslString);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1088,7 +1092,7 @@ slider.prototype = {
   /**
     * @desc redraw this UI element
   */
-  draw: function draw() {
+  draw: function draw(hsv) {
     var ctx = this._ctx;
     var opts = this._opts;
     var x1 = opts.x1,
@@ -1121,7 +1125,7 @@ slider.prototype = {
     if (opts.sliderType == "v") {
       fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, {
         0: "#000",
-        1: "#fff"
+        1: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 })
       });
     }
 
@@ -1146,12 +1150,13 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    if (opts.sliderType == "v" && changes.v) {
-      var percent = hsv.v / 100;
-      this.marker.move(range.min + percent * range.w, opts.y1 + opts.h / 2);
-      if (!this._hasDrawn) {
-        this.draw();
-        this._hasDrawn = true;
+    if (opts.sliderType == "v") {
+      if (changes.h || changes.s) {
+        this.draw(hsv);
+      }
+      if (changes.v) {
+        var percent = hsv.v / 100;
+        this.marker.move(range.min + percent * range.w, opts.y1 + opts.h / 2);
       }
     }
   },
@@ -1192,11 +1197,11 @@ module.exports = slider;
 "use strict";
 
 
-var _gradient = __webpack_require__(4);
+var _gradient = __webpack_require__(5);
 
 var _gradient2 = _interopRequireDefault(_gradient);
 
-var _marker = __webpack_require__(5);
+var _marker = __webpack_require__(6);
 
 var _marker2 = _interopRequireDefault(_marker);
 
@@ -1353,7 +1358,7 @@ module.exports = wheel;
 "use strict";
 
 
-var _colorPicker = __webpack_require__(7);
+var _colorPicker = __webpack_require__(8);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 

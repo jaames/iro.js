@@ -1,5 +1,6 @@
 import gradient from "./gradient.js";
 import marker from "./marker.js";
+import hslString from "../colorModels/hslString.js";
 
 /**
   * @constructor slider UI
@@ -27,7 +28,7 @@ slider.prototype = {
   /**
     * @desc redraw this UI element
   */
-  draw: function () {
+  draw: function (hsv) {
     var ctx = this._ctx;
     var opts = this._opts;
     var x1 = opts.x1,
@@ -60,7 +61,7 @@ slider.prototype = {
     if (opts.sliderType == "v") {
       fill = gradient.linear(ctx, x1, y1, x2, y2, {
         0: "#000",
-        1: "#fff",
+        1: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}),
       });
     }
 
@@ -85,13 +86,14 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    if (opts.sliderType == "v" && changes.v) {
-      var percent = (hsv.v / 100);
-      this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
-      if (!this._hasDrawn) {
-        this.draw();
-        this._hasDrawn = true;
+    if (opts.sliderType == "v") {
+      if (changes.h || changes.s) {
+        this.draw(hsv);
       }
+      if (changes.v) {
+        var percent = (hsv.v / 100);
+        this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
+      } 
     }
   },
 
