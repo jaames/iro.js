@@ -114,9 +114,9 @@ let colorWheel = function (el, opts) {
       }),
       new slider(layers, {
         sliderType: "v",
-        x: leftMargin,
+        x: leftMargin + borderWidth,
         y: bodyWidth + sliderMargin,
-        w: bodyWidth,
+        w: bodyWidth - (borderWidth * 2),
         h: sliderHeight - (borderWidth * 2),
         r: (sliderHeight / 2) - borderWidth,
         marker: marker,

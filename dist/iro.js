@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Tue Jun 20 2017
+ * Last updated: Wed Jun 21 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -777,9 +777,9 @@ var colorWheel = function colorWheel(el, opts) {
       border: borderStyles
     }), new _slider2.default(layers, {
       sliderType: "v",
-      x: leftMargin,
+      x: leftMargin + borderWidth,
       y: bodyWidth + sliderMargin,
-      w: bodyWidth,
+      w: bodyWidth - borderWidth * 2,
       h: sliderHeight - borderWidth * 2,
       r: sliderHeight / 2 - borderWidth,
       marker: marker,
@@ -1122,12 +1122,14 @@ slider.prototype = {
       fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, [{ at: 0, color: "#000" }, { at: 1, color: "#fff" }]);
     }
 
+    // Draw border
     if (border.w) {
       ctx.strokeStyle = border.color;
       ctx.lineWidth = border.w * 2;
       ctx.stroke();
     }
 
+    // Draw gradient
     ctx.fillStyle = fill;
     ctx.fill();
   },
