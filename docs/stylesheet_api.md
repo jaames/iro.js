@@ -45,14 +45,12 @@ stylesheet.setRule(".example", "border", "1px solid red")
 Get the stylesheet's current CSS rules as an object. For example:
 
 ```js
-
 "body": {
-	"background-color": "red"
+  "background-color": "red"
 },
 ".example": {
-	"border": "1px solid red"
+  "border": "1px solid red"
 }
-
 ```
 
 #### `getCssText`
@@ -61,12 +59,12 @@ Get the stylesheet's current CSS rules as an object. For example:
 
 Get the stylesheet's current CSS as a string. For example:
 
-``css
+```css
 body {
-	background-color: red;
+  background-color: red;
 }
 .example: {
-	border: 1px solid red;
+  border: 1px solid red;
 }
 ```
 
