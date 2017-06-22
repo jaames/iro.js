@@ -2,19 +2,10 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Wed Jun 21 2017
+ * Last updated: Thu Jun 22 2017
  */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["iro"] = factory();
-	else
-		root["iro"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+var iro =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -22,9 +13,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -76,10 +67,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist";
+/******/ 	__webpack_require__.p = "/test";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -679,11 +670,11 @@ module.exports = {
 "use strict";
 
 
-var _wheel = __webpack_require__(12);
+var _wheel = __webpack_require__(13);
 
 var _wheel2 = _interopRequireDefault(_wheel);
 
-var _slider = __webpack_require__(11);
+var _slider = __webpack_require__(12);
 
 var _slider2 = _interopRequireDefault(_slider);
 
@@ -1052,6 +1043,35 @@ module.exports = {
 "use strict";
 
 
+var _colorPicker = __webpack_require__(8);
+
+var _colorPicker2 = _interopRequireDefault(_colorPicker);
+
+var _color = __webpack_require__(1);
+
+var _color2 = _interopRequireDefault(_color);
+
+var _stylesheet = __webpack_require__(2);
+
+var _stylesheet2 = _interopRequireDefault(_stylesheet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  Color: _color2.default,
+  ColorPicker: _colorPicker2.default,
+  Stylesheet: _stylesheet2.default,
+  // for backwards compat
+  ColorWheel: _colorPicker2.default
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _gradient = __webpack_require__(5);
 
 var _gradient2 = _interopRequireDefault(_gradient);
@@ -1191,7 +1211,7 @@ slider.prototype = {
 module.exports = slider;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1351,36 +1371,6 @@ wheel.prototype = {
 
 module.exports = wheel;
 
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _colorPicker = __webpack_require__(8);
-
-var _colorPicker2 = _interopRequireDefault(_colorPicker);
-
-var _color = __webpack_require__(1);
-
-var _color2 = _interopRequireDefault(_color);
-
-var _stylesheet = __webpack_require__(2);
-
-var _stylesheet2 = _interopRequireDefault(_stylesheet);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  Color: _color2.default,
-  ColorPicker: _colorPicker2.default,
-  Stylesheet: _stylesheet2.default,
-  // for backwards compat
-  ColorWheel: _colorPicker2.default
-};
-
 /***/ })
 /******/ ]);
-});
 //# sourceMappingURL=iro.js.map
