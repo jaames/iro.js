@@ -1,6 +1,6 @@
-import colorPicker from "./modules/colorPicker.js";
-import color from "./modules/color.js";
-import stylesheet from "./modules/stylesheet.js";
+import colorPicker from "modules/colorPicker";
+import color from "modules/color";
+import stylesheet from "modules/stylesheet";
 
 module.exports = {
   Color: color,

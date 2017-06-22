@@ -1,4 +1,4 @@
-import rgb from "./rgb.js";
+import rgb from "colorModels/rgb";
 
 module.exports = {
   name: "hexString",

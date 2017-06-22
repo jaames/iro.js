@@ -1,6 +1,6 @@
-import gradient from "./gradient.js";
-import marker from "./marker.js";
-import hslString from "../colorModels/hslString.js";
+import gradient from "ui/gradient";
+import marker from "ui/marker";
+import hslString from "colorModels/hslString";
 
 /**
   * @constructor slider UI
@@ -93,7 +93,7 @@ slider.prototype = {
       if (changes.v) {
         var percent = (hsv.v / 100);
         this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
-      } 
+      }
     }
   },
 

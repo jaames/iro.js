@@ -1,4 +1,4 @@
-import dom from "../util/dom.js";
+import dom from "util/dom";
 
 const doc = document;
 

@@ -1,8 +1,8 @@
-import hsl from "../colorModels/hsl.js";
-import rgb from "../colorModels/rgb.js";
-import hslString from "../colorModels/hslString.js";
-import rgbString from "../colorModels/rgbString.js";
-import hexString from "../colorModels/hexString.js";
+import hsl from "colorModels/hsl";
+import rgb from "colorModels/rgb";
+import hslString from "colorModels/hslString";
+import rgbString from "colorModels/rgbString";
+import hexString from "colorModels/hexString";
 
 const colorModels = [
   hsl,

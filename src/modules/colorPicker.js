@@ -1,9 +1,9 @@
-import wheel from "../ui/wheel.js";
-import slider from "../ui/slider.js";
-import dom from "../util/dom.js";
+import wheel from "ui/wheel";
+import slider from "ui/slider";
+import dom from "util/dom";
 
-import iroColor from "./color.js";
-import iroStyleSheet from "./stylesheet.js";
+import iroColor from "modules/color";
+import iroStyleSheet from "modules/stylesheet";
 
 // When the user starts to interact with a color picker's UI, a referece to that coloPicker will be stored globally
 let activeColorWheel = false;

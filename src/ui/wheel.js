@@ -1,5 +1,5 @@
-import gradient from "./gradient.js";
-import marker from "./marker.js";
+import gradient from "ui/gradient";
+import marker from "ui/marker";
 
 // Quick references to reused math functions
 var PI = Math.PI,
