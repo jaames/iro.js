@@ -10,11 +10,13 @@
 
   * `{Number} width`
   * `{Number} height`
+  * `{String} color`
   * `{Number} padding`
   * `{Number} sliderMargin`
   * `{Number} sliderHeight`
   * `{Number} markerRadius`
-  * `{String} color`
+  * `{Number} borderWidth`
+  * `{String} borderColor`
   * `{Object} css`
 
 ### Methods
