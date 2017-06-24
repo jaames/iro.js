@@ -2,19 +2,10 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Mon Apr 24 2017
+ * Last updated: Thu Jun 22 2017
  */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["iro"] = factory();
-	else
-		root["iro"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+var iro =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -22,9 +13,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -76,10 +67,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist";
+/******/ 	__webpack_require__.p = "/test";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -168,7 +159,7 @@ var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
-var _hslString = __webpack_require__(9);
+var _hslString = __webpack_require__(4);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
@@ -176,7 +167,7 @@ var _rgbString = __webpack_require__(10);
 
 var _rgbString2 = _interopRequireDefault(_rgbString);
 
-var _hexString = __webpack_require__(8);
+var _hexString = __webpack_require__(9);
 
 var _hexString2 = _interopRequireDefault(_hexString);
 
@@ -301,7 +292,7 @@ module.exports = color;
 "use strict";
 
 
-var _dom = __webpack_require__(6);
+var _dom = __webpack_require__(7);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -463,10 +454,41 @@ module.exports = {
 "use strict";
 
 
+var _hsl = __webpack_require__(3);
+
+var _hsl2 = _interopRequireDefault(_hsl);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  name: "hslString",
+
+  fromHsv: function fromHsv(hsv) {
+    var color = _hsl2.default.fromHsv(hsv);
+    return "hsl" + (color.a ? "a" : "") + "(" + color.h + ", " + color.s + "%, " + color.l + "%" + (color.a ? ", " + color.a : "") + ")";
+  },
+
+  toHsv: function toHsv(hslString) {
+    var parsed = hslString.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+    return _hsl2.default.toHsv({
+      h: parseInt(parsed[2]),
+      s: parseInt(parsed[3]),
+      l: parseInt(parsed[4])
+    });
+  }
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 function addColorStops(gradient, colorStops) {
-  colorStops.forEach(function (stop) {
-    gradient.addColorStop(stop.at, stop.color);
-  });
+  for (stop in colorStops) {
+    gradient.addColorStop(stop, colorStops[stop]);
+  }
   return gradient;
 };
 
@@ -480,7 +502,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -537,7 +559,7 @@ marker.prototype = {
 module.exports = marker;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -642,21 +664,21 @@ module.exports = {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _wheel = __webpack_require__(12);
+var _wheel = __webpack_require__(13);
 
 var _wheel2 = _interopRequireDefault(_wheel);
 
-var _slider = __webpack_require__(11);
+var _slider = __webpack_require__(12);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(6);
+var _dom = __webpack_require__(7);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -753,29 +775,37 @@ var colorWheel = function colorWheel(el, opts) {
     this.layers = layers;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
-        sliderMargin = opts.sliderMargin || 24,
+        borderWidth = opts.borderWidth || 0,
         markerRadius = opts.markerRadius || 8,
-        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2,
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
         bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
+        wheelRadius = bodyWidth / 2 - borderWidth,
         leftMargin = (width - bodyWidth) / 2;
     var marker = {
       r: markerRadius
+    };
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff"
     };
     // Create UI elements
     this.ui = [new _wheel2.default(layers, {
       cX: leftMargin + bodyWidth / 2,
       cY: bodyWidth / 2,
-      r: bodyWidth / 2,
-      rMax: bodyWidth / 2 - (markerRadius + padding),
-      marker: marker
+      r: wheelRadius,
+      rMax: wheelRadius - (markerRadius + padding),
+      marker: marker,
+      border: borderStyles
     }), new _slider2.default(layers, {
       sliderType: "v",
-      x: leftMargin,
+      x: leftMargin + borderWidth,
       y: bodyWidth + sliderMargin,
-      w: bodyWidth,
-      h: sliderHeight,
-      r: sliderHeight / 2,
-      marker: marker
+      w: bodyWidth - borderWidth * 2,
+      h: sliderHeight - borderWidth * 2,
+      r: sliderHeight / 2 - borderWidth,
+      marker: marker,
+      border: borderStyles
     })];
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color.watch(this._update.bind(this), true);
@@ -908,7 +938,7 @@ colorWheel.prototype = {
 module.exports = colorWheel;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -976,37 +1006,6 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _hsl = __webpack_require__(3);
-
-var _hsl2 = _interopRequireDefault(_hsl);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  name: "hslString",
-
-  fromHsv: function fromHsv(hsv) {
-    var color = _hsl2.default.fromHsv(hsv);
-    return "hsl" + (color.a ? "a" : "") + "(" + color.h + ", " + color.s + "%, " + color.l + "%" + (color.a ? ", " + color.a : "") + ")";
-  },
-
-  toHsv: function toHsv(hslString) {
-    var parsed = hslString.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-    return _hsl2.default.toHsv({
-      h: parseInt(parsed[2]),
-      s: parseInt(parsed[3]),
-      l: parseInt(parsed[4])
-    });
-  }
-};
-
-/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1044,13 +1043,46 @@ module.exports = {
 "use strict";
 
 
-var _gradient = __webpack_require__(4);
+var _colorPicker = __webpack_require__(8);
+
+var _colorPicker2 = _interopRequireDefault(_colorPicker);
+
+var _color = __webpack_require__(1);
+
+var _color2 = _interopRequireDefault(_color);
+
+var _stylesheet = __webpack_require__(2);
+
+var _stylesheet2 = _interopRequireDefault(_stylesheet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  Color: _color2.default,
+  ColorPicker: _colorPicker2.default,
+  Stylesheet: _stylesheet2.default,
+  // for backwards compat
+  ColorWheel: _colorPicker2.default
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _gradient = __webpack_require__(5);
 
 var _gradient2 = _interopRequireDefault(_gradient);
 
-var _marker = __webpack_require__(5);
+var _marker = __webpack_require__(6);
 
 var _marker2 = _interopRequireDefault(_marker);
+
+var _hslString = __webpack_require__(4);
+
+var _hslString2 = _interopRequireDefault(_hslString);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1080,7 +1112,7 @@ slider.prototype = {
   /**
     * @desc redraw this UI element
   */
-  draw: function draw() {
+  draw: function draw(hsv) {
     var ctx = this._ctx;
     var opts = this._opts;
     var x1 = opts.x1,
@@ -1089,7 +1121,8 @@ slider.prototype = {
         y2 = opts.y2,
         w = opts.w,
         h = opts.h,
-        r = opts.r;
+        r = opts.r,
+        border = opts.border;
 
     // Clear the existing UI
     ctx.clearRect(x1, y1, w, h);
@@ -1110,9 +1143,20 @@ slider.prototype = {
 
     // For now the only type is "V", meaning this slider adjusts the HSV V channel
     if (opts.sliderType == "v") {
-      fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, [{ at: 0, color: "#000" }, { at: 1, color: "#fff" }]);
+      fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, {
+        0: "#000",
+        1: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 })
+      });
     }
 
+    // Draw border
+    if (border.w) {
+      ctx.strokeStyle = border.color;
+      ctx.lineWidth = border.w * 2;
+      ctx.stroke();
+    }
+
+    // Draw gradient
     ctx.fillStyle = fill;
     ctx.fill();
   },
@@ -1126,12 +1170,13 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    if (opts.sliderType == "v" && changes.v) {
-      var percent = hsv.v / 100;
-      this.marker.move(range.min + percent * range.w, opts.y1 + opts.h / 2);
-      if (!this._hasDrawn) {
-        this.draw();
-        this._hasDrawn = true;
+    if (opts.sliderType == "v") {
+      if (changes.h || changes.s) {
+        this.draw(hsv);
+      }
+      if (changes.v) {
+        var percent = hsv.v / 100;
+        this.marker.move(range.min + percent * range.w, opts.y1 + opts.h / 2);
       }
     }
   },
@@ -1166,17 +1211,17 @@ slider.prototype = {
 module.exports = slider;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _gradient = __webpack_require__(4);
+var _gradient = __webpack_require__(5);
 
 var _gradient2 = _interopRequireDefault(_gradient);
 
-var _marker = __webpack_require__(5);
+var _marker = __webpack_require__(6);
 
 var _marker2 = _interopRequireDefault(_marker);
 
@@ -1210,10 +1255,21 @@ wheel.prototype = {
     var opts = this._opts;
     var x = opts.cX,
         y = opts.cY,
+        border = opts.border,
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+
+    // Draw border
+    if (border.w) {
+      ctx.lineWidth = radius + border.w * 2;
+      ctx.strokeStyle = border.color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius / 2, 0, 2 * PI);
+      ctx.stroke();
+    }
+
     ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
@@ -1227,17 +1283,18 @@ wheel.prototype = {
       ctx.beginPath();
       // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
       // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.02);
+      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
       ctx.stroke();
     }
 
     // Create a radial gradient for "saturation"
     var hslString = "hsla(0,0%," + value + "%,";
-    ctx.fillStyle = _gradient2.default.radial(ctx, x, y, 0, opts.rMax, [
-    // The center of the color wheel should be pure white (0% saturation)
-    { at: 0, color: hslString + "1)" },
-    // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-    { at: 1, color: hslString + "0)" }]);
+    ctx.fillStyle = _gradient2.default.radial(ctx, x, y, 0, opts.rMax, {
+      // The center of the color wheel should be pure white (0% saturation)
+      0: hslString + "1)",
+      // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
+      1: hslString + "0)"
+    });
     // Draw a rect using the gradient as a fill style
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },
@@ -1314,36 +1371,6 @@ wheel.prototype = {
 
 module.exports = wheel;
 
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _colorPicker = __webpack_require__(7);
-
-var _colorPicker2 = _interopRequireDefault(_colorPicker);
-
-var _color = __webpack_require__(1);
-
-var _color2 = _interopRequireDefault(_color);
-
-var _stylesheet = __webpack_require__(2);
-
-var _stylesheet2 = _interopRequireDefault(_stylesheet);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  Color: _color2.default,
-  ColorPicker: _colorPicker2.default,
-  Stylesheet: _stylesheet2.default,
-  // for backwards compat
-  ColorWheel: _colorPicker2.default
-};
-
 /***/ })
 /******/ ]);
-});
 //# sourceMappingURL=iro.js.map

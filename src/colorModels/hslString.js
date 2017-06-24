@@ -1,4 +1,4 @@
-import hsl from "./hsl.js";
+import hsl from "colorModels/hsl";
 
 module.exports = {
   name: "hslString",

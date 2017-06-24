@@ -1,5 +1,5 @@
-import gradient from "./gradient.js";
-import marker from "./marker.js";
+import gradient from "ui/gradient";
+import marker from "ui/marker";
 
 // Quick references to reused math functions
 var PI = Math.PI,
@@ -29,10 +29,21 @@ wheel.prototype = {
     var opts = this._opts;
     var x = opts.cX,
         y = opts.cY,
+        border = opts.border,
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+
+    // Draw border
+    if (border.w) {
+      ctx.lineWidth = radius + (border.w * 2);
+      ctx.strokeStyle = border.color;
+      ctx.beginPath();
+      ctx.arc(x, y, radius / 2, 0, 2 * PI);
+      ctx.stroke();
+    }
+
     ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
@@ -46,18 +57,18 @@ wheel.prototype = {
       ctx.beginPath();
       // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
       // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.02);
+      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
       ctx.stroke();
     }
 
     // Create a radial gradient for "saturation"
     var hslString = "hsla(0,0%," + value + "%,";
-    ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, [
+    ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, {
       // The center of the color wheel should be pure white (0% saturation)
-      {at: 0, color: hslString + "1)" },
+      0: hslString + "1)",
       // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-      {at: 1, color: hslString + "0)" },
-    ]);
+      1: hslString + "0)",
+    });
     // Draw a rect using the gradient as a fill style
     ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },

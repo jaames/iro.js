@@ -1,5 +1,6 @@
-import gradient from "./gradient.js";
-import marker from "./marker.js";
+import gradient from "ui/gradient";
+import marker from "ui/marker";
+import hslString from "colorModels/hslString";
 
 /**
   * @constructor slider UI
@@ -27,7 +28,7 @@ slider.prototype = {
   /**
     * @desc redraw this UI element
   */
-  draw: function () {
+  draw: function (hsv) {
     var ctx = this._ctx;
     var opts = this._opts;
     var x1 = opts.x1,
@@ -36,7 +37,8 @@ slider.prototype = {
         y2 = opts.y2,
         w = opts.w,
         h = opts.h,
-        r = opts.r;
+        r = opts.r,
+        border = opts.border;
 
     // Clear the existing UI
     ctx.clearRect(x1, y1, w, h);
@@ -57,12 +59,20 @@ slider.prototype = {
 
     // For now the only type is "V", meaning this slider adjusts the HSV V channel
     if (opts.sliderType == "v") {
-      fill = gradient.linear(ctx, x1, y1, x2, y2, [
-        {at: 0, color: "#000"},
-        {at: 1, color: "#fff"},
-      ]);
+      fill = gradient.linear(ctx, x1, y1, x2, y2, {
+        0: "#000",
+        1: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}),
+      });
     }
 
+    // Draw border
+    if (border.w) {
+      ctx.strokeStyle = border.color;
+      ctx.lineWidth = border.w * 2;
+      ctx.stroke();
+    }
+
+    // Draw gradient
     ctx.fillStyle = fill;
     ctx.fill();
   },
@@ -76,12 +86,13 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    if (opts.sliderType == "v" && changes.v) {
-      var percent = (hsv.v / 100);
-      this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
-      if (!this._hasDrawn) {
-        this.draw();
-        this._hasDrawn = true;
+    if (opts.sliderType == "v") {
+      if (changes.h || changes.s) {
+        this.draw(hsv);
+      }
+      if (changes.v) {
+        var percent = (hsv.v / 100);
+        this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
       }
     }
   },

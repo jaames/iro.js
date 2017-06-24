@@ -25,16 +25,19 @@ var exampleColorPicker = new iro.ColorPicker("#example", {
   // Canvas dimensions:
   width: 320,
   height: 320,
+  // Initial color value -- any hex, rgb or hsl color string works:
+  color: "#fff",
   // Radius of the markers that show the current color:
   markerRadius: 8,
   // Padding space around the markers:
   padding: 4,
   // Space between the hue/saturation ring and the value slider:
   sliderMargin: 24,
-  // Initial color value -- any hex, rgb or hsl color string works:
-  color: "#fff",
+  // Add a border around the controls:
+  borderWidth: 2,
+  // Set the border color (defaults to white):
+  borderColor: "#000",
   // CSS rules to update as the selected color changes
-  // (More information about this can be found in the "Dynamic CSS" section below)
   css: {
     "body": {
       "background-color": "rgb"

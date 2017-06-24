@@ -1,7 +1,7 @@
 function addColorStops(gradient, colorStops) {
-  colorStops.forEach(function (stop) {
-    gradient.addColorStop(stop.at, stop.color);
-  });
+  for (stop in colorStops) {
+      gradient.addColorStop(stop, colorStops[stop]);
+  }
   return gradient;
 };
 
