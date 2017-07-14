@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Sat Jun 24 2017
+ * Last updated: Fri Jul 14 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
