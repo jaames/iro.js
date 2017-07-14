@@ -38,10 +38,11 @@ slider.prototype = {
         w = opts.w,
         h = opts.h,
         r = opts.r,
-        border = opts.border;
+        border = opts.border,
+        borderWidth = border.w;
 
     // Clear the existing UI
-    ctx.clearRect(x1, y1, w, h);
+    ctx.clearRect(x1 - borderWidth, y1 - borderWidth, w + (borderWidth * 2), h + (borderWidth * 2));
 
     // Draw a rounded rect
     // Modified from http://stackoverflow.com/a/7838871
@@ -66,9 +67,9 @@ slider.prototype = {
     }
 
     // Draw border
-    if (border.w) {
+    if (borderWidth) {
       ctx.strokeStyle = border.color;
-      ctx.lineWidth = border.w * 2;
+      ctx.lineWidth = borderWidth * 2;
       ctx.stroke();
     }
 

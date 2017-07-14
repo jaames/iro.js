@@ -30,14 +30,15 @@ wheel.prototype = {
     var x = opts.cX,
         y = opts.cY,
         border = opts.border,
+        borderWidth = border.w,
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
-    ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+    ctx.clearRect((x - radius) - borderWidth, (y - radius) - borderWidth, (radius + borderWidth) * 2, (radius + borderWidth) * 2);
 
     // Draw border
-    if (border.w) {
-      ctx.lineWidth = radius + (border.w * 2);
+    if (borderWidth) {
+      ctx.lineWidth = radius + (borderWidth * 2);
       ctx.strokeStyle = border.color;
       ctx.beginPath();
       ctx.arc(x, y, radius / 2, 0, 2 * PI);

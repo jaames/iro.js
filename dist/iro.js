@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Thu Jun 22 2017
+ * Last updated: Fri Jul 14 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
@@ -1122,10 +1122,11 @@ slider.prototype = {
         w = opts.w,
         h = opts.h,
         r = opts.r,
-        border = opts.border;
+        border = opts.border,
+        borderWidth = border.w;
 
     // Clear the existing UI
-    ctx.clearRect(x1, y1, w, h);
+    ctx.clearRect(x1 - borderWidth, y1 - borderWidth, w + borderWidth * 2, h + borderWidth * 2);
 
     // Draw a rounded rect
     // Modified from http://stackoverflow.com/a/7838871
@@ -1150,9 +1151,9 @@ slider.prototype = {
     }
 
     // Draw border
-    if (border.w) {
+    if (borderWidth) {
       ctx.strokeStyle = border.color;
-      ctx.lineWidth = border.w * 2;
+      ctx.lineWidth = borderWidth * 2;
       ctx.stroke();
     }
 
@@ -1256,14 +1257,15 @@ wheel.prototype = {
     var x = opts.cX,
         y = opts.cY,
         border = opts.border,
+        borderWidth = border.w,
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
-    ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+    ctx.clearRect(x - radius - borderWidth, y - radius - borderWidth, (radius + borderWidth) * 2, (radius + borderWidth) * 2);
 
     // Draw border
-    if (border.w) {
-      ctx.lineWidth = radius + border.w * 2;
+    if (borderWidth) {
+      ctx.lineWidth = radius + borderWidth * 2;
       ctx.strokeStyle = border.color;
       ctx.beginPath();
       ctx.arc(x, y, radius / 2, 0, 2 * PI);
