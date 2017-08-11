@@ -21,6 +21,64 @@
 
 ### Methods
 
+#### `on`
+
+**Arguments:**
+
+* `{String} eventType`
+* `{Function} callback`
+
+**Usage:**
+
+Add listeners to color picker events.
+
+**`eventType` values:**
+
+| `eventType`    | usage |
+|----------------|-------|
+| `color:change` | when the color has changed, the callback gets passed the new `color` object |
+| `input:start` | when the user starts interacting with the color picker |
+| `input:end` | when the user has finished interacting with the color picker |
+| `*` | listen to all events |
+
+**Example:**
+
+```js
+// make a handler function that will log the color's hex value to the console
+function colorChangeHandler(color) {
+  console.log(color.hexString)
+}
+
+// start listening to the color change event, now colorChangeHandler will be called whenever the color changes
+example.on("color:change", colorChangeHandler)
+```
+
+#### `off`
+
+**Arguments:**
+
+* `{String} eventType`
+* `{Function} callback`
+
+**Usage:**
+
+Remove event listeners added with `on`
+
+**Example:**
+
+```js
+// make a handler function that will log the color's hex value to the console
+function colorChangeHandler(color) {
+  console.log(color.hexString)
+}
+
+// start listening to the color change event, now colorChangeHandler will be called whenever the color changes
+example.on("color:change", colorChangeHandler);
+
+// stop listening to the color change event, colorChangeHandler won't be called ehen the color changes
+example.off("color:change", colorChangeHandler);
+```
+
 #### `watch`
 
 **Arguments:**
@@ -29,7 +87,7 @@
 
 **Usage:**
 
-Set a function to be called whenever the selected color changes. When called, the function will be passed the color picker's `color` object.
+Set a function to be called whenever the selected color changes. When called, the function will be passed the color picker's `color` object. This is the same as using `on("color:change", ...)`.
 
 **Example:**
 
@@ -47,7 +105,7 @@ example.watch(colorChangeHandler)
 
 **Usage:**
 
-Removes any callback added with `watch`.
+Removes any callback added with `watch`. This is the same as using `off("color:change", ...)`.
 
 ### Properties
 

@@ -1,6 +1,6 @@
 {
   "name": "iro.js",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "A sleek and lightweight JS color picker - with zero dependencies",
   "main": "src/iro.js",
   "devDependencies": {

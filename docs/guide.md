@@ -99,21 +99,21 @@ exampleColorPicker.color.hsv = { h: 0, s: 100, v: 100 };
 
 #### Watching the color for changes
 
-Sometimes you may want to update something whenever a color pickers's selected color is changed. To accomplish this, you can attach a "watch" function to a color wheel:
+Sometimes you may want to update something whenever a color pickers's selected color is changed. To do this, you can listen for a color wheel's `color:change` event with `on`:
 
 ```js
-// Create a new function to use for the watch callback
+// Create a new function to use for the event handler
 // When it is called, it will be passed the color object documented above
-function watchFunction(color) {
+function onColorChange(color) {
   // For this example, we'll just log the color's HEX value to the developer console
   console.log(color.hexString);
 };
 
 // Watch the color picker using the callback function we just created
-exampleColorPicker.watch(watchFunction);
+exampleColorPicker.on("color:change", onColorChange);
 ```
 
-The watch function can be removed at any time with the `unwatch()` method.
+There are a couple of other events in addition to the `color:change` event, such as `input:start` and `input:end`. For more information about events, check out the [color picker API docs](https://github.com/jaames/iro.js/blob/master/docs/colorPicker_api.md#on).
 
 ### Dynamic CSS
 
