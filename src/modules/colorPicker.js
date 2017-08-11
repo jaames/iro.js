@@ -281,7 +281,7 @@ colorWheel.prototype = {
       }
     }
     // Call the color change event
-    this.emit("color:change", {color, changes});
+    this.emit("color:change", color);
   },
 };
 
