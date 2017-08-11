@@ -31,7 +31,8 @@ dom.listen(document, ["mouseup", "touchend"], function (e) {
 */
 let colorWheel = function (el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
-
+  // event storage for `on` and `off`
+  this._events = {};
   this._mouseTarget = false;
   this._onChange = false;
   // Create an iroStyleSheet for this colorWheel's CSS overrides
@@ -146,6 +147,39 @@ colorWheel.prototype = {
   */
   unwatch: function () {
     this.watch(null);
+  },
+
+  /**
+    * @desc Set a callback function for an event
+    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
+    * @param {Function} callback The watch callback
+  */
+  on: function (eventType, callback) {
+    var events = this._events;
+    (events[eventType] || (events[eventType] = [])).push(callback);
+  },
+
+  /**
+    * @desc Remove a callback function for an event added with on()
+    * @param {String} eventType The name of the event
+    * @param {Function} callback The watch callback to remove from the event
+  */
+  off: function (eventType, callback) {
+    var events = this._events;
+    if (events[eventType]) {
+      events[eventType].splice(events[eventType].indexOf(callback), 1);
+    }
+  },
+
+  /**
+    * @desc Emit an event
+    * @param {String} eventType The name of the event to emit
+    * @param {Object} data data to pass to all the callback functions
+  */
+  emit: function (eventType, data) {
+    var events = this._events;
+    (events[eventType] || []).map((callback) => { callback(data); });
+    (events["*"] || []).map((callback) => { callback(data); });
   },
 
   /**
