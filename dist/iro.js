@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Fri Jul 14 2017
+ * Last updated: Fri Aug 11 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
@@ -706,6 +706,7 @@ _dom2.default.listen(document, ["mouseup", "touchend"], function (e) {
   // If there is an active colorWheel, stop it from handling input and clear the active colorWheel reference
   if (activeColorWheel) {
     e.preventDefault();
+    activeColorWheel.emit("input:end");
     activeColorWheel._mouseTarget = false;
     activeColorWheel = false;
   }
@@ -718,7 +719,8 @@ _dom2.default.listen(document, ["mouseup", "touchend"], function (e) {
 */
 var colorWheel = function colorWheel(el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
-
+  // event storage for `on` and `off`
+  this._events = {};
   this._mouseTarget = false;
   this._onChange = false;
   // Create an iroStyleSheet for this colorWheel's CSS overrides
@@ -821,6 +823,7 @@ colorWheel.prototype = {
     * @param {Boolean} callImmediately set to true if you want to call the callback as soon as it is added
   */
   watch: function watch(callback, callImmediately) {
+    this.on("color:change", callback);
     this._onChange = callback;
     if (callImmediately) callback(this.color);
   },
@@ -829,7 +832,44 @@ colorWheel.prototype = {
     * @desc Remove the watch callback
   */
   unwatch: function unwatch() {
-    this.watch(null);
+    this.off("color:change", this._onChange);
+  },
+
+  /**
+    * @desc Set a callback function for an event
+    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
+    * @param {Function} callback The watch callback
+  */
+  on: function on(eventType, callback) {
+    var events = this._events;
+    (events[eventType] || (events[eventType] = [])).push(callback);
+  },
+
+  /**
+    * @desc Remove a callback function for an event added with on()
+    * @param {String} eventType The name of the event
+    * @param {Function} callback The watch callback to remove from the event
+  */
+  off: function off(eventType, callback) {
+    var events = this._events;
+    if (events[eventType]) {
+      events[eventType].splice(events[eventType].indexOf(callback), 1);
+    }
+  },
+
+  /**
+    * @desc Emit an event
+    * @param {String} eventType The name of the event to emit
+    * @param {Object} data data to pass to all the callback functions
+  */
+  emit: function emit(eventType, data) {
+    var events = this._events;
+    (events[eventType] || []).map(function (callback) {
+      callback(data);
+    });
+    (events["*"] || []).map(function (callback) {
+      callback(data);
+    });
   },
 
   /**
@@ -886,6 +926,8 @@ colorWheel.prototype = {
         activeColorWheel = _this;
         // Set an internal reference to the uiElement being interacted with, for other internal event handlers
         _this._mouseTarget = uiElement;
+        // Emit input start event
+        _this.emit("input:start");
         // Finally, use the position to update the picked color
         _this._handleInput(x, y);
       }
@@ -929,9 +971,8 @@ colorWheel.prototype = {
         this.stylesheet.setRule(selector, prop, rgb);
       }
     }
-    // Call the watch callback if one is set
-    var callback = this._onChange;
-    if ("function" == typeof callback) callback(color, changes);
+    // Call the color change event
+    this.emit("color:change", color);
   }
 };
 
