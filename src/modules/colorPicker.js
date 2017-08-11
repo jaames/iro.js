@@ -19,6 +19,7 @@ dom.listen(document, ["mouseup", "touchend"], function (e) {
   // If there is an active colorWheel, stop it from handling input and clear the active colorWheel reference
   if (activeColorWheel) {
     e.preventDefault();
+    activeColorWheel.emit("input:end");
     activeColorWheel._mouseTarget = false;
     activeColorWheel = false;
   }
@@ -138,6 +139,7 @@ colorWheel.prototype = {
     * @param {Boolean} callImmediately set to true if you want to call the callback as soon as it is added
   */
   watch: function (callback, callImmediately) {
+    this.on("color:change", callback);
     this._onChange = callback;
     if (callImmediately) callback(this.color);
   },
@@ -146,7 +148,7 @@ colorWheel.prototype = {
     * @desc Remove the watch callback
   */
   unwatch: function () {
-    this.watch(null);
+    this.off("color:change", this._onChange);
   },
 
   /**
@@ -233,6 +235,8 @@ colorWheel.prototype = {
         activeColorWheel = this;
         // Set an internal reference to the uiElement being interacted with, for other internal event handlers
         this._mouseTarget = uiElement;
+        // Emit input start event
+        this.emit("input:start");
         // Finally, use the position to update the picked color
         this._handleInput(x, y);
       }
@@ -276,9 +280,8 @@ colorWheel.prototype = {
         this.stylesheet.setRule(selector, prop, rgb);
       }
     }
-    // Call the watch callback if one is set
-    var callback = this._onChange;
-    if ("function" == typeof callback) callback(color, changes);
+    // Call the color change event
+    this.emit("color:change", {color, changes});
   },
 };
 
