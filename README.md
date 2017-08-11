@@ -91,6 +91,12 @@ That's it! For more information about what Iro can do, check out the [`/docs`](h
 
 ### Changelog
 
+#### 2.2.0
+
+##### Additions
+
+* `iro.ColorPicker` instances now have a full event system, with `on`, `off` and `emit` methods. Listening for `color:change` is the same as using the `watch` method, and there are new `input:start` and `input:end` methods for detecting when the user begins and finishes interacting with the color picker. 
+
 #### 2.1.0
 
 ##### Additions
