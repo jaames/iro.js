@@ -27,10 +27,11 @@ module.exports = {
   /**
    * @desc create a new HTML element
    * @param {String} tagName the tag type of the element to create
+   * @param {String} nameSpaceType "SVG" = svg namespace, leave false for default namespace
    * @return {Element} the newly created HTML element
   */
-  create: function (tagName) {
-    return doc.createElement(tagName);
+  create: function (tagName, nameSpaceType) {
+    return nameSpaceType == "SVG" ? doc.createElementNS("http://www.w3.org/2000/svg", tagName) : doc.createElement(tagName);
   },
 
   /**
@@ -51,6 +52,12 @@ module.exports = {
   */
   attr: function (el, attrName) {
     return el.getAttribute(attrName);
+  },
+
+  setAttr: function (el, attrs) {
+    for (var attrName in (attrs || {})) {
+      el.setAttribute(attrName, attrs[attrName]);
+    }
   },
 
   /**

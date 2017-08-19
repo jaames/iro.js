@@ -5,8 +5,8 @@ import hslString from "colorModels/hslString";
 /**
   * @constructor slider UI
 */
-let slider = function (layers, opts) {
-  this._ctx = layers.main.ctx;
+let slider = function (ctx, svg, opts) {
+  this._ctx = ctx;
   opts.x1 = opts.x;
   opts.y1 = opts.y;
   opts.x2 = opts.x + opts.w;
@@ -20,7 +20,7 @@ let slider = function (layers, opts) {
   };
   opts.sliderType = opts.sliderType || "v";
   this.type = "slider";
-  this.marker = new marker(layers.over.ctx, opts.marker);
+  this.marker = new marker(svg, opts.marker);
   this._opts = opts;
 };
 

@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Fri Aug 11 2017
+ * Last updated: Sat Aug 19 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
@@ -151,7 +151,119 @@ module.exports = {
 "use strict";
 
 
-var _hsl = __webpack_require__(3);
+// Quick reference to the document object and some strings since we usethem more than once
+var doc = document,
+    READYSTATE_COMPLETE = "complete",
+    READYSTATE_CHANGE = "readystatechange";
+
+/**
+ * @desc iterate a list (or create a one-item list from a string), calling callback with each item
+ * @param {ArrayOrString} list an array or string, callback will be called for each array item, or once if a string is given
+ * @param {Function} callback a function to call for each item, the item will be passed as the first parameter
+ * @access private
+*/
+function iterateList(list, callback) {
+  list = "string" == typeof list ? [list] : list;
+  list.forEach(callback);
+};
+
+module.exports = {
+  /**
+   * @desc find a html element that matches a CSS selector
+   * @param {String} selector the CSS selector to be used to target a HTML element
+   * @return {Element} the HTML element that matches the selector given
+  */
+  $: function $(selector) {
+    return doc.querySelector(selector);
+  },
+
+  /**
+   * @desc create a new HTML element
+   * @param {String} tagName the tag type of the element to create
+   * @param {String} nameSpaceType "SVG" = svg namespace, leave false for default namespace
+   * @return {Element} the newly created HTML element
+  */
+  create: function create(tagName, nameSpaceType) {
+    return nameSpaceType == "SVG" ? doc.createElementNS("http://www.w3.org/2000/svg", tagName) : doc.createElement(tagName);
+  },
+
+  /**
+   * @desc append a child element to an element
+   * @param {Element} el the parent element to append to
+   * @param {Element} child the child element to append
+   * @return {Element} the child element, now appended to the parent
+  */
+  append: function append(el, child) {
+    return el.appendChild(child);
+  },
+
+  /**
+   * @desc get an element's attribute by name
+   * @param {Element} el target element
+   * @param {String} attrName the name of the attribute to get
+   * @return {String} the value of the attribute
+  */
+  attr: function attr(el, attrName) {
+    return el.getAttribute(attrName);
+  },
+
+  setAttr: function setAttr(el, attrs) {
+    for (var attrName in attrs || {}) {
+      el.setAttribute(attrName, attrs[attrName]);
+    }
+  },
+
+  /**
+   * @desc listen to one or more events on an element
+   * @param {Element} el target element
+   * @param {ArrayOrString} eventList the events to listen to
+   * @param {Function} callback the event callback function
+  */
+  listen: function listen(el, eventList, callback) {
+    iterateList(eventList, function (eventName) {
+      el.addEventListener(eventName, callback);
+    });
+  },
+
+  /**
+   * @desc remove an event listener on an element
+   * @param {Element} el target element
+   * @param {ArrayOrString} eventList the events to remove
+   * @param {Function} callback the event callback function
+  */
+  unlisten: function unlisten(el, eventList, callback) {
+    iterateList(eventList, function (eventName) {
+      el.removeEventListener(eventName, callback);
+    });
+  },
+
+  /**
+   * @desc call callback when the page document is ready
+   * @param {Function} callback callback function to be called
+  */
+  whenReady: function whenReady(callback) {
+    var _this = this;
+    if (doc.readyState == READYSTATE_COMPLETE) {
+      callback();
+    } else {
+      _this.listen(doc, READYSTATE_CHANGE, function stateChange(e) {
+        if (doc.readyState == READYSTATE_COMPLETE) {
+          callback();
+          _this.unlisten(doc, READYSTATE_CHANGE, stateChange);
+        }
+      });
+    }
+  }
+};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _hsl = __webpack_require__(4);
 
 var _hsl2 = _interopRequireDefault(_hsl);
 
@@ -159,7 +271,7 @@ var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
-var _hslString = __webpack_require__(4);
+var _hslString = __webpack_require__(5);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
@@ -286,13 +398,13 @@ color.prototype = {
 module.exports = color;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _dom = __webpack_require__(7);
+var _dom = __webpack_require__(1);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -412,7 +524,7 @@ stylesheet.prototype = {
 module.exports = stylesheet;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -448,13 +560,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _hsl = __webpack_require__(3);
+var _hsl = __webpack_require__(4);
 
 var _hsl2 = _interopRequireDefault(_hsl);
 
@@ -479,7 +591,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -502,166 +614,56 @@ module.exports = {
 };
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
-  * @constructor marker UI
-  * @param {Object} ctx - canvas 2d context to draw on
-  * @param {Object} opts - options
-*/
-var marker = function marker(ctx, opts) {
-  this.opts = opts;
-  this._ctx = ctx;
-  this._last = false;
-};
-
-marker.prototype = {
-  /**
-    * @desc Draw a ring (only used internally)
-    * @param {Number} x - centerpoint x coordinate
-    * @param {Number} y - centerpoint y coordinate
-    * @param {String} color - css color of the ring
-    * @param {Number} lineWidth - width of the ring stroke
-    * @private
-  */
-  _ring: function _ring(x, y, color, lineWidth) {
-    var ctx = this._ctx;
-    ctx.lineWidth = lineWidth;
-    ctx.beginPath();
-    ctx.strokeStyle = color;
-    ctx.arc(x, y, this.opts.r, 0, 2 * Math.PI);
-    ctx.stroke();
-  },
-
-  /**
-    * @desc move markerpoint to centerpoint (x, y) and redraw
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-  */
-  move: function move(x, y) {
-    // Get the current position
-    var last = this._last;
-    var radius = this.opts.r + 4;
-    // Clear the current marker
-    if (last) this._ctx.clearRect(last.x - radius, last.y - radius, radius * 2, radius * 2);
-    // Redraw at the new coordinates
-    this._ring(x, y, "#333", 4);
-    this._ring(x, y, "#fff", 2);
-    // Update the position
-    this._last = { x: x, y: y };
-  }
-};
-
-module.exports = marker;
-
-/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-// Quick reference to the document object and some strings since we usethem more than once
-var doc = document,
-    READYSTATE_COMPLETE = "complete",
-    READYSTATE_CHANGE = "readystatechange";
+var _dom = __webpack_require__(1);
+
+var _dom2 = _interopRequireDefault(_dom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @desc iterate a list (or create a one-item list from a string), calling callback with each item
- * @param {ArrayOrString} list an array or string, callback will be called for each array item, or once if a string is given
- * @param {Function} callback a function to call for each item, the item will be passed as the first parameter
- * @access private
+  * @constructor marker UI
+  * @param {Object} ctx - canvas 2d context to draw on
+  * @param {Object} opts - options
 */
-function iterateList(list, callback) {
-  list = "string" == typeof list ? [list] : list;
-  list.forEach(callback);
+var marker = function marker(svg, opts) {
+  var _this = this;
+
+  this.opts = opts;
+  this._rings = [];
+  var width = [5, 2];
+  ["#000", "#fff"].map(function (color, index) {
+    var el = _dom2.default.append(svg, _dom2.default.create("circle", "SVG"));
+    _dom2.default.setAttr(el, {
+      r: opts.r,
+      style: "fill:none;stroke-width:" + width[index] + ";stroke:" + color
+    });
+    _this._rings.push(el);
+  });
 };
 
-module.exports = {
+marker.prototype = {
   /**
-   * @desc find a html element that matches a CSS selector
-   * @param {String} selector the CSS selector to be used to target a HTML element
-   * @return {Element} the HTML element that matches the selector given
+    * @desc move markerpoint to centerpoint (x, y) and redraw
+    * @param {Number} x - point x coordinate
+    * @param {Number} y - point y coordinate
   */
-  $: function $(selector) {
-    return doc.querySelector(selector);
-  },
-
-  /**
-   * @desc create a new HTML element
-   * @param {String} tagName the tag type of the element to create
-   * @return {Element} the newly created HTML element
-  */
-  create: function create(tagName) {
-    return doc.createElement(tagName);
-  },
-
-  /**
-   * @desc append a child element to an element
-   * @param {Element} el the parent element to append to
-   * @param {Element} child the child element to append
-   * @return {Element} the child element, now appended to the parent
-  */
-  append: function append(el, child) {
-    return el.appendChild(child);
-  },
-
-  /**
-   * @desc get an element's attribute by name
-   * @param {Element} el target element
-   * @param {String} attrName the name of the attribute to get
-   * @return {String} the value of the attribute
-  */
-  attr: function attr(el, attrName) {
-    return el.getAttribute(attrName);
-  },
-
-  /**
-   * @desc listen to one or more events on an element
-   * @param {Element} el target element
-   * @param {ArrayOrString} eventList the events to listen to
-   * @param {Function} callback the event callback function
-  */
-  listen: function listen(el, eventList, callback) {
-    iterateList(eventList, function (eventName) {
-      el.addEventListener(eventName, callback);
-    });
-  },
-
-  /**
-   * @desc remove an event listener on an element
-   * @param {Element} el target element
-   * @param {ArrayOrString} eventList the events to remove
-   * @param {Function} callback the event callback function
-  */
-  unlisten: function unlisten(el, eventList, callback) {
-    iterateList(eventList, function (eventName) {
-      el.removeEventListener(eventName, callback);
-    });
-  },
-
-  /**
-   * @desc call callback when the page document is ready
-   * @param {Function} callback callback function to be called
-  */
-  whenReady: function whenReady(callback) {
-    var _this = this;
-    if (doc.readyState == READYSTATE_COMPLETE) {
-      callback();
-    } else {
-      _this.listen(doc, READYSTATE_CHANGE, function stateChange(e) {
-        if (doc.readyState == READYSTATE_COMPLETE) {
-          callback();
-          _this.unlisten(doc, READYSTATE_CHANGE, stateChange);
-        }
+  move: function move(x, y) {
+    this._rings.forEach(function (ring) {
+      _dom2.default.setAttr(ring, {
+        cx: x,
+        cy: y
       });
-    }
+    });
   }
 };
+
+module.exports = marker;
 
 /***/ }),
 /* 8 */
@@ -678,15 +680,15 @@ var _slider = __webpack_require__(12);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(7);
+var _dom = __webpack_require__(1);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _color = __webpack_require__(1);
+var _color = __webpack_require__(2);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _stylesheet = __webpack_require__(2);
+var _stylesheet = __webpack_require__(3);
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
@@ -744,37 +746,30 @@ var colorWheel = function colorWheel(el, opts) {
     // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
     // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
     var pxRatio = devicePixelRatio || 1;
-    // Multiply the visual width and height by the pixel ratio
-    // These dimensions will be used as the internal pixel dimensions for the canvas
-    var pxWidth = width * pxRatio;
-    var pxHeight = height * pxRatio;
-    // When we make new layers we'll add them to this object
-    var layers = {};
-    var layerNames = ["main", "over"];
     // Create a layer for each name
-    layerNames.forEach(function (name, index) {
-      // Create a new canvas and add it to the page
-      var canvas = _dom2.default.append(el, _dom2.default.create("canvas"));
-      var ctx = canvas.getContext("2d");
-      var style = canvas.style;
-      // Set the internal dimensions for the canvas
-      canvas.width = pxWidth;
-      canvas.height = pxHeight;
-      // Set the visual dimensions for the canvas
-      style.cssText += "width:" + width + "px;height:" + height + "px";
-      // Scale the canvas context to counter the manual scaling of the element
-      ctx.scale(pxRatio, pxRatio);
-      // Since we're creating multiple "layers" from seperate canvas we need them to be visually stacked ontop of eachother
-      // Here, any layer that isn't the first will be forced to the same position relative to their wrapper element
-      // The first layer isn't forced, so the space it takes up will still be considered in page layout
-      if (index != 0) style.cssText += "position:absolute;top:0;left:0";
-      layers[name] = {
-        ctx: ctx,
-        canvas: canvas
-      };
+    // Create a new canvas and add it to the page
+
+    var svg = _dom2.default.append(el, _dom2.default.create("svg", "SVG"));
+    _dom2.default.setAttr(svg, {
+      viewBox: [0, 0, width, height].join(" "),
+      width: width,
+      height: height
     });
+    svg.style.cssText += "position:absolute;top:0;left:0;";
+
+    var canvas = _dom2.default.append(el, _dom2.default.create("canvas"));
+    var ctx = canvas.getContext("2d");
+    // Set the internal dimensions for the canvas
+    canvas.width = width * pxRatio;
+    canvas.height = height * pxRatio;
+    // Set the visual dimensions for the canvas
+    canvas.style.cssText += "width:" + width + "px;height:" + height + "px";
+    // Scale the canvas context to counter the manual scaling of the element
+    ctx.scale(pxRatio, pxRatio);
+
     this.el = el;
-    this.layers = layers;
+    this.canvas = canvas;
+    this.ctx = ctx;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,
@@ -792,14 +787,14 @@ var colorWheel = function colorWheel(el, opts) {
       color: opts.borderColor || "#fff"
     };
     // Create UI elements
-    this.ui = [new _wheel2.default(layers, {
+    this.ui = [new _wheel2.default(ctx, svg, {
       cX: leftMargin + bodyWidth / 2,
       cY: bodyWidth / 2,
       r: wheelRadius,
       rMax: wheelRadius - (markerRadius + padding),
       marker: marker,
       border: borderStyles
-    }), new _slider2.default(layers, {
+    }), new _slider2.default(ctx, svg, {
       sliderType: "v",
       x: leftMargin + borderWidth,
       y: bodyWidth + sliderMargin,
@@ -886,7 +881,7 @@ colorWheel.prototype = {
     var point = e.touches ? e.changedTouches[0] : e,
 
     // Get the screen position of the UI
-    rect = this.layers.main.canvas.getBoundingClientRect();
+    rect = this.canvas.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,
@@ -1088,11 +1083,11 @@ var _colorPicker = __webpack_require__(8);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _color = __webpack_require__(1);
+var _color = __webpack_require__(2);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _stylesheet = __webpack_require__(2);
+var _stylesheet = __webpack_require__(3);
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
@@ -1113,15 +1108,15 @@ module.exports = {
 "use strict";
 
 
-var _gradient = __webpack_require__(5);
+var _gradient = __webpack_require__(6);
 
 var _gradient2 = _interopRequireDefault(_gradient);
 
-var _marker = __webpack_require__(6);
+var _marker = __webpack_require__(7);
 
 var _marker2 = _interopRequireDefault(_marker);
 
-var _hslString = __webpack_require__(4);
+var _hslString = __webpack_require__(5);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
@@ -1130,8 +1125,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
   * @constructor slider UI
 */
-var slider = function slider(layers, opts) {
-  this._ctx = layers.main.ctx;
+var slider = function slider(ctx, svg, opts) {
+  this._ctx = ctx;
   opts.x1 = opts.x;
   opts.y1 = opts.y;
   opts.x2 = opts.x + opts.w;
@@ -1145,7 +1140,7 @@ var slider = function slider(layers, opts) {
   };
   opts.sliderType = opts.sliderType || "v";
   this.type = "slider";
-  this.marker = new _marker2.default(layers.over.ctx, opts.marker);
+  this.marker = new _marker2.default(svg, opts.marker);
   this._opts = opts;
 };
 
@@ -1259,11 +1254,11 @@ module.exports = slider;
 "use strict";
 
 
-var _gradient = __webpack_require__(5);
+var _gradient = __webpack_require__(6);
 
 var _gradient2 = _interopRequireDefault(_gradient);
 
-var _marker = __webpack_require__(6);
+var _marker = __webpack_require__(7);
 
 var _marker2 = _interopRequireDefault(_marker);
 
@@ -1279,11 +1274,11 @@ var PI = Math.PI,
 /**
   * @constructor hue wheel UI
 */
-var wheel = function wheel(layers, opts) {
-  this._ctx = layers.main.ctx;
+var wheel = function wheel(ctx, svg, opts) {
+  this._ctx = ctx;
   this._opts = opts;
   this.type = "wheel";
-  this.marker = new _marker2.default(layers.over.ctx, opts.marker);
+  this.marker = new _marker2.default(svg, opts.marker);
 };
 
 wheel.prototype = {

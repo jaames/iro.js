@@ -11,11 +11,11 @@ var PI = Math.PI,
 /**
   * @constructor hue wheel UI
 */
-let wheel = function (layers, opts) {
-  this._ctx = layers.main.ctx;
+let wheel = function (ctx, svg, opts) {
+  this._ctx = ctx;
   this._opts = opts;
   this.type = "wheel";
-  this.marker = new marker(layers.over.ctx, opts.marker);
+  this.marker = new marker(svg, opts.marker);
 };
 
 wheel.prototype = {

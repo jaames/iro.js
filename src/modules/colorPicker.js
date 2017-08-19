@@ -57,37 +57,30 @@ let colorWheel = function (el, opts) {
     // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
     // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
     var pxRatio = devicePixelRatio || 1;
-    // Multiply the visual width and height by the pixel ratio
-    // These dimensions will be used as the internal pixel dimensions for the canvas
-    var pxWidth = width * pxRatio;
-    var pxHeight = height * pxRatio;
-    // When we make new layers we'll add them to this object
-    var layers = {};
-    var layerNames = ["main", "over"];
     // Create a layer for each name
-    layerNames.forEach(function (name, index) {
-      // Create a new canvas and add it to the page
-      var canvas = dom.append(el, dom.create("canvas"));
-      var ctx = canvas.getContext("2d");
-      var style = canvas.style;
-      // Set the internal dimensions for the canvas
-      canvas.width = pxWidth;
-      canvas.height = pxHeight;
-      // Set the visual dimensions for the canvas
-      style.cssText += "width:" + width + "px;height:" + height + "px";
-      // Scale the canvas context to counter the manual scaling of the element
-      ctx.scale(pxRatio, pxRatio);
-      // Since we're creating multiple "layers" from seperate canvas we need them to be visually stacked ontop of eachother
-      // Here, any layer that isn't the first will be forced to the same position relative to their wrapper element
-      // The first layer isn't forced, so the space it takes up will still be considered in page layout
-      if (index != 0) style.cssText += "position:absolute;top:0;left:0";
-      layers[name] = {
-        ctx,
-        canvas
-      };
+    // Create a new canvas and add it to the page
+
+    var svg = dom.append(el, dom.create("svg", "SVG"));
+    dom.setAttr(svg, {
+      viewBox: [0, 0, width, height].join(" "),
+      width: width,
+      height: height
     });
+    svg.style.cssText += "position:absolute;top:0;left:0;"
+
+    var canvas = dom.append(el, dom.create("canvas"));
+    var ctx = canvas.getContext("2d");
+    // Set the internal dimensions for the canvas
+    canvas.width = width * pxRatio;
+    canvas.height = height * pxRatio;
+    // Set the visual dimensions for the canvas
+    canvas.style.cssText += "width:" + width + "px;height:" + height + "px";
+    // Scale the canvas context to counter the manual scaling of the element
+    ctx.scale(pxRatio, pxRatio);
+
     this.el = el;
-    this.layers = layers;
+    this.canvas = canvas;
+    this.ctx = ctx;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,
@@ -106,7 +99,7 @@ let colorWheel = function (el, opts) {
     };
     // Create UI elements
     this.ui = [
-      new wheel(layers, {
+      new wheel(ctx, svg, {
         cX: leftMargin + (bodyWidth / 2),
         cY: bodyWidth / 2,
         r: wheelRadius,
@@ -114,7 +107,7 @@ let colorWheel = function (el, opts) {
         marker: marker,
         border: borderStyles
       }),
-      new slider(layers, {
+      new slider(ctx, svg, {
         sliderType: "v",
         x: leftMargin + borderWidth,
         y: bodyWidth + sliderMargin,
@@ -197,7 +190,7 @@ colorWheel.prototype = {
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e,
         // Get the screen position of the UI
-        rect = this.layers.main.canvas.getBoundingClientRect();
+        rect = this.canvas.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,
