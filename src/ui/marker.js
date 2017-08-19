@@ -6,16 +6,12 @@ import dom from "util/dom";
   * @param {Object} opts - options
 */
 let marker = function (svg, opts) {
-  this.opts = opts;
   this._rings = [];
-  var width = [5, 2];
-  ["#000", "#fff"].map((color, index) => {
-    var el = dom.append(svg, dom.create("circle", "SVG"));
-    dom.setAttr(el, {
-      r: opts.r,
-      style: "fill:none;stroke-width:" + width[index] + ";stroke:" + color
-    });
-    this._rings.push(el)
+  [["#000", 5], ["#fff", 2]].map((ring) => {
+    this._rings.push(dom.appendNew(svg, "circle", {
+      r: this.opts.r,
+      style: "fill:none;stroke-width:"+ ring[0] + ";stroke:" + ring[1]
+    }, "SVG"));
   });
 
 };
@@ -33,7 +29,6 @@ marker.prototype = {
         cy: y
       });
     });
-
   }
 };
 

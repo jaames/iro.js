@@ -15,7 +15,10 @@ module.exports = function (env) {
     "name",
     // util.dom.js
     "create",
+    "append",
+    "appendNew",
     "attr",
+    "setAttr",
     "append",
     "listen",
     "unlisten",

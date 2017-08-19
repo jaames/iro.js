@@ -36,12 +36,18 @@ module.exports = {
 
   /**
    * @desc append a child element to an element
-   * @param {Element} el the parent element to append to
+   * @param {Element} parent the parent element to append to
    * @param {Element} child the child element to append
    * @return {Element} the child element, now appended to the parent
   */
-  append: function (el, child) {
-    return el.appendChild(child);
+  append: function (parent, child) {
+    return parent.appendChild(child);
+  },
+
+  appendNew: function (parent, tagName, attrs, nameSpaceType) {
+    var child = this.create(tagName, nameSpaceType);
+    this.setAttr(child, attrs);
+    return parent.appendChild(child);
   },
 
   /**

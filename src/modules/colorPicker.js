@@ -60,27 +60,26 @@ let colorWheel = function (el, opts) {
     // Create a layer for each name
     // Create a new canvas and add it to the page
 
-    var svg = dom.append(el, dom.create("svg", "SVG"));
-    dom.setAttr(svg, {
+    var svg = dom.appendNew(el, "svg", {
       viewBox: [0, 0, width, height].join(" "),
       width: width,
-      height: height
-    });
-    svg.style.cssText += "position:absolute;top:0;left:0;"
+      height: height,
+      style: "position:absolute;top:0;left:0;"
+    }, "SVG");
 
-    var canvas = dom.append(el, dom.create("canvas"));
+    var canvas = dom.appendNew(el, "canvas", {
+      width: width * pxRatio,
+      height: height * pxRatio,
+      style: "width:" + width + "px;height:" + height + "px"
+    });
+
     var ctx = canvas.getContext("2d");
-    // Set the internal dimensions for the canvas
-    canvas.width = width * pxRatio;
-    canvas.height = height * pxRatio;
-    // Set the visual dimensions for the canvas
-    canvas.style.cssText += "width:" + width + "px;height:" + height + "px";
-    // Scale the canvas context to counter the manual scaling of the element
     ctx.scale(pxRatio, pxRatio);
 
     this.el = el;
     this.canvas = canvas;
     this.ctx = ctx;
+    this.svg = svg;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,

@@ -8,12 +8,10 @@ const doc = document;
 */
 let stylesheet = function (overrides) {
   // Create a new style element
-  let style = dom.create("style");
+  let style = dom.appendNew(doc.head, "style", {});
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
   dom.append(style, doc.createTextNode(""));
-  // Add that stylesheet to the document <head></head>
-  dom.append(doc.head, style);
   this.style = style;
   // Create a reference to the style element's CSSStyleSheet object
   // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
@@ -33,6 +31,9 @@ stylesheet.prototype = {
     * @desc Turns the stylesheet "on", allowing the styles to be rendered
   */
   on: function () {
+    this.enable();
+  },
+  enable: function () {
     this.sheet.disabled = false;
   },
 
@@ -40,6 +41,9 @@ stylesheet.prototype = {
     * @desc Turns the stylesheet "off", preventing the styles from being rendered
   */
   off: function () {
+    this.disable();
+  },
+  disable: function () {
     this.sheet.disabled = true;
   },
 

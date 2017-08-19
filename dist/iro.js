@@ -189,12 +189,18 @@ module.exports = {
 
   /**
    * @desc append a child element to an element
-   * @param {Element} el the parent element to append to
+   * @param {Element} parent the parent element to append to
    * @param {Element} child the child element to append
    * @return {Element} the child element, now appended to the parent
   */
-  append: function append(el, child) {
-    return el.appendChild(child);
+  append: function append(parent, child) {
+    return parent.appendChild(child);
+  },
+
+  appendNew: function appendNew(parent, tagName, attrs, nameSpaceType) {
+    var child = this.create(tagName, nameSpaceType);
+    this.setAttr(child, attrs);
+    return parent.appendChild(child);
   },
 
   /**
@@ -418,12 +424,10 @@ var doc = document;
 */
 var stylesheet = function stylesheet(overrides) {
   // Create a new style element
-  var style = _dom2.default.create("style");
+  var style = _dom2.default.appendNew(doc.head, "style", {});
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
   _dom2.default.append(style, doc.createTextNode(""));
-  // Add that stylesheet to the document <head></head>
-  _dom2.default.append(doc.head, style);
   this.style = style;
   // Create a reference to the style element's CSSStyleSheet object
   // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
@@ -443,6 +447,9 @@ stylesheet.prototype = {
     * @desc Turns the stylesheet "on", allowing the styles to be rendered
   */
   on: function on() {
+    this.enable();
+  },
+  enable: function enable() {
     this.sheet.disabled = false;
   },
 
@@ -450,6 +457,9 @@ stylesheet.prototype = {
     * @desc Turns the stylesheet "off", preventing the styles from being rendered
   */
   off: function off() {
+    this.disable();
+  },
+  disable: function disable() {
     this.sheet.disabled = true;
   },
 
@@ -634,16 +644,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var marker = function marker(svg, opts) {
   var _this = this;
 
-  this.opts = opts;
   this._rings = [];
-  var width = [5, 2];
-  ["#000", "#fff"].map(function (color, index) {
-    var el = _dom2.default.append(svg, _dom2.default.create("circle", "SVG"));
-    _dom2.default.setAttr(el, {
-      r: opts.r,
-      style: "fill:none;stroke-width:" + width[index] + ";stroke:" + color
-    });
-    _this._rings.push(el);
+  [["#000", 5], ["#fff", 2]].map(function (ring) {
+    _this._rings.push(_dom2.default.appendNew(svg, "circle", {
+      r: _this.opts.r,
+      style: "fill:none;stroke-width:" + ring[0] + ";stroke:" + ring[1]
+    }, "SVG"));
   });
 };
 
@@ -749,27 +755,26 @@ var colorWheel = function colorWheel(el, opts) {
     // Create a layer for each name
     // Create a new canvas and add it to the page
 
-    var svg = _dom2.default.append(el, _dom2.default.create("svg", "SVG"));
-    _dom2.default.setAttr(svg, {
+    var svg = _dom2.default.appendNew(el, "svg", {
       viewBox: [0, 0, width, height].join(" "),
       width: width,
-      height: height
-    });
-    svg.style.cssText += "position:absolute;top:0;left:0;";
+      height: height,
+      style: "position:absolute;top:0;left:0;"
+    }, "SVG");
 
-    var canvas = _dom2.default.append(el, _dom2.default.create("canvas"));
+    var canvas = _dom2.default.appendNew(el, "canvas", {
+      width: width * pxRatio,
+      height: height * pxRatio,
+      style: "width:" + width + "px;height:" + height + "px"
+    });
+
     var ctx = canvas.getContext("2d");
-    // Set the internal dimensions for the canvas
-    canvas.width = width * pxRatio;
-    canvas.height = height * pxRatio;
-    // Set the visual dimensions for the canvas
-    canvas.style.cssText += "width:" + width + "px;height:" + height + "px";
-    // Scale the canvas context to counter the manual scaling of the element
     ctx.scale(pxRatio, pxRatio);
 
     this.el = el;
     this.canvas = canvas;
     this.ctx = ctx;
+    this.svg = svg;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,
