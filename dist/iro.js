@@ -644,12 +644,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var marker = function marker(svg, opts) {
   var _this = this;
 
-  this._rings = [];
-  [["#000", 5], ["#fff", 2]].map(function (ring) {
-    _this._rings.push(_dom2.default.appendNew(svg, "circle", {
-      r: _this.opts.r,
-      style: "fill:none;stroke-width:" + ring[0] + ";stroke:" + ring[1]
-    }, "SVG"));
+  this._el = _dom2.default.appendNew(svg, "g", {}, "SVG");
+  [[5, "#000"], [2, "#fff"]].map(function (ring) {
+    _dom2.default.appendNew(_this._el, "circle", {
+      r: opts.r,
+      style: "fill:none;stroke-width:" + ring[0] + ";stroke:" + ring[1],
+      cy: 0,
+      cx: 0
+    }, "SVG");
   });
 };
 
@@ -660,11 +662,8 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function move(x, y) {
-    this._rings.forEach(function (ring) {
-      _dom2.default.setAttr(ring, {
-        cx: x,
-        cy: y
-      });
+    _dom2.default.setAttr(this._el, {
+      transform: "translate(" + x + " " + y + ")"
     });
   }
 };
