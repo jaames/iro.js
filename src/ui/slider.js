@@ -42,20 +42,17 @@ let slider = function (ctx, svg, opts) {
 
   this.stop2 = stop2;
 
-  if (borderWidth > 0) {
-    dom.appendNew(svg, "rect", {
-      "rx": radius,
-      "ry": radius,
-      "x": opts.x - borderWidth / 2,
-      "y": opts.y - borderWidth / 2,
-      "width": opts.w + borderWidth,
-      "height": opts.h + borderWidth,
-      "fill": "url(#slidergradient)",
-      "stroke-width": borderWidth,
-      "stroke": opts.border.color,
-    }, "SVG");
-  }
-
+  dom.appendNew(svg, "rect", {
+    "rx": radius,
+    "ry": radius,
+    "x": opts.x - borderWidth / 2,
+    "y": opts.y - borderWidth / 2,
+    "width": opts.w + borderWidth,
+    "height": opts.h + borderWidth,
+    "fill": "url(#slidergradient)",
+    "stroke-width": borderWidth,
+    "stroke": opts.border.color,
+  }, "SVG");
 
   this.marker = new marker(svg, opts.marker);
 };

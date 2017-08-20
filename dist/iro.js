@@ -1166,24 +1166,22 @@ var slider = function slider(ctx, svg, opts) {
 
   var stop2 = _dom2.default.appendNew(gradient, "stop", {
     "offset": "100%",
-    "stop-color": "#f00"
+    "stop-color": "#fff"
   }, "SVG");
 
   this.stop2 = stop2;
 
-  if (borderWidth > 0) {
-    _dom2.default.appendNew(svg, "rect", {
-      "rx": radius,
-      "ry": radius,
-      "x": opts.x - borderWidth / 2,
-      "y": opts.y - borderWidth / 2,
-      "width": opts.w + borderWidth,
-      "height": opts.h + borderWidth,
-      "fill": "url(#slidergradient)",
-      "stroke-width": borderWidth,
-      "stroke": opts.border.color
-    }, "SVG");
-  }
+  _dom2.default.appendNew(svg, "rect", {
+    "rx": radius,
+    "ry": radius,
+    "x": opts.x - borderWidth / 2,
+    "y": opts.y - borderWidth / 2,
+    "width": opts.w + borderWidth,
+    "height": opts.h + borderWidth,
+    "fill": "url(#slidergradient)",
+    "stroke-width": borderWidth,
+    "stroke": opts.border.color
+  }, "SVG");
 
   this.marker = new _marker2.default(svg, opts.marker);
 };
@@ -1194,6 +1192,44 @@ slider.prototype = {
   */
   draw: function draw(hsv) {
     _dom2.default.setAttr(this.stop2, { "stop-color": _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
+    // var ctx = this._ctx;
+    // var opts = this._opts;
+    // var x1 = opts.x1,
+    //     y1 = opts.y1,
+    //     x2 = opts.x2,
+    //     y2 = opts.y2,
+    //     w = opts.w,
+    //     h = opts.h,
+    //     r = opts.r;
+    //
+    // // Clear the existing UI
+    // ctx.clearRect(x1, y1, w, h);
+    //
+    // // Draw a rounded rect
+    // // Modified from http://stackoverflow.com/a/7838871
+    // ctx.beginPath();
+    // ctx.moveTo(x1 + r, y1);
+    // ctx.arcTo(x2, y1, x2, y2, r);
+    // ctx.arcTo(x2, y2, x1, y2, r);
+    // ctx.arcTo(x1, y2, x1, y1, r);
+    // ctx.arcTo(x1, y1, x2, y1, r);
+    // ctx.closePath();
+    //
+    // // I plan to have different slider "types" in the future
+    // // (I'd like to add a transparency slider at some point, for example)
+    // var fill;
+    //
+    // // For now the only type is "V", meaning this slider adjusts the HSV V channel
+    // if (opts.sliderType == "v") {
+    //   fill = gradient.linear(ctx, x1, y1, x2, y2, {
+    //     0: "#000",
+    //     1: ,
+    //   });
+    // }
+    //
+    // // Draw gradient
+    // ctx.fillStyle = fill;
+    // ctx.fill();
   },
 
   /**
@@ -1273,6 +1309,27 @@ var PI = Math.PI,
     abs = Math.abs,
     round = Math.round;
 
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+  var angleInRadians = angleInDegrees * Math.PI / 180.0;
+
+  return {
+    x: centerX + radius * Math.cos(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians)
+  };
+}
+
+function describeArc(x, y, radius, startAngle, endAngle) {
+
+  var start = polarToCartesian(x, y, radius, endAngle);
+  var end = polarToCartesian(x, y, radius, startAngle);
+
+  var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+  var d = ["M", start.x, start.y, "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(" ");
+
+  return d;
+}
+
 /**
   * @constructor hue wheel UI
 */
@@ -1280,17 +1337,53 @@ var wheel = function wheel(ctx, svg, opts) {
   this._ctx = ctx;
   this._opts = opts;
   this.type = "wheel";
-  this.marker = new _marker2.default(svg, opts.marker);
-  if (opts.border.w > 0) {
-    _dom2.default.appendNew(svg, "circle", {
-      "r": opts.r + opts.border.w / 2,
-      "fill": "none",
-      "stroke-width": opts.border.w,
-      "stroke": opts.border.color,
-      "cy": opts.cY,
-      "cx": opts.cX
+
+  var defs = _dom2.default.appendNew(svg, "defs", {}, "SVG");
+
+  var gradient = _dom2.default.appendNew(defs, "radialGradient", {
+    "id": "wheelgradient"
+  }, "SVG");
+
+  var stop1 = _dom2.default.appendNew(gradient, "stop", {
+    "offset": "0%",
+    "stop-color": "#fff"
+  }, "SVG");
+
+  var stop2 = _dom2.default.appendNew(gradient, "stop", {
+    "offset": "100%",
+    "stop-color": "#fff",
+    "stop-opacity": "0"
+  }, "SVG");
+
+  var group = _dom2.default.appendNew(svg, "g", {}, "SVG");
+
+  for (var hue = 0; hue < 360; hue++) {
+    _dom2.default.appendNew(group, "path", {
+      "d": describeArc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5),
+      "stroke": "hsl(" + hue + ",100%," + 100 / 2 + "%)",
+      "stroke-width": opts.r,
+      "fill": "none"
     }, "SVG");
   }
+
+  _dom2.default.appendNew(svg, "circle", {
+    "r": opts.r + opts.border.w / 2,
+    "fill": "url(#wheelgradient)",
+    "stroke": opts.border.color,
+    "stroke-width": opts.border.w,
+    "cy": opts.cY,
+    "cx": opts.cX
+  }, "SVG");
+
+  this._lightnessLayer = _dom2.default.appendNew(svg, "circle", {
+    "r": opts.r,
+    "fill": "#000",
+    "opacity": 1,
+    "cy": opts.cY,
+    "cx": opts.cX
+  }, "SVG");
+
+  this.marker = new _marker2.default(svg, opts.marker);
 };
 
 wheel.prototype = {
@@ -1300,43 +1393,44 @@ wheel.prototype = {
     * @param {Number} value - The hsv value component to use when drawing
   */
   draw: function draw(value) {
-    var ctx = this._ctx;
-    var opts = this._opts;
-    var x = opts.cX,
-        y = opts.cY,
-        border = opts.border,
-        borderWidth = border.w,
-        radius = opts.r;
+    _dom2.default.setAttr(this._lightnessLayer, { "opacity": 1 - value / 100 });
+    // var ctx = this._ctx;
+    // var opts = this._opts;
+    // var x = opts.cX,
+    //     y = opts.cY,
+    //     border = opts.border,
+    //     borderWidth = border.w,
+    //     radius = opts.r;
 
     // Clear the area where the wheel will be drawn
-    ctx.clearRect(x - radius - borderWidth, y - radius - borderWidth, radius * 2, radius * 2);
-    ctx.lineWidth = radius;
+    // ctx.clearRect((x - radius) - borderWidth, (y - radius) - borderWidth, radius * 2, radius * 2);
+    // ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
     // Here we calculate the angle for each slice, in radians
-    var sliceAngle = 2 * PI / 360;
+    // var sliceAngle = (2 * PI) / 360;
 
     // Create a loop to draw each slice
-    for (var hue = 0, sliceStart = 0; hue < 360; hue++, sliceStart += sliceAngle) {
-      // Create a HSL color for the slice using the current hue value
-      ctx.strokeStyle = "hsl(" + hue + ",100%," + value / 2 + "%)";
-      ctx.beginPath();
-      // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
-      // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
-      ctx.stroke();
-    }
+    // for (var hue = 0, sliceStart = 0; hue < 360; hue++, sliceStart += sliceAngle) {
+    //   // Create a HSL color for the slice using the current hue value
+    //   ctx.strokeStyle = "hsl(" + hue + ",100%," + (value / 2) + "%)";
+    //   ctx.beginPath();
+    //   // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
+    //   // So we make them overlap ever so slightly by adding a tiny value to the slice angle
+    //   ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
+    //   ctx.stroke();
+    // }
 
     // Create a radial gradient for "saturation"
-    var hslString = "hsla(0,0%," + value + "%,";
-    ctx.fillStyle = _gradient2.default.radial(ctx, x, y, 0, opts.rMax, {
-      // The center of the color wheel should be pure white (0% saturation)
-      0: hslString + "1)",
-      // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-      1: hslString + "0)"
-    });
+    // var hslString = "hsla(0,0%," + value + "%,";
+    // ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, {
+    //   // The center of the color wheel should be pure white (0% saturation)
+    //   0: hslString + "1)",
+    //   // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
+    //   1: hslString + "0)",
+    // });
     // Draw a rect using the gradient as a fill style
-    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+    // ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
   },
 
   /**
