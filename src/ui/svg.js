@@ -1,4 +1,3 @@
-import dom from "util/dom";
 // Quick references to reused math functions
 var PI = Math.PI,
     cos = Math.cos,
@@ -34,19 +33,21 @@ svgGradient.prototype.setAttr = function (index, attr, value) {
 };
 
 let svg = function (parent, width, height) {
-  this._root = dom.appendNew(parent, "svg", {
-    viewBox: [0, 0, width, height].join(" "),
+  var root = document.createElementNS(SVG_NAMESPACE, "svg");
+  parent.appendChild(root);
+  this.setAttrs(root, {
+    // viewBox: [0, 0, width, height].join(" "),
     width: width,
     height: height,
     style: "position:absolute;top:0;left:0;"
-  }, "SVG");
+  });
+  this._root = root;
   this._defs = this.insert(null, "defs");
 };
 
 svg.prototype = {
 
-  insert: function (parent, tagName, attrs) {
-    var el = document.createElementNS(SVG_NAMESPACE, tagName);
+  setAttrs: function (el, attrs) {
     for (var attr in (attrs || {})) {
       var name = attr;
       switch (attr) {
@@ -59,12 +60,20 @@ svg.prototype = {
         case "f":
           name = "fill";
           break;
+        case "o":
+          name = "opacity";
+          break;
         default:
           name = attr;
           break;
       }
       el.setAttribute(name, attrs[attr]);
     }
+  },
+
+  insert: function (parent, tagName, attrs) {
+    var el = document.createElementNS(SVG_NAMESPACE, tagName);
+    this.setAttrs(el, attrs);
     (parent || this._root).appendChild(el);
     return el;
   },

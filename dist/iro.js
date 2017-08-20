@@ -70,7 +70,7 @@ var iro =
 /******/ 	__webpack_require__.p = "/test";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -151,116 +151,7 @@ module.exports = {
 "use strict";
 
 
-// Quick reference to the document object and some strings since we usethem more than once
-var doc = document,
-    READYSTATE_COMPLETE = "complete",
-    READYSTATE_CHANGE = "readystatechange";
-
-/**
- * @desc iterate a list (or create a one-item list from a string), calling callback with each item
- * @param {ArrayOrString} list an array or string, callback will be called for each array item, or once if a string is given
- * @param {Function} callback a function to call for each item, the item will be passed as the first parameter
- * @access private
-*/
-function iterateList(list, callback) {
-  list = "string" == typeof list ? [list] : list;
-  list.forEach(callback);
-};
-
-module.exports = {
-  /**
-   * @desc create a new HTML element
-   * @param {String} tagName the tag type of the element to create
-   * @param {String} nameSpaceType "SVG" = svg namespace, leave false for default namespace
-   * @return {Element} the newly created HTML element
-  */
-  create: function create(tagName, nameSpaceType) {
-    return nameSpaceType == "SVG" ? doc.createElementNS("http://www.w3.org/2000/svg", tagName) : doc.createElement(tagName);
-  },
-
-  /**
-   * @desc append a child element to an element
-   * @param {Element} parent the parent element to append to
-   * @param {Element} child the child element to append
-   * @return {Element} the child element, now appended to the parent
-  */
-  append: function append(parent, child) {
-    return parent.appendChild(child);
-  },
-
-  appendNew: function appendNew(parent, tagName, attrs, nameSpaceType) {
-    var child = this.create(tagName, nameSpaceType);
-    this.setAttr(child, attrs);
-    return parent.appendChild(child);
-  },
-
-  /**
-   * @desc get an element's attribute by name
-   * @param {Element} el target element
-   * @param {String} attrName the name of the attribute to get
-   * @return {String} the value of the attribute
-  */
-  attr: function attr(el, attrName) {
-    return el.getAttribute(attrName);
-  },
-
-  setAttr: function setAttr(el, attrs) {
-    for (var attrName in attrs || {}) {
-      el.setAttribute(attrName, attrs[attrName]);
-    }
-  },
-
-  /**
-   * @desc listen to one or more events on an element
-   * @param {Element} el target element
-   * @param {ArrayOrString} eventList the events to listen to
-   * @param {Function} callback the event callback function
-  */
-  listen: function listen(el, eventList, callback) {
-    iterateList(eventList, function (eventName) {
-      el.addEventListener(eventName, callback);
-    });
-  },
-
-  /**
-   * @desc remove an event listener on an element
-   * @param {Element} el target element
-   * @param {ArrayOrString} eventList the events to remove
-   * @param {Function} callback the event callback function
-  */
-  unlisten: function unlisten(el, eventList, callback) {
-    iterateList(eventList, function (eventName) {
-      el.removeEventListener(eventName, callback);
-    });
-  },
-
-  /**
-   * @desc call callback when the page document is ready
-   * @param {Function} callback callback function to be called
-  */
-  whenReady: function whenReady(callback) {
-    var _this = this;
-    if (doc.readyState == READYSTATE_COMPLETE) {
-      callback();
-    } else {
-      _this.listen(doc, READYSTATE_CHANGE, function stateChange(e) {
-        if (doc.readyState == READYSTATE_COMPLETE) {
-          callback();
-          _this.unlisten(doc, READYSTATE_CHANGE, stateChange);
-        }
-      });
-    }
-  }
-};
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _hsl = __webpack_require__(4);
+var _hsl = __webpack_require__(3);
 
 var _hsl2 = _interopRequireDefault(_hsl);
 
@@ -268,15 +159,15 @@ var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
-var _hslString = __webpack_require__(5);
+var _hslString = __webpack_require__(4);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
-var _rgbString = __webpack_require__(9);
+var _rgbString = __webpack_require__(8);
 
 var _rgbString2 = _interopRequireDefault(_rgbString);
 
-var _hexString = __webpack_require__(8);
+var _hexString = __webpack_require__(7);
 
 var _hexString2 = _interopRequireDefault(_hexString);
 
@@ -395,17 +286,11 @@ color.prototype = {
 module.exports = color;
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _dom = __webpack_require__(1);
-
-var _dom2 = _interopRequireDefault(_dom);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var doc = document;
 
@@ -415,10 +300,11 @@ var doc = document;
 */
 var stylesheet = function stylesheet(overrides) {
   // Create a new style element
-  var style = _dom2.default.appendNew(doc.head, "style", {});
+  var style = doc.createElement("style");
+  doc.head.appendChild(style);
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
-  _dom2.default.append(style, doc.createTextNode(""));
+  style.appendChild(doc.createTextNode(""));
   this.style = style;
   // Create a reference to the style element's CSSStyleSheet object
   // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
@@ -525,7 +411,7 @@ stylesheet.prototype = {
 module.exports = stylesheet;
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -561,13 +447,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _hsl = __webpack_require__(4);
+var _hsl = __webpack_require__(3);
 
 var _hsl2 = _interopRequireDefault(_hsl);
 
@@ -592,7 +478,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -629,33 +515,33 @@ marker.prototype = {
 module.exports = marker;
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _wheel = __webpack_require__(13);
+var _wheel = __webpack_require__(12);
 
 var _wheel2 = _interopRequireDefault(_wheel);
 
-var _slider = __webpack_require__(11);
+var _slider = __webpack_require__(10);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(1);
+var _dom = __webpack_require__(13);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _svg = __webpack_require__(12);
+var _svg = __webpack_require__(11);
 
 var _svg2 = _interopRequireDefault(_svg);
 
-var _color = __webpack_require__(2);
+var _color = __webpack_require__(1);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _stylesheet = __webpack_require__(3);
+var _stylesheet = __webpack_require__(2);
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
@@ -924,7 +810,7 @@ colorWheel.prototype = {
 module.exports = colorWheel;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -992,7 +878,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1023,21 +909,21 @@ module.exports = {
 };
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _colorPicker = __webpack_require__(7);
+var _colorPicker = __webpack_require__(6);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _color = __webpack_require__(2);
+var _color = __webpack_require__(1);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _stylesheet = __webpack_require__(3);
+var _stylesheet = __webpack_require__(2);
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
@@ -1052,17 +938,17 @@ module.exports = {
 };
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _marker = __webpack_require__(6);
+var _marker = __webpack_require__(5);
 
 var _marker2 = _interopRequireDefault(_marker);
 
-var _hslString = __webpack_require__(5);
+var _hslString = __webpack_require__(4);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
@@ -1075,7 +961,7 @@ var slider = function slider(svg, opts) {
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
     min: opts.x + opts.r,
-    max: opts.x - opts.r,
+    max: opts.x + opts.w - opts.r,
     w: opts.w - opts.r * 2
   };
   opts.sliderType = opts.sliderType || "v";
@@ -1150,31 +1036,26 @@ slider.prototype = {
   */
   checkHit: function checkHit(x, y) {
     var opts = this._opts;
-    return x > opts.x && x < opts.x && y > opts.y + opts.w && y < opts.y + opts.h;
+    return x > opts.x && x < opts.x + opts.w && y > opts.y && y < opts.y + opts.h;
   }
 };
 
 module.exports = slider;
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _dom = __webpack_require__(1);
-
-var _dom2 = _interopRequireDefault(_dom);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Quick references to reused math functions
 var PI = Math.PI,
     cos = Math.cos,
     sin = Math.sin;
 
-var gradientid = 0;
+var GRADIENT_ID = 0;
+var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
 var svgGradient = function svgGradient(root, type, stops) {
   switch (type) {
@@ -1186,7 +1067,7 @@ var svgGradient = function svgGradient(root, type, stops) {
   }
   var stopElements = [];
   var gradient = root.insert(root._defs, type, {
-    "id": "irogradient" + gradientid++
+    "id": "irogradient" + GRADIENT_ID++
   });
   for (var offset in stops) {
     stopElements.push(root.insert(gradient, "stop", {
@@ -1203,19 +1084,21 @@ svgGradient.prototype.setAttr = function (index, attr, value) {
 };
 
 var svg = function svg(parent, width, height) {
-  this._root = _dom2.default.appendNew(parent, "svg", {
-    viewBox: [0, 0, width, height].join(" "),
+  var root = document.createElementNS(SVG_NAMESPACE, "svg");
+  parent.appendChild(root);
+  this.setAttrs(root, {
+    // viewBox: [0, 0, width, height].join(" "),
     width: width,
     height: height,
     style: "position:absolute;top:0;left:0;"
-  }, "SVG");
+  });
+  this._root = root;
   this._defs = this.insert(null, "defs");
 };
 
 svg.prototype = {
 
-  insert: function insert(parent, tagName, attrs) {
-    var el = document.createElementNS("http://www.w3.org/2000/svg", tagName);
+  setAttrs: function setAttrs(el, attrs) {
     for (var attr in attrs || {}) {
       var name = attr;
       switch (attr) {
@@ -1228,12 +1111,20 @@ svg.prototype = {
         case "f":
           name = "fill";
           break;
+        case "o":
+          name = "opacity";
+          break;
         default:
           name = attr;
           break;
       }
       el.setAttribute(name, attrs[attr]);
     }
+  },
+
+  insert: function insert(parent, tagName, attrs) {
+    var el = document.createElementNS(SVG_NAMESPACE, tagName);
+    this.setAttrs(el, attrs);
     (parent || this._root).appendChild(el);
     return el;
   },
@@ -1267,13 +1158,13 @@ svg.prototype = {
 module.exports = svg;
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _marker = __webpack_require__(6);
+var _marker = __webpack_require__(5);
 
 var _marker2 = _interopRequireDefault(_marker);
 
@@ -1397,6 +1288,90 @@ wheel.prototype = {
 };
 
 module.exports = wheel;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// Quick reference to the document object and some strings since we usethem more than once
+var doc = document,
+    READYSTATE_COMPLETE = "complete",
+    READYSTATE_CHANGE = "readystatechange";
+
+/**
+ * @desc iterate a list (or create a one-item list from a string), calling callback with each item
+ * @param {ArrayOrString} list an array or string, callback will be called for each array item, or once if a string is given
+ * @param {Function} callback a function to call for each item, the item will be passed as the first parameter
+ * @access private
+*/
+function iterateList(list, callback) {
+  list = "string" == typeof list ? [list] : list;
+  list.forEach(callback);
+};
+
+module.exports = {
+
+  /**
+   * @desc get an element's attribute by name
+   * @param {Element} el target element
+   * @param {String} attrName the name of the attribute to get
+   * @return {String} the value of the attribute
+  */
+  attr: function attr(el, attrName) {
+    return el.getAttribute(attrName);
+  },
+
+  setAttr: function setAttr(el, attrs) {
+    for (var attrName in attrs || {}) {
+      el.setAttribute(attrName, attrs[attrName]);
+    }
+  },
+
+  /**
+   * @desc listen to one or more events on an element
+   * @param {Element} el target element
+   * @param {ArrayOrString} eventList the events to listen to
+   * @param {Function} callback the event callback function
+  */
+  listen: function listen(el, eventList, callback) {
+    iterateList(eventList, function (eventName) {
+      el.addEventListener(eventName, callback);
+    });
+  },
+
+  /**
+   * @desc remove an event listener on an element
+   * @param {Element} el target element
+   * @param {ArrayOrString} eventList the events to remove
+   * @param {Function} callback the event callback function
+  */
+  unlisten: function unlisten(el, eventList, callback) {
+    iterateList(eventList, function (eventName) {
+      el.removeEventListener(eventName, callback);
+    });
+  },
+
+  /**
+   * @desc call callback when the page document is ready
+   * @param {Function} callback callback function to be called
+  */
+  whenReady: function whenReady(callback) {
+    var _this = this;
+    if (doc.readyState == READYSTATE_COMPLETE) {
+      callback();
+    } else {
+      _this.listen(doc, READYSTATE_CHANGE, function stateChange(e) {
+        if (doc.readyState == READYSTATE_COMPLETE) {
+          callback();
+          _this.unlisten(doc, READYSTATE_CHANGE, stateChange);
+        }
+      });
+    }
+  }
+};
 
 /***/ })
 /******/ ]);

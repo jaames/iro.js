@@ -8,7 +8,7 @@ let slider = function (svg, opts) {
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
     min: opts.x + opts.r,
-    max: opts.x - opts.r,
+    max: (opts.x + opts.w) - opts.r,
     w: opts.w - (opts.r * 2)
   };
   opts.sliderType = opts.sliderType || "v";
@@ -83,7 +83,7 @@ slider.prototype = {
   */
   checkHit: function (x, y) {
     var opts = this._opts;
-    return (x > opts.x) && (x < opts.x) && (y > opts.y + opts.w) && (y < opts.y + opts.h);
+    return (x > opts.x) && (x < opts.x + opts.w) && (y > opts.y) && (y < opts.y + opts.h);
   }
 };
 

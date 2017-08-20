@@ -15,31 +15,6 @@ function iterateList(list, callback) {
 };
 
 module.exports = {
-  /**
-   * @desc create a new HTML element
-   * @param {String} tagName the tag type of the element to create
-   * @param {String} nameSpaceType "SVG" = svg namespace, leave false for default namespace
-   * @return {Element} the newly created HTML element
-  */
-  create: function (tagName, nameSpaceType) {
-    return nameSpaceType == "SVG" ? doc.createElementNS("http://www.w3.org/2000/svg", tagName) : doc.createElement(tagName);
-  },
-
-  /**
-   * @desc append a child element to an element
-   * @param {Element} parent the parent element to append to
-   * @param {Element} child the child element to append
-   * @return {Element} the child element, now appended to the parent
-  */
-  append: function (parent, child) {
-    return parent.appendChild(child);
-  },
-
-  appendNew: function (parent, tagName, attrs, nameSpaceType) {
-    var child = this.create(tagName, nameSpaceType);
-    this.setAttr(child, attrs);
-    return parent.appendChild(child);
-  },
 
   /**
    * @desc get an element's attribute by name
