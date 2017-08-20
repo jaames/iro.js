@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Sat Aug 19 2017
+ * Last updated: Sun Aug 20 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
@@ -647,10 +647,12 @@ var marker = function marker(svg, opts) {
   this._el = _dom2.default.appendNew(svg, "g", {}, "SVG");
   [[5, "#000"], [2, "#fff"]].map(function (ring) {
     _dom2.default.appendNew(_this._el, "circle", {
-      r: opts.r,
-      style: "fill:none;stroke-width:" + ring[0] + ";stroke:" + ring[1],
-      cy: 0,
-      cx: 0
+      "r": opts.r,
+      "fill": "none",
+      "stroke-width": ring[0],
+      "stroke": ring[1],
+      "cy": 0,
+      "cx": 0
     }, "SVG");
   });
 };
@@ -1147,21 +1149,43 @@ var slider = function slider(ctx, svg, opts) {
   };
   opts.sliderType = opts.sliderType || "v";
   this.type = "slider";
-  this.marker = new _marker2.default(svg, opts.marker);
   this._opts = opts;
   var borderWidth = opts.border.w;
   var radius = opts.r + borderWidth / 2;
+
+  var defs = _dom2.default.appendNew(svg, "defs", {}, "SVG");
+
+  var gradient = _dom2.default.appendNew(defs, "linearGradient", {
+    "id": "slidergradient"
+  }, "SVG");
+
+  var stop1 = _dom2.default.appendNew(gradient, "stop", {
+    "offset": "0%",
+    "stop-color": "#000"
+  }, "SVG");
+
+  var stop2 = _dom2.default.appendNew(gradient, "stop", {
+    "offset": "100%",
+    "stop-color": "#f00"
+  }, "SVG");
+
+  this.stop2 = stop2;
+
   if (borderWidth > 0) {
     _dom2.default.appendNew(svg, "rect", {
-      rx: radius,
-      ry: radius,
-      x: opts.x - borderWidth / 2,
-      y: opts.y - borderWidth / 2,
-      width: opts.w + borderWidth,
-      height: opts.h + borderWidth,
-      style: "fill:none;stroke-width:" + borderWidth + ";stroke:" + opts.border.color
+      "rx": radius,
+      "ry": radius,
+      "x": opts.x - borderWidth / 2,
+      "y": opts.y - borderWidth / 2,
+      "width": opts.w + borderWidth,
+      "height": opts.h + borderWidth,
+      "fill": "url(#slidergradient)",
+      "stroke-width": borderWidth,
+      "stroke": opts.border.color
     }, "SVG");
   }
+
+  this.marker = new _marker2.default(svg, opts.marker);
 };
 
 slider.prototype = {
@@ -1169,44 +1193,7 @@ slider.prototype = {
     * @desc redraw this UI element
   */
   draw: function draw(hsv) {
-    var ctx = this._ctx;
-    var opts = this._opts;
-    var x1 = opts.x1,
-        y1 = opts.y1,
-        x2 = opts.x2,
-        y2 = opts.y2,
-        w = opts.w,
-        h = opts.h,
-        r = opts.r;
-
-    // Clear the existing UI
-    ctx.clearRect(x1, y1, w, h);
-
-    // Draw a rounded rect
-    // Modified from http://stackoverflow.com/a/7838871
-    ctx.beginPath();
-    ctx.moveTo(x1 + r, y1);
-    ctx.arcTo(x2, y1, x2, y2, r);
-    ctx.arcTo(x2, y2, x1, y2, r);
-    ctx.arcTo(x1, y2, x1, y1, r);
-    ctx.arcTo(x1, y1, x2, y1, r);
-    ctx.closePath();
-
-    // I plan to have different slider "types" in the future
-    // (I'd like to add a transparency slider at some point, for example)
-    var fill;
-
-    // For now the only type is "V", meaning this slider adjusts the HSV V channel
-    if (opts.sliderType == "v") {
-      fill = _gradient2.default.linear(ctx, x1, y1, x2, y2, {
-        0: "#000",
-        1: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 })
-      });
-    }
-
-    // Draw gradient
-    ctx.fillStyle = fill;
-    ctx.fill();
+    _dom2.default.setAttr(this.stop2, { "stop-color": _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
   },
 
   /**
@@ -1294,12 +1281,14 @@ var wheel = function wheel(ctx, svg, opts) {
   this._opts = opts;
   this.type = "wheel";
   this.marker = new _marker2.default(svg, opts.marker);
-  if (borderWidth > 0) {
+  if (opts.border.w > 0) {
     _dom2.default.appendNew(svg, "circle", {
-      r: opts.r + opts.border.w / 2,
-      style: "fill:none;stroke-width:" + opts.border.w + ";stroke:" + opts.border.color,
-      cy: opts.cY,
-      cx: opts.cX
+      "r": opts.r + opts.border.w / 2,
+      "fill": "none",
+      "stroke-width": opts.border.w,
+      "stroke": opts.border.color,
+      "cy": opts.cY,
+      "cx": opts.cX
     }, "SVG");
   }
 };

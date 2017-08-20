@@ -17,12 +17,14 @@ let wheel = function (ctx, svg, opts) {
   this._opts = opts;
   this.type = "wheel";
   this.marker = new marker(svg, opts.marker);
-  if (borderWidth > 0) {
+  if (opts.border.w > 0) {
     dom.appendNew(svg, "circle", {
-      r: opts.r + opts.border.w / 2,
-      style: "fill:none;stroke-width:"+ opts.border.w + ";stroke:" + opts.border.color,
-      cy: opts.cY,
-      cx: opts.cX,
+      "r": opts.r + opts.border.w / 2,
+      "fill": "none",
+      "stroke-width": opts.border.w,
+      "stroke": opts.border.color,
+      "cy": opts.cY,
+      "cx": opts.cX,
     }, "SVG");
   }
 };

@@ -20,21 +20,44 @@ let slider = function (ctx, svg, opts) {
   };
   opts.sliderType = opts.sliderType || "v";
   this.type = "slider";
-  this.marker = new marker(svg, opts.marker);
   this._opts = opts;
   var borderWidth = opts.border.w;
   var radius = opts.r + borderWidth / 2;
+
+  var defs = dom.appendNew(svg, "defs", {}, "SVG");
+
+  var gradient = dom.appendNew(defs, "linearGradient", {
+    "id": "slidergradient"
+  }, "SVG");
+
+  var stop1 = dom.appendNew(gradient, "stop", {
+    "offset": "0%",
+    "stop-color": "#000",
+  }, "SVG");
+
+  var stop2 = dom.appendNew(gradient, "stop", {
+    "offset": "100%",
+    "stop-color": "#fff",
+  }, "SVG");
+
+  this.stop2 = stop2;
+
   if (borderWidth > 0) {
     dom.appendNew(svg, "rect", {
-      rx: radius,
-      ry: radius,
-      x: opts.x - borderWidth / 2,
-      y: opts.y - borderWidth / 2,
-      width: opts.w + borderWidth,
-      height: opts.h + borderWidth,
-      style: "fill:none;stroke-width:"+ borderWidth + ";stroke:" + opts.border.color,
+      "rx": radius,
+      "ry": radius,
+      "x": opts.x - borderWidth / 2,
+      "y": opts.y - borderWidth / 2,
+      "width": opts.w + borderWidth,
+      "height": opts.h + borderWidth,
+      "fill": "url(#slidergradient)",
+      "stroke-width": borderWidth,
+      "stroke": opts.border.color,
     }, "SVG");
   }
+
+
+  this.marker = new marker(svg, opts.marker);
 };
 
 slider.prototype = {
@@ -42,44 +65,45 @@ slider.prototype = {
     * @desc redraw this UI element
   */
   draw: function (hsv) {
-    var ctx = this._ctx;
-    var opts = this._opts;
-    var x1 = opts.x1,
-        y1 = opts.y1,
-        x2 = opts.x2,
-        y2 = opts.y2,
-        w = opts.w,
-        h = opts.h,
-        r = opts.r;
-
-    // Clear the existing UI
-    ctx.clearRect(x1, y1, w, h);
-
-    // Draw a rounded rect
-    // Modified from http://stackoverflow.com/a/7838871
-    ctx.beginPath();
-    ctx.moveTo(x1 + r, y1);
-    ctx.arcTo(x2, y1, x2, y2, r);
-    ctx.arcTo(x2, y2, x1, y2, r);
-    ctx.arcTo(x1, y2, x1, y1, r);
-    ctx.arcTo(x1, y1, x2, y1, r);
-    ctx.closePath();
-
-    // I plan to have different slider "types" in the future
-    // (I'd like to add a transparency slider at some point, for example)
-    var fill;
-
-    // For now the only type is "V", meaning this slider adjusts the HSV V channel
-    if (opts.sliderType == "v") {
-      fill = gradient.linear(ctx, x1, y1, x2, y2, {
-        0: "#000",
-        1: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}),
-      });
-    }
-
-    // Draw gradient
-    ctx.fillStyle = fill;
-    ctx.fill();
+    dom.setAttr(this.stop2, {"stop-color": hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100})});
+    // var ctx = this._ctx;
+    // var opts = this._opts;
+    // var x1 = opts.x1,
+    //     y1 = opts.y1,
+    //     x2 = opts.x2,
+    //     y2 = opts.y2,
+    //     w = opts.w,
+    //     h = opts.h,
+    //     r = opts.r;
+    //
+    // // Clear the existing UI
+    // ctx.clearRect(x1, y1, w, h);
+    //
+    // // Draw a rounded rect
+    // // Modified from http://stackoverflow.com/a/7838871
+    // ctx.beginPath();
+    // ctx.moveTo(x1 + r, y1);
+    // ctx.arcTo(x2, y1, x2, y2, r);
+    // ctx.arcTo(x2, y2, x1, y2, r);
+    // ctx.arcTo(x1, y2, x1, y1, r);
+    // ctx.arcTo(x1, y1, x2, y1, r);
+    // ctx.closePath();
+    //
+    // // I plan to have different slider "types" in the future
+    // // (I'd like to add a transparency slider at some point, for example)
+    // var fill;
+    //
+    // // For now the only type is "V", meaning this slider adjusts the HSV V channel
+    // if (opts.sliderType == "v") {
+    //   fill = gradient.linear(ctx, x1, y1, x2, y2, {
+    //     0: "#000",
+    //     1: ,
+    //   });
+    // }
+    //
+    // // Draw gradient
+    // ctx.fillStyle = fill;
+    // ctx.fill();
   },
 
   /**

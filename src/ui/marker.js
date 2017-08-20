@@ -9,10 +9,12 @@ let marker = function (svg, opts) {
   this._el = dom.appendNew(svg, "g", {}, "SVG");
   [[5, "#000"], [2, "#fff"]].map((ring) => {
     dom.appendNew(this._el, "circle", {
-      r: opts.r,
-      style: "fill:none;stroke-width:"+ ring[0] + ";stroke:" + ring[1],
-      cy: 0,
-      cx: 0,
+      "r": opts.r,
+      "fill": "none",
+      "stroke-width": ring[0],
+      "stroke": ring[1],
+      "cy": 0,
+      "cx": 0,
     }, "SVG");
   });
 };
