@@ -25,6 +25,7 @@ module.exports = function (env) {
     "whenReady",
     // ui/svg.js
     "insert",
+    "setAttrs",
     "arc",
     "circle",
     "gradient",

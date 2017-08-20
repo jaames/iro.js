@@ -15,23 +15,6 @@ function iterateList(list, callback) {
 };
 
 module.exports = {
-
-  /**
-   * @desc get an element's attribute by name
-   * @param {Element} el target element
-   * @param {String} attrName the name of the attribute to get
-   * @return {String} the value of the attribute
-  */
-  attr: function (el, attrName) {
-    return el.getAttribute(attrName);
-  },
-
-  setAttr: function (el, attrs) {
-    for (var attrName in (attrs || {})) {
-      el.setAttribute(attrName, attrs[attrName]);
-    }
-  },
-
   /**
    * @desc listen to one or more events on an element
    * @param {Element} el target element

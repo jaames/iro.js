@@ -24,7 +24,8 @@ let svgGradient = function (root, type, stops) {
       "stop-color": stops[offset],
     }));
   }
-  this.id = gradient.id;
+  this.el = gradient;
+  this.url = "url(#" + gradient.id + ")";
   this.stops = stopElements;
 };
 

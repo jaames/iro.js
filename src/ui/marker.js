@@ -7,9 +7,9 @@ let marker = function (svg, opts) {
   var group = svg.insert(null, "g");
   [[5, "#000"], [2, "#fff"]].map((ring) => {
     svg.circle(0, 0, opts.r, group, {
-      "f": "none",
-      "sw": ring[0],
-      "s": ring[1],
+      f: "none",
+      sw: ring[0],
+      s: ring[1],
     });
   });
   this._el = group;

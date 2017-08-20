@@ -493,9 +493,9 @@ var marker = function marker(svg, opts) {
   var group = svg.insert(null, "g");
   [[5, "#000"], [2, "#fff"]].map(function (ring) {
     svg.circle(0, 0, opts.r, group, {
-      "f": "none",
-      "sw": ring[0],
-      "s": ring[1]
+      f: "none",
+      sw: ring[0],
+      s: ring[1]
     });
   });
   this._el = group;
@@ -595,12 +595,6 @@ var colorWheel = function colorWheel(el, opts) {
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
     var width = opts.width || parseInt(el.width) || 320;
     var height = opts.height || parseInt(el.height) || 320;
-    // Create UI layers
-    // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
-    // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-    var pxRatio = devicePixelRatio || 1;
-    // Create a layer for each name
-    // Create a new canvas and add it to the page
 
     var svgRoot = new _svg2.default(el, width, height);
 
@@ -976,15 +970,15 @@ var slider = function slider(svg, opts) {
   });
 
   svg.insert(null, "rect", {
-    "rx": radius,
-    "ry": radius,
-    "x": opts.x - borderWidth / 2,
-    "y": opts.y - borderWidth / 2,
-    "width": opts.w + borderWidth,
-    "height": opts.h + borderWidth,
-    "f": "url(#" + gradient.id + ")",
-    "sw": borderWidth,
-    "s": opts.border.color
+    rx: radius,
+    ry: radius,
+    x: opts.x - borderWidth / 2,
+    y: opts.y - borderWidth / 2,
+    width: opts.w + borderWidth,
+    height: opts.h + borderWidth,
+    f: gradient.url,
+    sw: borderWidth,
+    s: opts.border.color
   });
 
   this._gradient = gradient;
@@ -1075,7 +1069,8 @@ var svgGradient = function svgGradient(root, type, stops) {
       "stop-color": stops[offset]
     }));
   }
-  this.id = gradient.id;
+  this.el = gradient;
+  this.url = "url(#" + gradient.id + ")";
   this.stops = stopElements;
 };
 
@@ -1190,26 +1185,26 @@ var wheel = function wheel(svg, opts) {
   });
 
   var group = svg.insert(null, "g", {
-    "sw": opts.r,
-    "f": "none"
+    sw: opts.r,
+    f: "none"
   });
 
   for (var hue = 0; hue < 360; hue++) {
     svg.arc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5, group, {
-      "s": "hsl(" + hue + ",100%," + 100 / 2 + "%)"
+      s: "hsl(" + hue + ",100%," + 100 / 2 + "%)"
     });
   }
 
   gradient.setAttr(1, "stop-opacity", 0);
 
   svg.circle(opts.cX, opts.cY, opts.r + opts.border.w / 2, null, {
-    "f": "url(#" + gradient.id + ")",
-    "s": opts.border.color,
-    "sw": opts.border.w
+    f: gradient.url,
+    s: opts.border.color,
+    sw: opts.border.w
   });
 
   this._lightness = svg.circle(opts.cX, opts.cY, opts.r, null, {
-    "f": "#000"
+    f: "#000"
   });
 
   this.marker = new _marker2.default(svg, opts.marker);
@@ -1313,23 +1308,6 @@ function iterateList(list, callback) {
 };
 
 module.exports = {
-
-  /**
-   * @desc get an element's attribute by name
-   * @param {Element} el target element
-   * @param {String} attrName the name of the attribute to get
-   * @return {String} the value of the attribute
-  */
-  attr: function attr(el, attrName) {
-    return el.getAttribute(attrName);
-  },
-
-  setAttr: function setAttr(el, attrs) {
-    for (var attrName in attrs || {}) {
-      el.setAttribute(attrName, attrs[attrName]);
-    }
-  },
-
   /**
    * @desc listen to one or more events on an element
    * @param {Element} el target element

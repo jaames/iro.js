@@ -54,13 +54,7 @@ let colorWheel = function (el, opts) {
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
     var width = opts.width || parseInt(el.width) || 320;
     var height = opts.height || parseInt(el.height) || 320;
-    // Create UI layers
-    // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
-    // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-    var pxRatio = devicePixelRatio || 1;
-    // Create a layer for each name
-    // Create a new canvas and add it to the page
-
+    
     var svgRoot = new svg(el, width, height);
 
     this.el = el;

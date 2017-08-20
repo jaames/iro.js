@@ -23,15 +23,15 @@ let slider = function (svg, opts) {
   });
 
   svg.insert(null, "rect", {
-    "rx": radius,
-    "ry": radius,
-    "x": opts.x - borderWidth / 2,
-    "y": opts.y - borderWidth / 2,
-    "width": opts.w + borderWidth,
-    "height": opts.h + borderWidth,
-    "f": "url(#" + gradient.id + ")",
-    "sw": borderWidth,
-    "s": opts.border.color,
+    rx: radius,
+    ry: radius,
+    x: opts.x - borderWidth / 2,
+    y: opts.y - borderWidth / 2,
+    width: opts.w + borderWidth,
+    height: opts.h + borderWidth,
+    f: gradient.url,
+    sw: borderWidth,
+    s: opts.border.color,
   });
 
   this._gradient = gradient;

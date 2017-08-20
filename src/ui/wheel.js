@@ -20,26 +20,26 @@ let wheel = function (svg, opts) {
   });
 
   var group = svg.insert(null, "g", {
-    "sw": opts.r,
-    "f": "none",
+    sw: opts.r,
+    f: "none",
   });
 
   for (var hue = 0; hue < 360; hue++) {
     svg.arc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5, group, {
-      "s": "hsl(" + hue + ",100%," + (100 / 2) + "%)"
+      s: "hsl(" + hue + ",100%," + (100 / 2) + "%)"
     });
   }
 
   gradient.setAttr(1, "stop-opacity", 0);
 
   svg.circle(opts.cX, opts.cY, opts.r + opts.border.w / 2, null, {
-    "f": "url(#" + gradient.id + ")",
-    "s": opts.border.color,
-    "sw": opts.border.w,
+    f: gradient.url,
+    s: opts.border.color,
+    sw: opts.border.w,
   });
 
   this._lightness = svg.circle(opts.cX, opts.cY, opts.r, null, {
-    "f": "#000",
+    f: "#000",
   });
 
   this.marker = new marker(svg, opts.marker);
