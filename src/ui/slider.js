@@ -1,5 +1,6 @@
 import gradient from "ui/gradient";
 import marker from "ui/marker";
+import dom from "util/dom";
 import hslString from "colorModels/hslString";
 
 /**
@@ -11,7 +12,6 @@ let slider = function (ctx, svg, opts) {
   opts.y1 = opts.y;
   opts.x2 = opts.x + opts.w;
   opts.y2 = opts.y + opts.h;
-
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
     min: opts.x + opts.r,
@@ -22,6 +22,19 @@ let slider = function (ctx, svg, opts) {
   this.type = "slider";
   this.marker = new marker(svg, opts.marker);
   this._opts = opts;
+  var borderWidth = opts.border.w;
+  var radius = opts.r + borderWidth / 2;
+  if (borderWidth > 0) {
+    dom.appendNew(svg, "rect", {
+      rx: radius,
+      ry: radius,
+      x: opts.x - borderWidth / 2,
+      y: opts.y - borderWidth / 2,
+      width: opts.w + borderWidth,
+      height: opts.h + borderWidth,
+      style: "fill:none;stroke-width:"+ borderWidth + ";stroke:" + opts.border.color,
+    }, "SVG");
+  }
 };
 
 slider.prototype = {
@@ -37,12 +50,10 @@ slider.prototype = {
         y2 = opts.y2,
         w = opts.w,
         h = opts.h,
-        r = opts.r,
-        border = opts.border,
-        borderWidth = border.w;
+        r = opts.r;
 
     // Clear the existing UI
-    ctx.clearRect(x1 - borderWidth, y1 - borderWidth, w + (borderWidth * 2), h + (borderWidth * 2));
+    ctx.clearRect(x1, y1, w, h);
 
     // Draw a rounded rect
     // Modified from http://stackoverflow.com/a/7838871
@@ -64,13 +75,6 @@ slider.prototype = {
         0: "#000",
         1: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}),
       });
-    }
-
-    // Draw border
-    if (borderWidth) {
-      ctx.strokeStyle = border.color;
-      ctx.lineWidth = borderWidth * 2;
-      ctx.stroke();
     }
 
     // Draw gradient

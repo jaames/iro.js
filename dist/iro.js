@@ -80,77 +80,6 @@ var iro =
 "use strict";
 
 
-var round = Math.round;
-
-module.exports = {
-  name: "rgb",
-
-  fromHsv: function fromHsv(hsv) {
-    var r, g, b, i, f, p, q, t;
-    var h = hsv.h / 360,
-        s = hsv.s / 100,
-        v = hsv.v / 100;
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-      case 0:
-        r = v, g = t, b = p;break;
-      case 1:
-        r = q, g = v, b = p;break;
-      case 2:
-        r = p, g = v, b = t;break;
-      case 3:
-        r = p, g = q, b = v;break;
-      case 4:
-        r = t, g = p, b = v;break;
-      case 5:
-        r = v, g = p, b = q;break;
-    }
-    return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
-  },
-
-  toHsv: function toHsv(rgb) {
-    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
-    var r = rgb.r / 255,
-        g = rgb.g / 255,
-        b = rgb.b / 255;
-    var max = Math.max(r, g, b),
-        min = Math.min(r, g, b),
-        delta = max - min;
-    var hue;
-    switch (max) {
-      case min:
-        hue = 0;
-        break;
-      case r:
-        hue = (g - b) / delta + (g < b ? 6 : 0);
-        break;
-      case g:
-        hue = (b - r) / delta + 2;
-        break;
-      case b:
-        hue = (r - g) / delta + 4;
-        break;
-    }
-    hue /= 6;
-    return {
-      h: round(hue * 360),
-      s: round(max === 0 ? 0 : delta / max * 100),
-      v: round(max * 100)
-    };
-  }
-};
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 // Quick reference to the document object and some strings since we usethem more than once
 var doc = document,
     READYSTATE_COMPLETE = "complete",
@@ -263,6 +192,77 @@ module.exports = {
 };
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var round = Math.round;
+
+module.exports = {
+  name: "rgb",
+
+  fromHsv: function fromHsv(hsv) {
+    var r, g, b, i, f, p, q, t;
+    var h = hsv.h / 360,
+        s = hsv.s / 100,
+        v = hsv.v / 100;
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+      case 0:
+        r = v, g = t, b = p;break;
+      case 1:
+        r = q, g = v, b = p;break;
+      case 2:
+        r = p, g = v, b = t;break;
+      case 3:
+        r = p, g = q, b = v;break;
+      case 4:
+        r = t, g = p, b = v;break;
+      case 5:
+        r = v, g = p, b = q;break;
+    }
+    return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
+  },
+
+  toHsv: function toHsv(rgb) {
+    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
+    var r = rgb.r / 255,
+        g = rgb.g / 255,
+        b = rgb.b / 255;
+    var max = Math.max(r, g, b),
+        min = Math.min(r, g, b),
+        delta = max - min;
+    var hue;
+    switch (max) {
+      case min:
+        hue = 0;
+        break;
+      case r:
+        hue = (g - b) / delta + (g < b ? 6 : 0);
+        break;
+      case g:
+        hue = (b - r) / delta + 2;
+        break;
+      case b:
+        hue = (r - g) / delta + 4;
+        break;
+    }
+    hue /= 6;
+    return {
+      h: round(hue * 360),
+      s: round(max === 0 ? 0 : delta / max * 100),
+      v: round(max * 100)
+    };
+  }
+};
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -273,7 +273,7 @@ var _hsl = __webpack_require__(4);
 
 var _hsl2 = _interopRequireDefault(_hsl);
 
-var _rgb = __webpack_require__(0);
+var _rgb = __webpack_require__(1);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
@@ -410,7 +410,7 @@ module.exports = color;
 "use strict";
 
 
-var _dom = __webpack_require__(1);
+var _dom = __webpack_require__(0);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -630,7 +630,7 @@ module.exports = {
 "use strict";
 
 
-var _dom = __webpack_require__(1);
+var _dom = __webpack_require__(0);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -685,7 +685,7 @@ var _slider = __webpack_require__(12);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(1);
+var _dom = __webpack_require__(0);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -984,7 +984,7 @@ module.exports = colorWheel;
 "use strict";
 
 
-var _rgb = __webpack_require__(0);
+var _rgb = __webpack_require__(1);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
@@ -1052,7 +1052,7 @@ module.exports = {
 "use strict";
 
 
-var _rgb = __webpack_require__(0);
+var _rgb = __webpack_require__(1);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
@@ -1120,6 +1120,10 @@ var _marker = __webpack_require__(7);
 
 var _marker2 = _interopRequireDefault(_marker);
 
+var _dom = __webpack_require__(0);
+
+var _dom2 = _interopRequireDefault(_dom);
+
 var _hslString = __webpack_require__(5);
 
 var _hslString2 = _interopRequireDefault(_hslString);
@@ -1135,7 +1139,6 @@ var slider = function slider(ctx, svg, opts) {
   opts.y1 = opts.y;
   opts.x2 = opts.x + opts.w;
   opts.y2 = opts.y + opts.h;
-
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
     min: opts.x + opts.r,
@@ -1146,6 +1149,19 @@ var slider = function slider(ctx, svg, opts) {
   this.type = "slider";
   this.marker = new _marker2.default(svg, opts.marker);
   this._opts = opts;
+  var borderWidth = opts.border.w;
+  var radius = opts.r + borderWidth / 2;
+  if (borderWidth > 0) {
+    _dom2.default.appendNew(svg, "rect", {
+      rx: radius,
+      ry: radius,
+      x: opts.x - borderWidth / 2,
+      y: opts.y - borderWidth / 2,
+      width: opts.w + borderWidth,
+      height: opts.h + borderWidth,
+      style: "fill:none;stroke-width:" + borderWidth + ";stroke:" + opts.border.color
+    }, "SVG");
+  }
 };
 
 slider.prototype = {
@@ -1161,12 +1177,10 @@ slider.prototype = {
         y2 = opts.y2,
         w = opts.w,
         h = opts.h,
-        r = opts.r,
-        border = opts.border,
-        borderWidth = border.w;
+        r = opts.r;
 
     // Clear the existing UI
-    ctx.clearRect(x1 - borderWidth, y1 - borderWidth, w + borderWidth * 2, h + borderWidth * 2);
+    ctx.clearRect(x1, y1, w, h);
 
     // Draw a rounded rect
     // Modified from http://stackoverflow.com/a/7838871
@@ -1188,13 +1202,6 @@ slider.prototype = {
         0: "#000",
         1: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 })
       });
-    }
-
-    // Draw border
-    if (borderWidth) {
-      ctx.strokeStyle = border.color;
-      ctx.lineWidth = borderWidth * 2;
-      ctx.stroke();
     }
 
     // Draw gradient
@@ -1266,6 +1273,10 @@ var _marker = __webpack_require__(7);
 
 var _marker2 = _interopRequireDefault(_marker);
 
+var _dom = __webpack_require__(0);
+
+var _dom2 = _interopRequireDefault(_dom);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Quick references to reused math functions
@@ -1283,6 +1294,14 @@ var wheel = function wheel(ctx, svg, opts) {
   this._opts = opts;
   this.type = "wheel";
   this.marker = new _marker2.default(svg, opts.marker);
+  if (borderWidth > 0) {
+    _dom2.default.appendNew(svg, "circle", {
+      r: opts.r + opts.border.w / 2,
+      style: "fill:none;stroke-width:" + opts.border.w + ";stroke:" + opts.border.color,
+      cy: opts.cY,
+      cx: opts.cX
+    }, "SVG");
+  }
 };
 
 wheel.prototype = {
@@ -1301,17 +1320,7 @@ wheel.prototype = {
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
-    ctx.clearRect(x - radius - borderWidth, y - radius - borderWidth, (radius + borderWidth) * 2, (radius + borderWidth) * 2);
-
-    // Draw border
-    if (borderWidth) {
-      ctx.lineWidth = radius + borderWidth * 2;
-      ctx.strokeStyle = border.color;
-      ctx.beginPath();
-      ctx.arc(x, y, radius / 2, 0, 2 * PI);
-      ctx.stroke();
-    }
-
+    ctx.clearRect(x - radius - borderWidth, y - radius - borderWidth, radius * 2, radius * 2);
     ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree

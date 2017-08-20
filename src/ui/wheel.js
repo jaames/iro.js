@@ -1,5 +1,6 @@
 import gradient from "ui/gradient";
 import marker from "ui/marker";
+import dom from "util/dom";
 
 // Quick references to reused math functions
 var PI = Math.PI,
@@ -16,6 +17,14 @@ let wheel = function (ctx, svg, opts) {
   this._opts = opts;
   this.type = "wheel";
   this.marker = new marker(svg, opts.marker);
+  if (borderWidth > 0) {
+    dom.appendNew(svg, "circle", {
+      r: opts.r + opts.border.w / 2,
+      style: "fill:none;stroke-width:"+ opts.border.w + ";stroke:" + opts.border.color,
+      cy: opts.cY,
+      cx: opts.cX,
+    }, "SVG");
+  }
 };
 
 wheel.prototype = {
@@ -34,17 +43,7 @@ wheel.prototype = {
         radius = opts.r;
 
     // Clear the area where the wheel will be drawn
-    ctx.clearRect((x - radius) - borderWidth, (y - radius) - borderWidth, (radius + borderWidth) * 2, (radius + borderWidth) * 2);
-
-    // Draw border
-    if (borderWidth) {
-      ctx.lineWidth = radius + (borderWidth * 2);
-      ctx.strokeStyle = border.color;
-      ctx.beginPath();
-      ctx.arc(x, y, radius / 2, 0, 2 * PI);
-      ctx.stroke();
-    }
-
+    ctx.clearRect((x - radius) - borderWidth, (y - radius) - borderWidth, radius * 2, radius * 2);
     ctx.lineWidth = radius;
 
     // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
