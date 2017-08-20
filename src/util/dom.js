@@ -16,15 +16,6 @@ function iterateList(list, callback) {
 
 module.exports = {
   /**
-   * @desc find a html element that matches a CSS selector
-   * @param {String} selector the CSS selector to be used to target a HTML element
-   * @return {Element} the HTML element that matches the selector given
-  */
-  $: function (selector) {
-    return doc.querySelector(selector);
-  },
-
-  /**
    * @desc create a new HTML element
    * @param {String} tagName the tag type of the element to create
    * @param {String} nameSpaceType "SVG" = svg namespace, leave false for default namespace

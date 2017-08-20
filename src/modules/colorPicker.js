@@ -1,6 +1,7 @@
 import wheel from "ui/wheel";
 import slider from "ui/slider";
 import dom from "util/dom";
+import svg from "ui/svg";
 
 import iroColor from "modules/color";
 import iroStyleSheet from "modules/stylesheet";
@@ -45,14 +46,14 @@ let colorWheel = function (el, opts) {
   // Wait for the document to be ready, then init the UI
   dom.whenReady(function () {
     // If `el` is a string, use it to select an Element, else assume it's an element
-    el = ("string" == typeof el) ? dom.$(el) : el;
+    el = ("string" == typeof el) ? document.querySelector(el) : el;
     // Make sure the canvas wrapper is position:relative
     // This is because we'll be using position:absolute to stack the canvas layers
     el.style.cssText += "position:relative";
     // Find the width and height for the UI
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-    var width = opts.width || parseInt(dom.attr(el, "width")) || 320;
-    var height = opts.height || parseInt(dom.attr(el, "height")) || 320;
+    var width = opts.width || parseInt(el.width) || 320;
+    var height = opts.height || parseInt(el.height) || 320;
     // Create UI layers
     // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
     // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
@@ -60,26 +61,10 @@ let colorWheel = function (el, opts) {
     // Create a layer for each name
     // Create a new canvas and add it to the page
 
-    var svg = dom.appendNew(el, "svg", {
-      viewBox: [0, 0, width, height].join(" "),
-      width: width,
-      height: height,
-      style: "position:absolute;top:0;left:0;"
-    }, "SVG");
-
-    var canvas = dom.appendNew(el, "canvas", {
-      width: width * pxRatio,
-      height: height * pxRatio,
-      style: "width:" + width + "px;height:" + height + "px"
-    });
-
-    var ctx = canvas.getContext("2d");
-    ctx.scale(pxRatio, pxRatio);
+    var svgRoot = new svg(el, width, height);
 
     this.el = el;
-    this.canvas = canvas;
-    this.ctx = ctx;
-    this.svg = svg;
+    this.svg = svgRoot;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,
@@ -98,7 +83,7 @@ let colorWheel = function (el, opts) {
     };
     // Create UI elements
     this.ui = [
-      new wheel(ctx, svg, {
+      new wheel(svgRoot, {
         cX: leftMargin + (bodyWidth / 2),
         cY: bodyWidth / 2,
         r: wheelRadius,
@@ -106,7 +91,7 @@ let colorWheel = function (el, opts) {
         marker: marker,
         border: borderStyles
       }),
-      new slider(ctx, svg, {
+      new slider(svgRoot, {
         sliderType: "v",
         x: leftMargin + borderWidth,
         y: bodyWidth + sliderMargin,
@@ -189,7 +174,7 @@ colorWheel.prototype = {
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e,
         // Get the screen position of the UI
-        rect = this.canvas.getBoundingClientRect();
+        rect = this.el.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,

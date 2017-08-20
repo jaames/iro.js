@@ -23,9 +23,11 @@ module.exports = function (env) {
     "listen",
     "unlisten",
     "whenReady",
-    // ui/gradient.js
-    "radial",
-    "linear"
+    // ui/svg.js
+    "insert",
+    "arc",
+    "circle",
+    "gradient",
   ]
 
   var config = {

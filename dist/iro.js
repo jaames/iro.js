@@ -70,11 +70,82 @@ var iro =
 /******/ 	__webpack_require__.p = "/test";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var round = Math.round;
+
+module.exports = {
+  name: "rgb",
+
+  fromHsv: function fromHsv(hsv) {
+    var r, g, b, i, f, p, q, t;
+    var h = hsv.h / 360,
+        s = hsv.s / 100,
+        v = hsv.v / 100;
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+      case 0:
+        r = v, g = t, b = p;break;
+      case 1:
+        r = q, g = v, b = p;break;
+      case 2:
+        r = p, g = v, b = t;break;
+      case 3:
+        r = p, g = q, b = v;break;
+      case 4:
+        r = t, g = p, b = v;break;
+      case 5:
+        r = v, g = p, b = q;break;
+    }
+    return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
+  },
+
+  toHsv: function toHsv(rgb) {
+    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
+    var r = rgb.r / 255,
+        g = rgb.g / 255,
+        b = rgb.b / 255;
+    var max = Math.max(r, g, b),
+        min = Math.min(r, g, b),
+        delta = max - min;
+    var hue;
+    switch (max) {
+      case min:
+        hue = 0;
+        break;
+      case r:
+        hue = (g - b) / delta + (g < b ? 6 : 0);
+        break;
+      case g:
+        hue = (b - r) / delta + 2;
+        break;
+      case b:
+        hue = (r - g) / delta + 4;
+        break;
+    }
+    hue /= 6;
+    return {
+      h: round(hue * 360),
+      s: round(max === 0 ? 0 : delta / max * 100),
+      v: round(max * 100)
+    };
+  }
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -97,15 +168,6 @@ function iterateList(list, callback) {
 };
 
 module.exports = {
-  /**
-   * @desc find a html element that matches a CSS selector
-   * @param {String} selector the CSS selector to be used to target a HTML element
-   * @return {Element} the HTML element that matches the selector given
-  */
-  $: function $(selector) {
-    return doc.querySelector(selector);
-  },
-
   /**
    * @desc create a new HTML element
    * @param {String} tagName the tag type of the element to create
@@ -192,77 +254,6 @@ module.exports = {
 };
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var round = Math.round;
-
-module.exports = {
-  name: "rgb",
-
-  fromHsv: function fromHsv(hsv) {
-    var r, g, b, i, f, p, q, t;
-    var h = hsv.h / 360,
-        s = hsv.s / 100,
-        v = hsv.v / 100;
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-      case 0:
-        r = v, g = t, b = p;break;
-      case 1:
-        r = q, g = v, b = p;break;
-      case 2:
-        r = p, g = v, b = t;break;
-      case 3:
-        r = p, g = q, b = v;break;
-      case 4:
-        r = t, g = p, b = v;break;
-      case 5:
-        r = v, g = p, b = q;break;
-    }
-    return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
-  },
-
-  toHsv: function toHsv(rgb) {
-    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
-    var r = rgb.r / 255,
-        g = rgb.g / 255,
-        b = rgb.b / 255;
-    var max = Math.max(r, g, b),
-        min = Math.min(r, g, b),
-        delta = max - min;
-    var hue;
-    switch (max) {
-      case min:
-        hue = 0;
-        break;
-      case r:
-        hue = (g - b) / delta + (g < b ? 6 : 0);
-        break;
-      case g:
-        hue = (b - r) / delta + 2;
-        break;
-      case b:
-        hue = (r - g) / delta + 4;
-        break;
-    }
-    hue /= 6;
-    return {
-      h: round(hue * 360),
-      s: round(max === 0 ? 0 : delta / max * 100),
-      v: round(max * 100)
-    };
-  }
-};
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -273,7 +264,7 @@ var _hsl = __webpack_require__(4);
 
 var _hsl2 = _interopRequireDefault(_hsl);
 
-var _rgb = __webpack_require__(1);
+var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
@@ -281,11 +272,11 @@ var _hslString = __webpack_require__(5);
 
 var _hslString2 = _interopRequireDefault(_hslString);
 
-var _rgbString = __webpack_require__(10);
+var _rgbString = __webpack_require__(9);
 
 var _rgbString2 = _interopRequireDefault(_rgbString);
 
-var _hexString = __webpack_require__(9);
+var _hexString = __webpack_require__(8);
 
 var _hexString2 = _interopRequireDefault(_hexString);
 
@@ -410,7 +401,7 @@ module.exports = color;
 "use strict";
 
 
-var _dom = __webpack_require__(0);
+var _dom = __webpack_require__(1);
 
 var _dom2 = _interopRequireDefault(_dom);
 
@@ -607,54 +598,21 @@ module.exports = {
 "use strict";
 
 
-function addColorStops(gradient, colorStops) {
-  for (stop in colorStops) {
-    gradient.addColorStop(stop, colorStops[stop]);
-  }
-  return gradient;
-};
-
-module.exports = {
-  linear: function linear(ctx, x1, y1, x2, y2, colorStops) {
-    return addColorStops(ctx.createLinearGradient(x1, y1, x2, y1), colorStops);
-  },
-  radial: function radial(ctx, x, y, min, max, colorStops) {
-    return addColorStops(ctx.createRadialGradient(x, y, min, x, y, max), colorStops);
-  }
-};
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _dom = __webpack_require__(0);
-
-var _dom2 = _interopRequireDefault(_dom);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
   * @constructor marker UI
   * @param {Object} ctx - canvas 2d context to draw on
   * @param {Object} opts - options
 */
 var marker = function marker(svg, opts) {
-  var _this = this;
-
-  this._el = _dom2.default.appendNew(svg, "g", {}, "SVG");
+  var group = svg.insert(null, "g");
   [[5, "#000"], [2, "#fff"]].map(function (ring) {
-    _dom2.default.appendNew(_this._el, "circle", {
-      "r": opts.r,
-      "fill": "none",
-      "stroke-width": ring[0],
-      "stroke": ring[1],
-      "cy": 0,
-      "cx": 0
-    }, "SVG");
+    svg.circle(0, 0, opts.r, group, {
+      "f": "none",
+      "sw": ring[0],
+      "s": ring[1]
+    });
   });
+  this._el = group;
 };
 
 marker.prototype = {
@@ -664,16 +622,14 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function move(x, y) {
-    _dom2.default.setAttr(this._el, {
-      transform: "translate(" + x + " " + y + ")"
-    });
+    this._el.setAttribute("transform", "translate(" + x + " " + y + ")");
   }
 };
 
 module.exports = marker;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -683,13 +639,17 @@ var _wheel = __webpack_require__(13);
 
 var _wheel2 = _interopRequireDefault(_wheel);
 
-var _slider = __webpack_require__(12);
+var _slider = __webpack_require__(11);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(0);
+var _dom = __webpack_require__(1);
 
 var _dom2 = _interopRequireDefault(_dom);
+
+var _svg = __webpack_require__(12);
+
+var _svg2 = _interopRequireDefault(_svg);
 
 var _color = __webpack_require__(2);
 
@@ -741,14 +701,14 @@ var colorWheel = function colorWheel(el, opts) {
   // Wait for the document to be ready, then init the UI
   _dom2.default.whenReady(function () {
     // If `el` is a string, use it to select an Element, else assume it's an element
-    el = "string" == typeof el ? _dom2.default.$(el) : el;
+    el = "string" == typeof el ? document.querySelector(el) : el;
     // Make sure the canvas wrapper is position:relative
     // This is because we'll be using position:absolute to stack the canvas layers
     el.style.cssText += "position:relative";
     // Find the width and height for the UI
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-    var width = opts.width || parseInt(_dom2.default.attr(el, "width")) || 320;
-    var height = opts.height || parseInt(_dom2.default.attr(el, "height")) || 320;
+    var width = opts.width || parseInt(el.width) || 320;
+    var height = opts.height || parseInt(el.height) || 320;
     // Create UI layers
     // To support devices with hidpi screens, we scale the canvas so that it has more pixels, but still has the same size visually
     // This implementation is based on https://www.html5rocks.com/en/tutorials/canvas/hidpi/
@@ -756,26 +716,10 @@ var colorWheel = function colorWheel(el, opts) {
     // Create a layer for each name
     // Create a new canvas and add it to the page
 
-    var svg = _dom2.default.appendNew(el, "svg", {
-      viewBox: [0, 0, width, height].join(" "),
-      width: width,
-      height: height,
-      style: "position:absolute;top:0;left:0;"
-    }, "SVG");
-
-    var canvas = _dom2.default.appendNew(el, "canvas", {
-      width: width * pxRatio,
-      height: height * pxRatio,
-      style: "width:" + width + "px;height:" + height + "px"
-    });
-
-    var ctx = canvas.getContext("2d");
-    ctx.scale(pxRatio, pxRatio);
+    var svgRoot = new _svg2.default(el, width, height);
 
     this.el = el;
-    this.canvas = canvas;
-    this.ctx = ctx;
-    this.svg = svg;
+    this.svg = svgRoot;
     // Calculate layout variables
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,
@@ -793,14 +737,14 @@ var colorWheel = function colorWheel(el, opts) {
       color: opts.borderColor || "#fff"
     };
     // Create UI elements
-    this.ui = [new _wheel2.default(ctx, svg, {
+    this.ui = [new _wheel2.default(svgRoot, {
       cX: leftMargin + bodyWidth / 2,
       cY: bodyWidth / 2,
       r: wheelRadius,
       rMax: wheelRadius - (markerRadius + padding),
       marker: marker,
       border: borderStyles
-    }), new _slider2.default(ctx, svg, {
+    }), new _slider2.default(svgRoot, {
       sliderType: "v",
       x: leftMargin + borderWidth,
       y: bodyWidth + sliderMargin,
@@ -887,7 +831,7 @@ colorWheel.prototype = {
     var point = e.touches ? e.changedTouches[0] : e,
 
     // Get the screen position of the UI
-    rect = this.canvas.getBoundingClientRect();
+    rect = this.el.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,
@@ -980,13 +924,13 @@ colorWheel.prototype = {
 module.exports = colorWheel;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _rgb = __webpack_require__(1);
+var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
@@ -1048,13 +992,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _rgb = __webpack_require__(1);
+var _rgb = __webpack_require__(0);
 
 var _rgb2 = _interopRequireDefault(_rgb);
 
@@ -1079,13 +1023,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _colorPicker = __webpack_require__(8);
+var _colorPicker = __webpack_require__(7);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
@@ -1108,23 +1052,15 @@ module.exports = {
 };
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _gradient = __webpack_require__(6);
-
-var _gradient2 = _interopRequireDefault(_gradient);
-
-var _marker = __webpack_require__(7);
+var _marker = __webpack_require__(6);
 
 var _marker2 = _interopRequireDefault(_marker);
-
-var _dom = __webpack_require__(0);
-
-var _dom2 = _interopRequireDefault(_dom);
 
 var _hslString = __webpack_require__(5);
 
@@ -1135,16 +1071,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
   * @constructor slider UI
 */
-var slider = function slider(ctx, svg, opts) {
-  this._ctx = ctx;
-  opts.x1 = opts.x;
-  opts.y1 = opts.y;
-  opts.x2 = opts.x + opts.w;
-  opts.y2 = opts.y + opts.h;
+var slider = function slider(svg, opts) {
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
     min: opts.x + opts.r,
-    max: opts.x2 - opts.r,
+    max: opts.x - opts.r,
     w: opts.w - opts.r * 2
   };
   opts.sliderType = opts.sliderType || "v";
@@ -1153,84 +1084,28 @@ var slider = function slider(ctx, svg, opts) {
   var borderWidth = opts.border.w;
   var radius = opts.r + borderWidth / 2;
 
-  var defs = _dom2.default.appendNew(svg, "defs", {}, "SVG");
+  var gradient = svg.gradient("linear", {
+    0: "#000",
+    100: "#fff"
+  });
 
-  var gradient = _dom2.default.appendNew(defs, "linearGradient", {
-    "id": "slidergradient"
-  }, "SVG");
-
-  var stop1 = _dom2.default.appendNew(gradient, "stop", {
-    "offset": "0%",
-    "stop-color": "#000"
-  }, "SVG");
-
-  var stop2 = _dom2.default.appendNew(gradient, "stop", {
-    "offset": "100%",
-    "stop-color": "#fff"
-  }, "SVG");
-
-  this.stop2 = stop2;
-
-  _dom2.default.appendNew(svg, "rect", {
+  svg.insert(null, "rect", {
     "rx": radius,
     "ry": radius,
     "x": opts.x - borderWidth / 2,
     "y": opts.y - borderWidth / 2,
     "width": opts.w + borderWidth,
     "height": opts.h + borderWidth,
-    "fill": "url(#slidergradient)",
-    "stroke-width": borderWidth,
-    "stroke": opts.border.color
-  }, "SVG");
+    "f": "url(#" + gradient.id + ")",
+    "sw": borderWidth,
+    "s": opts.border.color
+  });
 
+  this._gradient = gradient;
   this.marker = new _marker2.default(svg, opts.marker);
 };
 
 slider.prototype = {
-  /**
-    * @desc redraw this UI element
-  */
-  draw: function draw(hsv) {
-    _dom2.default.setAttr(this.stop2, { "stop-color": _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
-    // var ctx = this._ctx;
-    // var opts = this._opts;
-    // var x1 = opts.x1,
-    //     y1 = opts.y1,
-    //     x2 = opts.x2,
-    //     y2 = opts.y2,
-    //     w = opts.w,
-    //     h = opts.h,
-    //     r = opts.r;
-    //
-    // // Clear the existing UI
-    // ctx.clearRect(x1, y1, w, h);
-    //
-    // // Draw a rounded rect
-    // // Modified from http://stackoverflow.com/a/7838871
-    // ctx.beginPath();
-    // ctx.moveTo(x1 + r, y1);
-    // ctx.arcTo(x2, y1, x2, y2, r);
-    // ctx.arcTo(x2, y2, x1, y2, r);
-    // ctx.arcTo(x1, y2, x1, y1, r);
-    // ctx.arcTo(x1, y1, x2, y1, r);
-    // ctx.closePath();
-    //
-    // // I plan to have different slider "types" in the future
-    // // (I'd like to add a transparency slider at some point, for example)
-    // var fill;
-    //
-    // // For now the only type is "V", meaning this slider adjusts the HSV V channel
-    // if (opts.sliderType == "v") {
-    //   fill = gradient.linear(ctx, x1, y1, x2, y2, {
-    //     0: "#000",
-    //     1: ,
-    //   });
-    // }
-    //
-    // // Draw gradient
-    // ctx.fillStyle = fill;
-    // ctx.fill();
-  },
 
   /**
     * @desc updates this element to represent a new color value
@@ -1243,11 +1118,11 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this.draw(hsv);
+        this._gradient.setAttr(1, "stop-color", _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }));
       }
       if (changes.v) {
         var percent = hsv.v / 100;
-        this.marker.move(range.min + percent * range.w, opts.y1 + opts.h / 2);
+        this.marker.move(range.min + percent * range.w, opts.y + opts.h / 2);
       }
     }
   },
@@ -1275,11 +1150,121 @@ slider.prototype = {
   */
   checkHit: function checkHit(x, y) {
     var opts = this._opts;
-    return x > opts.x1 && x < opts.x2 && y > opts.y1 && y < opts.y2;
+    return x > opts.x && x < opts.x && y > opts.y + opts.w && y < opts.y + opts.h;
   }
 };
 
 module.exports = slider;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _dom = __webpack_require__(1);
+
+var _dom2 = _interopRequireDefault(_dom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Quick references to reused math functions
+var PI = Math.PI,
+    cos = Math.cos,
+    sin = Math.sin;
+
+var gradientid = 0;
+
+var svgGradient = function svgGradient(root, type, stops) {
+  switch (type) {
+    case "linear":
+      type = "linearGradient";
+      break;
+    default:
+      type = "radialGradient";
+  }
+  var stopElements = [];
+  var gradient = root.insert(root._defs, type, {
+    "id": "irogradient" + gradientid++
+  });
+  for (var offset in stops) {
+    stopElements.push(root.insert(gradient, "stop", {
+      "offset": offset + "%",
+      "stop-color": stops[offset]
+    }));
+  }
+  this.id = gradient.id;
+  this.stops = stopElements;
+};
+
+svgGradient.prototype.setAttr = function (index, attr, value) {
+  this.stops[index].setAttribute(attr, value);
+};
+
+var svg = function svg(parent, width, height) {
+  this._root = _dom2.default.appendNew(parent, "svg", {
+    viewBox: [0, 0, width, height].join(" "),
+    width: width,
+    height: height,
+    style: "position:absolute;top:0;left:0;"
+  }, "SVG");
+  this._defs = this.insert(null, "defs");
+};
+
+svg.prototype = {
+
+  insert: function insert(parent, tagName, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tagName);
+    for (var attr in attrs || {}) {
+      var name = attr;
+      switch (attr) {
+        case "s":
+          name = "stroke";
+          break;
+        case "sw":
+          name = "stroke-width";
+          break;
+        case "f":
+          name = "fill";
+          break;
+        default:
+          name = attr;
+          break;
+      }
+      el.setAttribute(name, attrs[attr]);
+    }
+    (parent || this._root).appendChild(el);
+    return el;
+  },
+
+  gradient: function gradient(type, stops) {
+    return new svgGradient(this, type, stops);
+  },
+
+  arc: function arc(cx, cy, radius, startAngle, endAngle, parent, attrs) {
+    startAngle *= PI / 180;
+    endAngle *= PI / 180;
+    var x1 = cx + radius * cos(endAngle),
+        y1 = cy + radius * sin(endAngle),
+        x2 = cx + radius * cos(startAngle),
+        y2 = cy + radius * sin(startAngle);
+    attrs = attrs || {};
+    attrs.d = ["M", x1, y1, "A", radius, radius, 0, 0, 0, x2, y2].join(" ");
+    return this.insert(parent, "path", attrs);
+  },
+
+  circle: function circle(cx, cy, radius, parent, attrs) {
+    attrs = attrs || {};
+    attrs.cx = cx;
+    attrs.cy = cy;
+    attrs.r = radius;
+    return this.insert(parent, "circle", attrs);
+  }
+
+};
+
+module.exports = svg;
 
 /***/ }),
 /* 13 */
@@ -1288,17 +1273,9 @@ module.exports = slider;
 "use strict";
 
 
-var _gradient = __webpack_require__(6);
-
-var _gradient2 = _interopRequireDefault(_gradient);
-
-var _marker = __webpack_require__(7);
+var _marker = __webpack_require__(6);
 
 var _marker2 = _interopRequireDefault(_marker);
-
-var _dom = __webpack_require__(0);
-
-var _dom2 = _interopRequireDefault(_dom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1309,130 +1286,45 @@ var PI = Math.PI,
     abs = Math.abs,
     round = Math.round;
 
-function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-  var angleInRadians = angleInDegrees * Math.PI / 180.0;
-
-  return {
-    x: centerX + radius * Math.cos(angleInRadians),
-    y: centerY + radius * Math.sin(angleInRadians)
-  };
-}
-
-function describeArc(x, y, radius, startAngle, endAngle) {
-
-  var start = polarToCartesian(x, y, radius, endAngle);
-  var end = polarToCartesian(x, y, radius, startAngle);
-
-  var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-
-  var d = ["M", start.x, start.y, "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(" ");
-
-  return d;
-}
-
 /**
   * @constructor hue wheel UI
 */
-var wheel = function wheel(ctx, svg, opts) {
-  this._ctx = ctx;
+var wheel = function wheel(svg, opts) {
   this._opts = opts;
   this.type = "wheel";
 
-  var defs = _dom2.default.appendNew(svg, "defs", {}, "SVG");
+  var gradient = svg.gradient("radial", {
+    0: "#fff",
+    100: "#fff"
+  });
 
-  var gradient = _dom2.default.appendNew(defs, "radialGradient", {
-    "id": "wheelgradient"
-  }, "SVG");
-
-  var stop1 = _dom2.default.appendNew(gradient, "stop", {
-    "offset": "0%",
-    "stop-color": "#fff"
-  }, "SVG");
-
-  var stop2 = _dom2.default.appendNew(gradient, "stop", {
-    "offset": "100%",
-    "stop-color": "#fff",
-    "stop-opacity": "0"
-  }, "SVG");
-
-  var group = _dom2.default.appendNew(svg, "g", {}, "SVG");
+  var group = svg.insert(null, "g", {
+    "sw": opts.r,
+    "f": "none"
+  });
 
   for (var hue = 0; hue < 360; hue++) {
-    _dom2.default.appendNew(group, "path", {
-      "d": describeArc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5),
-      "stroke": "hsl(" + hue + ",100%," + 100 / 2 + "%)",
-      "stroke-width": opts.r,
-      "fill": "none"
-    }, "SVG");
+    svg.arc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5, group, {
+      "s": "hsl(" + hue + ",100%," + 100 / 2 + "%)"
+    });
   }
 
-  _dom2.default.appendNew(svg, "circle", {
-    "r": opts.r + opts.border.w / 2,
-    "fill": "url(#wheelgradient)",
-    "stroke": opts.border.color,
-    "stroke-width": opts.border.w,
-    "cy": opts.cY,
-    "cx": opts.cX
-  }, "SVG");
+  gradient.setAttr(1, "stop-opacity", 0);
 
-  this._lightnessLayer = _dom2.default.appendNew(svg, "circle", {
-    "r": opts.r,
-    "fill": "#000",
-    "opacity": 1,
-    "cy": opts.cY,
-    "cx": opts.cX
-  }, "SVG");
+  svg.circle(opts.cX, opts.cY, opts.r + opts.border.w / 2, null, {
+    "f": "url(#" + gradient.id + ")",
+    "s": opts.border.color,
+    "sw": opts.border.w
+  });
+
+  this._lightness = svg.circle(opts.cX, opts.cY, opts.r, null, {
+    "f": "#000"
+  });
 
   this.marker = new _marker2.default(svg, opts.marker);
 };
 
 wheel.prototype = {
-
-  /**
-    * @desc redraw this UI element
-    * @param {Number} value - The hsv value component to use when drawing
-  */
-  draw: function draw(value) {
-    _dom2.default.setAttr(this._lightnessLayer, { "opacity": 1 - value / 100 });
-    // var ctx = this._ctx;
-    // var opts = this._opts;
-    // var x = opts.cX,
-    //     y = opts.cY,
-    //     border = opts.border,
-    //     borderWidth = border.w,
-    //     radius = opts.r;
-
-    // Clear the area where the wheel will be drawn
-    // ctx.clearRect((x - radius) - borderWidth, (y - radius) - borderWidth, radius * 2, radius * 2);
-    // ctx.lineWidth = radius;
-
-    // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
-    // Here we calculate the angle for each slice, in radians
-    // var sliceAngle = (2 * PI) / 360;
-
-    // Create a loop to draw each slice
-    // for (var hue = 0, sliceStart = 0; hue < 360; hue++, sliceStart += sliceAngle) {
-    //   // Create a HSL color for the slice using the current hue value
-    //   ctx.strokeStyle = "hsl(" + hue + ",100%," + (value / 2) + "%)";
-    //   ctx.beginPath();
-    //   // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
-    //   // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-    //   ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
-    //   ctx.stroke();
-    // }
-
-    // Create a radial gradient for "saturation"
-    // var hslString = "hsla(0,0%," + value + "%,";
-    // ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, {
-    //   // The center of the color wheel should be pure white (0% saturation)
-    //   0: hslString + "1)",
-    //   // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-    //   1: hslString + "0)",
-    // });
-    // Draw a rect using the gradient as a fill style
-    // ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-  },
-
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
@@ -1443,7 +1335,8 @@ wheel.prototype = {
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this.draw(hsv.v);
+      this._lightness.setAttribute("opacity", 1 - hsv.v / 100);
+      // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {

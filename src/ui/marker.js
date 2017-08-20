@@ -1,22 +1,18 @@
-import dom from "util/dom";
-
 /**
   * @constructor marker UI
   * @param {Object} ctx - canvas 2d context to draw on
   * @param {Object} opts - options
 */
 let marker = function (svg, opts) {
-  this._el = dom.appendNew(svg, "g", {}, "SVG");
+  var group = svg.insert(null, "g");
   [[5, "#000"], [2, "#fff"]].map((ring) => {
-    dom.appendNew(this._el, "circle", {
-      "r": opts.r,
-      "fill": "none",
-      "stroke-width": ring[0],
-      "stroke": ring[1],
-      "cy": 0,
-      "cx": 0,
-    }, "SVG");
+    svg.circle(0, 0, opts.r, group, {
+      "f": "none",
+      "sw": ring[0],
+      "s": ring[1],
+    });
   });
+  this._el = group;
 };
 
 marker.prototype = {
@@ -26,9 +22,7 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function (x, y) {
-    dom.setAttr(this._el, {
-      transform: "translate(" + x + " " + y + ")"
-    });
+    this._el.setAttribute("transform", "translate(" + x + " " + y + ")");
   }
 };
 

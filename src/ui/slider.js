@@ -1,21 +1,14 @@
-import gradient from "ui/gradient";
 import marker from "ui/marker";
-import dom from "util/dom";
 import hslString from "colorModels/hslString";
 
 /**
   * @constructor slider UI
 */
-let slider = function (ctx, svg, opts) {
-  this._ctx = ctx;
-  opts.x1 = opts.x;
-  opts.y1 = opts.y;
-  opts.x2 = opts.x + opts.w;
-  opts.y2 = opts.y + opts.h;
+let slider = function (svg, opts) {
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
     min: opts.x + opts.r,
-    max: opts.x2 - opts.r,
+    max: opts.x - opts.r,
     w: opts.w - (opts.r * 2)
   };
   opts.sliderType = opts.sliderType || "v";
@@ -24,84 +17,28 @@ let slider = function (ctx, svg, opts) {
   var borderWidth = opts.border.w;
   var radius = opts.r + borderWidth / 2;
 
-  var defs = dom.appendNew(svg, "defs", {}, "SVG");
+  var gradient = svg.gradient("linear", {
+    0: "#000",
+    100: "#fff"
+  });
 
-  var gradient = dom.appendNew(defs, "linearGradient", {
-    "id": "slidergradient"
-  }, "SVG");
-
-  var stop1 = dom.appendNew(gradient, "stop", {
-    "offset": "0%",
-    "stop-color": "#000",
-  }, "SVG");
-
-  var stop2 = dom.appendNew(gradient, "stop", {
-    "offset": "100%",
-    "stop-color": "#fff",
-  }, "SVG");
-
-  this.stop2 = stop2;
-
-  dom.appendNew(svg, "rect", {
+  svg.insert(null, "rect", {
     "rx": radius,
     "ry": radius,
     "x": opts.x - borderWidth / 2,
     "y": opts.y - borderWidth / 2,
     "width": opts.w + borderWidth,
     "height": opts.h + borderWidth,
-    "fill": "url(#slidergradient)",
-    "stroke-width": borderWidth,
-    "stroke": opts.border.color,
-  }, "SVG");
+    "f": "url(#" + gradient.id + ")",
+    "sw": borderWidth,
+    "s": opts.border.color,
+  });
 
+  this._gradient = gradient;
   this.marker = new marker(svg, opts.marker);
 };
 
 slider.prototype = {
-  /**
-    * @desc redraw this UI element
-  */
-  draw: function (hsv) {
-    dom.setAttr(this.stop2, {"stop-color": hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100})});
-    // var ctx = this._ctx;
-    // var opts = this._opts;
-    // var x1 = opts.x1,
-    //     y1 = opts.y1,
-    //     x2 = opts.x2,
-    //     y2 = opts.y2,
-    //     w = opts.w,
-    //     h = opts.h,
-    //     r = opts.r;
-    //
-    // // Clear the existing UI
-    // ctx.clearRect(x1, y1, w, h);
-    //
-    // // Draw a rounded rect
-    // // Modified from http://stackoverflow.com/a/7838871
-    // ctx.beginPath();
-    // ctx.moveTo(x1 + r, y1);
-    // ctx.arcTo(x2, y1, x2, y2, r);
-    // ctx.arcTo(x2, y2, x1, y2, r);
-    // ctx.arcTo(x1, y2, x1, y1, r);
-    // ctx.arcTo(x1, y1, x2, y1, r);
-    // ctx.closePath();
-    //
-    // // I plan to have different slider "types" in the future
-    // // (I'd like to add a transparency slider at some point, for example)
-    // var fill;
-    //
-    // // For now the only type is "V", meaning this slider adjusts the HSV V channel
-    // if (opts.sliderType == "v") {
-    //   fill = gradient.linear(ctx, x1, y1, x2, y2, {
-    //     0: "#000",
-    //     1: ,
-    //   });
-    // }
-    //
-    // // Draw gradient
-    // ctx.fillStyle = fill;
-    // ctx.fill();
-  },
 
   /**
     * @desc updates this element to represent a new color value
@@ -114,11 +51,11 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this.draw(hsv);
+        this._gradient.setAttr(1, "stop-color", hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}));
       }
       if (changes.v) {
         var percent = (hsv.v / 100);
-        this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
+        this.marker.move(range.min + (percent * range.w), opts.y + (opts.h / 2));
       }
     }
   },
@@ -146,7 +83,7 @@ slider.prototype = {
   */
   checkHit: function (x, y) {
     var opts = this._opts;
-    return (x > opts.x1) && (x < opts.x2) && (y > opts.y1) && (y < opts.y2);
+    return (x > opts.x) && (x < opts.x) && (y > opts.y + opts.w) && (y < opts.y + opts.h);
   }
 };
 
