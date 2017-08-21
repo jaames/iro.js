@@ -5,35 +5,44 @@ import hslString from "colorModels/hslString";
   * @constructor slider UI
 */
 let slider = function (svg, opts) {
+
+  var r = opts.r,
+      w = opts.w,
+      h = opts.h,
+      x = opts.x,
+      y = opts.y,
+      borderWidth = opts.border.w;
+
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
-    min: opts.x + opts.r,
-    max: (opts.x + opts.w) - opts.r,
-    w: opts.w - (opts.r * 2)
+    min: x + r,
+    max: (x + w) - r,
+    w: w - (r * 2)
   };
+
   opts.sliderType = opts.sliderType || "v";
-  this.type = "slider";
-  this._opts = opts;
-  var borderWidth = opts.border.w;
-  var radius = opts.r + borderWidth / 2;
 
   var gradient = svg.gradient("linear", {
-    0: "#000",
-    100: "#fff"
+    0: {c: "#000"},
+    100: {c: "#fff"}
   });
+
+  var radius = r + borderWidth / 2;
 
   svg.insert(null, "rect", {
     rx: radius,
     ry: radius,
-    x: opts.x - borderWidth / 2,
-    y: opts.y - borderWidth / 2,
-    width: opts.w + borderWidth,
-    height: opts.h + borderWidth,
+    x: x - borderWidth / 2,
+    y: y - borderWidth / 2,
+    width: w + borderWidth,
+    height: h + borderWidth,
     f: gradient.url,
     sw: borderWidth,
     s: opts.border.color,
   });
 
+  this.type = "slider";
+  this._opts = opts;
   this._gradient = gradient;
   this.marker = new marker(svg, opts.marker);
 };
@@ -51,7 +60,7 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.setAttr(1, "stop-color", hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}));
+        this._gradient.stops[1].setAttribute("stop-color", hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}));
       }
       if (changes.v) {
         var percent = (hsv.v / 100);

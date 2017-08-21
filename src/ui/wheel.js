@@ -14,31 +14,34 @@ let wheel = function (svg, opts) {
   this._opts = opts;
   this.type = "wheel";
 
+  var cY = opts.cY,
+      cX = opts.cX,
+      r = opts.r,
+      border = opts.border;
+
   var gradient = svg.gradient("radial", {
-    0: "#fff",
-    100: "#fff",
+    0: {c:"#fff"},
+    100: {c:"#fff", o: 0},
   });
 
-  var group = svg.insert(null, "g", {
+  var group = svg.g(null, {
     sw: opts.r,
     f: "none",
   });
 
   for (var hue = 0; hue < 360; hue++) {
-    svg.arc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5, group, {
+    svg.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, group, {
       s: "hsl(" + hue + ",100%," + (100 / 2) + "%)"
     });
   }
 
-  gradient.setAttr(1, "stop-opacity", 0);
-
-  svg.circle(opts.cX, opts.cY, opts.r + opts.border.w / 2, null, {
+  svg.circle(cX, cY, r + border.w / 2, null, {
     f: gradient.url,
-    s: opts.border.color,
-    sw: opts.border.w,
+    s: border.color,
+    sw: border.w,
   });
 
-  this._lightness = svg.circle(opts.cX, opts.cY, opts.r, null, {
+  this._lightness = svg.circle(cX, cY, r, null, {
     f: "#000",
   });
 

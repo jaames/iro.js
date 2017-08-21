@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Sun Aug 20 2017
+ * Last updated: Mon Aug 21 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
@@ -490,7 +490,7 @@ module.exports = {
   * @param {Object} opts - options
 */
 var marker = function marker(svg, opts) {
-  var group = svg.insert(null, "g");
+  var group = svg.g();
   [[5, "#000"], [2, "#fff"]].map(function (ring) {
     svg.circle(0, 0, opts.r, group, {
       f: "none",
@@ -952,35 +952,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   * @constructor slider UI
 */
 var slider = function slider(svg, opts) {
+
+  var r = opts.r,
+      w = opts.w,
+      h = opts.h,
+      x = opts.x,
+      y = opts.y,
+      borderWidth = opts.border.w;
+
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
-    min: opts.x + opts.r,
-    max: opts.x + opts.w - opts.r,
-    w: opts.w - opts.r * 2
+    min: x + r,
+    max: x + w - r,
+    w: w - r * 2
   };
+
   opts.sliderType = opts.sliderType || "v";
-  this.type = "slider";
-  this._opts = opts;
-  var borderWidth = opts.border.w;
-  var radius = opts.r + borderWidth / 2;
 
   var gradient = svg.gradient("linear", {
-    0: "#000",
-    100: "#fff"
+    0: { c: "#000" },
+    100: { c: "#fff" }
   });
+
+  var radius = r + borderWidth / 2;
 
   svg.insert(null, "rect", {
     rx: radius,
     ry: radius,
-    x: opts.x - borderWidth / 2,
-    y: opts.y - borderWidth / 2,
-    width: opts.w + borderWidth,
-    height: opts.h + borderWidth,
+    x: x - borderWidth / 2,
+    y: y - borderWidth / 2,
+    width: w + borderWidth,
+    height: h + borderWidth,
     f: gradient.url,
     sw: borderWidth,
     s: opts.border.color
   });
 
+  this.type = "slider";
+  this._opts = opts;
   this._gradient = gradient;
   this.marker = new _marker2.default(svg, opts.marker);
 };
@@ -998,7 +1007,7 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.setAttr(1, "stop-color", _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }));
+        this._gradient.stops[1].setAttribute("stop-color", _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }));
       }
       if (changes.v) {
         var percent = hsv.v / 100;
@@ -1064,18 +1073,16 @@ var svgGradient = function svgGradient(root, type, stops) {
     "id": "irogradient" + GRADIENT_ID++
   });
   for (var offset in stops) {
+    var stop = stops[offset];
     stopElements.push(root.insert(gradient, "stop", {
       "offset": offset + "%",
-      "stop-color": stops[offset]
+      "stop-color": stop.c,
+      "stop-opacity": stop.o === undefined ? 1 : stop.o
     }));
   }
   this.el = gradient;
   this.url = "url(#" + gradient.id + ")";
   this.stops = stopElements;
-};
-
-svgGradient.prototype.setAttr = function (index, attr, value) {
-  this.stops[index].setAttribute(attr, value);
 };
 
 var svg = function svg(parent, width, height) {
@@ -1122,6 +1129,10 @@ svg.prototype = {
     this.setAttrs(el, attrs);
     (parent || this._root).appendChild(el);
     return el;
+  },
+
+  g: function g(parent, attrs) {
+    return this.insert(parent, "g", attrs);
   },
 
   gradient: function gradient(type, stops) {
@@ -1179,31 +1190,34 @@ var wheel = function wheel(svg, opts) {
   this._opts = opts;
   this.type = "wheel";
 
+  var cY = opts.cY,
+      cX = opts.cX,
+      r = opts.r,
+      border = opts.border;
+
   var gradient = svg.gradient("radial", {
-    0: "#fff",
-    100: "#fff"
+    0: { c: "#fff" },
+    100: { c: "#fff", o: 0 }
   });
 
-  var group = svg.insert(null, "g", {
+  var group = svg.g(null, {
     sw: opts.r,
     f: "none"
   });
 
   for (var hue = 0; hue < 360; hue++) {
-    svg.arc(opts.cX, opts.cY, opts.r / 2, hue - 0.5, hue + 1.5, group, {
+    svg.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, group, {
       s: "hsl(" + hue + ",100%," + 100 / 2 + "%)"
     });
   }
 
-  gradient.setAttr(1, "stop-opacity", 0);
-
-  svg.circle(opts.cX, opts.cY, opts.r + opts.border.w / 2, null, {
+  svg.circle(cX, cY, r + border.w / 2, null, {
     f: gradient.url,
-    s: opts.border.color,
-    sw: opts.border.w
+    s: border.color,
+    sw: border.w
   });
 
-  this._lightness = svg.circle(opts.cX, opts.cY, opts.r, null, {
+  this._lightness = svg.circle(cX, cY, r, null, {
     f: "#000"
   });
 
@@ -1296,17 +1310,6 @@ var doc = document,
     READYSTATE_COMPLETE = "complete",
     READYSTATE_CHANGE = "readystatechange";
 
-/**
- * @desc iterate a list (or create a one-item list from a string), calling callback with each item
- * @param {ArrayOrString} list an array or string, callback will be called for each array item, or once if a string is given
- * @param {Function} callback a function to call for each item, the item will be passed as the first parameter
- * @access private
-*/
-function iterateList(list, callback) {
-  list = "string" == typeof list ? [list] : list;
-  list.forEach(callback);
-};
-
 module.exports = {
   /**
    * @desc listen to one or more events on an element
@@ -1315,9 +1318,9 @@ module.exports = {
    * @param {Function} callback the event callback function
   */
   listen: function listen(el, eventList, callback) {
-    iterateList(eventList, function (eventName) {
-      el.addEventListener(eventName, callback);
-    });
+    for (var i = 0; i < eventList.length; i++) {
+      el.addEventListener(eventList[i], callback);
+    }
   },
 
   /**
@@ -1327,9 +1330,9 @@ module.exports = {
    * @param {Function} callback the event callback function
   */
   unlisten: function unlisten(el, eventList, callback) {
-    iterateList(eventList, function (eventName) {
-      el.removeEventListener(eventName, callback);
-    });
+    for (var i = 0; i < eventList.length; i++) {
+      el.removeEventListener(eventList[i], callback);
+    }
   },
 
   /**
@@ -1341,10 +1344,10 @@ module.exports = {
     if (doc.readyState == READYSTATE_COMPLETE) {
       callback();
     } else {
-      _this.listen(doc, READYSTATE_CHANGE, function stateChange(e) {
+      _this.listen(doc, [READYSTATE_CHANGE], function stateChange(e) {
         if (doc.readyState == READYSTATE_COMPLETE) {
           callback();
-          _this.unlisten(doc, READYSTATE_CHANGE, stateChange);
+          _this.unlisten(doc, [READYSTATE_CHANGE], stateChange);
         }
       });
     }

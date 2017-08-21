@@ -14,12 +14,6 @@ module.exports = function (env) {
     "fromHsv",
     "name",
     // util.dom.js
-    "create",
-    "append",
-    "appendNew",
-    "attr",
-    "setAttr",
-    "append",
     "listen",
     "unlisten",
     "whenReady",

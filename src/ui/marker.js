@@ -4,7 +4,7 @@
   * @param {Object} opts - options
 */
 let marker = function (svg, opts) {
-  var group = svg.insert(null, "g");
+  var group = svg.g();
   [[5, "#000"], [2, "#fff"]].map((ring) => {
     svg.circle(0, 0, opts.r, group, {
       f: "none",

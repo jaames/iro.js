@@ -19,18 +19,16 @@ let svgGradient = function (root, type, stops) {
     "id": "irogradient" + (GRADIENT_ID++)
   });
   for (var offset in stops) {
+    var stop = stops[offset];
     stopElements.push(root.insert(gradient, "stop", {
       "offset": offset + "%",
-      "stop-color": stops[offset],
+      "stop-color": stop.c,
+      "stop-opacity": stop.o === undefined ? 1 : stop.o,
     }));
   }
   this.el = gradient;
   this.url = "url(#" + gradient.id + ")";
   this.stops = stopElements;
-};
-
-svgGradient.prototype.setAttr = function (index, attr, value) {
-  this.stops[index].setAttribute(attr, value);
 };
 
 let svg = function (parent, width, height) {
@@ -77,6 +75,10 @@ svg.prototype = {
     this.setAttrs(el, attrs);
     (parent || this._root).appendChild(el);
     return el;
+  },
+
+  g: function (parent, attrs) {
+    return this.insert(parent, "g", attrs);
   },
 
   gradient: function (type, stops) {
