@@ -46,7 +46,7 @@ let slider = function (svg, opts) {
   this.type = "slider";
   this._opts = opts;
   this._gradient = gradient;
-  this.marker = new marker(svg, opts.marker);
+  this.marker = new marker(baseGroup, opts.marker);
 };
 
 slider.prototype = {

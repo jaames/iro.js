@@ -6,6 +6,20 @@ var PI = Math.PI,
 var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+var SVG_ATTRIBUTE_SHORTHANDS = {
+  s: "stroke",
+  sw: "stroke-width",
+  f: "fill",
+  o: "opacity",
+  os: "offset",
+  sc: "stop-color",
+  so: "stop-opacity",
+};
+var SVG_TRANSFORM_SHORTHANDS = {
+  t: "setTranslate",
+  s: "setScale",
+  r: "setRotate"
+};
 
 let svgElement = function (root, parent, type, attrs) {
   var el = document.createElementNS(SVG_NAMESPACE, type);
@@ -57,48 +71,13 @@ svgElement.prototype = {
     } else {
       transform = svgTransforms[type];
     }
-    switch (type) {
-      case "t":
-        transformFn = "setTranslate";
-        break;
-      case "r":
-        transformFn = "setRotate";
-        break;
-      default:
-        transformFn = "setScale";
-    }
+    transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
     transform[transformFn].apply(transform, args);
   },
 
   setAttrs: function (attrs) {
     for (var attr in (attrs || {})) {
-      var name = attr;
-      switch (attr) {
-        case "s":
-          name = "stroke";
-          break;
-        case "sw":
-          name = "stroke-width";
-          break;
-        case "f":
-          name = "fill";
-          break;
-        case "o":
-          name = "opacity";
-          break;
-        case "os":
-          name = "offset";
-          break;
-        case "sc":
-          name = "stop-color";
-          break;
-        case "so":
-          name = "stop-opacity";
-          break;
-        default:
-          name = attr;
-          break;
-      }
+      var name = (attr in SVG_ATTRIBUTE_SHORTHANDS) ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
       this.el.setAttribute(name, attrs[attr]);
     }
   }

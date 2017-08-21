@@ -45,7 +45,7 @@ let wheel = function (svg, opts) {
 
   this._lightness = baseGroup.circle(cX, cY, r);
 
-  this.marker = new marker(svg, opts.marker);
+  this.marker = new marker(baseGroup, opts.marker);
 };
 
 wheel.prototype = {
