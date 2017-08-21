@@ -29,7 +29,9 @@ let slider = function (svg, opts) {
 
   var radius = r + borderWidth / 2;
 
-  svg.insert(null, "rect", {
+  var baseGroup = svg.g();
+
+  baseGroup.insert("rect", {
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
@@ -60,7 +62,7 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttribute("stop-color", hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}));
+        this._gradient.stops[1].setAttrs({sc: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100})});
       }
       if (changes.v) {
         var percent = (hsv.v / 100);

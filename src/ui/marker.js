@@ -4,15 +4,15 @@
   * @param {Object} opts - options
 */
 let marker = function (svg, opts) {
-  var group = svg.g();
+  var baseGroup = svg.g();
   [[5, "#000"], [2, "#fff"]].map((ring) => {
-    svg.circle(0, 0, opts.r, group, {
+    baseGroup.circle(0, 0, opts.r, {
       f: "none",
       sw: ring[0],
       s: ring[1],
     });
   });
-  this._el = group;
+  this.g = baseGroup;
 };
 
 marker.prototype = {
@@ -22,7 +22,7 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function (x, y) {
-    this._el.setAttribute("transform", "translate(" + x + " " + y + ")");
+    this.g.setTransform("t", [x, y]);
   }
 };
 

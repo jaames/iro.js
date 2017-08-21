@@ -490,15 +490,15 @@ module.exports = {
   * @param {Object} opts - options
 */
 var marker = function marker(svg, opts) {
-  var group = svg.g();
+  var baseGroup = svg.g();
   [[5, "#000"], [2, "#fff"]].map(function (ring) {
-    svg.circle(0, 0, opts.r, group, {
+    baseGroup.circle(0, 0, opts.r, {
       f: "none",
       sw: ring[0],
       s: ring[1]
     });
   });
-  this._el = group;
+  this.g = baseGroup;
 };
 
 marker.prototype = {
@@ -508,7 +508,7 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function move(x, y) {
-    this._el.setAttribute("transform", "translate(" + x + " " + y + ")");
+    this.g.setTransform("t", [x, y]);
   }
 };
 
@@ -588,9 +588,6 @@ var colorWheel = function colorWheel(el, opts) {
   _dom2.default.whenReady(function () {
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = "string" == typeof el ? document.querySelector(el) : el;
-    // Make sure the canvas wrapper is position:relative
-    // This is because we'll be using position:absolute to stack the canvas layers
-    el.style.cssText += "position:relative";
     // Find the width and height for the UI
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
     var width = opts.width || parseInt(el.width) || 320;
@@ -976,7 +973,9 @@ var slider = function slider(svg, opts) {
 
   var radius = r + borderWidth / 2;
 
-  svg.insert(null, "rect", {
+  var baseGroup = svg.g();
+
+  baseGroup.insert("rect", {
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
@@ -1007,7 +1006,7 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttribute("stop-color", _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }));
+        this._gradient.stops[1].setAttrs({ sc: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
       }
       if (changes.v) {
         var percent = hsv.v / 100;
@@ -1057,50 +1056,74 @@ var PI = Math.PI,
     cos = Math.cos,
     sin = Math.sin;
 
-var GRADIENT_ID = 0;
+var GRADIENT_INDEX = 0;
+var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
-var svgGradient = function svgGradient(root, type, stops) {
-  switch (type) {
-    case "linear":
-      type = "linearGradient";
-      break;
-    default:
-      type = "radialGradient";
-  }
-  var stopElements = [];
-  var gradient = root.insert(root._defs, type, {
-    "id": "irogradient" + GRADIENT_ID++
-  });
-  for (var offset in stops) {
-    var stop = stops[offset];
-    stopElements.push(root.insert(gradient, "stop", {
-      "offset": offset + "%",
-      "stop-color": stop.c,
-      "stop-opacity": stop.o === undefined ? 1 : stop.o
-    }));
-  }
-  this.el = gradient;
-  this.url = "url(#" + gradient.id + ")";
-  this.stops = stopElements;
-};
-
-var svg = function svg(parent, width, height) {
-  var root = document.createElementNS(SVG_NAMESPACE, "svg");
-  parent.appendChild(root);
-  this.setAttrs(root, {
-    // viewBox: [0, 0, width, height].join(" "),
-    width: width,
-    height: height,
-    style: "position:absolute;top:0;left:0;"
-  });
+var svgElement = function svgElement(root, parent, type, attrs) {
+  var el = document.createElementNS(SVG_NAMESPACE, type);
+  this.el = el;
+  this.setAttrs(attrs);
+  (parent.el || parent).appendChild(el);
   this._root = root;
-  this._defs = this.insert(null, "defs");
+  this._svgTransforms = {};
+  this._transformList = el.transform ? el.transform.baseVal : false;
 };
 
-svg.prototype = {
+svgElement.prototype = {
+  insert: function insert(type, attrs) {
+    return new svgElement(this._root, this, type, attrs);
+  },
 
-  setAttrs: function setAttrs(el, attrs) {
+  g: function g(attrs) {
+    return this.insert("g", attrs);
+  },
+
+  arc: function arc(cx, cy, radius, startAngle, endAngle, attrs) {
+    var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+    startAngle *= PI / 180;
+    endAngle *= PI / 180;
+    var x1 = cx + radius * cos(endAngle),
+        y1 = cy + radius * sin(endAngle),
+        x2 = cx + radius * cos(startAngle),
+        y2 = cy + radius * sin(startAngle);
+    attrs = attrs || {};
+    attrs.d = ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
+    return this.insert("path", attrs);
+  },
+
+  circle: function circle(cx, cy, radius, attrs) {
+    attrs = attrs || {};
+    attrs.cx = cx;
+    attrs.cy = cy;
+    attrs.r = radius;
+    return this.insert("circle", attrs);
+  },
+
+  setTransform: function setTransform(type, args) {
+    var transform, transformFn;
+    var svgTransforms = this._svgTransforms;
+    if (!svgTransforms[type]) {
+      transform = this._root.el.createSVGTransform();
+      svgTransforms[type] = transform;
+      this._transformList.appendItem(transform);
+    } else {
+      transform = svgTransforms[type];
+    }
+    switch (type) {
+      case "t":
+        transformFn = "setTranslate";
+        break;
+      case "r":
+        transformFn = "setRotate";
+        break;
+      default:
+        transformFn = "setScale";
+    }
+    transform[transformFn].apply(transform, args);
+  },
+
+  setAttrs: function setAttrs(attrs) {
     for (var attr in attrs || {}) {
       var name = attr;
       switch (attr) {
@@ -1116,52 +1139,54 @@ svg.prototype = {
         case "o":
           name = "opacity";
           break;
+        case "os":
+          name = "offset";
+          break;
+        case "sc":
+          name = "stop-color";
+          break;
+        case "so":
+          name = "stop-opacity";
+          break;
         default:
           name = attr;
           break;
       }
-      el.setAttribute(name, attrs[attr]);
+      this.el.setAttribute(name, attrs[attr]);
     }
-  },
-
-  insert: function insert(parent, tagName, attrs) {
-    var el = document.createElementNS(SVG_NAMESPACE, tagName);
-    this.setAttrs(el, attrs);
-    (parent || this._root).appendChild(el);
-    return el;
-  },
-
-  g: function g(parent, attrs) {
-    return this.insert(parent, "g", attrs);
-  },
-
-  gradient: function gradient(type, stops) {
-    return new svgGradient(this, type, stops);
-  },
-
-  arc: function arc(cx, cy, radius, startAngle, endAngle, parent, attrs) {
-    startAngle *= PI / 180;
-    endAngle *= PI / 180;
-    var x1 = cx + radius * cos(endAngle),
-        y1 = cy + radius * sin(endAngle),
-        x2 = cx + radius * cos(startAngle),
-        y2 = cy + radius * sin(startAngle);
-    attrs = attrs || {};
-    attrs.d = ["M", x1, y1, "A", radius, radius, 0, 0, 0, x2, y2].join(" ");
-    return this.insert(parent, "path", attrs);
-  },
-
-  circle: function circle(cx, cy, radius, parent, attrs) {
-    attrs = attrs || {};
-    attrs.cx = cx;
-    attrs.cy = cy;
-    attrs.r = radius;
-    return this.insert(parent, "circle", attrs);
   }
-
 };
 
-module.exports = svg;
+var svgGradient = function svgGradient(root, type, stops) {
+  var stopElements = [];
+  var gradient = root._defs.insert(type + GRADIENT_SUFFIX, {
+    id: "iro" + GRADIENT_SUFFIX + GRADIENT_INDEX++
+  });
+  for (var offset in stops) {
+    var stop = stops[offset];
+    stopElements.push(gradient.insert("stop", {
+      os: offset + "%",
+      sc: stop.c,
+      so: stop.o === undefined ? 1 : stop.o
+    }));
+  }
+  this.el = gradient.el;
+  this.url = "url(#" + gradient.el.id + ")";
+  this.stops = stopElements;
+};
+
+var svgRoot = function svgRoot(parent, width, height) {
+  svgElement.call(this, this, parent, "svg", { width: width, height: height });
+  this._defs = this.insert("defs");
+};
+
+svgRoot.prototype = Object.create(svgElement.prototype);
+svgRoot.prototype.constructor = svgRoot;
+svgRoot.prototype.gradient = function (type, stops) {
+  return new svgGradient(this, type, stops);
+};
+
+module.exports = svgRoot;
 
 /***/ }),
 /* 12 */
@@ -1200,26 +1225,26 @@ var wheel = function wheel(svg, opts) {
     100: { c: "#fff", o: 0 }
   });
 
-  var group = svg.g(null, {
-    sw: opts.r,
+  var baseGroup = svg.g();
+
+  var ringGroup = baseGroup.g({
+    sw: r,
     f: "none"
   });
 
   for (var hue = 0; hue < 360; hue++) {
-    svg.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, group, {
+    ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
       s: "hsl(" + hue + ",100%," + 100 / 2 + "%)"
     });
   }
 
-  svg.circle(cX, cY, r + border.w / 2, null, {
+  baseGroup.circle(cX, cY, r + border.w / 2, {
     f: gradient.url,
     s: border.color,
     sw: border.w
   });
 
-  this._lightness = svg.circle(cX, cY, r, null, {
-    f: "#000"
-  });
+  this._lightness = baseGroup.circle(cX, cY, r);
 
   this.marker = new _marker2.default(svg, opts.marker);
 };
@@ -1235,7 +1260,7 @@ wheel.prototype = {
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this._lightness.setAttribute("opacity", 1 - hsv.v / 100);
+      this._lightness.setAttrs({ o: 1 - hsv.v / 100 });
       // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position

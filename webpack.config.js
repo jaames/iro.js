@@ -20,6 +20,7 @@ module.exports = function (env) {
     // ui/svg.js
     "insert",
     "setAttrs",
+    "setTransform",
     "arc",
     "circle",
     "gradient",

@@ -47,14 +47,11 @@ let colorWheel = function (el, opts) {
   dom.whenReady(function () {
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = ("string" == typeof el) ? document.querySelector(el) : el;
-    // Make sure the canvas wrapper is position:relative
-    // This is because we'll be using position:absolute to stack the canvas layers
-    el.style.cssText += "position:relative";
     // Find the width and height for the UI
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
     var width = opts.width || parseInt(el.width) || 320;
     var height = opts.height || parseInt(el.height) || 320;
-    
+
     var svgRoot = new svg(el, width, height);
 
     this.el = el;
