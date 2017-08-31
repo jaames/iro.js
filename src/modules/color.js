@@ -86,7 +86,7 @@ color.prototype = {
     var oldValue = this._value;
     for (var channel in oldValue) {
       if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
-      changes[channel] = !(newValue[channel] == oldValue[channel]);
+      changes[channel] = newValue[channel] != oldValue[channel];
     }
     // Update the old value
     this._value = newValue;

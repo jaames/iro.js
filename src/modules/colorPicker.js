@@ -61,9 +61,9 @@ let colorWheel = function (el, opts) {
         borderWidth = opts.borderWidth || 0,
         markerRadius = opts.markerRadius || 8,
         sliderMargin = opts.sliderMargin || 24,
-        sliderHeight = opts.sliderHeight || (markerRadius * 2) + (padding * 2) + (borderWidth * 2),
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
         bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
-        wheelRadius = (bodyWidth / 2) - borderWidth,
+        wheelRadius = bodyWidth / 2 - borderWidth,
         leftMargin = (width - bodyWidth) / 2;
     var marker = {
       r: markerRadius
@@ -75,7 +75,7 @@ let colorWheel = function (el, opts) {
     // Create UI elements
     this.ui = [
       new wheel(svgRoot, {
-        cX: leftMargin + (bodyWidth / 2),
+        cX: leftMargin + bodyWidth / 2,
         cY: bodyWidth / 2,
         r: wheelRadius,
         rMax: wheelRadius - (markerRadius + padding),
@@ -86,9 +86,9 @@ let colorWheel = function (el, opts) {
         sliderType: "v",
         x: leftMargin + borderWidth,
         y: bodyWidth + sliderMargin,
-        w: bodyWidth - (borderWidth * 2),
-        h: sliderHeight - (borderWidth * 2),
-        r: (sliderHeight / 2) - borderWidth,
+        w: bodyWidth - borderWidth * 2,
+        h: sliderHeight - borderWidth * 2,
+        r: sliderHeight / 2 - borderWidth,
         marker: marker,
         border: borderStyles
       })
@@ -135,10 +135,8 @@ colorWheel.prototype = {
     * @param {Function} callback The watch callback to remove from the event
   */
   off: function (eventType, callback) {
-    var events = this._events;
-    if (events[eventType]) {
-      events[eventType].splice(events[eventType].indexOf(callback), 1);
-    }
+    var eventList = this._events[eventType];
+    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
   },
 
   /**
@@ -148,8 +146,7 @@ colorWheel.prototype = {
   */
   emit: function (eventType, data) {
     var events = this._events;
-    (events[eventType] || []).map((callback) => { callback(data); });
-    (events["*"] || []).map((callback) => { callback(data); });
+    (events[eventType] || []).concat((events["*"] || [])).map((callback) => { callback(data); });
   },
 
   /**

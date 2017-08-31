@@ -44,10 +44,10 @@ svgElement.prototype = {
     var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
     startAngle *= PI / 180;
     endAngle *= PI / 180;
-    var x1 = cx + (radius * cos(endAngle)),
-        y1 = cy + (radius * sin(endAngle)),
-        x2 = cx + (radius * cos(startAngle)),
-        y2 = cy + (radius * sin(startAngle));
+    var x1 = cx + radius * cos(endAngle),
+        y1 = cy + radius * sin(endAngle),
+        x2 = cx + radius * cos(startAngle),
+        y2 = cy + radius * sin(startAngle);
     attrs = attrs || {};
     attrs.d = ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
     return this.insert("path", attrs);

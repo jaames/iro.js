@@ -2,7 +2,6 @@ import marker from "ui/marker";
 
 // Quick references to reused math functions
 var PI = Math.PI,
-    pow = Math.pow,
     sqrt = Math.sqrt,
     abs = Math.abs,
     round = Math.round;
@@ -33,7 +32,7 @@ let wheel = function (svg, opts) {
 
   for (var hue = 0; hue < 360; hue++) {
     ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      s: "hsl(" + hue + ",100%," + (100 / 2) + "%)"
+      s: "hsl(" + hue + ",100%,50%)"
     });
   }
 
@@ -59,13 +58,13 @@ wheel.prototype = {
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this._lightness.setAttrs({o: 1 - (hsv.v / 100)});
+      this._lightness.setAttrs({o: (1 - hsv.v / 100).toFixed(2) });
       // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = hsv.h * (PI/180);
+      var hueAngle = hsv.h * (PI / 180);
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
@@ -81,18 +80,16 @@ wheel.prototype = {
   */
   input: function (x, y) {
     var opts = this._opts,
-        cX = opts.cX,
-        cY = opts.cY,
-        radius = opts.r,
-        rangeMax = opts.rMax;
+        rangeMax = opts.rMax,
+        _x = opts.cX - x,
+        _y = opts.cY - y;
 
-    // Angle in radians, anticlockwise starting at 12 o'clock
-    var angle = Math.atan2(x - cX, y - cY),
-        // Calculate the hue by converting the angle to radians, and normalising the angle to 3 o'clock
-        hue = 360 - (round(angle * (180 / PI)) + 270) % 360,
+    var angle = Math.atan2(_y, _x),
+        // Calculate the hue by converting the angle to radians
+        hue = round(angle * (180 / PI)) + 180,
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
-        dist = Math.min(sqrt(pow(cX - x, 2) + pow(cY - y, 2)), rangeMax);
+        dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
 
     // Return just the H and S channels, the wheel element doesn't do anything with the L channel
     return {

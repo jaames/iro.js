@@ -1,13 +1,11 @@
-const doc = document;
-
 /**
   @constructor stylesheet writer
   @param {Object} overrides - an object representing the CSS rules that this stylesheet updates
 */
 let stylesheet = function (overrides) {
   // Create a new style element
-  let style = doc.createElement("style");
-  doc.head.appendChild(style);
+  let style = document.createElement("style");
+  document.head.appendChild(style);
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
   style.appendChild(doc.createTextNode(""));

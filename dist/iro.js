@@ -260,7 +260,7 @@ color.prototype = {
     var oldValue = this._value;
     for (var channel in oldValue) {
       if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
-      changes[channel] = !(newValue[channel] == oldValue[channel]);
+      changes[channel] = newValue[channel] != oldValue[channel];
     }
     // Update the old value
     this._value = newValue;
@@ -301,16 +301,14 @@ module.exports = color;
 "use strict";
 
 
-var doc = document;
-
 /**
   @constructor stylesheet writer
   @param {Object} overrides - an object representing the CSS rules that this stylesheet updates
 */
 var stylesheet = function stylesheet(overrides) {
   // Create a new style element
-  var style = doc.createElement("style");
-  doc.head.appendChild(style);
+  var style = document.createElement("style");
+  document.head.appendChild(style);
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
   style.appendChild(doc.createTextNode(""));
@@ -683,10 +681,8 @@ colorWheel.prototype = {
     * @param {Function} callback The watch callback to remove from the event
   */
   off: function off(eventType, callback) {
-    var events = this._events;
-    if (events[eventType]) {
-      events[eventType].splice(events[eventType].indexOf(callback), 1);
-    }
+    var eventList = this._events[eventType];
+    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
   },
 
   /**
@@ -696,10 +692,7 @@ colorWheel.prototype = {
   */
   emit: function emit(eventType, data) {
     var events = this._events;
-    (events[eventType] || []).map(function (callback) {
-      callback(data);
-    });
-    (events["*"] || []).map(function (callback) {
+    (events[eventType] || []).concat(events["*"] || []).map(function (callback) {
       callback(data);
     });
   },
@@ -1192,7 +1185,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Quick references to reused math functions
 var PI = Math.PI,
-    pow = Math.pow,
     sqrt = Math.sqrt,
     abs = Math.abs,
     round = Math.round;
@@ -1223,7 +1215,7 @@ var wheel = function wheel(svg, opts) {
 
   for (var hue = 0; hue < 360; hue++) {
     ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      s: "hsl(" + hue + ",100%," + 100 / 2 + "%)"
+      s: "hsl(" + hue + ",100%,50%)"
     });
   }
 
@@ -1249,7 +1241,7 @@ wheel.prototype = {
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this._lightness.setAttrs({ o: 1 - hsv.v / 100 });
+      this._lightness.setAttrs({ o: (1 - hsv.v / 100).toFixed(2) });
       // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
@@ -1271,20 +1263,18 @@ wheel.prototype = {
   */
   input: function input(x, y) {
     var opts = this._opts,
-        cX = opts.cX,
-        cY = opts.cY,
-        radius = opts.r,
-        rangeMax = opts.rMax;
+        rangeMax = opts.rMax,
+        _x = opts.cX - x,
+        _y = opts.cY - y;
 
-    // Angle in radians, anticlockwise starting at 12 o'clock
-    var angle = Math.atan2(x - cX, y - cY),
+    var angle = Math.atan2(_y, _x),
 
-    // Calculate the hue by converting the angle to radians, and normalising the angle to 3 o'clock
-    hue = 360 - (round(angle * (180 / PI)) + 270) % 360,
+    // Calculate the hue by converting the angle to radians
+    hue = round(angle * (180 / PI)) + 180,
 
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
-    dist = Math.min(sqrt(pow(cX - x, 2) + pow(cY - y, 2)), rangeMax);
+    dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
 
     // Return just the H and S channels, the wheel element doesn't do anything with the L channel
     return {
