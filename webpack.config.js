@@ -31,7 +31,7 @@ module.exports = function (env) {
     entry: "./iro.js",
     output: {
       library: "iro",
-      libraryTarget: "var",
+      libraryTarget: "umd",
       publicPath: "/test",
       path: path.resolve(__dirname, "dist"),
       filename: isDevMode ? "iro.js" : "iro.min.js",
@@ -52,11 +52,7 @@ module.exports = function (env) {
           test: /\.js?$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader",
-            options: {
-              "babelrc": false,
-              "presets": ["es2015", "stage-2"]
-            }
+            loader: "babel-loader"
           }
         }
       ]

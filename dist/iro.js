@@ -2,10 +2,19 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Mon Aug 21 2017
+ * Last updated: Thu Aug 31 2017
  */
-var iro =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["iro"] = factory();
+	else
+		root["iro"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -1360,4 +1369,5 @@ module.exports = {
 
 /***/ })
 /******/ ]);
+});
 //# sourceMappingURL=iro.js.map

@@ -22,7 +22,7 @@
   "scripts": {
     "build": "webpack --env=dev --progress --colors && webpack --env=prod --progress --colors",
     "dev": "webpack-dev-server --env=dev --hot --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-core/register --colors ./tests/*.spec.js"
   },
   "repository": {
     "type": "git",
