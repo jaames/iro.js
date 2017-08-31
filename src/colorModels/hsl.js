@@ -16,13 +16,14 @@ module.exports = {
   },
 
   toHsv: function (hsl) {
-    var s = hsl.s / 50,
+    var s = hsl.s / 100,
         l = hsl.l / 100;
+    l *= 2;
     s *= (l <= 1) ? l : 2 - l;
     return {
       h: hsl.h,
       s: round(((2 * s) / (l + s)) * 100),
-      v: round((l + s) * 100)
+      v: round(((l + s) / 2) * 100)
     };
   }
 };
