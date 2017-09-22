@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Thu Aug 31 2017
+ * Last updated: Fri Sep 22 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -311,7 +311,7 @@ var stylesheet = function stylesheet(overrides) {
   document.head.appendChild(style);
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
-  style.appendChild(doc.createTextNode(""));
+  style.appendChild(document.createTextNode(""));
   this.style = style;
   // Create a reference to the style element's CSSStyleSheet object
   // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
@@ -492,6 +492,9 @@ module.exports = {
 "use strict";
 
 
+// sniff useragent string to check if the user is running IE
+var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
+
 /**
   * @constructor marker UI
   * @param {Object} ctx - canvas 2d context to draw on
@@ -499,12 +502,15 @@ module.exports = {
 */
 var marker = function marker(svg, opts) {
   var baseGroup = svg.g();
-  [[5, "#000"], [2, "#fff"]].map(function (ring) {
-    baseGroup.circle(0, 0, opts.r, {
-      f: "none",
-      sw: ring[0],
-      s: ring[1]
-    });
+  baseGroup.circle(0, 0, opts.r, {
+    f: "none",
+    sw: 5,
+    s: "#000"
+  });
+  baseGroup.circle(0, 0, opts.r, {
+    f: "none",
+    sw: 2,
+    s: "#fff"
   });
   this.g = baseGroup;
 };
@@ -516,7 +522,13 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function move(x, y) {
-    this.g.setTransform("t", [x, y]);
+    // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
+    // TODO: move this functionality to the SVG lib
+    if (IS_IE) {
+      this.g.setAttrs({ "transform": "translate(" + x + "," + y + ")" });
+    } else {
+      this.g.setTransform("t", [x, y]);
+    }
   }
 };
 
@@ -736,27 +748,26 @@ colorWheel.prototype = {
     * @access protected
   */
   _mouseDown: function _mouseDown(e) {
-    var _this = this;
-
     // Get the local-space position of the mouse input
     var point = this._getLocalPoint(e),
         x = point.x,
         y = point.y;
 
     // Loop through each UI element and check if the point "hits" it
-    this.ui.forEach(function (uiElement) {
+    for (var i = 0; i < this.ui.length; i++) {
+      var uiElement = this.ui[i];
       // If the element is hit, this means the user has clicked the element and is trying to interact with it
       if (uiElement.checkHit(x, y)) {
         // Set a reference to this colorWheel instance so that the global event handlers know about it
-        activeColorWheel = _this;
+        activeColorWheel = this;
         // Set an internal reference to the uiElement being interacted with, for other internal event handlers
-        _this._mouseTarget = uiElement;
+        this._mouseTarget = uiElement;
         // Emit input start event
-        _this.emit("input:start");
+        this.emit("input:start");
         // Finally, use the position to update the picked color
-        _this._handleInput(x, y);
+        this._handleInput(x, y);
       }
-    });
+    }
   },
 
   /**
@@ -786,9 +797,9 @@ colorWheel.prototype = {
     var rgb = color.rgbString;
     var css = this.css;
     // Loop through each UI element and update it
-    this.ui.forEach(function (uiElement) {
-      uiElement.update(color, changes);
-    });
+    for (var i = 0; i < this.ui.length; i++) {
+      this.ui[i].update(color, changes);
+    }
     // Update the stylesheet too
     for (var selector in css) {
       var properties = css[selector];
