@@ -7,18 +7,18 @@ var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 var SVG_ATTRIBUTE_SHORTHANDS = {
-  s: "stroke",
-  sw: "stroke-width",
-  f: "fill",
-  o: "opacity",
-  os: "offset",
-  sc: "stop-color",
-  so: "stop-opacity",
+  stroke: "stroke",
+  strokeWidth: "stroke-width",
+  fill: "fill",
+  opacity: "opacity",
+  offset: "offset",
+  stopColor: "stop-color",
+  stopOpacity: "stop-opacity",
 };
 var SVG_TRANSFORM_SHORTHANDS = {
-  t: "setTranslate",
-  s: "setScale",
-  r: "setRotate"
+  translate: "setTranslate",
+  scale: "setScale",
+  rotate: "setRotate"
 };
 
 let svgElement = function (root, parent, type, attrs) {
@@ -91,9 +91,9 @@ let svgGradient = function (root, type, stops) {
   for (var offset in stops) {
     var stop = stops[offset];
     stopElements.push(gradient.insert("stop", {
-      os: offset + "%",
-      sc: stop.c,
-      so: stop.o === undefined ? 1 : stop.o,
+      offset: offset + "%",
+      stopColor: stop.color,
+      stopOpacity: stop.opacity === undefined ? 1 : stop.opacity,
     }));
   }
   this.el = gradient.el;

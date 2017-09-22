@@ -24,6 +24,17 @@ module.exports = function (env) {
     "arc",
     "circle",
     "gradient",
+    "color",
+    "stopColor",
+    "stopOpacity",
+    "offset",
+    "opacity",
+    "stroke",
+    "strokeWidth",
+    "fill",
+    "translate",
+    "rotate",
+    "scale"
   ]
 
   var config = {

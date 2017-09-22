@@ -501,16 +501,18 @@ var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
   * @param {Object} opts - options
 */
 var marker = function marker(svg, opts) {
-  var baseGroup = svg.g();
-  baseGroup.circle(0, 0, opts.r, {
-    f: "none",
-    sw: 5,
-    s: "#000"
+  var baseGroup = svg.g({
+    class: "iro__marker"
   });
   baseGroup.circle(0, 0, opts.r, {
-    f: "none",
-    sw: 2,
-    s: "#fff"
+    fill: "none",
+    strokeWidth: 5,
+    stroke: "#000"
+  });
+  baseGroup.circle(0, 0, opts.r, {
+    fill: "none",
+    strokeWidth: 2,
+    stroke: "#fff"
   });
   this.g = baseGroup;
 };
@@ -527,7 +529,7 @@ marker.prototype = {
     if (IS_IE) {
       this.g.setAttrs({ "transform": "translate(" + x + "," + y + ")" });
     } else {
-      this.g.setTransform("t", [x, y]);
+      this.g.setTransform("translate", [x, y]);
     }
   }
 };
@@ -981,8 +983,8 @@ var slider = function slider(svg, opts) {
   opts.sliderType = opts.sliderType || "v";
 
   var gradient = svg.gradient("linear", {
-    0: { c: "#000" },
-    100: { c: "#fff" }
+    0: { color: "#000" },
+    100: { color: "#fff" }
   });
 
   var radius = r + borderWidth / 2;
@@ -996,9 +998,9 @@ var slider = function slider(svg, opts) {
     y: y - borderWidth / 2,
     width: w + borderWidth,
     height: h + borderWidth,
-    f: gradient.url,
-    sw: borderWidth,
-    s: opts.border.color
+    fill: gradient.url,
+    strokeWidth: borderWidth,
+    stroke: opts.border.color
   });
 
   this.type = "slider";
@@ -1020,7 +1022,7 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttrs({ sc: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
+        this._gradient.stops[1].setAttrs({ stopColor: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
       }
       if (changes.v) {
         var percent = hsv.v / 100;
@@ -1074,18 +1076,18 @@ var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 var SVG_ATTRIBUTE_SHORTHANDS = {
-  s: "stroke",
-  sw: "stroke-width",
-  f: "fill",
-  o: "opacity",
-  os: "offset",
-  sc: "stop-color",
-  so: "stop-opacity"
+  stroke: "stroke",
+  strokeWidth: "stroke-width",
+  fill: "fill",
+  opacity: "opacity",
+  offset: "offset",
+  stopColor: "stop-color",
+  stopOpacity: "stop-opacity"
 };
 var SVG_TRANSFORM_SHORTHANDS = {
-  t: "setTranslate",
-  s: "setScale",
-  r: "setRotate"
+  translate: "setTranslate",
+  scale: "setScale",
+  rotate: "setRotate"
 };
 
 var svgElement = function svgElement(root, parent, type, attrs) {
@@ -1158,9 +1160,9 @@ var svgGradient = function svgGradient(root, type, stops) {
   for (var offset in stops) {
     var stop = stops[offset];
     stopElements.push(gradient.insert("stop", {
-      os: offset + "%",
-      sc: stop.c,
-      so: stop.o === undefined ? 1 : stop.o
+      offset: offset + "%",
+      stopColor: stop.color,
+      stopOpacity: stop.opacity === undefined ? 1 : stop.opacity
     }));
   }
   this.el = gradient.el;
@@ -1213,27 +1215,32 @@ var wheel = function wheel(svg, opts) {
       border = opts.border;
 
   var gradient = svg.gradient("radial", {
-    0: { c: "#fff" },
-    100: { c: "#fff", o: 0 }
+    0: {
+      color: "#fff"
+    },
+    100: {
+      color: "#fff",
+      opacity: 0
+    }
   });
 
   var baseGroup = svg.g();
 
   var ringGroup = baseGroup.g({
-    sw: r,
-    f: "none"
+    strokeWidth: r,
+    fill: "none"
   });
 
   for (var hue = 0; hue < 360; hue++) {
     ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      s: "hsl(" + hue + ",100%,50%)"
+      stroke: "hsl(" + hue + ",100%,50%)"
     });
   }
 
   baseGroup.circle(cX, cY, r + border.w / 2, {
-    f: gradient.url,
-    s: border.color,
-    sw: border.w
+    fill: gradient.url,
+    stroke: border.color,
+    strokeWidth: border.w
   });
 
   this._lightness = baseGroup.circle(cX, cY, r);
@@ -1252,7 +1259,7 @@ wheel.prototype = {
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this._lightness.setAttrs({ o: (1 - hsv.v / 100).toFixed(2) });
+      this._lightness.setAttrs({ opacity: (1 - hsv.v / 100).toFixed(2) });
       // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position

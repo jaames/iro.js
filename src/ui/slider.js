@@ -23,8 +23,8 @@ let slider = function (svg, opts) {
   opts.sliderType = opts.sliderType || "v";
 
   var gradient = svg.gradient("linear", {
-    0: {c: "#000"},
-    100: {c: "#fff"}
+    0: {color: "#000"},
+    100: {color: "#fff"}
   });
 
   var radius = r + borderWidth / 2;
@@ -38,9 +38,9 @@ let slider = function (svg, opts) {
     y: y - borderWidth / 2,
     width: w + borderWidth,
     height: h + borderWidth,
-    f: gradient.url,
-    sw: borderWidth,
-    s: opts.border.color,
+    fill: gradient.url,
+    strokeWidth: borderWidth,
+    stroke: opts.border.color,
   });
 
   this.type = "slider";
@@ -62,7 +62,7 @@ slider.prototype = {
     var hsv = color.hsv;
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttrs({sc: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100})});
+        this._gradient.stops[1].setAttrs({stopColor: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100})});
       }
       if (changes.v) {
         var percent = (hsv.v / 100);

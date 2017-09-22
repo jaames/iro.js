@@ -7,16 +7,18 @@ var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
   * @param {Object} opts - options
 */
 let marker = function (svg, opts) {
-  var baseGroup = svg.g();
-  baseGroup.circle(0, 0, opts.r, {
-    f: "none",
-    sw: 5,
-    s: "#000",
+  var baseGroup = svg.g({
+    class: "iro__marker"
   });
   baseGroup.circle(0, 0, opts.r, {
-    f: "none",
-    sw: 2,
-    s: "#fff",
+    fill: "none",
+    strokeWidth: 5,
+    stroke: "#000",
+  });
+  baseGroup.circle(0, 0, opts.r, {
+    fill: "none",
+    strokeWidth: 2,
+    stroke: "#fff",
   });
   this.g = baseGroup;
 };
@@ -33,7 +35,7 @@ marker.prototype = {
     if (IS_IE) {
       this.g.setAttrs({"transform": "translate(" + x + "," + y + ")"});
     } else {
-      this.g.setTransform("t", [x, y]);
+      this.g.setTransform("translate", [x, y]);
     }
   }
 };

@@ -19,27 +19,32 @@ let wheel = function (svg, opts) {
       border = opts.border;
 
   var gradient = svg.gradient("radial", {
-    0: {c:"#fff"},
-    100: {c:"#fff", o: 0},
+    0: {
+      color: "#fff"
+    },
+    100: {
+      color:"#fff", 
+      opacity: 0
+    },
   });
 
   var baseGroup = svg.g();
 
   var ringGroup = baseGroup.g({
-    sw: r,
-    f: "none",
+    strokeWidth: r,
+    fill: "none",
   });
 
   for (var hue = 0; hue < 360; hue++) {
     ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      s: "hsl(" + hue + ",100%,50%)"
+      stroke: "hsl(" + hue + ",100%,50%)"
     });
   }
 
   baseGroup.circle(cX, cY, r + border.w / 2, {
-    f: gradient.url,
-    s: border.color,
-    sw: border.w,
+    fill: gradient.url,
+    stroke: border.color,
+    strokeWidth: border.w,
   });
 
   this._lightness = baseGroup.circle(cX, cY, r);
@@ -58,7 +63,7 @@ wheel.prototype = {
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this._lightness.setAttrs({o: (1 - hsv.v / 100).toFixed(2) });
+      this._lightness.setAttrs({opacity: (1 - hsv.v / 100).toFixed(2) });
       // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
