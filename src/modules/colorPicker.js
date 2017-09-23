@@ -156,8 +156,6 @@ colorWheel.prototype = {
     * @access protected
   */
   _getLocalPoint: function (e) {
-    // Prevent default event behaviour, like scrolling
-    e.preventDefault();
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e,
@@ -196,6 +194,8 @@ colorWheel.prototype = {
     this.ui.forEach((uiElement) => {
       // If the element is hit, this means the user has clicked the element and is trying to interact with it
       if (uiElement.checkHit(x, y)) {
+        // Prevent default event behaviour, like scrolling
+        e.preventDefault();
         // Set a reference to this colorWheel instance so that the global event handlers know about it
         activeColorWheel = this;
         // Set an internal reference to the uiElement being interacted with, for other internal event handlers
@@ -216,6 +216,8 @@ colorWheel.prototype = {
   _mouseMove: function (e) {
     // If there is an active colorWheel (set in _mouseDown) then update the input as the user interacts with it
     if (this == activeColorWheel) {
+      // Prevent default event behaviour, like scrolling
+      e.preventDefault();
       // Get the local-space position of the mouse input
       var point = this._getLocalPoint(e);
       // Use the position to update the picker color

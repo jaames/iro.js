@@ -102,7 +102,7 @@ let svgGradient = function (root, type, stops) {
 };
 
 let svgRoot = function (parent, width, height) {
-  svgElement.call(this, this, parent, "svg", {width, height});
+  svgElement.call(this, this, parent, "svg", {width, height, style: "display:block;"});
   this._defs = this.insert("defs");
 };
 

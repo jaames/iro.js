@@ -1,0 +1,44 @@
+// I hate that I have to use a full relative path for this but hexo-sass-renderer doesn't seem to give me very decent import options
+@import "../../node_modules/foundation-sites/scss/foundation.scss";
+
+$global-font-size: 16px;
+
+$frame-width: 8px;
+$hero-bg-color: #535878;
+$hero-main-color: #fff;
+
+@include foundation-global-styles;
+@include foundation-typography-base;
+
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: "Rubik", sans-serif;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  @include clearfix();
+}
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  padding: .5rem 1rem;
+  cursor: pointer;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  background: transparent;
+  transition: background-color .15s ease-out
+}
+
+.button:hover {
+  border-color: #fff;
+  color: #000;
+  background-color: #fff;
+}
+
+@import "_partials/index.scss";
