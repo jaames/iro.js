@@ -8,7 +8,7 @@ let stylesheet = function (overrides) {
   document.head.appendChild(style);
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
-  style.appendChild(doc.createTextNode(""));
+  style.appendChild(document.createTextNode(""));
   this.style = style;
   // Create a reference to the style element's CSSStyleSheet object
   // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet

@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Fri Sep 22 2017
+ * Last updated: Sat Sep 23 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -750,26 +750,27 @@ colorWheel.prototype = {
     * @access protected
   */
   _mouseDown: function _mouseDown(e) {
+    var _this = this;
+
     // Get the local-space position of the mouse input
     var point = this._getLocalPoint(e),
         x = point.x,
         y = point.y;
 
     // Loop through each UI element and check if the point "hits" it
-    for (var i = 0; i < this.ui.length; i++) {
-      var uiElement = this.ui[i];
+    this.ui.forEach(function (uiElement) {
       // If the element is hit, this means the user has clicked the element and is trying to interact with it
       if (uiElement.checkHit(x, y)) {
         // Set a reference to this colorWheel instance so that the global event handlers know about it
-        activeColorWheel = this;
+        activeColorWheel = _this;
         // Set an internal reference to the uiElement being interacted with, for other internal event handlers
-        this._mouseTarget = uiElement;
+        _this._mouseTarget = uiElement;
         // Emit input start event
-        this.emit("input:start");
+        _this.emit("input:start");
         // Finally, use the position to update the picked color
-        this._handleInput(x, y);
+        _this._handleInput(x, y);
       }
-    }
+    });
   },
 
   /**
@@ -799,9 +800,9 @@ colorWheel.prototype = {
     var rgb = color.rgbString;
     var css = this.css;
     // Loop through each UI element and update it
-    for (var i = 0; i < this.ui.length; i++) {
-      this.ui[i].update(color, changes);
-    }
+    this.ui.forEach(function (uiElement) {
+      uiElement.update(color, changes);
+    });
     // Update the stylesheet too
     for (var selector in css) {
       var properties = css[selector];
