@@ -1,0 +1,52 @@
+.article {
+
+  ul ul {
+    list-style-type: circle;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  ul ul ul {
+    list-style-type: square;
+  }
+  
+  ul p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  h3, h4, h5, h6 {
+    color: $black;
+  }
+  
+  h1, h2 {
+    color: $accent-color;
+  }
+  
+  h3 {
+    margin: 1em 0 0.5em 0;
+    padding-bottom: 0.25em;
+    border-bottom: 2px solid lighten($black, 64);
+  }
+  
+  a {
+    font-weight: bold;
+    border-bottom: 1px solid $accent-color;
+  }
+
+  a:hover, a:focus {
+    color: darken($accent-color, 8);
+  }
+
+  code {
+    border: none;
+    background: $medium-gray;
+  }
+
+}
+
+.article__title {
+  font-size: 42px;
+  line-height: 48px;
+  margin-bottom: 48px;
+ }

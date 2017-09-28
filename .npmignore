@@ -1,5 +1,7 @@
 *.*-cache
 node_modules
 *.log
+.tmp
+src
 www
 assets
