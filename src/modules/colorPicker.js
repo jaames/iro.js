@@ -160,7 +160,7 @@ colorWheel.prototype = {
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e,
         // Get the screen position of the UI
-        rect = this.el.getBoundingClientRect();
+        rect = this.svg.el.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,

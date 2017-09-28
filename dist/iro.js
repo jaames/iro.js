@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Sat Sep 23 2017
+ * Last updated: Fri Sep 29 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -723,7 +723,7 @@ colorWheel.prototype = {
     var point = e.touches ? e.changedTouches[0] : e,
 
     // Get the screen position of the UI
-    rect = this.el.getBoundingClientRect();
+    rect = this.svg.el.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,
@@ -1236,7 +1236,7 @@ var wheel = function wheel(svg, opts) {
 
   for (var hue = 0; hue < 360; hue++) {
     ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      stroke: "hsl(" + hue + ",100%,50%)"
+      stroke: "hsl(" + (360 - hue) + ",100%,50%)"
     });
   }
 
@@ -1268,7 +1268,7 @@ wheel.prototype = {
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = hsv.h * (PI / 180);
+      var hueAngle = (360 - hsv.h) * (PI / 180);
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = hsv.s / 100 * opts.rMax;
       // Move the marker based on the angle and distance
@@ -1287,11 +1287,8 @@ wheel.prototype = {
         rangeMax = opts.rMax,
         _x = opts.cX - x,
         _y = opts.cY - y;
-
-    var angle = Math.atan2(_y, _x),
-
     // Calculate the hue by converting the angle to radians
-    hue = round(angle * (180 / PI)) + 180,
+    var hue = 360 - (round(Math.atan2(_y, _x) * (180 / PI)) + 180),
 
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
