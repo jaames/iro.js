@@ -32,6 +32,7 @@ dom.listen(document, ["mouseup", "touchend"], function (e) {
 */
 let colorWheel = function (el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
+  opts = opts || {};
   // event storage for `on` and `off`
   this._events = {};
   this._mouseTarget = false;
