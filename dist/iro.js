@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Fri Aug 11 2017
+ * Last updated: Tue Oct 03 2017
  */
 var iro =
 /******/ (function(modules) { // webpackBootstrap
@@ -719,6 +719,7 @@ _dom2.default.listen(document, ["mouseup", "touchend"], function (e) {
 */
 var colorWheel = function colorWheel(el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
+  opts = opts || {};
   // event storage for `on` and `off`
   this._events = {};
   this._mouseTarget = false;
