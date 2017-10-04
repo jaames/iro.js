@@ -24,6 +24,7 @@ module.exports = function (env) {
     "arc",
     "circle",
     "gradient",
+    "class",
     "color",
     "stopColor",
     "stopOpacity",

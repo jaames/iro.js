@@ -1,5 +1,6 @@
 import marker from "ui/marker";
-
+// css class prefix for this element
+var CLASS_PREFIX = "iro__wheel";
 // Quick references to reused math functions
 var PI = Math.PI,
     sqrt = Math.sqrt,
@@ -28,9 +29,19 @@ let wheel = function (svg, opts) {
     },
   });
 
-  var baseGroup = svg.g();
+  var baseGroup = svg.g({
+    class: CLASS_PREFIX,
+  });
+
+  baseGroup.circle(cX, cY, r + border.w / 2, {
+    class: CLASS_PREFIX + "__border",
+    fill: "#fff",
+    stroke: border.color,
+    strokeWidth: border.w,
+  });
 
   var ringGroup = baseGroup.g({
+    class: CLASS_PREFIX + "__hue",
     strokeWidth: r,
     fill: "none",
   });
@@ -41,13 +52,14 @@ let wheel = function (svg, opts) {
     });
   }
 
-  baseGroup.circle(cX, cY, r + border.w / 2, {
+  baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__saturation",
     fill: gradient.url,
-    stroke: border.color,
-    strokeWidth: border.w,
   });
 
-  this._lightness = baseGroup.circle(cX, cY, r);
+  this._lightness = baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__lightness"
+  });
 
   this.marker = new marker(baseGroup, opts.marker);
 };

@@ -1,5 +1,7 @@
 import marker from "ui/marker";
 import hslString from "colorModels/hslString";
+// css class prefix for this element
+var CLASS_PREFIX = "iro__slider";
 
 /**
   * @constructor slider UI
@@ -22,16 +24,24 @@ let slider = function (svg, opts) {
 
   opts.sliderType = opts.sliderType || "v";
 
+  this.type = "slider";
+  this._opts = opts;
+
   var gradient = svg.gradient("linear", {
     0: {color: "#000"},
     100: {color: "#fff"}
   });
 
+  this._gradient = gradient;
+
   var radius = r + borderWidth / 2;
 
-  var baseGroup = svg.g();
+  var baseGroup = svg.g({
+    class: CLASS_PREFIX,
+  });
 
   baseGroup.insert("rect", {
+    class: CLASS_PREFIX + "__value",
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
@@ -43,9 +53,6 @@ let slider = function (svg, opts) {
     stroke: opts.border.color,
   });
 
-  this.type = "slider";
-  this._opts = opts;
-  this._gradient = gradient;
   this.marker = new marker(baseGroup, opts.marker);
 };
 

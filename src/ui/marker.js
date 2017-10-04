@@ -1,5 +1,7 @@
 // sniff useragent string to check if the user is running IE
 var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
+// css class prefix for this element
+var CLASS_PREFIX = "iro__marker";
 
 /**
   * @constructor marker UI
@@ -8,14 +10,16 @@ var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 */
 let marker = function (svg, opts) {
   var baseGroup = svg.g({
-    class: "iro__marker"
+    class: CLASS_PREFIX
   });
   baseGroup.circle(0, 0, opts.r, {
+    class: CLASS_PREFIX + "__outer",
     fill: "none",
     strokeWidth: 5,
     stroke: "#000",
   });
   baseGroup.circle(0, 0, opts.r, {
+    class: CLASS_PREFIX + "__inner",
     fill: "none",
     strokeWidth: 2,
     stroke: "#fff",

@@ -7,6 +7,7 @@ var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 var SVG_ATTRIBUTE_SHORTHANDS = {
+  class: "class",
   stroke: "stroke",
   strokeWidth: "stroke-width",
   fill: "fill",
@@ -102,7 +103,7 @@ let svgGradient = function (root, type, stops) {
 };
 
 let svgRoot = function (parent, width, height) {
-  svgElement.call(this, this, parent, "svg", {width, height, style: "display:block;"});
+  svgElement.call(this, this, parent, "svg", {width, height, style: "display:block;overflow:hidden;"});
   this._defs = this.insert("defs");
 };
 
