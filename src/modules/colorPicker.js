@@ -97,7 +97,7 @@ let colorWheel = function (el, opts) {
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color.watch(this._update.bind(this), true);
     // Add handler for mousedown + touchdown events on this element
-    dom.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
+    dom.listen(svgRoot.el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
   }.bind(this));
 };
 
