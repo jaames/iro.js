@@ -32,5 +32,12 @@
   </head>
   <body>
     <%- body %>
+    <%- js("js/prism.js") %>
+    <script>
+      var codeblocks = Array.prototype.slice.call(document.getElementsByTagName("code"));
+      codeblocks.forEach(function(block){
+        block.className = "language-" + block.className;
+      });
+    </script>
   </body>
 </html>

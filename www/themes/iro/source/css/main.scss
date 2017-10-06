@@ -62,6 +62,20 @@ $hero-main: $white;
 $hero-logo-stroke: $white;
 $hero-logo-fill: $accent-color;
 
+$codeSyntax: (
+  color: #252525,
+  background: darken($light-gray, 8),
+  comment: #4C5666,
+  punctuation: #6DADD4,
+  property: #EB8831,
+  boolean: #E6416F,
+  string: #8AC938,
+  variable: #FACC34,
+  atrule: #5B79F3,
+  keyword: #9B5CE9,
+  regex: #EB8B1D
+);
+
 @include foundation-global-styles;
 @include foundation-typography-base;
 
@@ -113,3 +127,4 @@ html, body {
 @import "_partials/index.scss";
 @import "_partials/article.scss";
 @import "_partials/navigation.scss";
+@import "_partials/prism.scss";
