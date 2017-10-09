@@ -34,10 +34,22 @@
     <%- body %>
     <%- js("js/prism.js") %>
     <script>
-      var codeblocks = Array.prototype.slice.call(document.getElementsByTagName("code"));
-      codeblocks.forEach(function(block){
+      function $(selector) {return document.querySelector(selector)};
+      function $$(selector) {return Array.prototype.slice.call(document.querySelectorAll(selector))};
+      // Navmenu code
+      var nav = $(".navigation");
+      var navToggle = $(".navigation__toggle");
+      if (nav && navToggle) {
+        navToggle.addEventListener("click", function() {
+          nav.classList.toggle("is-active");
+          navToggle.classList.toggle("is-active");
+        }, false);
+      }
+      // Fix codeblocks so they work with prism
+      $$("code").forEach(function(block) {
         block.className = "language-" + block.className;
       });
     </script>
+    <!-- Looking for this site's source code? https://github.com/jaames/iro.js/tree/master/www -->
   </body>
 </html>

@@ -64,16 +64,16 @@ $hero-logo-fill: $accent-color;
 
 $codeSyntax: (
   color: #252525,
-  background: darken($light-gray, 8),
+  background: darken($light-gray, 4),
   comment: #4C5666,
-  punctuation: #6DADD4,
-  property: #EB8831,
+  punctuation: #252525,
+  property: darken($accent-color, 8),
   boolean: #E6416F,
-  string: #8AC938,
-  variable: #FACC34,
-  atrule: #5B79F3,
-  keyword: #9B5CE9,
-  regex: #EB8B1D
+  string: #519725,
+  variable: darken($accent-color, 8),
+  atrule: #4352ff,
+  keyword: darken($accent-color, 8),
+  regex: #eb6f1d
 );
 
 @include foundation-global-styles;

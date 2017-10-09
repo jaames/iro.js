@@ -24,9 +24,10 @@
   }
   
   h3 {
+    font-size: 1.5rem;
     margin: 1em 0 0.5em 0;
     padding-bottom: 0.25em;
-    border-bottom: 2px solid lighten($black, 64);
+    border-bottom: 1px solid darken($light-gray, 24);
   }
   
   a {
@@ -40,13 +41,21 @@
 
   code {
     border: none;
-    background: darken($light-gray, 8);
+    font-size: 0.9rem;
   }
 
 }
 
 .article__title {
-  font-size: 42px;
+  font-size: 38px;
   line-height: 48px;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
+ }
+
+ .article__foot {
+  color: $dark-gray;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid darken($light-gray, 24);
+  font-size: 0.9em;
  }

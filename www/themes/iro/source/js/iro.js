@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Sat Sep 23 2017
+ * Last updated: Wed Oct 04 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -494,6 +494,8 @@ module.exports = {
 
 // sniff useragent string to check if the user is running IE
 var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
+// css class prefix for this element
+var CLASS_PREFIX = "iro__marker";
 
 /**
   * @constructor marker UI
@@ -502,14 +504,16 @@ var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 */
 var marker = function marker(svg, opts) {
   var baseGroup = svg.g({
-    class: "iro__marker"
+    class: CLASS_PREFIX
   });
   baseGroup.circle(0, 0, opts.r, {
+    class: CLASS_PREFIX + "__outer",
     fill: "none",
     strokeWidth: 5,
     stroke: "#000"
   });
   baseGroup.circle(0, 0, opts.r, {
+    class: CLASS_PREFIX + "__inner",
     fill: "none",
     strokeWidth: 2,
     stroke: "#fff"
@@ -596,6 +600,7 @@ _dom2.default.listen(document, ["mouseup", "touchend"], function (e) {
 */
 var colorWheel = function colorWheel(el, opts) {
   if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
+  opts = opts || {};
   // event storage for `on` and `off`
   this._events = {};
   this._mouseTarget = false;
@@ -656,7 +661,7 @@ var colorWheel = function colorWheel(el, opts) {
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color.watch(this._update.bind(this), true);
     // Add handler for mousedown + touchdown events on this element
-    _dom2.default.listen(el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
+    _dom2.default.listen(svgRoot.el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
   }.bind(this));
 };
 
@@ -723,7 +728,7 @@ colorWheel.prototype = {
     var point = e.touches ? e.changedTouches[0] : e,
 
     // Get the screen position of the UI
-    rect = this.el.getBoundingClientRect();
+    rect = this.svg.el.getBoundingClientRect();
     // Convert the screen-space pointer position to local-space
     return {
       x: point.clientX - rect.left,
@@ -964,6 +969,9 @@ var _hslString2 = _interopRequireDefault(_hslString);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// css class prefix for this element
+var CLASS_PREFIX = "iro__slider";
+
 /**
   * @constructor slider UI
 */
@@ -985,16 +993,24 @@ var slider = function slider(svg, opts) {
 
   opts.sliderType = opts.sliderType || "v";
 
+  this.type = "slider";
+  this._opts = opts;
+
   var gradient = svg.gradient("linear", {
     0: { color: "#000" },
     100: { color: "#fff" }
   });
 
+  this._gradient = gradient;
+
   var radius = r + borderWidth / 2;
 
-  var baseGroup = svg.g();
+  var baseGroup = svg.g({
+    class: CLASS_PREFIX
+  });
 
   baseGroup.insert("rect", {
+    class: CLASS_PREFIX + "__value",
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
@@ -1006,9 +1022,6 @@ var slider = function slider(svg, opts) {
     stroke: opts.border.color
   });
 
-  this.type = "slider";
-  this._opts = opts;
-  this._gradient = gradient;
   this.marker = new _marker2.default(baseGroup, opts.marker);
 };
 
@@ -1079,6 +1092,7 @@ var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 var SVG_ATTRIBUTE_SHORTHANDS = {
+  class: "class",
   stroke: "stroke",
   strokeWidth: "stroke-width",
   fill: "fill",
@@ -1174,7 +1188,7 @@ var svgGradient = function svgGradient(root, type, stops) {
 };
 
 var svgRoot = function svgRoot(parent, width, height) {
-  svgElement.call(this, this, parent, "svg", { width: width, height: height, style: "display:block;" });
+  svgElement.call(this, this, parent, "svg", { width: width, height: height, style: "display:block;overflow:hidden;" });
   this._defs = this.insert("defs");
 };
 
@@ -1199,6 +1213,8 @@ var _marker2 = _interopRequireDefault(_marker);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// css class prefix for this element
+var CLASS_PREFIX = "iro__wheel";
 // Quick references to reused math functions
 var PI = Math.PI,
     sqrt = Math.sqrt,
@@ -1227,26 +1243,37 @@ var wheel = function wheel(svg, opts) {
     }
   });
 
-  var baseGroup = svg.g();
+  var baseGroup = svg.g({
+    class: CLASS_PREFIX
+  });
+
+  baseGroup.circle(cX, cY, r + border.w / 2, {
+    class: CLASS_PREFIX + "__border",
+    fill: "#fff",
+    stroke: border.color,
+    strokeWidth: border.w
+  });
 
   var ringGroup = baseGroup.g({
+    class: CLASS_PREFIX + "__hue",
     strokeWidth: r,
     fill: "none"
   });
 
   for (var hue = 0; hue < 360; hue++) {
     ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      stroke: "hsl(" + (360 - hue) + ",100%,50%)"
+      stroke: "hsl(" + hue + ",100%,50%)"
     });
   }
 
-  baseGroup.circle(cX, cY, r + border.w / 2, {
-    fill: gradient.url,
-    stroke: border.color,
-    strokeWidth: border.w
+  baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__saturation",
+    fill: gradient.url
   });
 
-  this._lightness = baseGroup.circle(cX, cY, r);
+  this._lightness = baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__lightness"
+  });
 
   this.marker = new _marker2.default(baseGroup, opts.marker);
 };
@@ -1268,7 +1295,7 @@ wheel.prototype = {
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = (360 - hsv.h) * (PI / 180);
+      var hueAngle = hsv.h * (PI / 180);
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = hsv.s / 100 * opts.rMax;
       // Move the marker based on the angle and distance
@@ -1287,8 +1314,11 @@ wheel.prototype = {
         rangeMax = opts.rMax,
         _x = opts.cX - x,
         _y = opts.cY - y;
+
+    var angle = Math.atan2(_y, _x),
+
     // Calculate the hue by converting the angle to radians
-    var hue = 360 - (round(Math.atan2(_y, _x) * (180 / PI)) + 180),
+    hue = round(angle * (180 / PI)) + 180,
 
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level

@@ -2,7 +2,7 @@
  pre[class*="language-"] {
    color: map-get($codeSyntax, color);
    background: none;
-   text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+   position: relative;
    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
    text-align: left;
    white-space: pre;
@@ -19,7 +19,26 @@
    -moz-hyphens: none;
    -ms-hyphens: none;
    hyphens: none;
- }
+}
+
+pre.language-js::before,
+pre.language-css::before,
+pre.language-html::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: darken($light-gray, 24);
+  text-align: right;
+  font-size: 0.75em;
+  padding: 5px 10px 0;
+  line-height: 15px;
+  height: 15px;
+  font-weight: 600;
+}
+
+pre.language-js::before {content: "JS";}
+pre.language-css::before {content: "CSS";}
+pre.language-html::before {content: "HTML";}
  
  /* Code blocks */
  pre[class*="language-"] {
