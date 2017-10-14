@@ -26,26 +26,78 @@ dom.listen(document, ["mouseup", "touchend"], function (e) {
   }
 });
 
-/**
-  @constructor color wheel object
-  @param {ElementOrString} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
-  @param {Object} opts - options for this instance
-*/
-let colorWheel = function (el, opts) {
-  if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
-  opts = opts || {};
-  // event storage for `on` and `off`
-  this._events = {};
-  this._mouseTarget = false;
-  this._onChange = false;
-  // Create an iroStyleSheet for this colorWheel's CSS overrides
-  this.stylesheet = new iroStyleSheet();
-  this.css = opts.css || opts.styles || undefined;
-  // Create an iroColor to store this colorWheel's selected color
-  this.color = new iroColor(opts.color || "#fff");
+module.exports = class {
+  /**
+    @constructor color wheel object
+    @param {ElementOrString} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+    @param {Object} opts - options for this instance
+  */
+  constructor(el, opts) {
+    opts = opts || {};
+    // event storage for `on` and `off`
+    this._events = {};
+    this._mouseTarget = false;
+    this._onChange = false;
+    // Create an iroStyleSheet for this colorWheel's CSS overrides
+    this.stylesheet = new iroStyleSheet();
+    this.css = opts.css || opts.styles || undefined;
+    // Create an iroColor to store this colorWheel's selected color
+    this.color = new iroColor(opts.color || opts.defaultValue || "#fff");
+    // Wait for the document to be ready, then init the UI
+    dom.whenReady(() => {
+      this._init(el, opts);
+    });
+  }
 
-  // Wait for the document to be ready, then init the UI
-  dom.whenReady(function () {
+  /**
+    * @desc Set a callback function that gets called whenever the selected color changes
+    * @param {Function} callback The watch callback
+    * @param {Boolean} callImmediately set to true if you want to call the callback as soon as it is added
+  */
+  watch(callback, callImmediately) {
+    this.on("color:change", callback);
+    this._onChange = callback;
+    if (callImmediately) callback(this.color);
+  }
+
+  /**
+    * @desc Remove the watch callback
+  */
+  unwatch() {
+    this.off("color:change", this._onChange);
+  }
+
+  /**
+    * @desc Set a callback function for an event
+    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
+    * @param {Function} callback The watch callback
+  */
+  on(eventType, callback) {
+    var events = this._events;
+    (events[eventType] || (events[eventType] = [])).push(callback);
+  }
+
+  /**
+    * @desc Remove a callback function for an event added with on()
+    * @param {String} eventType The name of the event
+    * @param {Function} callback The watch callback to remove from the event
+  */
+  off(eventType, callback) {
+    var eventList = this._events[eventType];
+    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
+  }
+
+  /**
+    * @desc Emit an event
+    * @param {String} eventType The name of the event to emit
+    * @param {Object} data data to pass to all the callback functions
+  */
+  emit(eventType, data) {
+    var events = this._events;
+    (events[eventType] || []).concat((events["*"] || [])).map((callback) => { callback(data); });
+  }
+
+  _init(el, opts) {
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = ("string" == typeof el) ? document.querySelector(el) : el;
     // Find the width and height for the UI
@@ -98,57 +150,7 @@ let colorWheel = function (el, opts) {
     this.color.watch(this._update.bind(this), true);
     // Add handler for mousedown + touchdown events on this element
     dom.listen(svgRoot.el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
-  }.bind(this));
-};
-
-colorWheel.prototype = {
-  /**
-    * @desc Set a callback function that gets called whenever the selected color changes
-    * @param {Function} callback The watch callback
-    * @param {Boolean} callImmediately set to true if you want to call the callback as soon as it is added
-  */
-  watch: function (callback, callImmediately) {
-    this.on("color:change", callback);
-    this._onChange = callback;
-    if (callImmediately) callback(this.color);
-  },
-
-  /**
-    * @desc Remove the watch callback
-  */
-  unwatch: function () {
-    this.off("color:change", this._onChange);
-  },
-
-  /**
-    * @desc Set a callback function for an event
-    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
-    * @param {Function} callback The watch callback
-  */
-  on: function (eventType, callback) {
-    var events = this._events;
-    (events[eventType] || (events[eventType] = [])).push(callback);
-  },
-
-  /**
-    * @desc Remove a callback function for an event added with on()
-    * @param {String} eventType The name of the event
-    * @param {Function} callback The watch callback to remove from the event
-  */
-  off: function (eventType, callback) {
-    var eventList = this._events[eventType];
-    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
-  },
-
-  /**
-    * @desc Emit an event
-    * @param {String} eventType The name of the event to emit
-    * @param {Object} data data to pass to all the callback functions
-  */
-  emit: function (eventType, data) {
-    var events = this._events;
-    (events[eventType] || []).concat((events["*"] || [])).map((callback) => { callback(data); });
-  },
+  }
 
   /**
     * @desc Get the local-space X and Y pointer position from an input event
@@ -156,7 +158,7 @@ colorWheel.prototype = {
     * @return {Object} x and y coordinates from the top-left of the UI
     * @access protected
   */
-  _getLocalPoint: function (e) {
+  _getLocalPoint(e) {
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e,
@@ -167,7 +169,7 @@ colorWheel.prototype = {
       x: point.clientX - rect.left,
       y: point.clientY - rect.top
     };
-  },
+  }
 
   /**
     * @desc Handle a pointer input at local-space point (x, y)
@@ -175,17 +177,17 @@ colorWheel.prototype = {
     * @return {Object} x and y coordinates from the top-left of the UI
     * @access protected
   */
-  _handleInput: function (x, y) {
+  _handleInput(x, y) {
     // Use the active UI element to handle translating the input to a change in the color
-    this.color.set(this._mouseTarget.input(x, y));
-  },
+    this.color.hsv = this._mouseTarget.input(x, y);
+  }
 
   /**
     * @desc mousedown event handler
     * @param {Event} e A mouse or touch event
     * @access protected
   */
-  _mouseDown: function (e) {
+  _mouseDown(e) {
     // Get the local-space position of the mouse input
     var point = this._getLocalPoint(e),
         x = point.x,
@@ -207,14 +209,14 @@ colorWheel.prototype = {
         this._handleInput(x, y);
       }
     });
-  },
+  }
 
   /**
     * @desc mousemose event handler
     * @param {Event} e A mouse or touch event
     * @access protected
   */
-  _mouseMove: function (e) {
+  _mouseMove(e) {
     // If there is an active colorWheel (set in _mouseDown) then update the input as the user interacts with it
     if (this == activeColorWheel) {
       // Prevent default event behaviour, like scrolling
@@ -224,7 +226,7 @@ colorWheel.prototype = {
       // Use the position to update the picker color
       this._handleInput(point.x, point.y);
     }
-  },
+  }
 
   /**
     * @desc update the selected color
@@ -233,7 +235,7 @@ colorWheel.prototype = {
     * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
     * @access protected
   */
-  _update: function (newValue, oldValue, changes) {
+  _update(newValue, oldValue, changes) {
     var color = this.color;
     var rgb = color.rgbString;
     var css = this.css;
@@ -250,7 +252,5 @@ colorWheel.prototype = {
     }
     // Call the color change event
     this.emit("color:change", color);
-  },
-};
-
-module.exports = colorWheel;
+  }
+}

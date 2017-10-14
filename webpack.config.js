@@ -9,15 +9,13 @@ module.exports = function (env) {
 
   // We can mangle (compress) the following props for better minification, since they aren't used publicly
   var mangleProps = [
-    // colorModels/*.js
-    "toHsv",
-    "fromHsv",
-    "name",
-    // util.dom.js
-    "listen",
-    "unlisten",
-    "whenReady",
-    // ui/svg.js
+    "key",
+    "value",
+    // // util.dom.js
+    // "listen",
+    // "unlisten",
+    // "whenReady",
+    // // ui/svg.js
     "insert",
     "setAttrs",
     "setTransform",

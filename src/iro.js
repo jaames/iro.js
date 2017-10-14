@@ -6,6 +6,4 @@ module.exports = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
-  // for backwards compat
-  ColorWheel: colorPicker,
 };

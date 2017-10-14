@@ -1,56 +1,44 @@
-/**
-  @constructor stylesheet writer
-  @param {Object} overrides - an object representing the CSS rules that this stylesheet updates
-*/
-let stylesheet = function (overrides) {
-  // Create a new style element
-  let style = document.createElement("style");
-  document.head.appendChild(style);
-  // Webkit apparently requires a text node to be inserted into the style element
-  // (according to https://davidwalsh.name/add-rules-stylesheets)
-  style.appendChild(document.createTextNode(""));
-  this.style = style;
-  // Create a reference to the style element's CSSStyleSheet object
-  // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
-  let sheet = style.sheet;
-  this.sheet = sheet;
-  // Get a reference to the sheet's CSSRuleList object
-  // CSSRuleList API: https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList
-  this.rules = sheet.rules || sheet.cssRules;
-  // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
-  // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
-  this.map = {};
-};
 
-stylesheet.prototype = {
 
+module.exports = class {
   /**
-    * @desc Turns the stylesheet "on", allowing the styles to be rendered
+    @constructor stylesheet writer
   */
-  on: function () {
-    this.enable();
-  },
-  enable: function () {
-    this.sheet.disabled = false;
-  },
+  constructor() {
+    // Create a new style element
+    let style = document.createElement("style");
+    document.head.appendChild(style);
+    // Webkit apparently requires a text node to be inserted into the style element
+    // (according to https://davidwalsh.name/add-rules-stylesheets)
+    style.appendChild(document.createTextNode(""));
+    this.style = style;
+    // Create a reference to the style element's CSSStyleSheet object
+    // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
+    let sheet = style.sheet;
+    this.sheet = sheet;
+    // Get a reference to the sheet's CSSRuleList object
+    // CSSRuleList API: https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList
+    this.rules = sheet.rules || sheet.cssRules;
+    // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
+    // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
+    this.map = {};
+  }
 
-  /**
-    * @desc Turns the stylesheet "off", preventing the styles from being rendered
-  */
-  off: function () {
-    this.disable();
-  },
-  disable: function () {
-    this.sheet.disabled = true;
-  },
+  set enabled(value) {
+    this.sheet.disabled = !value;
+  }
 
-  /**
+  get enabled() {
+    return !this.sheet.disabled;
+  }
+
+   /**
     * @desc Set a specific rule for a given selector
     * @param {String} selector - the CSS selector for this rule (e.g. "body", ".class", "#id")
     * @param {String} property - the CSS property to set (e.g. "background-color", "font-family", "z-index")
     * @param {String} value    - the new value for the rule (e.g. "rgb(255, 255, 255)", "Helvetica", "99")
   */
-  setRule: function (selector, property, value) {
+  setRule(selector, property, value) {
     var sheet = this.sheet;
     var rules = sheet.rules || sheet.cssRules;
     var map = this.map;
@@ -79,13 +67,13 @@ stylesheet.prototype = {
     else {
       map[selector].setProperty(property, value);
     }
-  },
+  }
 
   /**
     * @desc Get an object representing the current css styles
     * @return {Object} css object
   */
-  getCss: function () {
+  get css() {
     var map = this.map;
     var ret = {};
     for (var selector in map) {
@@ -97,13 +85,13 @@ stylesheet.prototype = {
       }
     }
     return ret;
-  },
+  }
 
   /**
     * @desc Get the stylesheet text
     * @return {String} css text
   */
-  getCssText: function () {
+  get cssText() {
     var map = this.map;
     var ret = [];
     for (var selector in map) {
@@ -111,6 +99,4 @@ stylesheet.prototype = {
     }
     return ret.join("\n");
   }
-};
-
-module.exports = stylesheet;
+}
