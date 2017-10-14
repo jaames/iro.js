@@ -30,7 +30,7 @@ module.exports = class {
         opacity: 0
       },
     });
-  
+
     var baseGroup = svg.g({
       class: CLASS_PREFIX,
     });
@@ -49,8 +49,8 @@ module.exports = class {
     });
   
     for (var hue = 0; hue < 360; hue++) {
-      ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-        stroke: "hsl(" + hue + ",100%,50%)"
+      ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
+        stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)",
       });
     }
   
@@ -82,7 +82,7 @@ module.exports = class {
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = hsv.h * (PI / 180);
+      var hueAngle = (opts.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
@@ -108,6 +108,9 @@ module.exports = class {
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
         dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
+
+    
+    hue = (opts.anticlockwise ? 360 - hue : hue);
 
     // Return just the H and S channels, the wheel element doesn't do anything with the L channel
     return {

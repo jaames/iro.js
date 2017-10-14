@@ -133,7 +133,8 @@ module.exports = class {
         r: wheelRadius,
         rMax: wheelRadius - (markerRadius + padding),
         marker: marker,
-        border: borderStyles
+        border: borderStyles,
+        anticlockwise: opts.anticlockwise
       }),
       new slider(svgRoot, {
         sliderType: "v",

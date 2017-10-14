@@ -660,7 +660,7 @@ module.exports = function () {
     this.stylesheet = new _stylesheet2.default();
     this.css = opts.css || opts.styles || undefined;
     // Create an iroColor to store this colorWheel's selected color
-    this.color = new _color2.default(opts.color || "#fff");
+    this.color = new _color2.default(opts.color || opts.defaultValue || "#fff");
     // Wait for the document to be ready, then init the UI
     _dom2.default.whenReady(function () {
       _this._init(el, opts);
@@ -1305,8 +1305,8 @@ module.exports = function () {
     });
 
     for (var hue = 0; hue < 360; hue++) {
-      ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-        stroke: "hsl(" + hue + ",100%,50%)"
+      ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
+        stroke: "hsl(" + (opts.antiClockWise ? 360 - hue : hue) + ",100%,50%)"
       });
     }
 
@@ -1342,7 +1342,7 @@ module.exports = function () {
       // If the H or S channel has changed, move the marker to the right position
       if (changes.h || changes.s) {
         // convert the hue value to radians, since we'll use it as an angle
-        var hueAngle = hsv.h * (PI / 180);
+        var hueAngle = (opts.antiClockWise ? 360 - hsv.h : hsv.h) * (PI / 180);
         // convert the saturation value to a distance between the center of the ring and the edge
         var dist = hsv.s / 100 * opts.rMax;
         // Move the marker based on the angle and distance
@@ -1373,6 +1373,8 @@ module.exports = function () {
       // Find the point's distance from the center of the wheel
       // This is used to show the saturation level
       dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
+
+      hue = opts.antiClockWise ? 360 - hue : hue;
 
       // Return just the H and S channels, the wheel element doesn't do anything with the L channel
       return {
@@ -1446,7 +1448,6 @@ module.exports = {
    * @param {Function} callback callback function to be called
   */
   whenReady: function whenReady(callback) {
-    console.log(callback);
     var _this = this;
     if (doc.readyState == READYSTATE_COMPLETE) {
       callback();
