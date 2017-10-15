@@ -9,13 +9,7 @@ module.exports = function (env) {
 
   // We can mangle (compress) the following props for better minification, since they aren't used publicly
   var mangleProps = [
-    "key",
-    "value",
-    // // util.dom.js
-    // "listen",
-    // "unlisten",
-    // "whenReady",
-    // // ui/svg.js
+    // ui/svg.js
     "insert",
     "setAttrs",
     "setTransform",

@@ -20,7 +20,7 @@
     "webpack-dev-server": "2"
   },
   "scripts": {
-    "build": "webpack --env=dev --progress --colors && webpack --env=prod --progress --colors",
+    "build": "webpack --env=dev --progress --colors && webpack --env=prod --progress --colors && \\cp -r dist/ www/themes/iro/source/js",
     "dev": "webpack-dev-server --env=dev --hot --progress --colors",
     "test": "mocha --compilers js:babel-core/register --colors ./tests/*.spec.js"
   },

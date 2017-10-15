@@ -1,44 +1,36 @@
+/**
+  @constructor stylesheet writer
+*/
+const stylesheet = function() {
+  // Create a new style element
+  let style = document.createElement("style");
+  document.head.appendChild(style);
+  // Webkit apparently requires a text node to be inserted into the style element
+  // (according to https://davidwalsh.name/add-rules-stylesheets)
+  style.appendChild(document.createTextNode(""));
+  this.style = style;
+  // Create a reference to the style element's CSSStyleSheet object
+  // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
+  let sheet = style.sheet;
+  this.sheet = sheet;
+  // Get a reference to the sheet's CSSRuleList object
+  // CSSRuleList API: https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList
+  this.rules = sheet.rules || sheet.cssRules;
+  // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
+  // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
+  this.map = {};
+};
 
+stylesheet.prototype = {
+  constructor: stylesheet,
 
-module.exports = class {
   /**
-    @constructor stylesheet writer
-  */
-  constructor() {
-    // Create a new style element
-    let style = document.createElement("style");
-    document.head.appendChild(style);
-    // Webkit apparently requires a text node to be inserted into the style element
-    // (according to https://davidwalsh.name/add-rules-stylesheets)
-    style.appendChild(document.createTextNode(""));
-    this.style = style;
-    // Create a reference to the style element's CSSStyleSheet object
-    // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
-    let sheet = style.sheet;
-    this.sheet = sheet;
-    // Get a reference to the sheet's CSSRuleList object
-    // CSSRuleList API: https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList
-    this.rules = sheet.rules || sheet.cssRules;
-    // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
-    // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
-    this.map = {};
-  }
-
-  set enabled(value) {
-    this.sheet.disabled = !value;
-  }
-
-  get enabled() {
-    return !this.sheet.disabled;
-  }
-
-   /**
     * @desc Set a specific rule for a given selector
     * @param {String} selector - the CSS selector for this rule (e.g. "body", ".class", "#id")
     * @param {String} property - the CSS property to set (e.g. "background-color", "font-family", "z-index")
     * @param {String} value    - the new value for the rule (e.g. "rgb(255, 255, 255)", "Helvetica", "99")
   */
-  setRule(selector, property, value) {
+  setRule: function(selector, property, value) {
     var sheet = this.sheet;
     var rules = sheet.rules || sheet.cssRules;
     var map = this.map;
@@ -46,7 +38,7 @@ module.exports = class {
     property = property.replace(/([A-Z])/g, function($1) {
       return "-" + $1.toLowerCase();
     });
-    if (!map.hasOwnProperty(selector)){
+    if (!map.hasOwnProperty(selector)) {
       // If the selector hasn't been used yet we want to insert the rule at the end of the CSSRuleList, so we use its length as the index value
       var index = rules.length;
       // Prepare the rule declaration text, since both insertRule and addRule take this format
@@ -68,35 +60,51 @@ module.exports = class {
       map[selector].setProperty(property, value);
     }
   }
+};
 
-  /**
-    * @desc Get an object representing the current css styles
-    * @return {Object} css object
-  */
-  get css() {
-    var map = this.map;
-    var ret = {};
-    for (var selector in map) {
-      var ruleSet = map[selector];
-      ret[selector] = {};
-      for (var i = 0; i < ruleSet.length; i++) {
-        var property = ruleSet[i];
-        ret[selector][property] = ruleSet.getPropertyValue(property);
+Object.defineProperties(stylesheet.prototype, {
+  enabled: {
+    get: function() {
+      return !this.sheet.disabled;
+    },
+    set: function(value) {
+      this.sheet.disabled = !value;
+    },
+  },
+  // TODO: consider removing cssText + css properties since i don't tink they're that useful
+  cssText: {
+    /**
+      * @desc Get the stylesheet text
+      * @return {String} css text
+    */
+    get: function() {
+      var map = this.map;
+      var ret = [];
+      for (var selector in map) {
+        ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
       }
+      return ret.join("\n");
     }
-    return ret;
+  },
+  css: {
+     /**
+      * @desc Get an object representing the current css styles
+      * @return {Object} css object
+    */
+    get: function() {
+      var map = this.map;
+      var ret = {};
+      for (var selector in map) {
+        var ruleSet = map[selector];
+        ret[selector] = {};
+        for (var i = 0; i < ruleSet.length; i++) {
+          var property = ruleSet[i];
+          ret[selector][property] = ruleSet.getPropertyValue(property);
+        }
+      }
+      return ret;
+    }
   }
+});
 
-  /**
-    * @desc Get the stylesheet text
-    * @return {String} css text
-  */
-  get cssText() {
-    var map = this.map;
-    var ret = [];
-    for (var selector in map) {
-      ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-    }
-    return ret.join("\n");
-  }
-}
+module.exports = stylesheet;
