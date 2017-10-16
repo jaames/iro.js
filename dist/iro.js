@@ -574,10 +574,16 @@ var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Quick reference to the document object and some strings since we usethem more than once
+// Quick reference to the document object and some strings since we use them more than once
 var doc = document,
-    READYSTATE_COMPLETE = "complete",
-    READYSTATE_CHANGE = "readystatechange";
+    EVENT_READYSTATE_CHANGE = "readystatechange",
+    EVENT_MOUSEDOWN = "mousedown",
+    EVENT_MOUSEMOVE = "mousemove",
+    EVENT_MOUSEUP = "mouseup",
+    EVENT_TOUCHSTART = "touchstart",
+    EVENT_TOUCHMOVE = "touchmove",
+    EVENT_TOUCHEND = "touchend",
+    READYSTATE_COMPLETE = "complete";
 
 /**
 * @desc listen to one or more events on an element
@@ -612,34 +618,14 @@ function whenReady(callback) {
   if (doc.readyState == READYSTATE_COMPLETE) {
     callback();
   } else {
-    listen(doc, [READYSTATE_CHANGE], function stateChange(e) {
+    listen(doc, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
       if (doc.readyState == READYSTATE_COMPLETE) {
         callback();
-        unlisten(doc, [READYSTATE_CHANGE], stateChange);
+        unlisten(doc, [EVENT_READYSTATE_CHANGE], stateChange);
       }
     });
   }
 };
-
-// When the user starts to interact with a color picker's UI, a referece to that coloPicker will be stored globally
-var activeColorWheel = false;
-
-// Global mousemove + touchmove event handler
-listen(document, ["mousemove", "touchmove"], function (e) {
-  // If there is an active colorWheel, call its mousemove handler
-  if (activeColorWheel) activeColorWheel._mouseMove(e);
-});
-
-// Global mouseup + touchend event handler
-listen(document, ["mouseup", "touchend"], function (e) {
-  // If there is an active colorWheel, stop it from handling input and clear the active colorWheel reference
-  if (activeColorWheel) {
-    e.preventDefault();
-    activeColorWheel.emit("input:end");
-    activeColorWheel._mouseTarget = false;
-    activeColorWheel = false;
-  }
-});
 
 /**
   @constructor color wheel object
@@ -759,28 +745,8 @@ colorPicker.prototype = {
     })];
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color.watch(this._update.bind(this), true);
-    // Add handler for mousedown + touchdown events on this element
-    listen(svgRoot.el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
-  },
-
-  /**
-    * @desc Get the local-space X and Y pointer position from an input event
-    * @param {Event} e A mouse or touch event
-    * @return {Object} x and y coordinates from the top-left of the UI
-    * @access protected
-  */
-  _getLocalPoint: function _getLocalPoint(e) {
-    // Detect if the event is a touch event by checking if it has the `touches` property
-    // If it is a touch event, use the first touch input
-    var point = e.touches ? e.changedTouches[0] : e,
-
-    // Get the screen position of the UI
-    rect = this.svg.el.getBoundingClientRect();
-    // Convert the screen-space pointer position to local-space
-    return {
-      x: point.clientX - rect.left,
-      y: point.clientY - rect.top
-    };
+    // Listen to events
+    listen(svgRoot.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   },
 
   /**
@@ -794,51 +760,52 @@ colorPicker.prototype = {
     this.color.hsv = this._mouseTarget.input(x, y);
   },
 
-  /**
-    * @desc mousedown event handler
-    * @param {Event} e A mouse or touch event
-    * @access protected
-  */
-  _mouseDown: function _mouseDown(e) {
-    var _this3 = this;
+  handleEvent: function handleEvent(e) {
+    // Detect if the event is a touch event by checking if it has the `touches` property
+    // If it is a touch event, use the first touch input
+    var point = e.touches ? e.changedTouches[0] : e,
 
-    // Get the local-space position of the mouse input
-    var point = this._getLocalPoint(e),
-        x = point.x,
-        y = point.y;
+    // Get the screen position of the UI
+    rect = this.svg.el.getBoundingClientRect(),
 
-    // Loop through each UI element and check if the point "hits" it
-    this.ui.forEach(function (uiElement) {
-      // If the element is hit, this means the user has clicked the element and is trying to interact with it
-      if (uiElement.checkHit(x, y)) {
-        // Prevent default event behaviour, like scrolling
-        e.preventDefault();
-        // Set a reference to this colorWheel instance so that the global event handlers know about it
-        activeColorWheel = _this3;
-        // Set an internal reference to the uiElement being interacted with, for other internal event handlers
-        _this3._mouseTarget = uiElement;
-        // Emit input start event
-        _this3.emit("input:start");
-        // Finally, use the position to update the picked color
-        _this3._handleInput(x, y);
-      }
-    });
-  },
+    // Convert the screen-space pointer position to local-space
+    x = point.clientX - rect.left,
+        y = point.clientY - rect.top;
 
-  /**
-    * @desc mousemose event handler
-    * @param {Event} e A mouse or touch event
-    * @access protected
-  */
-  _mouseMove: function _mouseMove(e) {
-    // If there is an active colorWheel (set in _mouseDown) then update the input as the user interacts with it
-    if (this == activeColorWheel) {
-      // Prevent default event behaviour, like scrolling
+    switch (e.type) {
+      case EVENT_MOUSEDOWN:
+      case EVENT_TOUCHSTART:
+        // Loop through each UI element and check if the point "hits" it
+        for (var i = 0; i < this.ui.length; i++) {
+          var uiElement = this.ui[i];
+          // If the element is hit, this means the user has clicked the element and is trying to interact with it
+          if (uiElement.checkHit(x, y)) {
+            // Set an internal reference to the uiElement being interacted with, for other internal event handlers
+            this._mouseTarget = uiElement;
+            // Attach event listeners
+            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+            // Emit input start event
+            this.emit("input:start");
+            // Finally, use the position to update the picked color
+            this._handleInput(x, y);
+          }
+        }
+        break;
+      case EVENT_MOUSEMOVE:
+      case EVENT_TOUCHMOVE:
+        // Use the position to update the picker color
+        this._handleInput(x, y);
+        break;
+      case EVENT_MOUSEUP:
+      case EVENT_TOUCHEND:
+        this._mouseTarget = false;
+        this.emit("input:end");
+        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        break;
+    }
+
+    if (this._mouseTarget) {
       e.preventDefault();
-      // Get the local-space position of the mouse input
-      var point = this._getLocalPoint(e);
-      // Use the position to update the picker color
-      this._handleInput(point.x, point.y);
     }
   },
 
