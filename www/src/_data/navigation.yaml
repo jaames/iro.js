@@ -1,0 +1,18 @@
+Introduction:
+  Features: introduction.html#Features
+  Download: introduction.html#Download
+  Installation: introduction.html#Installation
+  Getting Started: introduction.html#Getting-Started
+Guide:
+  Color Picker Options: guide.html#Color-Picker-Options
+  Events: guide.html#Events
+  Dynamic CSS: guide.html#Dynamic-CSS
+API:
+  iro.ColorPicker: link
+  iro.Color: link
+  iro.Stylesheet: link
+Links:
+  Codepen Demo: https://codepen.io/rakujira/pen/WZOeNq?editors=0010
+  iro.js on GitHub: https://github.com/jaames/iro
+  Submit an Issue / Request: https://github.com/jaames/iro/issues
+  Ask Questions via Twitter: https://twitter.com/rakujira

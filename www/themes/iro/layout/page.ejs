@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="content">
-
+    <% if(!page.index) { %>
     <article class="article">
       <div class="article__head">
         <h1 class="article__title"><%- page.title %></h1>
@@ -36,5 +36,6 @@
         Spotted a mistake or want to contribute to this documentation? <a href="<%- page.github_url %>">Edit this page on Github!</a>
       </div>
     </article>
+    <% } %>
   </div>
 </div>

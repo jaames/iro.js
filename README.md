@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://rakujira.jp/projects/iro/"">
-    <img width="666" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
+    <img width="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
   </a>
 </p>
 
@@ -9,10 +9,9 @@
 * Pretty color wheel UI with touch and HiDPI/retina screen support
 * Color model conversion between RGB, HSV, HSL and hexadecimal RGB
 * Dynamically update CSS styles when the selected color changes
-* Zero dependencies (not even jQuery or extra stylesheets/images!)
-* Supports all major browsers from IE10 up
-* Lightweight, at just about 11KB minified (or ~4KB minified + gzipped)
-* Buzzword buzzword buzzword, you get the idea
+* No dependencies! Not even jQuery or extra stylesheets/images
+* Supports all major browsers from IE9 up
+* Lightweight, at just about 12KB minified (or ~5KB minified + gzipped)
 
 ### Install
 
@@ -68,73 +67,16 @@ var exampleColorPicker = new iro.ColorPicker("#example", {
 
 That's it! For more information about what Iro can do, check out the [`/docs`](https://github.com/jaames/iro.js/tree/master/docs). (:
 
-### Building
+### Contributing
 
-#### Install dependencies:
+[Read more on contributing]()
 
-`npm install`
-
-#### Build:
-
-`npm run build`
-
-#### Run dev server:
-
-`npm run dev`
-
-### Todo
-
- * Add code tests (I really need to learn how to do this tbh, it's super important)
- * Add options to change the position of the value slider to the left or right
- * Add transparency support
- * Publish on NPM
+### FAQ
 
 ### Changelog
 
-#### 2.2.0
+See the [changlelog]()
 
-##### Additions
+### License
 
-* `iro.ColorPicker` instances now have a full event system, with `on`, `off` and `emit` methods. Listening for `color:change` is the same as using the `watch` method, and there are new `input:start` and `input:end` methods for detecting when the user begins and finishes interacting with the color picker. 
-
-#### 2.1.0
-
-##### Additions
-
-* The `iro.ColorPicker` constructor has new (optional) `borderWidth` and `borderColor` options, which can be used to add borders around the color picker's UI elements
-
-##### Changes
-
-* The gradient used by the color picker's value slider is now based on the currently selected color
-* Clean up the build process, and get webpack-dev-server's HMR mode to work properly
-* Replace relative module import paths with aliased absolute paths
-
-#### 2.0.0
-
-This version represents a major rewrite of the library, although there are no major API changes. Anything using the publicly documented 1.0.0 API should be fully compatible with ver 2.0.0 and above (but not vice versa) for the foreseeable future.
-
-**Note:** version 1.0.0 of the library has been preserved in the `v1` branch. Feel free to use it if you want IE 9 support, but note that I don't intend to actively maintain it.
-
-##### Additions
-
- - Stylesheet API has some new methods and properties:
-	* `on()` and `off()` - enable and disable the stylesheet styles
-    * `getCss()` - returns the stylesheet content as an object
-    * `getCssText()` - returns the stylesheet content as a string
-    * `sheet`  - stylesheet's [CSSStyleSheet](//developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet) object
-    * `rules`  - stylesheet's [CSSRuleList](//developer.mozilla.org/en-US/docs/Web/API/CSSRuleList) object
-    * `map`  - stylesheet's [CSSStyleDeclaration](//developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration) objects; keyed by the CSS selector that they belong to
-
- - Added a proper build process using webpack
-
-##### Changes
-
- - Full rewrite, including splitting code into seperate files and switching to es6 syntax
- - IE 9 support dropped in favor of filesize
- - `iro.ColorWheel` was renamed to `iro.ColorPicker`, although `ColorWheel` is still supported for backwards compatibility.
- - The `styles` option for `iro.ColorPicker` was renamed to `css`, but again, the former is still supported
- - Docsite was dropped in favor of just using github (I may use hexo in the future, though!)
- - Landing page redesigned
-
-
-#### 1.0.0 - Initial version
+[MIT]() © [James Daniel](https://rakujira.jp)

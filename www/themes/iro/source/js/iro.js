@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Wed Oct 04 2017
+ * Last updated: Mon Oct 16 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -79,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/test";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -91,138 +91,202 @@ return /******/ (function(modules) { // webpackBootstrap
 
 var round = Math.round;
 
-module.exports = {
-  name: "rgb",
-
-  fromHsv: function fromHsv(hsv) {
-    var r, g, b, i, f, p, q, t;
-    var h = hsv.h / 360,
-        s = hsv.s / 100,
-        v = hsv.v / 100;
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-      case 0:
-        r = v, g = t, b = p;break;
-      case 1:
-        r = q, g = v, b = p;break;
-      case 2:
-        r = p, g = v, b = t;break;
-      case 3:
-        r = p, g = q, b = v;break;
-      case 4:
-        r = t, g = p, b = v;break;
-      case 5:
-        r = v, g = p, b = q;break;
-    }
-    return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
-  },
-
-  toHsv: function toHsv(rgb) {
-    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
-    var r = rgb.r / 255,
-        g = rgb.g / 255,
-        b = rgb.b / 255;
-    var max = Math.max(r, g, b),
-        min = Math.min(r, g, b),
-        delta = max - min;
-    var hue;
-    switch (max) {
-      case min:
-        hue = 0;
-        break;
-      case r:
-        hue = (g - b) / delta + (g < b ? 6 : 0);
-        break;
-      case g:
-        hue = (b - r) / delta + 2;
-        break;
-      case b:
-        hue = (r - g) / delta + 4;
-        break;
-    }
-    hue /= 6;
-    return {
-      h: round(hue * 360),
-      s: round(max === 0 ? 0 : delta / max * 100),
-      v: round(max * 100)
-    };
+function hsvToRgb(hsv) {
+  var r, g, b, i, f, p, q, t;
+  var h = hsv.h / 360,
+      s = hsv.s / 100,
+      v = hsv.v / 100;
+  i = Math.floor(h * 6);
+  f = h * 6 - i;
+  p = v * (1 - s);
+  q = v * (1 - f * s);
+  t = v * (1 - (1 - f) * s);
+  switch (i % 6) {
+    case 0:
+      r = v, g = t, b = p;break;
+    case 1:
+      r = q, g = v, b = p;break;
+    case 2:
+      r = p, g = v, b = t;break;
+    case 3:
+      r = p, g = q, b = v;break;
+    case 4:
+      r = t, g = p, b = v;break;
+    case 5:
+      r = v, g = p, b = q;break;
   }
-};
+  return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
+}
 
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+function rgbToHsv(rgb) {
+  // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
+  var r = rgb.r / 255,
+      g = rgb.g / 255,
+      b = rgb.b / 255;
+  var max = Math.max(r, g, b),
+      min = Math.min(r, g, b),
+      delta = max - min;
+  var hue;
+  switch (max) {
+    case min:
+      hue = 0;
+      break;
+    case r:
+      hue = (g - b) / delta + (g < b ? 6 : 0);
+      break;
+    case g:
+      hue = (b - r) / delta + 2;
+      break;
+    case b:
+      hue = (r - g) / delta + 4;
+      break;
+  }
+  hue /= 6;
+  return {
+    h: round(hue * 360),
+    s: round(max === 0 ? 0 : delta / max * 100),
+    v: round(max * 100)
+  };
+}
 
-"use strict";
+function rgbToString(rgb) {
+  return "rgb" + (rgb.a ? "a" : "") + "(" + rgb.r + ", " + rgb.g + ", " + rgb.b + (rgb.a ? ", " + rgb.a : "") + ")";
+}
 
+function parseRgbString(str) {
+  var parsed = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+  return {
+    r: parseInt(parsed[2]),
+    g: parseInt(parsed[3]),
+    b: parseInt(parsed[4])
+  };
+}
 
-var _hsl = __webpack_require__(3);
+function rgbToHex(rgb) {
+  var r = rgb.r,
+      g = rgb.g,
+      b = rgb.b;
+  // If each RGB channel's value is a multiple of 17, we can use HEX shorthand notation
+  var useShorthand = r % 17 == 0 && g % 17 == 0 && b % 17 == 0,
 
-var _hsl2 = _interopRequireDefault(_hsl);
+  // If we're using shorthand notation, divide each channel by 17
+  divider = useShorthand ? 17 : 1,
 
-var _rgb = __webpack_require__(0);
+  // bitLength of each channel (for example, F is 4 bits long while FF is 8 bits long)
+  bitLength = useShorthand ? 4 : 8,
 
-var _rgb2 = _interopRequireDefault(_rgb);
+  // Target length of the string (ie "#FFF" or "#FFFFFF")
+  strLength = useShorthand ? 4 : 7,
 
-var _hslString = __webpack_require__(4);
+  // Combine the channels together into a single integer
+  int = r / divider << bitLength * 2 | g / divider << bitLength | b / divider,
 
-var _hslString2 = _interopRequireDefault(_hslString);
+  // Convert that integer to a hex string
+  str = int.toString(16);
+  // Add right amount of left-padding
+  return "#" + new Array(strLength - str.length).join("0") + str;
+}
 
-var _rgbString = __webpack_require__(8);
+function parseHexString(hex) {
+  // Strip any "#" characters
+  hex = hex.replace(/#/g, '');
+  // Prefix the hex string with "0x" which indicates a number in hex notation, then convert to an integer
+  var int = parseInt("0x" + hex),
 
-var _rgbString2 = _interopRequireDefault(_rgbString);
+  // If the length of the input is only 3, then it is a shorthand hex color
+  isShorthand = hex.length == 3,
 
-var _hexString = __webpack_require__(7);
+  // bitMask for isolating each channel
+  bitMask = isShorthand ? 0xF : 0xFF,
 
-var _hexString2 = _interopRequireDefault(_hexString);
+  // bitLength of each channel (for example, F is 4 bits long while FF is 8 bits long)
+  bitLength = isShorthand ? 4 : 8,
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  // If we're using shorthand notation, multiply each channel by 17
+  multiplier = isShorthand ? 17 : 1;
 
-var colorModels = [_hsl2.default, _rgb2.default, _hslString2.default, _rgbString2.default, _hexString2.default];
+  return {
+    r: (int >> bitLength * 2 & bitMask) * multiplier,
+    g: (int >> bitLength & bitMask) * multiplier,
+    b: (int & bitMask) * multiplier
+  };
+}
+
+function hsvToHsl(hsv) {
+  var s = hsv.s / 100,
+      v = hsv.v / 100;
+  var p = (2 - s) * v;
+  s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
+  return {
+    h: hsv.h,
+    s: round(s * 100),
+    l: round(p * 50)
+  };
+}
+
+function hslToHsv(hsl) {
+  var s = hsl.s / 100,
+      l = hsl.l / 100;
+  l *= 2;
+  s *= l <= 1 ? l : 2 - l;
+  return {
+    h: hsl.h,
+    s: round(2 * s / (l + s) * 100),
+    v: round((l + s) / 2 * 100)
+  };
+}
+
+function hslToString(hsl) {
+  return "hsl" + (hsl.a ? "a" : "") + "(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%" + (hsl.a ? ", " + hsl.a : "") + ")";
+}
+
+function parseHslString(str) {
+  var parsed = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+  return {
+    h: parseInt(parsed[2]),
+    s: parseInt(parsed[3]),
+    l: parseInt(parsed[4])
+  };
+}
 
 /**
-  @constructor color object
-  @param {String} str (optional) CSS color string to use as the start color for this element
-*/
+    @constructor color object
+    @param {String} str (optional) CSS color string to use as the start color for this element
+  */
 var color = function color(str) {
-  var _this = this;
-
-  if (!(this instanceof color)) return new color(str);
   // The watch callback function for this color will be stored here
   this._onChange = false;
   // The default color value
   this._value = { h: undefined, s: undefined, v: undefined };
-  this.register("hsv", {
-    get: this.get,
-    set: this.set
-  });
-  // Loop through each external color model and register it
-  colorModels.forEach(function (model) {
-    _this.register(model.name, {
-      set: function set(value) {
-        this.hsv = model.toHsv(value);
-      },
-      get: function get() {
-        return model.fromHsv(this.hsv);
-      }
-    });
-  });
   if (str) this.fromString(str);
 };
 
+color.hsvToRgb = hsvToRgb;
+color.rgbToHsv = rgbToHsv;
+color.hsvToHsl = hsvToHsl;
+color.hslToHsv = hslToHsv;
+color.hslToString = hslToString;
+color.rgbToString = rgbToString;
+color.rgbToHex = rgbToHex;
+color.parseHexString = parseHexString;
+color.parseHslString = parseHslString;
+color.parseRgbString = parseRgbString;
+
 color.prototype = {
+  constructor: color,
 
   /**
-    * @desc Register a new color model on this instance
-    * @param {String} name The name of the color model
-    * @param {Object} descriptor The property descriptor (see https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Description)
+    * @desc Set the color from a CSS string
+    * @param {String} str - HEX, rgb, or hsl color string
   */
-  register: function register(name, descriptor) {
-    Object.defineProperty(this, name, descriptor);
+  fromString: function fromString(str) {
+    if (/^rgb/.test(str)) {
+      this.rgbString = str;
+    } else if (/^hsl/.test(str)) {
+      this.hslString = str;
+    } else if (/^#[0-9A-Fa-f]/.test(str)) {
+      this.hexString = str;
+    }
   },
 
   /**
@@ -250,11 +314,7 @@ color.prototype = {
     this._onChange(value, value, { h: true, s: true, v: true });
   },
 
-  /**
-    * @desc Set the color from a HSV value
-    * @param {Object} newValue - HSV object
-  */
-  set: function set(newValue) {
+  set: function set(newValue, triggerEvents) {
     // Loop through the channels and check if any of them have changed
     var changes = {};
     var oldValue = this._value;
@@ -266,36 +326,65 @@ color.prototype = {
     this._value = newValue;
     // If the value has changed, call hook callback
     var callback = this._onChange;
-    if ((changes.h || changes.s || changes.v) && "function" == typeof callback) callback(newValue, oldValue, changes);
-  },
-
-  /**
-    * @desc Get the HSV value
-    * @return HSV object
-  */
-  get: function get() {
-    return this._value;
-  },
-
-  /**
-    * @desc Set the color from a CSS string
-    * @param {String} str - HEX, rgb, or hsl color string
-  */
-  fromString: function fromString(str) {
-    if (/^rgb/.test(str)) {
-      this.rgbString = str;
-    } else if (/^hsl/.test(str)) {
-      this.hslString = str;
-    } else if (/^#[0-9A-Fa-f]/.test(str)) {
-      this.hexString = str;
-    }
+    if ((changes.h || changes.s || changes.v) && "function" == typeof callback) callback(newValue, oldValue, changes, triggerEvents);
   }
 };
+
+Object.defineProperties(color.prototype, {
+  hsv: {
+    get: function get() {
+      return this._value;
+    },
+    set: function set(value) {
+      this.set(value, true);
+    }
+  },
+  rgb: {
+    get: function get() {
+      return hsvToRgb(this._value);
+    },
+    set: function set(value) {
+      this.hsv = rgbToHsv(value);
+    }
+  },
+  hsl: {
+    get: function get() {
+      return hsvToHsl(this._value);
+    },
+    set: function set(value) {
+      this.hsv = hslToHsv(value);
+    }
+  },
+  rgbString: {
+    get: function get() {
+      return rgbToString(this.rgb);
+    },
+    set: function set(value) {
+      this.rgb = parseRgbString(value);
+    }
+  },
+  hexString: {
+    get: function get() {
+      return rgbToHex(this.rgb);
+    },
+    set: function set(value) {
+      this.rgb = parseHexString(value);
+    }
+  },
+  hslString: {
+    get: function get() {
+      return hslToString(this.hsl);
+    },
+    set: function set(value) {
+      this.hsl = color.parseHslString(value);
+    }
+  }
+});
 
 module.exports = color;
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -303,9 +392,8 @@ module.exports = color;
 
 /**
   @constructor stylesheet writer
-  @param {Object} overrides - an object representing the CSS rules that this stylesheet updates
 */
-var stylesheet = function stylesheet(overrides) {
+var stylesheet = function stylesheet() {
   // Create a new style element
   var style = document.createElement("style");
   document.head.appendChild(style);
@@ -326,26 +414,7 @@ var stylesheet = function stylesheet(overrides) {
 };
 
 stylesheet.prototype = {
-
-  /**
-    * @desc Turns the stylesheet "on", allowing the styles to be rendered
-  */
-  on: function on() {
-    this.enable();
-  },
-  enable: function enable() {
-    this.sheet.disabled = false;
-  },
-
-  /**
-    * @desc Turns the stylesheet "off", preventing the styles from being rendered
-  */
-  off: function off() {
-    this.disable();
-  },
-  disable: function disable() {
-    this.sheet.disabled = true;
-  },
+  constructor: stylesheet,
 
   /**
     * @desc Set a specific rule for a given selector
@@ -381,126 +450,70 @@ stylesheet.prototype = {
     } else {
       map[selector].setProperty(property, value);
     }
-  },
-
-  /**
-    * @desc Get an object representing the current css styles
-    * @return {Object} css object
-  */
-  getCss: function getCss() {
-    var map = this.map;
-    var ret = {};
-    for (var selector in map) {
-      var ruleSet = map[selector];
-      ret[selector] = {};
-      for (var i = 0; i < ruleSet.length; i++) {
-        var property = ruleSet[i];
-        ret[selector][property] = ruleSet.getPropertyValue(property);
-      }
-    }
-    return ret;
-  },
-
-  /**
-    * @desc Get the stylesheet text
-    * @return {String} css text
-  */
-  getCssText: function getCssText() {
-    var map = this.map;
-    var ret = [];
-    for (var selector in map) {
-      ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-    }
-    return ret.join("\n");
   }
 };
+
+Object.defineProperties(stylesheet.prototype, {
+  enabled: {
+    get: function get() {
+      return !this.sheet.disabled;
+    },
+    set: function set(value) {
+      this.sheet.disabled = !value;
+    }
+  },
+  // TODO: consider removing cssText + css properties since i don't tink they're that useful
+  cssText: {
+    /**
+      * @desc Get the stylesheet text
+      * @return {String} css text
+    */
+    get: function get() {
+      var map = this.map;
+      var ret = [];
+      for (var selector in map) {
+        ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
+      }
+      return ret.join("\n");
+    }
+  },
+  css: {
+    /**
+     * @desc Get an object representing the current css styles
+     * @return {Object} css object
+    */
+    get: function get() {
+      var map = this.map;
+      var ret = {};
+      for (var selector in map) {
+        var ruleSet = map[selector];
+        ret[selector] = {};
+        for (var i = 0; i < ruleSet.length; i++) {
+          var property = ruleSet[i];
+          ret[selector][property] = ruleSet.getPropertyValue(property);
+        }
+      }
+      return ret;
+    }
+  }
+});
 
 module.exports = stylesheet;
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var round = Math.round;
-
-module.exports = {
-  name: "hsl",
-
-  fromHsv: function fromHsv(hsv) {
-    var s = hsv.s / 100,
-        v = hsv.v / 100;
-    var p = (2 - s) * v;
-    s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
-    return {
-      h: hsv.h,
-      s: round(s * 100),
-      l: round(p * 50)
-    };
-  },
-
-  toHsv: function toHsv(hsl) {
-    var s = hsl.s / 100,
-        l = hsl.l / 100;
-    l *= 2;
-    s *= l <= 1 ? l : 2 - l;
-    return {
-      h: hsl.h,
-      s: round(2 * s / (l + s) * 100),
-      v: round((l + s) / 2 * 100)
-    };
-  }
-};
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _hsl = __webpack_require__(3);
-
-var _hsl2 = _interopRequireDefault(_hsl);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  name: "hslString",
-
-  fromHsv: function fromHsv(hsv) {
-    var color = _hsl2.default.fromHsv(hsv);
-    return "hsl" + (color.a ? "a" : "") + "(" + color.h + ", " + color.s + "%, " + color.l + "%" + (color.a ? ", " + color.a : "") + ")";
-  },
-
-  toHsv: function toHsv(hslString) {
-    var parsed = hslString.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-    return _hsl2.default.toHsv({
-      h: parseInt(parsed[2]),
-      s: parseInt(parsed[3]),
-      l: parseInt(parsed[4])
-    });
-  }
-};
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// sniff useragent string to check if the user is running IE
-var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 // css class prefix for this element
 var CLASS_PREFIX = "iro__marker";
 
 /**
-  * @constructor marker UI
-  * @param {Object} ctx - canvas 2d context to draw on
-  * @param {Object} opts - options
+ * @constructor marker UI
+ * @param {Object} ctx - canvas 2d context to draw on
+ * @param {Object} opts - options
 */
 var marker = function marker(svg, opts) {
   var baseGroup = svg.g({
@@ -522,68 +535,107 @@ var marker = function marker(svg, opts) {
 };
 
 marker.prototype = {
+  constructor: marker,
+
   /**
     * @desc move markerpoint to centerpoint (x, y) and redraw
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
   */
   move: function move(x, y) {
-    // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
-    // TODO: move this functionality to the SVG lib
-    if (IS_IE) {
-      this.g.setAttrs({ "transform": "translate(" + x + "," + y + ")" });
-    } else {
-      this.g.setTransform("translate", [x, y]);
-    }
+    this.g.setTransform("translate", [x, y]);
   }
 };
 
 module.exports = marker;
 
 /***/ }),
-/* 6 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _wheel = __webpack_require__(12);
+var _wheel = __webpack_require__(7);
 
 var _wheel2 = _interopRequireDefault(_wheel);
 
-var _slider = __webpack_require__(10);
+var _slider = __webpack_require__(5);
 
 var _slider2 = _interopRequireDefault(_slider);
 
-var _dom = __webpack_require__(13);
-
-var _dom2 = _interopRequireDefault(_dom);
-
-var _svg = __webpack_require__(11);
+var _svg = __webpack_require__(6);
 
 var _svg2 = _interopRequireDefault(_svg);
 
-var _color = __webpack_require__(1);
+var _color = __webpack_require__(0);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _stylesheet = __webpack_require__(2);
+var _stylesheet = __webpack_require__(1);
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Quick reference to the document object and some strings since we usethem more than once
+var doc = document,
+    READYSTATE_COMPLETE = "complete",
+    READYSTATE_CHANGE = "readystatechange";
+
+/**
+* @desc listen to one or more events on an element
+* @param {Element} el target element
+* @param {ArrayOrString} eventList the events to listen to
+* @param {Function} callback the event callback function
+*/
+function listen(el, eventList, callback) {
+  for (var i = 0; i < eventList.length; i++) {
+    el.addEventListener(eventList[i], callback);
+  }
+};
+
+/**
+* @desc remove an event listener on an element
+* @param {Element} el target element
+* @param {ArrayOrString} eventList the events to remove
+* @param {Function} callback the event callback function
+*/
+function unlisten(el, eventList, callback) {
+  for (var i = 0; i < eventList.length; i++) {
+    el.removeEventListener(eventList[i], callback);
+  }
+};
+
+/**
+* @desc call callback when the page document is ready
+* @param {Function} callback callback function to be called
+*/
+function whenReady(callback) {
+  var _this = this;
+  if (doc.readyState == READYSTATE_COMPLETE) {
+    callback();
+  } else {
+    listen(doc, [READYSTATE_CHANGE], function stateChange(e) {
+      if (doc.readyState == READYSTATE_COMPLETE) {
+        callback();
+        unlisten(doc, [READYSTATE_CHANGE], stateChange);
+      }
+    });
+  }
+};
+
 // When the user starts to interact with a color picker's UI, a referece to that coloPicker will be stored globally
 var activeColorWheel = false;
 
 // Global mousemove + touchmove event handler
-_dom2.default.listen(document, ["mousemove", "touchmove"], function (e) {
+listen(document, ["mousemove", "touchmove"], function (e) {
   // If there is an active colorWheel, call its mousemove handler
   if (activeColorWheel) activeColorWheel._mouseMove(e);
 });
 
 // Global mouseup + touchend event handler
-_dom2.default.listen(document, ["mouseup", "touchend"], function (e) {
+listen(document, ["mouseup", "touchend"], function (e) {
   // If there is an active colorWheel, stop it from handling input and clear the active colorWheel reference
   if (activeColorWheel) {
     e.preventDefault();
@@ -598,8 +650,9 @@ _dom2.default.listen(document, ["mouseup", "touchend"], function (e) {
   @param {ElementOrString} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
   @param {Object} opts - options for this instance
 */
-var colorWheel = function colorWheel(el, opts) {
-  if (!(this instanceof colorWheel)) return new colorWheel(el, opts);
+var colorPicker = function colorPicker(el, opts) {
+  var _this2 = this;
+
   opts = opts || {};
   // event storage for `on` and `off`
   this._events = {};
@@ -609,10 +662,59 @@ var colorWheel = function colorWheel(el, opts) {
   this.stylesheet = new _stylesheet2.default();
   this.css = opts.css || opts.styles || undefined;
   // Create an iroColor to store this colorWheel's selected color
-  this.color = new _color2.default(opts.color || "#fff");
-
+  this.color = new _color2.default(opts.color || opts.defaultValue || "#fff");
   // Wait for the document to be ready, then init the UI
-  _dom2.default.whenReady(function () {
+  whenReady(function () {
+    _this2._init(el, opts);
+  });
+};
+
+colorPicker.prototype = {
+  constructor: colorPicker,
+
+  watch: function watch(callback, callImmediately) {
+    this.on("color:change", callback);
+    this._onChange = callback;
+    if (callImmediately) callback(this.color);
+  },
+
+  unwatch: function unwatch() {
+    this.off("color:change", this._onChange);
+  },
+
+  /**
+  * @desc Set a callback function for an event
+  * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
+  * @param {Function} callback The watch callback
+  */
+  on: function on(eventType, callback) {
+    var events = this._events;
+    (events[eventType] || (events[eventType] = [])).push(callback);
+  },
+
+  /**
+    * @desc Remove a callback function for an event added with on()
+    * @param {String} eventType The name of the event
+    * @param {Function} callback The watch callback to remove from the event
+  */
+  off: function off(eventType, callback) {
+    var eventList = this._events[eventType];
+    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
+  },
+
+  /**
+    * @desc Emit an event
+    * @param {String} eventType The name of the event to emit
+    * @param {Object} data data to pass to all the callback functions
+  */
+  emit: function emit(eventType, data) {
+    var events = this._events;
+    (events[eventType] || []).concat(events["*"] || []).map(function (callback) {
+      callback(data);
+    });
+  },
+
+  _init: function _init(el, opts) {
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = "string" == typeof el ? document.querySelector(el) : el;
     // Find the width and height for the UI
@@ -647,7 +749,8 @@ var colorWheel = function colorWheel(el, opts) {
       r: wheelRadius,
       rMax: wheelRadius - (markerRadius + padding),
       marker: marker,
-      border: borderStyles
+      border: borderStyles,
+      anticlockwise: opts.anticlockwise
     }), new _slider2.default(svgRoot, {
       sliderType: "v",
       x: leftMargin + borderWidth,
@@ -661,59 +764,7 @@ var colorWheel = function colorWheel(el, opts) {
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color.watch(this._update.bind(this), true);
     // Add handler for mousedown + touchdown events on this element
-    _dom2.default.listen(svgRoot.el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
-  }.bind(this));
-};
-
-colorWheel.prototype = {
-  /**
-    * @desc Set a callback function that gets called whenever the selected color changes
-    * @param {Function} callback The watch callback
-    * @param {Boolean} callImmediately set to true if you want to call the callback as soon as it is added
-  */
-  watch: function watch(callback, callImmediately) {
-    this.on("color:change", callback);
-    this._onChange = callback;
-    if (callImmediately) callback(this.color);
-  },
-
-  /**
-    * @desc Remove the watch callback
-  */
-  unwatch: function unwatch() {
-    this.off("color:change", this._onChange);
-  },
-
-  /**
-    * @desc Set a callback function for an event
-    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
-    * @param {Function} callback The watch callback
-  */
-  on: function on(eventType, callback) {
-    var events = this._events;
-    (events[eventType] || (events[eventType] = [])).push(callback);
-  },
-
-  /**
-    * @desc Remove a callback function for an event added with on()
-    * @param {String} eventType The name of the event
-    * @param {Function} callback The watch callback to remove from the event
-  */
-  off: function off(eventType, callback) {
-    var eventList = this._events[eventType];
-    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
-  },
-
-  /**
-    * @desc Emit an event
-    * @param {String} eventType The name of the event to emit
-    * @param {Object} data data to pass to all the callback functions
-  */
-  emit: function emit(eventType, data) {
-    var events = this._events;
-    (events[eventType] || []).concat(events["*"] || []).map(function (callback) {
-      callback(data);
-    });
+    listen(svgRoot.el, ["mousedown", "touchstart"], this._mouseDown.bind(this));
   },
 
   /**
@@ -744,7 +795,7 @@ colorWheel.prototype = {
   */
   _handleInput: function _handleInput(x, y) {
     // Use the active UI element to handle translating the input to a change in the color
-    this.color.set(this._mouseTarget.input(x, y));
+    this.color.hsv = this._mouseTarget.input(x, y);
   },
 
   /**
@@ -753,7 +804,7 @@ colorWheel.prototype = {
     * @access protected
   */
   _mouseDown: function _mouseDown(e) {
-    var _this = this;
+    var _this3 = this;
 
     // Get the local-space position of the mouse input
     var point = this._getLocalPoint(e),
@@ -767,13 +818,13 @@ colorWheel.prototype = {
         // Prevent default event behaviour, like scrolling
         e.preventDefault();
         // Set a reference to this colorWheel instance so that the global event handlers know about it
-        activeColorWheel = _this;
+        activeColorWheel = _this3;
         // Set an internal reference to the uiElement being interacted with, for other internal event handlers
-        _this._mouseTarget = uiElement;
+        _this3._mouseTarget = uiElement;
         // Emit input start event
-        _this.emit("input:start");
+        _this3.emit("input:start");
         // Finally, use the position to update the picked color
-        _this._handleInput(x, y);
+        _this3._handleInput(x, y);
       }
     });
   },
@@ -802,7 +853,7 @@ colorWheel.prototype = {
     * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
     * @access protected
   */
-  _update: function _update(newValue, oldValue, changes) {
+  _update: function _update(newValue, oldValue, changes, triggerEvents) {
     var color = this.color;
     var rgb = color.rgbString;
     var css = this.css;
@@ -818,127 +869,28 @@ colorWheel.prototype = {
       }
     }
     // Call the color change event
-    this.emit("color:change", color);
+    if (triggerEvents) this.emit("color:change", color);
   }
 };
 
-module.exports = colorWheel;
+module.exports = colorPicker;
 
 /***/ }),
-/* 7 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _rgb = __webpack_require__(0);
-
-var _rgb2 = _interopRequireDefault(_rgb);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  name: "hexString",
-
-  fromHsv: function fromHsv(hsv) {
-    var color = _rgb2.default.fromHsv(hsv),
-        r = color.r,
-        g = color.g,
-        b = color.b;
-    // If each RGB channel's value is a multiple of 17, we can use HEX shorthand notation
-    var useShorthand = r % 17 == 0 && g % 17 == 0 && b % 17 == 0,
-
-    // If we're using shorthand notation, divide each channel by 17
-    divider = useShorthand ? 17 : 1,
-
-    // bitLength of each channel (for example, F is 4 bits long while FF is 8 bits long)
-    bitLength = useShorthand ? 4 : 8,
-
-    // Target length of the string (ie "#FFF" or "#FFFFFF")
-    strLength = useShorthand ? 4 : 7,
-
-    // Combine the channels together into a single integer
-    int = r / divider << bitLength * 2 | g / divider << bitLength | b / divider,
-
-    // Convert that integer to a hex string
-    str = int.toString(16);
-    // Add right amount of left-padding
-    return "#" + new Array(strLength - str.length).join("0") + str;
-  },
-
-  toHsv: function toHsv(hex) {
-    // Strip any "#" characters
-    hex = hex.replace(/#/g, '');
-    // Prefix the hex string with "0x" which indicates a number in hex notation, then convert to an integer
-    var int = parseInt("0x" + hex),
-
-    // If the length of the input is only 3, then it is a shorthand hex color
-    isShorthand = hex.length == 3,
-
-    // bitMask for isolating each channel
-    bitMask = isShorthand ? 0xF : 0xFF,
-
-    // bitLength of each channel (for example, F is 4 bits long while FF is 8 bits long)
-    bitLength = isShorthand ? 4 : 8,
-
-    // If we're using shorthand notation, multiply each channel by 17
-    multiplier = isShorthand ? 17 : 1;
-
-    return _rgb2.default.toHsv({
-      r: (int >> bitLength * 2 & bitMask) * multiplier,
-      g: (int >> bitLength & bitMask) * multiplier,
-      b: (int & bitMask) * multiplier
-    });
-  }
-};
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _rgb = __webpack_require__(0);
-
-var _rgb2 = _interopRequireDefault(_rgb);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  name: "rgbString",
-
-  fromHsv: function fromHsv(hsv) {
-    var color = _rgb2.default.fromHsv(hsv);
-    return "rgb" + (color.a ? "a" : "") + "(" + color.r + ", " + color.g + ", " + color.b + (color.a ? ", " + color.a : "") + ")";
-  },
-
-  toHsv: function toHsv(rgbString) {
-    var parsed = rgbString.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-    return _rgb2.default.toHsv({
-      r: parseInt(parsed[2]),
-      g: parseInt(parsed[3]),
-      b: parseInt(parsed[4])
-    });
-  }
-};
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _colorPicker = __webpack_require__(6);
+var _colorPicker = __webpack_require__(3);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _color = __webpack_require__(1);
+var _color = __webpack_require__(0);
 
 var _color2 = _interopRequireDefault(_color);
 
-var _stylesheet = __webpack_require__(2);
+var _stylesheet = __webpack_require__(1);
 
 var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
@@ -947,25 +899,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
-  Stylesheet: _stylesheet2.default,
-  // for backwards compat
-  ColorWheel: _colorPicker2.default
+  Stylesheet: _stylesheet2.default
 };
 
 /***/ }),
-/* 10 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _marker = __webpack_require__(5);
+var _marker = __webpack_require__(2);
 
 var _marker2 = _interopRequireDefault(_marker);
 
-var _hslString = __webpack_require__(4);
+var _color = __webpack_require__(0);
 
-var _hslString2 = _interopRequireDefault(_hslString);
+var _color2 = _interopRequireDefault(_color);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -973,10 +923,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var CLASS_PREFIX = "iro__slider";
 
 /**
-  * @constructor slider UI
-*/
+    * @constructor slider UI
+  */
 var slider = function slider(svg, opts) {
-
   var r = opts.r,
       w = opts.w,
       h = opts.h,
@@ -1026,6 +975,7 @@ var slider = function slider(svg, opts) {
 };
 
 slider.prototype = {
+  constructor: slider,
 
   /**
     * @desc updates this element to represent a new color value
@@ -1036,9 +986,10 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
+    var hsl = _color2.default.hsvToHsl({ h: hsv.h, s: hsv.s, v: 100 });
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttrs({ stopColor: _hslString2.default.fromHsv({ h: hsv.h, s: hsv.s, v: 100 }) });
+        this._gradient.stops[1].setAttrs({ stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)" });
       }
       if (changes.v) {
         var percent = hsv.v / 100;
@@ -1072,21 +1023,17 @@ slider.prototype = {
     var opts = this._opts;
     return x > opts.x && x < opts.x + opts.w && y > opts.y && y < opts.y + opts.h;
   }
+
 };
 
 module.exports = slider;
 
 /***/ }),
-/* 11 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-// Quick references to reused math functions
-var PI = Math.PI,
-    cos = Math.cos,
-    sin = Math.sin;
 
 var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
@@ -1106,6 +1053,8 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
+// sniff useragent string to check if the user is running IE
+var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 
 var svgElement = function svgElement(root, parent, type, attrs) {
   var el = document.createElementNS(SVG_NAMESPACE, type);
@@ -1118,6 +1067,8 @@ var svgElement = function svgElement(root, parent, type, attrs) {
 };
 
 svgElement.prototype = {
+  constructor: svgElement,
+
   insert: function insert(type, attrs) {
     return new svgElement(this._root, this, type, attrs);
   },
@@ -1128,12 +1079,12 @@ svgElement.prototype = {
 
   arc: function arc(cx, cy, radius, startAngle, endAngle, attrs) {
     var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-    startAngle *= PI / 180;
-    endAngle *= PI / 180;
-    var x1 = cx + radius * cos(endAngle),
-        y1 = cy + radius * sin(endAngle),
-        x2 = cx + radius * cos(startAngle),
-        y2 = cy + radius * sin(startAngle);
+    startAngle *= Math.PI / 180;
+    endAngle *= Math.PI / 180;
+    var x1 = cx + radius * Math.cos(endAngle),
+        y1 = cy + radius * Math.sin(endAngle),
+        x2 = cx + radius * Math.cos(startAngle),
+        y2 = cy + radius * Math.sin(startAngle);
     attrs = attrs || {};
     attrs.d = ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
     return this.insert("path", attrs);
@@ -1148,21 +1099,26 @@ svgElement.prototype = {
   },
 
   setTransform: function setTransform(type, args) {
-    var transform, transformFn;
-    var svgTransforms = this._svgTransforms;
-    if (!svgTransforms[type]) {
-      transform = this._root.el.createSVGTransform();
-      svgTransforms[type] = transform;
-      this._transformList.appendItem(transform);
+    if (!IS_IE) {
+      var transform, transformFn;
+      var svgTransforms = this._svgTransforms;
+      if (!svgTransforms[type]) {
+        transform = this._root.el.createSVGTransform();
+        svgTransforms[type] = transform;
+        this._transformList.appendItem(transform);
+      } else {
+        transform = svgTransforms[type];
+      }
+      transformFn = type in SVG_TRANSFORM_SHORTHANDS ? SVG_TRANSFORM_SHORTHANDS[type] : type;
+      transform[transformFn].apply(transform, args);
     } else {
-      transform = svgTransforms[type];
+      // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
+      this.setAttrs({ "transform": type + "(" + args.join(", ") + ")" });
     }
-    transformFn = type in SVG_TRANSFORM_SHORTHANDS ? SVG_TRANSFORM_SHORTHANDS[type] : type;
-    transform[transformFn].apply(transform, args);
   },
 
   setAttrs: function setAttrs(attrs) {
-    for (var attr in attrs || {}) {
+    for (var attr in attrs) {
       var name = attr in SVG_ATTRIBUTE_SHORTHANDS ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
       this.el.setAttribute(name, attrs[attr]);
     }
@@ -1201,13 +1157,13 @@ svgRoot.prototype.gradient = function (type, stops) {
 module.exports = svgRoot;
 
 /***/ }),
-/* 12 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _marker = __webpack_require__(5);
+var _marker = __webpack_require__(2);
 
 var _marker2 = _interopRequireDefault(_marker);
 
@@ -1261,8 +1217,8 @@ var wheel = function wheel(svg, opts) {
   });
 
   for (var hue = 0; hue < 360; hue++) {
-    ringGroup.arc(cX, cY, r / 2, hue - 0.5, hue + 1.5, {
-      stroke: "hsl(" + hue + ",100%,50%)"
+    ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
+      stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)"
     });
   }
 
@@ -1279,6 +1235,8 @@ var wheel = function wheel(svg, opts) {
 };
 
 wheel.prototype = {
+  constructor: wheel,
+
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
@@ -1295,7 +1253,7 @@ wheel.prototype = {
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = hsv.h * (PI / 180);
+      var hueAngle = (opts.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = hsv.s / 100 * opts.rMax;
       // Move the marker based on the angle and distance
@@ -1324,6 +1282,8 @@ wheel.prototype = {
     // This is used to show the saturation level
     dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
 
+    hue = opts.anticlockwise ? 360 - hue : hue;
+
     // Return just the H and S channels, the wheel element doesn't do anything with the L channel
     return {
       h: hue,
@@ -1349,62 +1309,6 @@ wheel.prototype = {
 };
 
 module.exports = wheel;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// Quick reference to the document object and some strings since we usethem more than once
-var doc = document,
-    READYSTATE_COMPLETE = "complete",
-    READYSTATE_CHANGE = "readystatechange";
-
-module.exports = {
-  /**
-   * @desc listen to one or more events on an element
-   * @param {Element} el target element
-   * @param {ArrayOrString} eventList the events to listen to
-   * @param {Function} callback the event callback function
-  */
-  listen: function listen(el, eventList, callback) {
-    for (var i = 0; i < eventList.length; i++) {
-      el.addEventListener(eventList[i], callback);
-    }
-  },
-
-  /**
-   * @desc remove an event listener on an element
-   * @param {Element} el target element
-   * @param {ArrayOrString} eventList the events to remove
-   * @param {Function} callback the event callback function
-  */
-  unlisten: function unlisten(el, eventList, callback) {
-    for (var i = 0; i < eventList.length; i++) {
-      el.removeEventListener(eventList[i], callback);
-    }
-  },
-
-  /**
-   * @desc call callback when the page document is ready
-   * @param {Function} callback callback function to be called
-  */
-  whenReady: function whenReady(callback) {
-    var _this = this;
-    if (doc.readyState == READYSTATE_COMPLETE) {
-      callback();
-    } else {
-      _this.listen(doc, [READYSTATE_CHANGE], function stateChange(e) {
-        if (doc.readyState == READYSTATE_COMPLETE) {
-          callback();
-          _this.unlisten(doc, [READYSTATE_CHANGE], stateChange);
-        }
-      });
-    }
-  }
-};
 
 /***/ })
 /******/ ]);
