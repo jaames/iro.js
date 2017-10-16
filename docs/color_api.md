@@ -2,7 +2,7 @@
 
 The color API is used by `colorPicker` objects to store the selected color and to handle conversions between different color models.
 
-The API is made accessible via the `iro.Color` constructor so that developers can make use of it should they wish, however if you're looking for more functionality, then I highly recommend using something like [cssobj](https://github.com/cssobj/cssobj). Iro is a color picker widget, not a fancy CSS-in-JS library. :P
+The API is made accessible via the `iro.Color` constructor so that developers can make use of it should they wish.
 
 ### Methods
 
@@ -14,8 +14,9 @@ The API is made accessible via the `iro.Color` constructor so that developers ca
 	* `{Number} h`
 	* `{Number} s`
 	* `{Number} v`
+* `{Boolean} triggerEvents`
 
-**Usage:** Set the color's HSV value.
+**Usage:** Set the color's HSV value. Setting a color picker's color via this method won't trigger the `color:change` event unless the second parameter (`triggerEvents`) is set to `true`.
 
 #### `get`
 

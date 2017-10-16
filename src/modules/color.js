@@ -79,8 +79,9 @@ color.prototype = {
   /**
     * @desc Set the color from a HSV value
     * @param {Object} newValue - HSV object
+    * @param {Boolean} triggerEvents - if set to true, the color:change event will be fired (hacky fix for https://github.com/jaames/iro.js/issues/11)
   */
-  set: function (newValue) {
+  set: function (newValue, triggerEvents) {
     // Loop through the channels and check if any of them have changed
     var changes = {};
     var oldValue = this._value;
@@ -92,7 +93,7 @@ color.prototype = {
     this._value = newValue;
     // If the value has changed, call hook callback
     var callback = this._onChange;
-    if ((changes.h || changes.s || changes.v) && ("function" == typeof callback)) callback(newValue, oldValue, changes);
+    if ((changes.h || changes.s || changes.v) && ("function" == typeof callback)) callback(newValue, oldValue, changes, triggerEvents);
   },
 
   /**

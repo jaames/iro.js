@@ -214,7 +214,7 @@ colorWheel.prototype = {
   */
   _handleInput: function (x, y) {
     // Use the active UI element to handle translating the input to a change in the color
-    this.color.set(this._mouseTarget.input(x, y));
+    this.color.set(this._mouseTarget.input(x, y), true);
   },
 
   /**
@@ -264,9 +264,10 @@ colorWheel.prototype = {
     * @param {Object} newValue - the new HSV values
     * @param {Object} oldValue - the old HSV values
     * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
+    * @param {Boolean} triggerEvents - if set to true, the color:change event will be fired (hacky fix for https://github.com/jaames/iro.js/issues/11)
     * @access protected
   */
-  _update: function (newValue, oldValue, changes) {
+  _update: function (newValue, oldValue, changes, triggerEvents) {
     var color = this.color;
     var rgb = color.rgbString;
     var css = this.css;
@@ -282,7 +283,7 @@ colorWheel.prototype = {
       }
     }
     // Call the color change event
-    this.emit("color:change", color);
+    if (triggerEvents) this.emit("color:change", color);
   },
 };
 
