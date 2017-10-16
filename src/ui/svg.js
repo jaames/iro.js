@@ -16,6 +16,8 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
+// sniff useragent string to check if the user is running IE
+var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 
 const svgElement = function(root, parent, type, attrs) {
   var el = document.createElementNS(SVG_NAMESPACE, type);
@@ -60,17 +62,22 @@ svgElement.prototype = {
   },
 
   setTransform: function(type, args) {
-    var transform, transformFn;
-    var svgTransforms = this._svgTransforms;
-    if (!svgTransforms[type]) {
-      transform = this._root.el.createSVGTransform();
-      svgTransforms[type] = transform;
-      this._transformList.appendItem(transform);
+    if (!IS_IE) {  
+      var transform, transformFn;
+      var svgTransforms = this._svgTransforms;
+      if (!svgTransforms[type]) {
+        transform = this._root.el.createSVGTransform();
+        svgTransforms[type] = transform;
+        this._transformList.appendItem(transform);
+      } else {
+        transform = svgTransforms[type];
+      }
+      transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
+      transform[transformFn].apply(transform, args);
     } else {
-      transform = svgTransforms[type];
+      // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
+      this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
     }
-    transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
-    transform[transformFn].apply(transform, args);
   },
 
   setAttrs (attrs) {

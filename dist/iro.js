@@ -503,8 +503,6 @@ module.exports = stylesheet;
 "use strict";
 
 
-// sniff useragent string to check if the user is running IE
-var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 // css class prefix for this element
 var CLASS_PREFIX = "iro__marker";
 
@@ -541,13 +539,7 @@ marker.prototype = {
     * @param {Number} y - point y coordinate
   */
   move: function move(x, y) {
-    // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
-    // TODO: move this functionality to the SVG lib
-    if (IS_IE) {
-      this.g.setAttrs({ "transform": "translate(" + x + "," + y + ")" });
-    } else {
-      this.g.setTransform("translate", [x, y]);
-    }
+    this.g.setTransform("translate", [x, y]);
   }
 };
 
@@ -1057,6 +1049,8 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
+// sniff useragent string to check if the user is running IE
+var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 
 var svgElement = function svgElement(root, parent, type, attrs) {
   var el = document.createElementNS(SVG_NAMESPACE, type);
@@ -1101,17 +1095,22 @@ svgElement.prototype = {
   },
 
   setTransform: function setTransform(type, args) {
-    var transform, transformFn;
-    var svgTransforms = this._svgTransforms;
-    if (!svgTransforms[type]) {
-      transform = this._root.el.createSVGTransform();
-      svgTransforms[type] = transform;
-      this._transformList.appendItem(transform);
+    if (!IS_IE) {
+      var transform, transformFn;
+      var svgTransforms = this._svgTransforms;
+      if (!svgTransforms[type]) {
+        transform = this._root.el.createSVGTransform();
+        svgTransforms[type] = transform;
+        this._transformList.appendItem(transform);
+      } else {
+        transform = svgTransforms[type];
+      }
+      transformFn = type in SVG_TRANSFORM_SHORTHANDS ? SVG_TRANSFORM_SHORTHANDS[type] : type;
+      transform[transformFn].apply(transform, args);
     } else {
-      transform = svgTransforms[type];
+      // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
+      this.setAttrs({ "transform": type + "(" + args.join(", ") + ")" });
     }
-    transformFn = type in SVG_TRANSFORM_SHORTHANDS ? SVG_TRANSFORM_SHORTHANDS[type] : type;
-    transform[transformFn].apply(transform, args);
   },
 
   setAttrs: function setAttrs(attrs) {
