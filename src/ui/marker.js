@@ -3,7 +3,7 @@ var CLASS_PREFIX = "iro__marker";
 
  /**
   * @constructor marker UI
-  * @param {Object} ctx - canvas 2d context to draw on
+  * @param {svgRoot} svg - svgRoot object
   * @param {Object} opts - options
 */
 const marker = function (svg, opts) {
@@ -29,7 +29,7 @@ marker.prototype = {
   constructor: marker,
 
   /**
-    * @desc move markerpoint to centerpoint (x, y) and redraw
+    * @desc move marker to centerpoint (x, y) and redraw
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
   */

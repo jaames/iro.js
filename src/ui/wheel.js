@@ -10,6 +10,8 @@ var PI = Math.PI,
 
 /**
   * @constructor hue wheel UI
+  * @param {svgRoot} svg - svgRoot object
+  * @param {Object} opts - options
 */
 const wheel = function (svg, opts) {
   this._opts = opts;

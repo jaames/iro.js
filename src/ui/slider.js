@@ -5,8 +5,10 @@ import iroColor from "modules/color";
 var CLASS_PREFIX = "iro__slider";
 
 /**
-    * @constructor slider UI
-  */
+  * @constructor slider UI
+  * @param {svgRoot} svg - svgRoot object
+  * @param {Object} opts - options
+*/
 const slider = function (svg, opts) {
   var r = opts.r,
   w = opts.w,
@@ -68,7 +70,7 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    var hsl = iroColor.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
+    var hsl = iroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
         this._gradient.stops[1].setAttrs({stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"});

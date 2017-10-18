@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Mon Oct 16 2017
+ * Last updated: Wed Oct 18 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -89,9 +89,12 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-var round = Math.round;
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-function hsvToRgb(hsv) {
+var round = Math.round,
+    floor = Math.floor;
+
+function hsv2Rgb(hsv) {
   var r, g, b, i, f, p, q, t;
   var h = hsv.h / 360,
       s = hsv.s / 100,
@@ -116,53 +119,68 @@ function hsvToRgb(hsv) {
       r = v, g = p, b = q;break;
   }
   return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
-}
+};
 
-function rgbToHsv(rgb) {
+function rgb2Hsv(rgb) {
   // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
   var r = rgb.r / 255,
       g = rgb.g / 255,
-      b = rgb.b / 255;
-  var max = Math.max(r, g, b),
+      b = rgb.b / 255,
+      max = Math.max(r, g, b),
       min = Math.min(r, g, b),
-      delta = max - min;
-  var hue;
+      delta = max - min,
+      hue;
   switch (max) {
     case min:
-      hue = 0;
-      break;
+      hue = 0;break;
     case r:
-      hue = (g - b) / delta + (g < b ? 6 : 0);
-      break;
+      hue = (g - b) / delta + (g < b ? 6 : 0);break;
     case g:
-      hue = (b - r) / delta + 2;
-      break;
+      hue = (b - r) / delta + 2;break;
     case b:
-      hue = (r - g) / delta + 4;
-      break;
+      hue = (r - g) / delta + 4;break;
   }
   hue /= 6;
   return {
     h: round(hue * 360),
-    s: round(max === 0 ? 0 : delta / max * 100),
+    s: round(max == 0 ? 0 : delta / max * 100),
     v: round(max * 100)
   };
-}
+};
 
-function rgbToString(rgb) {
-  return "rgb" + (rgb.a ? "a" : "") + "(" + rgb.r + ", " + rgb.g + ", " + rgb.b + (rgb.a ? ", " + rgb.a : "") + ")";
-}
-
-function parseRgbString(str) {
-  var parsed = str.match(/(rgba?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
+function hsv2Hsl(hsv) {
+  var s = hsv.s / 100,
+      v = hsv.v / 100;
+  var p = (2 - s) * v;
+  s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
   return {
-    r: parseInt(parsed[2]),
-    g: parseInt(parsed[3]),
-    b: parseInt(parsed[4])
+    h: hsv.h,
+    s: round(s * 100),
+    l: round(p * 50)
   };
-}
+};
 
-function rgbToHex(rgb) {
+function hsl2Hsv(hsl) {
+  var s = hsl.s / 100,
+      l = hsl.l / 100;
+  l *= 2;
+  s *= l <= 1 ? l : 2 - l;
+  return {
+    h: hsl.h,
+    s: round(2 * s / (l + s) * 100),
+    v: round((l + s) / 2 * 100)
+  };
+};
+
+function rgb2Str(rgb) {
+  return "rgb" + (rgb.a ? "a" : "") + "(" + rgb.r + ", " + rgb.g + ", " + rgb.b + (rgb.a ? ", " + rgb.a : "") + ")";
+};
+
+function hsl2Str(hsl) {
+  return "hsl" + (hsl.a ? "a" : "") + "(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%" + (hsl.a ? ", " + hsl.a : "") + ")";
+};
+
+function rgb2Hex(rgb) {
   var r = rgb.r,
       g = rgb.g,
       b = rgb.b;
@@ -185,11 +203,37 @@ function rgbToHex(rgb) {
   str = int.toString(16);
   // Add right amount of left-padding
   return "#" + new Array(strLength - str.length).join("0") + str;
-}
+};
 
-function parseHexString(hex) {
+function parseColorStr(str, maxValues) {
+  var parsed = str.match(/(\S+)\((\d+)(%?)(?:\D+?)(\d+)(%?)(?:\D+?)(\d+)(%?)(?:\D+?)?([0-9\.]+?)?\)/i),
+      val1 = parseInt(parsed[2]),
+      val2 = parseInt(parsed[4]),
+      val3 = parseInt(parsed[6]);
+  return [parsed[1], parsed[3] == "%" ? val1 / 100 * maxValues[0] : val1, parsed[5] == "%" ? val2 / 100 * maxValues[1] : val2, parsed[7] == "%" ? val3 / 100 * maxValues[2] : val3, parseFloat(parsed[8]) || undefined];
+};
+
+function parseRgbStr(str) {
+  var parsed = parseColorStr(str, [255, 255, 255]);
+  return {
+    r: parsed[1],
+    g: parsed[2],
+    b: parsed[3]
+  };
+};
+
+function parseHslStr(str) {
+  var parsed = parseColorStr(str, [360, 100, 100]);
+  return {
+    h: parsed[2],
+    s: parsed[3],
+    l: parsed[4]
+  };
+};
+
+function parseHexStr(hex) {
   // Strip any "#" characters
-  hex = hex.replace(/#/g, '');
+  hex = hex.replace("#", "");
   // Prefix the hex string with "0x" which indicates a number in hex notation, then convert to an integer
   var int = parseInt("0x" + hex),
 
@@ -204,106 +248,61 @@ function parseHexString(hex) {
 
   // If we're using shorthand notation, multiply each channel by 17
   multiplier = isShorthand ? 17 : 1;
-
   return {
     r: (int >> bitLength * 2 & bitMask) * multiplier,
     g: (int >> bitLength & bitMask) * multiplier,
     b: (int & bitMask) * multiplier
   };
-}
-
-function hsvToHsl(hsv) {
-  var s = hsv.s / 100,
-      v = hsv.v / 100;
-  var p = (2 - s) * v;
-  s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
-  return {
-    h: hsv.h,
-    s: round(s * 100),
-    l: round(p * 50)
-  };
-}
-
-function hslToHsv(hsl) {
-  var s = hsl.s / 100,
-      l = hsl.l / 100;
-  l *= 2;
-  s *= l <= 1 ? l : 2 - l;
-  return {
-    h: hsl.h,
-    s: round(2 * s / (l + s) * 100),
-    v: round((l + s) / 2 * 100)
-  };
-}
-
-function hslToString(hsl) {
-  return "hsl" + (hsl.a ? "a" : "") + "(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%" + (hsl.a ? ", " + hsl.a : "") + ")";
-}
-
-function parseHslString(str) {
-  var parsed = str.match(/(hsla?)\((\d+)(?:\D+?)(\d+)(?:\D+?)(\d+)(?:\D+?)?([0-9\.]+?)?\)/i);
-  return {
-    h: parseInt(parsed[2]),
-    s: parseInt(parsed[3]),
-    l: parseInt(parsed[4])
-  };
-}
+};
 
 /**
-    @constructor color object
-    @param {String} str (optional) CSS color string to use as the start color for this element
-  */
-var color = function color(str) {
+  * @constructor color object
+  * @param {String} str (optional) CSS color string to use as the start color for this element
+*/
+var color = function color(value) {
   // The watch callback function for this color will be stored here
   this._onChange = false;
   // The default color value
   this._value = { h: undefined, s: undefined, v: undefined };
-  if (str) this.fromString(str);
+  if (value) this.set(value);
 };
 
-color.hsvToRgb = hsvToRgb;
-color.rgbToHsv = rgbToHsv;
-color.hsvToHsl = hsvToHsl;
-color.hslToHsv = hslToHsv;
-color.hslToString = hslToString;
-color.rgbToString = rgbToString;
-color.rgbToHex = rgbToHex;
-color.parseHexString = parseHexString;
-color.parseHslString = parseHslString;
-color.parseRgbString = parseRgbString;
+color.hsv2Rgb = hsv2Rgb;
+color.rgb2Hsv = rgb2Hsv;
+color.hsv2Hsl = hsv2Hsl;
+color.hsl2Hsv = hsl2Hsv;
+color.hsl2Str = hsl2Str;
+color.rgb2Str = rgb2Str;
+color.rgb2Hex = rgb2Hex;
+color.parseHexStr = parseHexStr;
+color.parseHslStr = parseHslStr;
+color.parseRgbStr = parseRgbStr;
 
 color.prototype = {
   constructor: color,
 
   /**
-    * @desc Set the color from a CSS string
-    * @param {String} str - HEX, rgb, or hsl color string
+    * @desc set the color from any valid value
+    * @param {Object \ String} value - hsv, hsl or rgb object, ot any valid hsl, rgb or hex string
   */
-  fromString: function fromString(str) {
-    if (/^rgb/.test(str)) {
-      this.rgbString = str;
-    } else if (/^hsl/.test(str)) {
-      this.hslString = str;
-    } else if (/^#[0-9A-Fa-f]/.test(str)) {
-      this.hexString = str;
+  set: function set(value) {
+    if ((typeof value === "undefined" ? "undefined" : _typeof(value)) == "object") {
+      if ("r" in value) {
+        this.rgb = value;
+      } else if ("v" in value) {
+        this.hsv = value;
+      } else if ("l" in value) {
+        this.hsl = value;
+      }
+    } else if (typeof value == "string") {
+      if (/^rgb/.test(value)) {
+        this.rgbString = value;
+      } else if (/^hsl/.test(value)) {
+        this.hslString = value;
+      } else if (/^#[0-9A-Fa-f]/.test(value)) {
+        this.hexString = value;
+      }
     }
-  },
-
-  /**
-    * @desc Set a callback function that gets called whenever the selected color changes
-    * @param {Function} callback The watch callback
-    * @param {Boolean} callImmediately set to true if you want to call the callback as soon as it is added
-  */
-  watch: function watch(callback, callImmediately) {
-    this._onChange = callback;
-    if (callImmediately) this.forceUpdate();
-  },
-
-  /**
-    * @desc Remove the watch callback
-  */
-  unwatch: function unwatch() {
-    this.watch(false);
   },
 
   /**
@@ -331,48 +330,47 @@ Object.defineProperties(color.prototype, {
       // Update the old value
       this._value = newValue;
       // If the value has changed, call hook callback
-      var callback = this._onChange;
-      if ((changes.h || changes.s || changes.v) && "function" == typeof callback) callback(newValue, oldValue, changes);
+      if (this._onChange && (changes.h || changes.s || changes.v)) this._onChange(newValue, oldValue, changes);
     }
   },
   rgb: {
     get: function get() {
-      return hsvToRgb(this._value);
+      return hsv2Rgb(this._value);
     },
     set: function set(value) {
-      this.hsv = rgbToHsv(value);
+      this.hsv = rgb2Hsv(value);
     }
   },
   hsl: {
     get: function get() {
-      return hsvToHsl(this._value);
+      return hsv2Hsl(this._value);
     },
     set: function set(value) {
-      this.hsv = hslToHsv(value);
+      this.hsv = hsl2Hsv(value);
     }
   },
   rgbString: {
     get: function get() {
-      return rgbToString(this.rgb);
+      return rgb2Str(this.rgb);
     },
     set: function set(value) {
-      this.rgb = parseRgbString(value);
+      this.rgb = parseRgbStr(value);
     }
   },
   hexString: {
     get: function get() {
-      return rgbToHex(this.rgb);
+      return rgb2Hex(this.rgb);
     },
     set: function set(value) {
-      this.rgb = parseHexString(value);
+      this.rgb = parseHexStr(value);
     }
   },
   hslString: {
     get: function get() {
-      return hslToString(this.hsl);
+      return hsl2Str(this.hsl);
     },
     set: function set(value) {
-      this.hsl = color.parseHslString(value);
+      this.hsl = color.parseHslStr(value);
     }
   }
 });
@@ -508,7 +506,7 @@ var CLASS_PREFIX = "iro__marker";
 
 /**
  * @constructor marker UI
- * @param {Object} ctx - canvas 2d context to draw on
+ * @param {svgRoot} svg - svgRoot object
  * @param {Object} opts - options
 */
 var marker = function marker(svg, opts) {
@@ -534,7 +532,7 @@ marker.prototype = {
   constructor: marker,
 
   /**
-    * @desc move markerpoint to centerpoint (x, y) and redraw
+    * @desc move marker to centerpoint (x, y) and redraw
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
   */
@@ -574,22 +572,20 @@ var _stylesheet2 = _interopRequireDefault(_stylesheet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Quick reference to the document object and some strings since we use them more than once
-var doc = document,
-    EVENT_READYSTATE_CHANGE = "readystatechange",
-    EVENT_MOUSEDOWN = "mousedown",
+var EVENT_MOUSEDOWN = "mousedown",
     EVENT_MOUSEMOVE = "mousemove",
     EVENT_MOUSEUP = "mouseup",
     EVENT_TOUCHSTART = "touchstart",
     EVENT_TOUCHMOVE = "touchmove",
     EVENT_TOUCHEND = "touchend",
+    EVENT_READYSTATE_CHANGE = "readystatechange",
     READYSTATE_COMPLETE = "complete";
 
 /**
-* @desc listen to one or more events on an element
-* @param {Element} el target element
-* @param {ArrayOrString} eventList the events to listen to
-* @param {Function} callback the event callback function
+  * @desc listen to one or more events on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to listen to
+  * @param {Function} callback the event callback function
 */
 function listen(el, eventList, callback) {
   for (var i = 0; i < eventList.length; i++) {
@@ -598,10 +594,10 @@ function listen(el, eventList, callback) {
 };
 
 /**
-* @desc remove an event listener on an element
-* @param {Element} el target element
-* @param {ArrayOrString} eventList the events to remove
-* @param {Function} callback the event callback function
+  * @desc remove an event listener on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to remove
+  * @param {Function} callback the event callback function
 */
 function unlisten(el, eventList, callback) {
   for (var i = 0; i < eventList.length; i++) {
@@ -610,27 +606,27 @@ function unlisten(el, eventList, callback) {
 };
 
 /**
-* @desc call callback when the page document is ready
-* @param {Function} callback callback function to be called
+  * @desc call fn callback when the page document is ready
+  * @param {Function} callback callback function to be called
 */
 function whenReady(callback) {
   var _this = this;
-  if (doc.readyState == READYSTATE_COMPLETE) {
+  if (document.readyState == READYSTATE_COMPLETE) {
     callback();
   } else {
-    listen(doc, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-      if (doc.readyState == READYSTATE_COMPLETE) {
+    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
+      if (document.readyState == READYSTATE_COMPLETE) {
         callback();
-        unlisten(doc, [EVENT_READYSTATE_CHANGE], stateChange);
+        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
       }
     });
   }
 };
 
 /**
-  @constructor color wheel object
-  @param {ElementOrString} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
-  @param {Object} opts - options for this instance
+  * @constructor color wheel object
+  * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+  * @param {Object} opts - options for this instance
 */
 var colorPicker = function colorPicker(el, opts) {
   var _this2 = this;
@@ -639,12 +635,7 @@ var colorPicker = function colorPicker(el, opts) {
   // event storage for `on` and `off`
   this._events = {};
   this._mouseTarget = false;
-  this._onChange = false;
-  // Create an iroStyleSheet for this colorWheel's CSS overrides
-  this.stylesheet = new _stylesheet2.default();
   this.css = opts.css || opts.styles || undefined;
-  // Create an iroColor to store this colorWheel's selected color
-  this.color = new _color2.default(opts.color || opts.defaultValue || "#fff");
   // Wait for the document to be ready, then init the UI
   whenReady(function () {
     _this2._init(el, opts);
@@ -654,14 +645,92 @@ var colorPicker = function colorPicker(el, opts) {
 colorPicker.prototype = {
   constructor: colorPicker,
 
-  watch: function watch(callback, callImmediately) {
-    this.on("color:change", callback);
-    this._onChange = callback;
-    if (callImmediately) callback(this.color);
+  /**
+    * @desc init the color picker UI
+    * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+    * @param {Object} opts - options for this instance
+    * @access protected
+  */
+  _init: function _init(el, opts) {
+    // If `el` is a string, use it to select an Element, else assume it's an element
+    el = "string" == typeof el ? document.querySelector(el) : el;
+    // Find the width and height for the UI
+    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
+    var width = opts.width || parseInt(el.width) || 320;
+    var height = opts.height || parseInt(el.height) || 320;
+    // Calculate layout variables
+    var padding = opts.padding + 2 || 6,
+        borderWidth = opts.borderWidth || 0,
+        markerRadius = opts.markerRadius || 8,
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
+        bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
+        wheelRadius = bodyWidth / 2 - borderWidth,
+        leftMargin = (width - bodyWidth) / 2;
+    var marker = {
+      r: markerRadius
+    };
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff"
+    };
+
+    // Create UI elements
+    this.el = el;
+    this.svg = new _svg2.default(el, width, height);
+    this.ui = [new _wheel2.default(this.svg, {
+      cX: leftMargin + bodyWidth / 2,
+      cY: bodyWidth / 2,
+      r: wheelRadius,
+      rMax: wheelRadius - (markerRadius + padding),
+      marker: marker,
+      border: borderStyles,
+      anticlockwise: opts.anticlockwise
+    }), new _slider2.default(this.svg, {
+      sliderType: "v",
+      x: leftMargin + borderWidth,
+      y: bodyWidth + sliderMargin,
+      w: bodyWidth - borderWidth * 2,
+      h: sliderHeight - borderWidth * 2,
+      r: sliderHeight / 2 - borderWidth,
+      marker: marker,
+      border: borderStyles
+    })];
+    // Create an iroStyleSheet for this colorWheel's CSS overrides
+    this.stylesheet = new _stylesheet2.default();
+    // Create an iroColor to store this colorWheel's selected color
+    this.color = new _color2.default();
+    // Whenever the selected color changes, trigger a colorWheel update too
+    this.color._onChange = this._update.bind(this);
+    this.color.set(opts.color || opts.defaultValue || "#fff");
+    // Listen to events
+    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   },
 
-  unwatch: function unwatch() {
-    this.off("color:change", this._onChange);
+  /**
+    * @desc update the selected color
+    * @param {Object} newValue - the new HSV values
+    * @param {Object} oldValue - the old HSV values
+    * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
+    * @access protected
+  */
+  _update: function _update(newValue, oldValue, changes) {
+    var color = this.color;
+    var rgb = color.rgbString;
+    var css = this.css;
+    // Loop through each UI element and update it
+    for (var i = 0; i < this.ui.length; i++) {
+      this.ui[i].update(color, changes);
+    }
+    // Update the stylesheet too
+    for (var selector in css) {
+      var properties = css[selector];
+      for (var prop in properties) {
+        this.stylesheet.setRule(selector, prop, rgb);
+      }
+    }
+    // Call the color change event
+    this.emit("color:change", color);
   },
 
   /**
@@ -696,70 +765,10 @@ colorPicker.prototype = {
     });
   },
 
-  _init: function _init(el, opts) {
-    // If `el` is a string, use it to select an Element, else assume it's an element
-    el = "string" == typeof el ? document.querySelector(el) : el;
-    // Find the width and height for the UI
-    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-    var width = opts.width || parseInt(el.width) || 320;
-    var height = opts.height || parseInt(el.height) || 320;
-
-    var svgRoot = new _svg2.default(el, width, height);
-
-    this.el = el;
-    this.svg = svgRoot;
-    // Calculate layout variables
-    var padding = opts.padding + 2 || 6,
-        borderWidth = opts.borderWidth || 0,
-        markerRadius = opts.markerRadius || 8,
-        sliderMargin = opts.sliderMargin || 24,
-        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
-        bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
-        wheelRadius = bodyWidth / 2 - borderWidth,
-        leftMargin = (width - bodyWidth) / 2;
-    var marker = {
-      r: markerRadius
-    };
-    var borderStyles = {
-      w: borderWidth,
-      color: opts.borderColor || "#fff"
-    };
-    // Create UI elements
-    this.ui = [new _wheel2.default(svgRoot, {
-      cX: leftMargin + bodyWidth / 2,
-      cY: bodyWidth / 2,
-      r: wheelRadius,
-      rMax: wheelRadius - (markerRadius + padding),
-      marker: marker,
-      border: borderStyles,
-      anticlockwise: opts.anticlockwise
-    }), new _slider2.default(svgRoot, {
-      sliderType: "v",
-      x: leftMargin + borderWidth,
-      y: bodyWidth + sliderMargin,
-      w: bodyWidth - borderWidth * 2,
-      h: sliderHeight - borderWidth * 2,
-      r: sliderHeight / 2 - borderWidth,
-      marker: marker,
-      border: borderStyles
-    })];
-    // Whenever the selected color changes, trigger a colorWheel update too
-    this.color.watch(this._update.bind(this), true);
-    // Listen to events
-    listen(svgRoot.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
-  },
-
   /**
-    * @desc Handle a pointer input at local-space point (x, y)
-    * @param {Event} e A mouse or touch event
-    * @return {Object} x and y coordinates from the top-left of the UI
-    * @access protected
+    * @desc DOM event handler
+    * @param {Event} e DOM event (currently either mouse or touch events)
   */
-  _handleInput: function _handleInput(x, y) {
-    // Use the active UI element to handle translating the input to a change in the color
-    this.color.hsv = this._mouseTarget.input(x, y);
-  },
-
   handleEvent: function handleEvent(e) {
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
@@ -787,14 +796,14 @@ colorPicker.prototype = {
             // Emit input start event
             this.emit("input:start");
             // Finally, use the position to update the picked color
-            this._handleInput(x, y);
+            this.color.hsv = this._mouseTarget.input(x, y);
           }
         }
         break;
       case EVENT_MOUSEMOVE:
       case EVENT_TOUCHMOVE:
         // Use the position to update the picker color
-        this._handleInput(x, y);
+        this.color.hsv = this._mouseTarget.input(x, y);
         break;
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
@@ -803,36 +812,9 @@ colorPicker.prototype = {
         unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
         break;
     }
-
     if (this._mouseTarget) {
       e.preventDefault();
     }
-  },
-
-  /**
-    * @desc update the selected color
-    * @param {Object} newValue - the new HSV values
-    * @param {Object} oldValue - the old HSV values
-    * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
-    * @access protected
-  */
-  _update: function _update(newValue, oldValue, changes) {
-    var color = this.color;
-    var rgb = color.rgbString;
-    var css = this.css;
-    // Loop through each UI element and update it
-    this.ui.forEach(function (uiElement) {
-      uiElement.update(color, changes);
-    });
-    // Update the stylesheet too
-    for (var selector in css) {
-      var properties = css[selector];
-      for (var prop in properties) {
-        this.stylesheet.setRule(selector, prop, rgb);
-      }
-    }
-    // Call the color change event
-    this.emit("color:change", color);
   }
 };
 
@@ -886,8 +868,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var CLASS_PREFIX = "iro__slider";
 
 /**
-    * @constructor slider UI
-  */
+  * @constructor slider UI
+  * @param {svgRoot} svg - svgRoot object
+  * @param {Object} opts - options
+*/
 var slider = function slider(svg, opts) {
   var r = opts.r,
       w = opts.w,
@@ -949,7 +933,7 @@ slider.prototype = {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
-    var hsl = _color2.default.hsvToHsl({ h: hsv.h, s: hsv.s, v: 100 });
+    var hsl = _color2.default.hsv2Hsl({ h: hsv.h, s: hsv.s, v: 100 });
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
         this._gradient.stops[1].setAttrs({ stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)" });
@@ -1019,6 +1003,13 @@ var SVG_TRANSFORM_SHORTHANDS = {
 // sniff useragent string to check if the user is running IE
 var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
 
+/**
+  * @constructor svg element wrapper
+  * @param {svgRoot} root - svgRoot object
+  * @param {svgElement | Element} parent - parent node 
+  * @param {String} type - element tag name
+  * @param {Object} attrs - element attributes
+*/
 var svgElement = function svgElement(root, parent, type, attrs) {
   var el = document.createElementNS(SVG_NAMESPACE, type);
   this.el = el;
@@ -1032,14 +1023,32 @@ var svgElement = function svgElement(root, parent, type, attrs) {
 svgElement.prototype = {
   constructor: svgElement,
 
+  /**
+    * @desc insert a new svgElement
+    * @param {String} type - element tag name
+    * @param {Object} attrs - element attributes
+  */
   insert: function insert(type, attrs) {
     return new svgElement(this._root, this, type, attrs);
   },
 
+  /**
+    * @desc shorthand to insert a new group svgElement
+    * @param {Object} attrs - element attributes
+  */
   g: function g(attrs) {
     return this.insert("g", attrs);
   },
 
+  /**
+    * @desc shorthand to insert a new arc svgElement
+    * @param {Number} cx - arc center x
+    * @param {Number} cy - arc center y
+    * @param {Number} radius - arc radius
+    * @param {Number} startAngle - arc start angle (in degrees)
+    * @param {Number} endAngle - arc end angle (in degrees)
+    * @param {Object} attrs - element attributes
+  */
   arc: function arc(cx, cy, radius, startAngle, endAngle, attrs) {
     var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
     startAngle *= Math.PI / 180;
@@ -1053,6 +1062,13 @@ svgElement.prototype = {
     return this.insert("path", attrs);
   },
 
+  /**
+    * @desc shorthand to insert a new circle svgElement
+    * @param {Number} cx - circle center x
+    * @param {Number} cy - circle center y
+    * @param {Number} radius - circle radius
+    * @param {Object} attrs - element attributes
+  */
   circle: function circle(cx, cy, radius, attrs) {
     attrs = attrs || {};
     attrs.cx = cx;
@@ -1061,6 +1077,11 @@ svgElement.prototype = {
     return this.insert("circle", attrs);
   },
 
+  /**
+    * @desc set a rotate/translate/scale transform on this element
+    * @param {String} type - transform (rotate | translate | scale)
+    * @param {Array} args - transform values
+  */
   setTransform: function setTransform(type, args) {
     if (!IS_IE) {
       var transform, transformFn;
@@ -1080,6 +1101,10 @@ svgElement.prototype = {
     }
   },
 
+  /**
+    * @desc set attributes on this element
+    * @param {Object} attrs - element attributes
+  */
   setAttrs: function setAttrs(attrs) {
     for (var attr in attrs) {
       var name = attr in SVG_ATTRIBUTE_SHORTHANDS ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
@@ -1088,6 +1113,12 @@ svgElement.prototype = {
   }
 };
 
+/**
+  * @constructor svg gradient wrapper
+  * @param {svgRoot} root - svgRoot object
+  * @param {String} type - gradient type (linear | radial)
+  * @param {Object} stops - gradient stops = {color, opacity} keyed by offset value
+*/
 var svgGradient = function svgGradient(root, type, stops) {
   var stopElements = [];
   var gradient = root._defs.insert(type + GRADIENT_SUFFIX, {
@@ -1106,8 +1137,14 @@ var svgGradient = function svgGradient(root, type, stops) {
   this.stops = stopElements;
 };
 
+/**
+  * @constructor svg root element (inherits svgElement)
+  * @param {svgElement | Element} parent - parent node 
+  * @param {Number} width - svg width
+  * @param {Number} height - svg height
+*/
 var svgRoot = function svgRoot(parent, width, height) {
-  svgElement.call(this, this, parent, "svg", { width: width, height: height, style: "display:block;overflow:hidden;" });
+  svgElement.call(this, this, parent, "svg", { width: width, height: height, style: "display:block" });
   this._defs = this.insert("defs");
 };
 
@@ -1142,6 +1179,8 @@ var PI = Math.PI,
 
 /**
   * @constructor hue wheel UI
+  * @param {svgRoot} svg - svgRoot object
+  * @param {Object} opts - options
 */
 var wheel = function wheel(svg, opts) {
   this._opts = opts;

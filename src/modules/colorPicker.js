@@ -4,22 +4,20 @@ import svg from "ui/svg";
 import iroColor from "modules/color";
 import iroStyleSheet from "modules/stylesheet";
 
-// Quick reference to the document object and some strings since we use them more than once
-const doc = document,
-EVENT_READYSTATE_CHANGE = "readystatechange",
-EVENT_MOUSEDOWN = "mousedown",
-EVENT_MOUSEMOVE = "mousemove",
-EVENT_MOUSEUP = "mouseup",
-EVENT_TOUCHSTART = "touchstart",
-EVENT_TOUCHMOVE = "touchmove",
-EVENT_TOUCHEND = "touchend",
-READYSTATE_COMPLETE = "complete";
+const EVENT_MOUSEDOWN = "mousedown",
+      EVENT_MOUSEMOVE = "mousemove",
+      EVENT_MOUSEUP = "mouseup",
+      EVENT_TOUCHSTART = "touchstart",
+      EVENT_TOUCHMOVE = "touchmove",
+      EVENT_TOUCHEND = "touchend",
+      EVENT_READYSTATE_CHANGE = "readystatechange",
+      READYSTATE_COMPLETE = "complete";
 
 /**
-* @desc listen to one or more events on an element
-* @param {Element} el target element
-* @param {ArrayOrString} eventList the events to listen to
-* @param {Function} callback the event callback function
+  * @desc listen to one or more events on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to listen to
+  * @param {Function} callback the event callback function
 */
 function listen(el, eventList, callback) {
   for (var i = 0; i < eventList.length; i++) {
@@ -28,10 +26,10 @@ function listen(el, eventList, callback) {
 };
 
 /**
-* @desc remove an event listener on an element
-* @param {Element} el target element
-* @param {ArrayOrString} eventList the events to remove
-* @param {Function} callback the event callback function
+  * @desc remove an event listener on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to remove
+  * @param {Function} callback the event callback function
 */
 function unlisten(el, eventList, callback) {
   for (var i = 0; i < eventList.length; i++) {
@@ -40,57 +38,131 @@ function unlisten(el, eventList, callback) {
 };
 
 /**
-* @desc call callback when the page document is ready
-* @param {Function} callback callback function to be called
+  * @desc call fn callback when the page document is ready
+  * @param {Function} callback callback function to be called
 */
 function whenReady(callback) {
   var _this = this;
-  if (doc.readyState == READYSTATE_COMPLETE) {
+  if (document.readyState == READYSTATE_COMPLETE) {
     callback();
   }
   else {
-    listen(doc, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-      if (doc.readyState == READYSTATE_COMPLETE) {
+    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
+      if (document.readyState == READYSTATE_COMPLETE) {
         callback();
-        unlisten(doc, [EVENT_READYSTATE_CHANGE], stateChange);
+        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
       }
     });
   }
 };
 
 /**
-  @constructor color wheel object
-  @param {ElementOrString} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
-  @param {Object} opts - options for this instance
+  * @constructor color wheel object
+  * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+  * @param {Object} opts - options for this instance
 */
 const colorPicker = function(el, opts) {
   opts = opts || {};
   // event storage for `on` and `off`
   this._events = {};
   this._mouseTarget = false;
-  this._onChange = false;
-  // Create an iroStyleSheet for this colorWheel's CSS overrides
-  this.stylesheet = new iroStyleSheet();
   this.css = opts.css || opts.styles || undefined;
-  // Create an iroColor to store this colorWheel's selected color
-  this.color = new iroColor(opts.color || opts.defaultValue || "#fff");
   // Wait for the document to be ready, then init the UI
-  whenReady(() => {
-    this._init(el, opts);
-  });
+  whenReady(() => {this._init(el, opts)});
 }
 
 colorPicker.prototype = {
   constructor: colorPicker,
 
-  watch: function(callback, callImmediately) {
-    this.on("color:change", callback);
-    this._onChange = callback;
-    if (callImmediately) callback(this.color);
+  /**
+    * @desc init the color picker UI
+    * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+    * @param {Object} opts - options for this instance
+    * @access protected
+  */
+  _init: function(el, opts) {
+    // If `el` is a string, use it to select an Element, else assume it's an element
+    el = ("string" == typeof el) ? document.querySelector(el) : el;
+    // Find the width and height for the UI
+    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
+    var width = opts.width || parseInt(el.width) || 320;
+    var height = opts.height || parseInt(el.height) || 320;
+    // Calculate layout variables
+    var padding = opts.padding + 2 || 6,
+        borderWidth = opts.borderWidth || 0,
+        markerRadius = opts.markerRadius || 8,
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
+        bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
+        wheelRadius = bodyWidth / 2 - borderWidth,
+        leftMargin = (width - bodyWidth) / 2;
+    var marker = {
+      r: markerRadius
+    };
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff",
+    };
+
+    // Create UI elements
+    this.el = el;
+    this.svg = new svg(el, width, height);
+    this.ui = [
+      new wheel(this.svg, {
+        cX: leftMargin + bodyWidth / 2,
+        cY: bodyWidth / 2,
+        r: wheelRadius,
+        rMax: wheelRadius - (markerRadius + padding),
+        marker: marker,
+        border: borderStyles,
+        anticlockwise: opts.anticlockwise
+      }),
+      new slider(this.svg, {
+        sliderType: "v",
+        x: leftMargin + borderWidth,
+        y: bodyWidth + sliderMargin,
+        w: bodyWidth - borderWidth * 2,
+        h: sliderHeight - borderWidth * 2,
+        r: sliderHeight / 2 - borderWidth,
+        marker: marker,
+        border: borderStyles
+      })
+    ];
+    // Create an iroStyleSheet for this colorWheel's CSS overrides
+    this.stylesheet = new iroStyleSheet();
+    // Create an iroColor to store this colorWheel's selected color
+    this.color = new iroColor();
+    // Whenever the selected color changes, trigger a colorWheel update too
+    this.color._onChange = this._update.bind(this);
+    this.color.set(opts.color || opts.defaultValue || "#fff")
+    // Listen to events
+    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   },
 
-  unwatch: function() {
-    this.off("color:change", this._onChange);
+  /**
+    * @desc update the selected color
+    * @param {Object} newValue - the new HSV values
+    * @param {Object} oldValue - the old HSV values
+    * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
+    * @access protected
+  */
+  _update: function(newValue, oldValue, changes) {
+    var color = this.color;
+    var rgb = color.rgbString;
+    var css = this.css;
+    // Loop through each UI element and update it
+    for (var i = 0; i < this.ui.length; i++) {
+      this.ui[i].update(color, changes); 
+    }
+    // Update the stylesheet too
+    for (var selector in css) {
+      var properties = css[selector];
+      for (var prop in properties) {
+        this.stylesheet.setRule(selector, prop, rgb);
+      }
+    }
+    // Call the color change event
+    this.emit("color:change", color);
   },
 
     /**
@@ -123,73 +195,10 @@ colorPicker.prototype = {
     (events[eventType] || []).concat((events["*"] || [])).map((callback) => { callback(data); });
   },
 
-  _init: function(el, opts) {
-    // If `el` is a string, use it to select an Element, else assume it's an element
-    el = ("string" == typeof el) ? document.querySelector(el) : el;
-    // Find the width and height for the UI
-    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-    var width = opts.width || parseInt(el.width) || 320;
-    var height = opts.height || parseInt(el.height) || 320;
-
-    var svgRoot = new svg(el, width, height);
-
-    this.el = el;
-    this.svg = svgRoot;
-    // Calculate layout variables
-    var padding = opts.padding + 2 || 6,
-        borderWidth = opts.borderWidth || 0,
-        markerRadius = opts.markerRadius || 8,
-        sliderMargin = opts.sliderMargin || 24,
-        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
-        bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
-        wheelRadius = bodyWidth / 2 - borderWidth,
-        leftMargin = (width - bodyWidth) / 2;
-    var marker = {
-      r: markerRadius
-    };
-    var borderStyles = {
-      w: borderWidth,
-      color: opts.borderColor || "#fff",
-    };
-    // Create UI elements
-    this.ui = [
-      new wheel(svgRoot, {
-        cX: leftMargin + bodyWidth / 2,
-        cY: bodyWidth / 2,
-        r: wheelRadius,
-        rMax: wheelRadius - (markerRadius + padding),
-        marker: marker,
-        border: borderStyles,
-        anticlockwise: opts.anticlockwise
-      }),
-      new slider(svgRoot, {
-        sliderType: "v",
-        x: leftMargin + borderWidth,
-        y: bodyWidth + sliderMargin,
-        w: bodyWidth - borderWidth * 2,
-        h: sliderHeight - borderWidth * 2,
-        r: sliderHeight / 2 - borderWidth,
-        marker: marker,
-        border: borderStyles
-      })
-    ];
-    // Whenever the selected color changes, trigger a colorWheel update too
-    this.color.watch(this._update.bind(this), true);
-    // Listen to events
-    listen(svgRoot.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
-  },
-
   /**
-    * @desc Handle a pointer input at local-space point (x, y)
-    * @param {Event} e A mouse or touch event
-    * @return {Object} x and y coordinates from the top-left of the UI
-    * @access protected
+    * @desc DOM event handler
+    * @param {Event} e DOM event (currently either mouse or touch events)
   */
-  _handleInput: function(x, y) {
-    // Use the active UI element to handle translating the input to a change in the color
-    this.color.hsv = this._mouseTarget.input(x, y);
-  },
-
   handleEvent: function(e) {
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
@@ -215,14 +224,14 @@ colorPicker.prototype = {
             // Emit input start event
             this.emit("input:start");
             // Finally, use the position to update the picked color
-            this._handleInput(x, y);
+            this.color.hsv = this._mouseTarget.input(x, y);
           }
         }
         break;
       case EVENT_MOUSEMOVE:
       case EVENT_TOUCHMOVE:
         // Use the position to update the picker color
-        this._handleInput(x, y);
+        this.color.hsv = this._mouseTarget.input(x, y);
         break;
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
@@ -231,36 +240,9 @@ colorPicker.prototype = {
         unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
         break;
     }
-
     if (this._mouseTarget) {
       e.preventDefault();
     }
-  },
-
-  /**
-    * @desc update the selected color
-    * @param {Object} newValue - the new HSV values
-    * @param {Object} oldValue - the old HSV values
-    * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
-    * @access protected
-  */
-  _update: function(newValue, oldValue, changes) {
-    var color = this.color;
-    var rgb = color.rgbString;
-    var css = this.css;
-    // Loop through each UI element and update it
-    this.ui.forEach(function (uiElement) {
-      uiElement.update(color, changes);
-    });
-    // Update the stylesheet too
-    for (var selector in css) {
-      var properties = css[selector];
-      for (var prop in properties) {
-        this.stylesheet.setRule(selector, prop, rgb);
-      }
-    }
-    // Call the color change event
-    this.emit("color:change", color);
   }
 }
 
