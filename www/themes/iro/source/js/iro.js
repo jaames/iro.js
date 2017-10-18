@@ -255,6 +255,21 @@ function parseHexStr(hex) {
   };
 };
 
+function getColor(value) {
+  return value instanceof color ? value : new color(value);
+};
+
+function _mix(color1, color2, weight) {
+  var rgb1 = getColor(color1).rgb,
+      rgb2 = getColor(color2).rgb;
+  weight = weight / 100 || 0.5;
+  return new color({
+    r: floor(rgb1.r + (rgb2.r - rgb1.r) * weight),
+    g: floor(rgb1.g + (rgb2.g - rgb1.g) * weight),
+    b: floor(rgb1.b + (rgb2.b - rgb1.b) * weight)
+  });
+};
+
 /**
   * @constructor color object
   * @param {String} str (optional) CSS color string to use as the start color for this element
@@ -267,6 +282,7 @@ var color = function color(value) {
   if (value) this.set(value);
 };
 
+color.mix = _mix;
 color.hsv2Rgb = hsv2Rgb;
 color.rgb2Hsv = rgb2Hsv;
 color.hsv2Hsl = hsv2Hsl;
@@ -303,6 +319,10 @@ color.prototype = {
         this.hexString = value;
       }
     }
+  },
+
+  mix: function mix(color, weight) {
+    this.hsv = _mix(this, color, weight).hsv;
   }
 };
 
