@@ -2,7 +2,7 @@
  * iro.js
  * ----------------
  * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Wed Oct 18 2017
+ * Last updated: Thu Oct 19 2017
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -94,6 +94,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var round = Math.round,
     floor = Math.floor;
 
+/**
+  * @desc convert hsv object to rgb
+  * @param {Object} hsv - hsv object
+  * @return {Object} rgb object
+*/
 function hsv2Rgb(hsv) {
   var r, g, b, i, f, p, q, t;
   var h = hsv.h / 360,
@@ -121,6 +126,11 @@ function hsv2Rgb(hsv) {
   return { r: round(r * 255), g: round(g * 255), b: round(b * 255) };
 };
 
+/**
+  * @desc convert rgb object to hsv
+  * @param {Object} rgb - rgb object
+  * @return {Object} hsv object
+*/
 function rgb2Hsv(rgb) {
   // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
   var r = rgb.r / 255,
@@ -148,6 +158,11 @@ function rgb2Hsv(rgb) {
   };
 };
 
+/**
+  * @desc convert hsv object to hsl
+  * @param {Object} hsv - hsv object
+  * @return {Object} hsl object
+*/
 function hsv2Hsl(hsv) {
   var s = hsv.s / 100,
       v = hsv.v / 100;
@@ -160,6 +175,11 @@ function hsv2Hsl(hsv) {
   };
 };
 
+/**
+  * @desc convert hsl object to hsv
+  * @param {Object} hsl - hsl object
+  * @return {Object} hsv object
+*/
 function hsl2Hsv(hsl) {
   var s = hsl.s / 100,
       l = hsl.l / 100;
@@ -172,14 +192,29 @@ function hsl2Hsv(hsl) {
   };
 };
 
+/**
+  * @desc convert rgb object to string
+  * @param {Object} rgb - rgb object
+  * @return {Object} rgb string
+*/
 function rgb2Str(rgb) {
   return "rgb" + (rgb.a ? "a" : "") + "(" + rgb.r + ", " + rgb.g + ", " + rgb.b + (rgb.a ? ", " + rgb.a : "") + ")";
 };
 
+/**
+  * @desc convert hsl object to string
+  * @param {Object} hsl - hsl object
+  * @return {Object} hsl string
+*/
 function hsl2Str(hsl) {
   return "hsl" + (hsl.a ? "a" : "") + "(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%" + (hsl.a ? ", " + hsl.a : "") + ")";
 };
 
+/**
+  * @desc convert rgb object to hex string
+  * @param {Object} rgb - rgb object
+  * @return {Object} hex string
+*/
 function rgb2Hex(rgb) {
   var r = rgb.r,
       g = rgb.g,
@@ -205,6 +240,12 @@ function rgb2Hex(rgb) {
   return "#" + new Array(strLength - str.length).join("0") + str;
 };
 
+/**
+  * @desc generic parser for hsl / rgb / etc string
+  * @param {String} str - color string
+  * @param {Array} maxValues - max values for each channel (used for calculating percent-based values)
+  * @return {Array} type (rgb | rgba | hsl | hsla) values for each channel
+*/
 function parseColorStr(str, maxValues) {
   var parsed = str.match(/(\S+)\((\d+)(%?)(?:\D+?)(\d+)(%?)(?:\D+?)(\d+)(%?)(?:\D+?)?([0-9\.]+?)?\)/i),
       val1 = parseInt(parsed[2]),
@@ -213,6 +254,11 @@ function parseColorStr(str, maxValues) {
   return [parsed[1], parsed[3] == "%" ? val1 / 100 * maxValues[0] : val1, parsed[5] == "%" ? val2 / 100 * maxValues[1] : val2, parsed[7] == "%" ? val3 / 100 * maxValues[2] : val3, parseFloat(parsed[8]) || undefined];
 };
 
+/**
+  * @desc parse rgb string
+  * @param {String} str - color string
+  * @return {Object} rgb object
+*/
 function parseRgbStr(str) {
   var parsed = parseColorStr(str, [255, 255, 255]);
   return {
@@ -222,6 +268,11 @@ function parseRgbStr(str) {
   };
 };
 
+/**
+  * @desc parse hsl string
+  * @param {String} str - color string
+  * @return {Object} hsl object
+*/
 function parseHslStr(str) {
   var parsed = parseColorStr(str, [360, 100, 100]);
   return {
@@ -231,6 +282,11 @@ function parseHslStr(str) {
   };
 };
 
+/**
+  * @desc parse hex string
+  * @param {String} str - color string
+  * @return {Object} rgb object
+*/
 function parseHexStr(hex) {
   // Strip any "#" characters
   hex = hex.replace("#", "");
@@ -255,14 +311,37 @@ function parseHexStr(hex) {
   };
 };
 
+/**
+  * @desc convert object / string input to color if necessary
+  * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+  * @return {color} color instance
+*/
 function getColor(value) {
   return value instanceof color ? value : new color(value);
 };
 
+/**
+  * @desc clamp value between min and max
+  * @param {Number} value
+  * @param {Number} min
+  * @param {Number} max
+  * @return {Number}
+*/
+function clamp(value, min, max) {
+  return value <= min ? min : value >= max ? max : value;
+};
+
+/**
+  * @desc mix two colors
+  * @param {Object | String | color} color1 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+  * @param {Object | String | color} color2 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+  * @param {Number} weight - closer to 0 = more color1, closer to 100 = more color2
+  * @return {color} color instance
+*/
 function _mix(color1, color2, weight) {
   var rgb1 = getColor(color1).rgb,
       rgb2 = getColor(color2).rgb;
-  weight = weight / 100 || 0.5;
+  weight = clamp(weight / 100 || 0.5, 0, 1);
   return new color({
     r: floor(rgb1.r + (rgb2.r - rgb1.r) * weight),
     g: floor(rgb1.g + (rgb2.g - rgb1.g) * weight),
@@ -271,8 +350,36 @@ function _mix(color1, color2, weight) {
 };
 
 /**
+  * @desc lighten color by amount
+  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+  * @param {Number} amount
+  * @return {color} color instance
+*/
+function _lighten(color, amount) {
+  var col = getColor(color),
+      hsv = col.hsv;
+  hsv.v = clamp(hsv.v + amount, 0, 100);
+  col.hsv = hsv;
+  return col;
+};
+
+/**
+  * @desc darken color by amount
+  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+  * @param {Number} amount
+  * @return {color} color instance
+*/
+function _darken(color, amount) {
+  var col = getColor(color),
+      hsv = col.hsv;
+  hsv.v = clamp(hsv.v - amount, 0, 100);
+  col.hsv = hsv;
+  return col;
+};
+
+/**
   * @constructor color object
-  * @param {String} str (optional) CSS color string to use as the start color for this element
+  * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
 */
 var color = function color(value) {
   // The watch callback function for this color will be stored here
@@ -282,7 +389,10 @@ var color = function color(value) {
   if (value) this.set(value);
 };
 
+// Expose functions as static helpers
 color.mix = _mix;
+color.lighten = _lighten;
+color.darken = _darken;
 color.hsv2Rgb = hsv2Rgb;
 color.rgb2Hsv = rgb2Hsv;
 color.hsv2Hsl = hsv2Hsl;
@@ -299,11 +409,13 @@ color.prototype = {
 
   /**
     * @desc set the color from any valid value
-    * @param {Object \ String} value - hsv, hsl or rgb object, ot any valid hsl, rgb or hex string
+    * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
   */
   set: function set(value) {
     if ((typeof value === "undefined" ? "undefined" : _typeof(value)) == "object") {
-      if ("r" in value) {
+      if (value instanceof color) {
+        this.hsv = color.hsv;
+      } else if ("r" in value) {
         this.rgb = value;
       } else if ("v" in value) {
         this.hsv = value;
@@ -321,8 +433,29 @@ color.prototype = {
     }
   },
 
+  /**
+    * @desc mix a color into this one
+    * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+    * @param {Number} weight - closer to 0 = more current color, closer to 100 = more new color
+  */
   mix: function mix(color, weight) {
     this.hsv = _mix(this, color, weight).hsv;
+  },
+
+  /**
+    * @desc lighten color by amount
+    * @param {Number} amount
+  */
+  lighten: function lighten(amount) {
+    _lighten(this, amount);
+  },
+
+  /**
+    * @desc darken color by amount
+    * @param {Number} amount
+  */
+  darken: function darken(amount) {
+    _darken(this, amount);
   }
 };
 
@@ -334,17 +467,23 @@ Object.defineProperties(color.prototype, {
       return { h: v.h, s: v.s, v: v.v };
     },
     set: function set(newValue) {
-      // Loop through the channels and check if any of them have changed
-      var changes = {};
-      var oldValue = this._value;
-      for (var channel in oldValue) {
-        if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
-        changes[channel] = newValue[channel] != oldValue[channel];
+      // If this color is being watched for changes we need to compare the new and old values to check the difference
+      // Otherwise we can just be lazy
+      if (this._onChange) {
+        var changes = {};
+        var oldValue = this._value;
+        // Loop through the channels and check if any of them have changed
+        for (var channel in oldValue) {
+          if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
+          changes[channel] = newValue[channel] != oldValue[channel];
+        }
+        // Update the old value
+        this._value = newValue;
+        // If the value has changed, call hook callback
+        if (changes.h || changes.s || changes.v) this._onChange(this, changes);
+      } else {
+        this._value = newValue;
       }
-      // Update the old value
-      this._value = newValue;
-      // If the value has changed, call hook callback
-      if (this._onChange && (changes.h || changes.s || changes.v)) this._onChange(this, changes);
     }
   },
   rgb: {
@@ -734,7 +873,7 @@ colorPicker.prototype = {
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
       this._colorChangeActive = true;
-      this.emit("color:change", [color, changes]);
+      this.emit("color:change", color, changes);
       this._colorChangeActive = false;
     }
     var rgb = color.rgbString;
@@ -777,9 +916,14 @@ colorPicker.prototype = {
     * @param {String} eventType The name of the event to emit
     * @param {Array} args array of args to pass to callbacks
   */
-  emit: function emit(eventType, args) {
+  emit: function emit(eventType) {
     var events = this._events,
         callbackList = (events[eventType] || []).concat(events["*"] || []);
+
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
     for (var i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args);
     }
