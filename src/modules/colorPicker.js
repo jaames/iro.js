@@ -152,7 +152,7 @@ colorPicker.prototype = {
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
       this._colorChangeActive = true;
-      this.emit("color:change", [color, changes]);
+      this.emit("color:change", color, changes);
       this._colorChangeActive = false;
     }
     var rgb = color.rgbString;
@@ -195,7 +195,7 @@ colorPicker.prototype = {
     * @param {String} eventType The name of the event to emit
     * @param {Array} args array of args to pass to callbacks
   */
-  emit: function(eventType, args) {
+  emit: function(eventType, ...args) {
     var events = this._events,
         callbackList = (events[eventType] || []).concat((events["*"] || []));
     for (var i = 0; i < callbackList.length; i++) {
