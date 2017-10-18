@@ -195,21 +195,15 @@ color.prototype = {
         this.hexString = value;
       }
     }
-  },
-
-  /**
-    * @desc Force an update
-  */
-  forceUpdate: function() {
-    var value = this._value;
-    this._onChange(value, value, {h: true, s: true, v: true});
   }
 };
 
 Object.defineProperties(color.prototype, {
   hsv: {
     get: function () {
-      return this._value
+      // _value is cloned to allow changes to be made to the values before passing them back
+      var v = this._value;
+      return {h: v.h, s: v.s, v: v.v};
     },
     set: function (newValue) {
       // Loop through the channels and check if any of them have changed
@@ -222,7 +216,7 @@ Object.defineProperties(color.prototype, {
       // Update the old value
       this._value = newValue;
       // If the value has changed, call hook callback
-      if (this._onChange && (changes.h || changes.s || changes.v)) this._onChange(newValue, oldValue, changes);
+      if (this._onChange && (changes.h || changes.s || changes.v)) this._onChange(this, changes);
     },
   },
   rgb: {

@@ -18,15 +18,22 @@
         anticlockwise: true,
         css: {
           body: {
-            "background-color": "rgb",
-            "color": "rgb"
+            "background-color": "$rgb",
+            "color": "$rgb"
           },
           ".test": {
-            "border-color": "rgb",
-            "color": "rgb"
+            "border-color": "$rgb",
+            "color": "$rgb"
           }
         }
       });
+
+      demo.on("color:change", function(color, changes){
+        var hsv = color.hsv;
+        hsv.v = hsv.s;
+        color.set(hsv);
+      });
+
     </script>
   </body>
 </html>

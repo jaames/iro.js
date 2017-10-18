@@ -303,21 +303,15 @@ color.prototype = {
         this.hexString = value;
       }
     }
-  },
-
-  /**
-    * @desc Force an update
-  */
-  forceUpdate: function forceUpdate() {
-    var value = this._value;
-    this._onChange(value, value, { h: true, s: true, v: true });
   }
 };
 
 Object.defineProperties(color.prototype, {
   hsv: {
     get: function get() {
-      return this._value;
+      // _value is cloned to allow changes to be made to the values before passing them back
+      var v = this._value;
+      return { h: v.h, s: v.s, v: v.v };
     },
     set: function set(newValue) {
       // Loop through the channels and check if any of them have changed
@@ -330,7 +324,7 @@ Object.defineProperties(color.prototype, {
       // Update the old value
       this._value = newValue;
       // If the value has changed, call hook callback
-      if (this._onChange && (changes.h || changes.s || changes.v)) this._onChange(newValue, oldValue, changes);
+      if (this._onChange && (changes.h || changes.s || changes.v)) this._onChange(this, changes);
     }
   },
   rgb: {
@@ -635,6 +629,7 @@ var colorPicker = function colorPicker(el, opts) {
   // event storage for `on` and `off`
   this._events = {};
   this._mouseTarget = false;
+  this._colorChangeActive = false;
   this.css = opts.css || opts.styles || undefined;
   // Wait for the document to be ready, then init the UI
   whenReady(function () {
@@ -714,8 +709,14 @@ colorPicker.prototype = {
     * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
     * @access protected
   */
-  _update: function _update(newValue, oldValue, changes) {
-    var color = this.color;
+  _update: function _update(color, changes) {
+    // Prevent infinite loops if the color is set inside a `color:change` callback
+    if (!this._colorChangeActive) {
+      // While _colorChangeActive = true, this event cannot be fired
+      this._colorChangeActive = true;
+      this.emit("color:change", [color, changes]);
+      this._colorChangeActive = false;
+    }
     var rgb = color.rgbString;
     var css = this.css;
     // Loop through each UI element and update it
@@ -729,8 +730,6 @@ colorPicker.prototype = {
         this.stylesheet.setRule(selector, prop, rgb);
       }
     }
-    // Call the color change event
-    this.emit("color:change", color);
   },
 
   /**
@@ -756,13 +755,14 @@ colorPicker.prototype = {
   /**
     * @desc Emit an event
     * @param {String} eventType The name of the event to emit
-    * @param {Object} data data to pass to all the callback functions
+    * @param {Array} args array of args to pass to callbacks
   */
-  emit: function emit(eventType, data) {
-    var events = this._events;
-    (events[eventType] || []).concat(events["*"] || []).map(function (callback) {
-      callback(data);
-    });
+  emit: function emit(eventType, args) {
+    var events = this._events,
+        callbackList = (events[eventType] || []).concat(events["*"] || []);
+    for (var i = 0; i < callbackList.length; i++) {
+      callbackList[i].apply(null, args);
+    }
   },
 
   /**
