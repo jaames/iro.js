@@ -6,4 +6,5 @@ module.exports = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
+  version: VERSION
 };

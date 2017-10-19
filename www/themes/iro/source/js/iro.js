@@ -1,8 +1,8 @@
 /*!
- * iro.js
- * ----------------
- * Author: James Daniel (github.com/jaames | rakujira.jp)
- * Last updated: Thu Oct 19 2017
+ * iro.js v3.0.0
+ * 2016-2017 James Daniel
+ * Released under the MIT license
+ * github.com/jaames/iro.js
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -1008,7 +1008,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
-  Stylesheet: _stylesheet2.default
+  Stylesheet: _stylesheet2.default,
+  version: "3.0.0"
 };
 
 /***/ }),

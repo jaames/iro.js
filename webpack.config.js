@@ -2,6 +2,7 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const version = require("./package.json").version;
 
 module.exports = function (env) {
 
@@ -64,12 +65,15 @@ module.exports = function (env) {
     plugins: [
       new webpack.BannerPlugin({
         banner: [
-          "iro.js",
-          "----------------",
-          "Author: James Daniel (github.com/jaames | rakujira.jp)",
-          "Last updated: " + new Date().toDateString(),
+          "iro.js v" + version,
+          "2016-2017 James Daniel",
+          "Released under the MIT license",
+          "github.com/jaames/iro.js"
         ].join("\n")
       }),
+      new webpack.DefinePlugin({
+        VERSION: JSON.stringify(version)
+      })
     ],
     devtool: "source-map",
     devServer: {
