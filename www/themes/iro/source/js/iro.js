@@ -869,13 +869,6 @@ colorPicker.prototype = {
     * @access protected
   */
   _update: function _update(color, changes) {
-    // Prevent infinite loops if the color is set inside a `color:change` callback
-    if (!this._colorChangeActive) {
-      // While _colorChangeActive = true, this event cannot be fired
-      this._colorChangeActive = true;
-      this.emit("color:change", color, changes);
-      this._colorChangeActive = false;
-    }
     var rgb = color.rgbString;
     var css = this.css;
     // Loop through each UI element and update it
@@ -888,6 +881,13 @@ colorPicker.prototype = {
       for (var prop in properties) {
         this.stylesheet.setRule(selector, prop, rgb);
       }
+    }
+    // Prevent infinite loops if the color is set inside a `color:change` callback
+    if (!this._colorChangeActive) {
+      // While _colorChangeActive = true, this event cannot be fired
+      this._colorChangeActive = true;
+      this.emit("color:change", color, changes);
+      this._colorChangeActive = false;
     }
   },
 
