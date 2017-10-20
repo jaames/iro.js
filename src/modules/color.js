@@ -9,7 +9,7 @@ var round = Math.round,
 function hsv2Rgb(hsv) {
   var r, g, b, i, f, p, q, t;
   var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
-  i = Math.floor(h * 6);
+  i = floor(h * 6);
   f = h * 6 - i;
   p = v * (1 - s);
   q = v * (1 - f * s);
@@ -60,13 +60,13 @@ function rgb2Hsv(rgb) {
 */
 function hsv2Hsl(hsv) {
   var s = hsv.s / 100,
-  v = hsv.v / 100;
-  var p = (2 - s) * v;
-  s = s == 0 ? 0 : s * v / (p < 1 ? p : 2 - p);
+      v = hsv.v / 100;
+  var l = 0.5 * v * (2 - s);
+  s = v * s / (1 - Math.abs(2 * l - 1));
   return {
     h: hsv.h,
-    s: round(s * 100),
-    l: round(p * 50)
+    s: round(s * 100) || 0,
+    l: round(l * 100)
   };
 };
 
