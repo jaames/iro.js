@@ -18,7 +18,7 @@ module.exports = function (env) {
     "circle",
     "gradient",
     "class",
-    "color",
+    // "color",
     "stopColor",
     "stopOpacity",
     "offset",
@@ -26,9 +26,9 @@ module.exports = function (env) {
     "stroke",
     "strokeWidth",
     "fill",
-    "translate",
-    "rotate",
-    "scale"
+    // "translate",
+    // "rotate",
+    // "scale"
   ]
 
   var config = {
@@ -37,7 +37,6 @@ module.exports = function (env) {
     output: {
       library: "iro",
       libraryTarget: "umd",
-      publicPath: "/test",
       path: path.resolve(__dirname, "dist"),
       filename: isDevMode ? "iro.js" : "iro.min.js",
       sourceMapFilename: isDevMode ? "iro.js.map" : "iro.min.js.map",
@@ -79,7 +78,7 @@ module.exports = function (env) {
     devServer: {
       port: process.env.PORT || 8080,
       host: "localhost",
-      publicPath: "http://localhost:8080/test/",
+      publicPath: "http://localhost:8080",
       contentBase: path.join(__dirname, "./"),
       watchContentBase: true,
     }

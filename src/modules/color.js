@@ -1,6 +1,8 @@
 var round = Math.round,
     floor = Math.floor;
 
+// TODO: compare(rgb, hsv, hsl) + clone methods
+
 /**
   * @desc convert hsv object to rgb
   * @param {Object} hsv - hsv object

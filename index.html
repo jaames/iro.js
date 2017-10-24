@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <script src="test/iro.js" charset="utf-8"></script>
+    <script src="iro.js" charset="utf-8"></script>
   </head>
   <body>
     <div id="demoWheel"></div>
@@ -27,13 +27,6 @@
           }
         }
       });
-
-      demo.on("color:change", function(color, changes){
-        var hsv = color.hsv;
-        hsv.v = hsv.s;
-        color.set(hsv);
-      });
-
     </script>
   </body>
 </html>

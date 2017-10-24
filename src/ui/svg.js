@@ -11,6 +11,7 @@ var SVG_ATTRIBUTE_SHORTHANDS = {
   stopColor: "stop-color",
   stopOpacity: "stop-opacity",
 };
+// TODO: figure out why these aren't being compressed properly?
 var SVG_TRANSFORM_SHORTHANDS = {
   translate: "setTranslate",
   scale: "setScale",

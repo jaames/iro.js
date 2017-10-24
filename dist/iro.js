@@ -94,6 +94,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var round = Math.round,
     floor = Math.floor;
 
+// TODO: compare(rgb, hsv, hsl) + clone methods
+
 /**
   * @desc convert hsv object to rgb
   * @param {Object} hsv - hsv object
@@ -1160,6 +1162,7 @@ var SVG_ATTRIBUTE_SHORTHANDS = {
   stopColor: "stop-color",
   stopOpacity: "stop-opacity"
 };
+// TODO: figure out why these aren't being compressed properly?
 var SVG_TRANSFORM_SHORTHANDS = {
   translate: "setTranslate",
   scale: "setScale",
