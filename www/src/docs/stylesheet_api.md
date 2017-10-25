@@ -1,4 +1,7 @@
-## Stylesheet API
+---
+title: Stylesheet API
+github_url: https://github.com/jaames/iro.js/blob/master/www/src/stylesheet_api.md
+---
 
 The stylesheet API is used by colorPicker objects to dynamically update CSS styles whenever the selected color changes.
 

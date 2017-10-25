@@ -39,13 +39,30 @@
     color: darken($accent-color, 8);
   }
 
-  pre {
+  code {
+    background-color: darken($light-gray, 4);
   }
 
   pre, code {
     border: none;
-
     font-size: 0.9em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+  
+  tr:nth-child(2n) {
+    background-color: darken($light-gray, 2);
+  }
+
+  td, th {
+    border: 1px solid darken($light-gray, 24);
+    padding: 0.5rem 1rem;
+  }
+
+  th {
+    text-align: center !important;
   }
 
 }

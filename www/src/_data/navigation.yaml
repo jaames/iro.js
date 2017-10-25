@@ -4,10 +4,10 @@ Introduction:
     Features: introduction.html#Features
     Download: introduction.html#Download
     Installation: introduction.html#Installation
-    Getting Started: introduction.html#Getting-Started
 Guide:
   link: guide.html
   submenu: 
+    Getting Started: guide.html#Getting-Started
     Color Picker Options: guide.html#Color-Picker-Options
     Events: guide.html#Events
     Using the Selected Color: guide.html#Using-the-Selected-Color

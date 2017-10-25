@@ -1,4 +1,7 @@
-## Color API
+---
+title: Color API
+github_url: https://github.com/jaames/iro.js/blob/master/www/src/color_api.md
+---
 
 The color API is used by `colorPicker` objects to store the selected color and to handle conversions between different color models.
 

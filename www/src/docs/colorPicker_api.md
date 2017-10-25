@@ -1,4 +1,7 @@
-## Color Picker API
+---
+title: Color Picker API
+github_url: https://github.com/jaames/iro.js/blob/master/www/src/colorPicker_api.md
+---
 
 ### Constructor
 

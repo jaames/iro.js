@@ -37,35 +37,9 @@ import iro from "iro.js";
 var iro = require("iro.js");
 ```
 
-### Getting Started
+### What Now?
 
-To set up a color picker, we need to make a HTML element with a unique identifier (an `id` attribute works well!) to act as a container:
-```html
-<div id="color-picker-container"></div>
-```
-
-Now all we need to do is create a new instance of iro.ColorPicker, and tell it to use the container element we just made by providing a matching [CSS selector](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors):
-```js
-var demoColorPicker = new iro.ColorPicker("#color-picker-container");
-```
-_Note: You can provide a DOM object instead of a CSS selector if you prefer!_ 
-
-Of course you probably want to customise some things, just provide a list of options when creating a new color picker:
-
-```js
-var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
-  // Set the size of the color picker UI
-  width: 320,
-  height: 320,
-  // Set the initial color to red
-  color: "#f00"
-});
-```
-
-For a full list of options check out the [options guide](guide.html#Color-Picker-Options).
-
-
-
+Continue over to the [Guide](guide.html) page to learn about using iro.js main features. If you're more of a practical learner, you might prefer to take a look at the [Codepen Demo]()
 
 
 
