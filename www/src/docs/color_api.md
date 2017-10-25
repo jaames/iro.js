@@ -6,101 +6,103 @@ The API is made accessible via `iro.Color`.
 
 ### Supported Color Formats
 
-#### HSV
+##### HSV
 
 * HSV object: `{h: 360, s: 100, v: 50}`.
 
-#### RGB
+##### RGB
 
 * RGB object: `{r: 255, g: 0, b: 0}`.
 * RGB string: `rgb(255, 0, 0)`, percentage values like `rgb(100%, 0%, 0%)` also work.
 * HEX RGB string: `#FFFFFF`, the shorthand format (`#FFF`) is supported too.
 
-#### HSL
+##### HSL
 
 * HSL object: `{h: 360, s: 50, l: 100}`.
 * HSL string: `hsl(360, 50%, 100%)`.
 
+Any param with type `{Color}` listed below can be any one of these formats, or an existing instance of iro.Color.
+
 ### Methods
 
-#### `set`
+##### set
 
 **Arguments:**
 
 * `{Color} color`
 
-**Usage:** Set the color from any [supported color format]().
+**Details:** Set the color from any [supported color format](#Supported-Color-Formats).
 
-#### `mix`
+##### mix
 
 **Arguments:**
 
 * `{Color} color`
 * `{Number} weight`
 
-**Usage:** Mix a color into the current one.`weight` is a value between 0 and 100 - closer to 0 = more current color, closer to 100 = more new color.
+**Details:** Mix a color into the current one.`weight` is a value between 0 and 100 - closer to 0 = more current color, closer to 100 = more new color.
 
-#### `lighten`
-
-**Arguments:**
-
-* `{Number} amount`
-
-**Usage:** Lighten color by `amount`.
-
-#### `darken`
+##### lighten
 
 **Arguments:**
 
 * `{Number} amount`
 
-**Usage:** Darken color by `amount`.
+**Details:** Lighten color by `amount`.
+
+##### darken
+
+**Arguments:**
+
+* `{Number} amount`
+
+**Details:** Darken color by `amount`.
 
 ### Properties
 
 All of these color properties are writable as well as readable, which means they can be used to both *set* and *get* the color from various models.
 
-#### `hsv`
+##### hsv
 
 **Details:** The color as a [HSV](https://www.wikiwand.com/en/HSL_and_HSV) object
 
 **Example format:** `{h: 360, s: 100, v: 50}`
 
-#### `hsl`
+##### hsl
 
 **Details:** The color as a [HSL](https://www.wikiwand.com/en/HSL_and_HSV) object
 
 **Example format:** `{h: 360, s: 50, l: 100}`
 
-#### `rgb`
+##### rgb
 
 **Details:** The color as an [RGB](https://www.wikiwand.com/en/RGB_color_model) object
 
 **Example format:** `{r: 255, g: 0, b: 0}`
 
-#### `hslString`
+##### hslString
 
 **Details:** The color as a HSL string
 
 **Example format:** `hsl(360, 100%, 50%)`
 
-#### `rgbString`
+##### rgbString
 
 **Details:** The color as an RGB string
 
-**Example format:** `rgb(255, 0, 0)`
+**Example format:** `rgb(255, 0, 0)` **or** `rgb(100%, 0%, 0%)`
 
-#### `hexString`
+##### hexString
 
 **Details:** The color as a HEX string (supports shorthand notation)
 
-**Example format:** `#f00`
+**Example format:** `#ff0000` **or** where applicable, the shorthand format: `#f00`
 
 ### Static Methods
 
 These functions are provided by `iro.Color` at all times.
 
-#### `mix`
+##### mix
 
 **Arguments:**
 
@@ -108,62 +110,62 @@ These functions are provided by `iro.Color` at all times.
 * `{Color} color2`
 * `{Number} weight`
 
-**Usage:** Mix two colors together, returning a new `iro.Color` instance. `weight` is a value between 0 and 100 - closer to 0 = more color1, closer to 100 = more color2.
+**Details:** Mix two colors together, returning a new `iro.Color` instance. `weight` is a value between 0 and 100 - closer to 0 = more color1, closer to 100 = more color2.
 
-#### `lighten`
-
-**Arguments:**
-
-* `{Color} color`
-* `{Number} amount`
-
-**Usage:** Lighten `color` by `amount`, returning a new `iro.Color` instance.
-
-#### `darken`
+##### lighten
 
 **Arguments:**
 
 * `{Color} color`
 * `{Number} amount`
 
-**Usage:** Darken `color` by `amount`, returning a new `iro.Color` instance.
+**Details:** Lighten `color` by `amount`, returning a new `iro.Color` instance.
 
-#### `hsv2Rgb`
+##### darken
 
-**Usage:** Convert a HSV object `{h: 360, s: 100, v: 50}` to an RGB object `{r: 255, g: 0, b: 0}`.
+**Arguments:**
 
-#### `rgb2Hsv`
+* `{Color} color`
+* `{Number} amount`
 
-**Usage:** Convert an RGB object `{r: 255, g: 0, b: 0}` to a HSV object `{h: 360, s: 100, v: 50}`.
+**Details:** Darken `color` by `amount`, returning a new `iro.Color` instance.
 
-#### `hsv2Hsl`
+##### hsv2Rgb
 
-**Usage:** Convert a HSV object `{h: 360, s:50, v:100}` to a HSL object `{h: 360, s: 100, l: 100}`.
+Convert a HSV object `{h: 360, s: 100, v: 50}` to an RGB object `{r: 255, g: 0, b: 0}`.
 
-#### `hsl2Hsv`
+##### rgb2Hsv
 
-**Usage:** Convert a HSL object `{h: 360, s: 100, l: 100}` to a HSV object `{h: 360, s:50, v:100}`.
+Convert an RGB object `{r: 255, g: 0, b: 0}` to a HSV object `{h: 360, s: 100, v: 50}`.
 
-#### `hsl2Str`
+##### hsv2Hsl
 
-**Usage:** Convert a HSL object `{h: 360, s: 100, l: 100}` to a HSL string `hsl(360, 100, 100)`.
+Convert a HSV object `{h: 360, s:50, v:100}` to a HSL object `{h: 360, s: 100, l: 100}`.
 
-#### `rgb2Str`
+##### hsl2Hsv
 
-**Usage:** Convert an RGB object `{r: 255, g: 0, b: 0}` to an RGB string `rgb(255, 0, 0)`.
+Convert a HSL object `{h: 360, s: 100, l: 100}` to a HSV object `{h: 360, s:50, v:100}`.
 
-#### `rgb2Hex`
+##### hsl2Str
 
-**Usage:** Convert a RGB object `{r: 255, g: 0, b: 0}` to a HEX string `#FF0000`.
+Convert a HSL object `{h: 360, s: 100, l: 100}` to a HSL string `hsl(360, 100, 100)`.
 
-#### `parseHexStr`
+##### rgb2Str
 
-**Usage:** Convert a HEX string `#FF0000` to an RGB object `{r: 255, g: 0, b: 0}`.
+Convert an RGB object `{r: 255, g: 0, b: 0}` to an RGB string `rgb(255, 0, 0)`.
 
-#### `parseHslStr`
+##### rgb2Hex
 
-**Usage:** Convert a HSL string `hsl(360, 100, 100)` to a HSL object `{h: 360, s: 100, l: 100}`.
+Convert a RGB object `{r: 255, g: 0, b: 0}` to a HEX string `#FF0000`.
 
-#### `parseRgbStr`
+##### parseHexStr
 
-**Usage:** Convert an RGB string `rgb(255, 0, 0)` to an RGB object `{r: 255, g: 0, b: 0}`.
+Convert a HEX string `#FF0000` to an RGB object `{r: 255, g: 0, b: 0}`.
+
+##### parseHslStr
+
+Convert a HSL string `hsl(360, 100, 100)` to a HSL object `{h: 360, s: 100, l: 100}`.
+
+##### parseRgbStr
+
+Convert an RGB string `rgb(255, 0, 0)` to an RGB object `{r: 255, g: 0, b: 0}`.

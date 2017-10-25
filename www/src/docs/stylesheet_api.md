@@ -8,7 +8,7 @@ The API is made accessible through the `iro.Stylesheet` constructor so that deve
 
 ### Methods
 
-#### `setRule`
+##### setRule
 
 **Arguments:**
 
@@ -34,13 +34,13 @@ stylesheet.setRule(".example", "border", "1px solid red")
 
 ### Properties
 
-#### `enabled`
+##### enabled
 
 **Details:**
 
 Used to enable/disable a stylesheet; if set to `false`, the styles will not be applied to the page.
 
-#### `css`
+##### css
 
 **Details:**
 
@@ -55,7 +55,7 @@ The stylesheet's current CSS rules as an object. For example:
 }
 ```
 
-#### `cssText`
+##### cssText
 
 **Details:**
 
@@ -70,13 +70,13 @@ body {
 }
 ```
 
-#### `sheet`
+##### sheet
 
 **Details:**
 
 A reference to the stylesheet's [CSSStyleSheet](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet) object.
 
-#### `rules`
+##### rules
 
 **Details:**
 

@@ -5,7 +5,7 @@ github_url: https://github.com/jaames/iro.js/blob/master/www/src/introduction.md
 ### Features
 
  * Customizable SVG-based UI
- * Lightweight, at just under 15KB minified (or about 5KB minified + gzipped)
+ * Lightweight, at just over 12KB minified (or about 5KB minified + gzipped)
  * Zero dependencies (not even jQuery or extra stylesheets/images)
  * Dynamicly update CSS styles when the selected color changes
  * Convert colors between RGB, HSV, HSL and hex RGB
@@ -13,11 +13,11 @@ github_url: https://github.com/jaames/iro.js/blob/master/www/src/introduction.md
 
 ### Download
 
-[Development Version](https://raw.githubusercontent.com/jaames/iro.js/blob/master/dist/iro.js) 
-Uncompressed with comments at around 50kb
+[Development Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js) 
+Uncompressed with comments at around 45kb
 
-[Production Version](https://raw.githubusercontent.com/jaames/iro.js/blob/master/dist/iro.min.js) 
-Minified to just under 15kb
+[Production Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js) 
+Minified to just above 12kb
 
 ### Installation
 
@@ -44,11 +44,11 @@ To set up a color picker, we need to make a HTML element with a unique identifie
 <div id="color-picker-container"></div>
 ```
 
-Now all we need to do is create a new instance of iro.ColorPicker, and tell it to use the container element we just made by providing it with a matching [CSS selector](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors):
+Now all we need to do is create a new instance of iro.ColorPicker, and tell it to use the container element we just made by providing a matching [CSS selector](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors):
 ```js
 var demoColorPicker = new iro.ColorPicker("#color-picker-container");
 ```
-_Note: You can provide a DOM object instead of a CSS selector if you prefer_ 
+_Note: You can provide a DOM object instead of a CSS selector if you prefer!_ 
 
 Of course you probably want to customise some things, just provide a list of options when creating a new color picker:
 
@@ -58,7 +58,7 @@ var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
   width: 320,
   height: 320,
   // Set the initial color to red
-  defaultValue: "#f00"
+  color: "#f00"
 });
 ```
 

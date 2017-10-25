@@ -39,9 +39,13 @@
     color: darken($accent-color, 8);
   }
 
-  code {
+  pre {
+  }
+
+  pre, code {
     border: none;
-    font-size: 0.9rem;
+
+    font-size: 0.9em;
   }
 
 }

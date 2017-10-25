@@ -1,7 +1,7 @@
 <div class="page">
   <div class="navigation">
     <div class="navigation__head">
-      <%- partial("./_partial/logo.ejs", {outline: false, height: 48}) %>
+      <a href="<%= config.root %>"><%- partial("./_partial/logo.ejs", {outline: false, height: 48}) %></a>
       <div class="navigation__toggle">
         <span class="icon"></span>
       </div>
@@ -10,11 +10,15 @@
       <nav class="navmenu">
         <% var menudata = site.data.navigation; for (var category in menudata) { %>
           <div class="navmenu__category">
-            <h3 class="category__title"><%= category %></h3>
+            <% if(menudata[category].link) { %>
+              <a href="<%= menudata[category].link %>"><h3 class="category__title"><%= category %></h3></a>
+            <% } else { %>
+              <h3 class="category__title"><%= category %></h3>
+            <% } %>
             <ul class="category__list">
-            <% for (var link in menudata[category]) { %>
+            <% for (var link in menudata[category].submenu) { %>
               <li class="list__item">
-                <a href="<%- menudata[category][link] %>"><%= link %></a>
+                <a href="<%- menudata[category].submenu[link] %>"><%= link %></a>
               </li>
             <% } %>
             </ul>

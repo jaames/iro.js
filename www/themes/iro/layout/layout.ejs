@@ -18,7 +18,7 @@
     <meta name="twitter:url" property="og:url" content="<%- url %>"> 
    
     <%- css("css/main.css") %>
-    <%- js("js/iro.js") %>
+    <%- js("js/iro.min.js") %>
     <% if (theme.google_font_families) { %>
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <script>
@@ -39,14 +39,32 @@
       // Navmenu code
       var nav = $(".navigation");
       var navToggle = $(".navigation__toggle");
+      var isNavActive = false;
+      function openNav() {
+        nav.classList.add("is-active");
+        navToggle.classList.add("is-active");
+        isNavActive = true;
+      }
+      function closeNav() {
+        nav.classList.remove("is-active");
+        navToggle.classList.remove("is-active");
+        isNavActive = false;
+      }
+      function toggleNav() {
+        var fn = isNavActive ? closeNav : openNav;
+        fn();
+      }
       if (nav && navToggle) {
-        navToggle.addEventListener("click", function() {
-          nav.classList.toggle("is-active");
-          navToggle.classList.toggle("is-active");
+        // Navmenu toggle
+        navToggle.addEventListener("click", toggleNav, false);
+        // Navmenu links (close mobile menu on click)
+        nav.addEventListener("click", function(e) {
+          var target = e.target || e.srcElement;
+          if (target.hash) closeNav();
         }, false);
       }
       // Fix codeblocks so they work with prism
-      $$("code").forEach(function(block) {
+      $$("pre code").forEach(function(block) {
         block.className = "language-" + block.className;
       });
     </script>
