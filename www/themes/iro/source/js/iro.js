@@ -1168,8 +1168,8 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
-// sniff useragent string to check if the user is running IE
-var IS_IE = /msie|trident/.test(window.navigator.userAgent.toLowerCase());
+// sniff useragent string to check if the user is running IE or Edge
+var IS_IE = /msie|trident|edge/.test(window.navigator.userAgent.toLowerCase());
 
 /**
   * @constructor svg element wrapper
@@ -1264,7 +1264,8 @@ svgElement.prototype = {
       transformFn = type in SVG_TRANSFORM_SHORTHANDS ? SVG_TRANSFORM_SHORTHANDS[type] : type;
       transform[transformFn].apply(transform, args);
     } else {
-      // older internet explorer versions dont implement SVG transforms properly, instead we have to force them
+      // Microsoft still can't make a web browser that actually works, as such, Edge + IE dont implement SVG transforms properly.
+      // We have to force them instead... geez
       this.setAttrs({ "transform": type + "(" + args.join(", ") + ")" });
     }
   },

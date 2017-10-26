@@ -39,7 +39,7 @@ var iro = require("iro.js");
 
 ### What Now?
 
-Continue over to the [Guide](guide.html) page to learn about using iro.js main features. If you're more of a practical learner, you might prefer to take a look at the [Codepen Demo]()
+Continue over to the [Guide](guide.html) page to learn about using iro.js main features. If you're more of a practical learner, you might prefer to take a look at the [Codepen Demo](https://codepen.io/rakujira/pen/WZOeNq?editors=0010)
 
 
 
