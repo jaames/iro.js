@@ -1,82 +1,39 @@
-<p align="center">
-  <a href="https://rakujira.jp/projects/iro/"">
-    <img width="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
-  </a>
-</p>
+# [iro.js](https://rakujira.jp/projects/iro)
+
+<img width="100%" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
+
+⚠️ Migrating from version 2.x ? Please make sure to read the [changelog](https://github.com/jaames/iro.js/blob/master/CHANGELOG.md#3.0.0).
 
 ### Main Features
 
-* Pretty color wheel UI with touch and HiDPI/retina screen support
-* Color model conversion between RGB, HSV, HSL and hexadecimal RGB
-* Dynamically update CSS styles when the selected color changes
-* No dependencies! Not even jQuery or extra stylesheets/images
-* Supports all major browsers from IE9 up
-* Lightweight, at just about 12KB minified (or ~5KB minified + gzipped)
+ * Customizable SVG-based UI
+ * Convert colors between RGB, HSV, HSL and hex RGB
+ * Dynamicly update CSS styles when the selected color changes
+ * Lightweight, at just over 12KB minified (or ~5KB minified + gzipped)
+ * Zero dependencies (not even jQuery or extra stylesheets/images)
 
-### Install
+### Browser Support
 
- * download [iro.min.js](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js)
+iro.js aims to support all modern browsers, and has been successfully tested on IE 9 +.
 
-### Quick Start
+### Get Started
 
-To set up a color picker, first we need to make a HTML element to act as a container for it:
+* [Download](https://rakujira.jp/projects/iro/docs/introduction.html#Download)
+* [Installation](https://rakujira.jp/projects/iro/docs/introduction.html#Installation)
+* [Usage Guide](https://rakujira.jp/projects/iro/docs/guide.html)
 
-```html
-<div id="example">
-  <!-- The color picker will be inserted here -->
-</div>
-```
+### Demo
 
-Then we can initialize it with JavaScript, by passing a [CSS selector](https://css-tricks.com/how-css-selectors-work/) for the container element to the `iro.ColorPicker` constructor:
-
-```javascript
-var exampleColorPicker = new iro.ColorPicker("#example");
-```
-
-Color pickers can also be customized by passing an option object to the `iro.ColorPicker` constructor. All options are, uh, optional:
-
-```javascript
-var exampleColorPicker = new iro.ColorPicker("#example", {
-  // Canvas dimensions:
-  width: 320,
-  height: 320,
-  // Initial color value -- any hex, rgb or hsl color string works:
-  color: "#fff",
-  // Radius of the markers that show the current color:
-  markerRadius: 8,
-  // Padding space around the markers:
-  padding: 4,
-  // Space between the hue/saturation ring and the value slider:
-  sliderMargin: 24,
-  // Add a border around the controls:
-  borderWidth: 2,
-  // Set the border color (defaults to white):
-  borderColor: "#000",
-  // CSS rules to update as the selected color changes
-  css: {
-    "body": {
-      "background-color": "rgb"
-    },
-    "input, button": {
-      "border-color": "rgb",
-      "color": "rgb"
-    }
-  }
-});
-```
-
-That's it! For more information about what Iro can do, check out the [`/docs`](https://github.com/jaames/iro.js/tree/master/docs). (:
+[Codepen Demo](https://codepen.io/rakujira/pen/WZOeNq?editors=0010)
 
 ### Contributing
 
-[Read more on contributing]()
-
-### FAQ
+[Read more on contributing](https://github.com/jaames/iro.js/blob/master/CONTRIBUTING.md)
 
 ### Changelog
 
-See the [changlelog]()
+See the [changlelog](https://github.com/jaames/iro.js/blob/master/CHANGELOG.md)
 
 ### License
 
-[MIT]() © [James Daniel](https://rakujira.jp)
+[MIT](https://github.com/jaames/iro.js/blob/master/README.md) © [James Daniel](https://rakujira.jp)
