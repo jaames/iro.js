@@ -1,0 +1,10 @@
+google_font_families: ["Poppins:600", "Open Sans"]
+favicon_url: img/favicon.png
+og_image_url: img/social_media_preview.png
+og_image_width: 800
+og_image_height: 400
+
+node_sass:
+  outputStyle: compressed
+  precision: 5
+  sourceComments: false

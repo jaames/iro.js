@@ -1,0 +1,41 @@
+<div class="hero">
+  <div class="frame frame--top"></div>
+  <div class="frame frame--bottom"></div>
+  <div class="frame frame--left"></div>
+  <div class="frame frame--right"></div>
+  <div class="wrap hero__wrap">
+    <div class="half"> 
+      <%- partial("./_partial/logo.ejs", {outline: true, height: 135}) %>
+      <h3 class="subheading">A lightweight SVG-based color picker library.</h3>
+      <div class="buttonGroup">
+        <a href="//github.com/jaames/iro.js" class="button">View on GitHub</a>
+        <a href="/projects/iro/docs/introduction.html" class="button">Get Started</a>
+      </div>
+    </div>
+      <div class="half">
+        <div class="wheelDemo">
+          <div id="wheelDemoWrapper"></div>
+        </div>
+      </div>
+  </div>
+</div>
+<script>
+  var demo = new iro.ColorPicker("#wheelDemoWrapper", {
+    sliderMargin: 20,
+    markerRadius: 8,
+    borderWidth: 2,
+    borderColor: "#fff",
+    width: 290,
+    height: 290,
+    anticlockwise: true,
+    color: "#906bff",
+    css: {
+      ".frame": {
+        "background-color": "$color",
+      },
+      ".iroLogo": {
+        "fill": "$color"
+      },
+    }
+  });
+</script>

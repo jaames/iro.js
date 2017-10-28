@@ -1,19 +1,13 @@
-import dom from "util/dom";
-
-const doc = document;
-
 /**
   @constructor stylesheet writer
-  @param {Object} overrides - an object representing the CSS rules that this stylesheet updates
 */
-let stylesheet = function (overrides) {
+const stylesheet = function() {
   // Create a new style element
-  let style = dom.create("style");
+  let style = document.createElement("style");
+  document.head.appendChild(style);
   // Webkit apparently requires a text node to be inserted into the style element
   // (according to https://davidwalsh.name/add-rules-stylesheets)
-  dom.append(style, doc.createTextNode(""));
-  // Add that stylesheet to the document <head></head>
-  dom.append(doc.head, style);
+  style.appendChild(document.createTextNode(""));
   this.style = style;
   // Create a reference to the style element's CSSStyleSheet object
   // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
@@ -28,20 +22,7 @@ let stylesheet = function (overrides) {
 };
 
 stylesheet.prototype = {
-
-  /**
-    * @desc Turns the stylesheet "on", allowing the styles to be rendered
-  */
-  on: function () {
-    this.sheet.disabled = false;
-  },
-
-  /**
-    * @desc Turns the stylesheet "off", preventing the styles from being rendered
-  */
-  off: function () {
-    this.sheet.disabled = true;
-  },
+  constructor: stylesheet,
 
   /**
     * @desc Set a specific rule for a given selector
@@ -49,7 +30,7 @@ stylesheet.prototype = {
     * @param {String} property - the CSS property to set (e.g. "background-color", "font-family", "z-index")
     * @param {String} value    - the new value for the rule (e.g. "rgb(255, 255, 255)", "Helvetica", "99")
   */
-  setRule: function (selector, property, value) {
+  setRule: function(selector, property, value) {
     var sheet = this.sheet;
     var rules = sheet.rules || sheet.cssRules;
     var map = this.map;
@@ -57,7 +38,7 @@ stylesheet.prototype = {
     property = property.replace(/([A-Z])/g, function($1) {
       return "-" + $1.toLowerCase();
     });
-    if (!map.hasOwnProperty(selector)){
+    if (!map.hasOwnProperty(selector)) {
       // If the selector hasn't been used yet we want to insert the rule at the end of the CSSRuleList, so we use its length as the index value
       var index = rules.length;
       // Prepare the rule declaration text, since both insertRule and addRule take this format
@@ -78,38 +59,52 @@ stylesheet.prototype = {
     else {
       map[selector].setProperty(property, value);
     }
-  },
-
-  /**
-    * @desc Get an object representing the current css styles
-    * @return {Object} css object
-  */
-  getCss: function () {
-    var map = this.map;
-    var ret = {};
-    for (var selector in map) {
-      var ruleSet = map[selector];
-      ret[selector] = {};
-      for (var i = 0; i < ruleSet.length; i++) {
-        var property = ruleSet[i];
-        ret[selector][property] = ruleSet.getPropertyValue(property);
-      }
-    }
-    return ret;
-  },
-
-  /**
-    * @desc Get the stylesheet text
-    * @return {String} css text
-  */
-  getCssText: function () {
-    var map = this.map;
-    var ret = [];
-    for (var selector in map) {
-      ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-    }
-    return ret.join("\n");
   }
 };
+
+Object.defineProperties(stylesheet.prototype, {
+  enabled: {
+    get: function() {
+      return !this.sheet.disabled;
+    },
+    set: function(value) {
+      this.sheet.disabled = !value;
+    },
+  },
+  // TODO: consider removing cssText + css properties since i don't tink they're that useful
+  cssText: {
+    /**
+      * @desc Get the stylesheet text
+      * @return {String} css text
+    */
+    get: function() {
+      var map = this.map;
+      var ret = [];
+      for (var selector in map) {
+        ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
+      }
+      return ret.join("\n");
+    }
+  },
+  css: {
+     /**
+      * @desc Get an object representing the current css styles
+      * @return {Object} css object
+    */
+    get: function() {
+      var map = this.map;
+      var ret = {};
+      for (var selector in map) {
+        var ruleSet = map[selector];
+        ret[selector] = {};
+        for (var i = 0; i < ruleSet.length; i++) {
+          var property = ruleSet[i];
+          ret[selector][property] = ruleSet.getPropertyValue(property);
+        }
+      }
+      return ret;
+    }
+  }
+});
 
 module.exports = stylesheet;

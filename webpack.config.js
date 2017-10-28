@@ -2,6 +2,7 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const version = require("./package.json").version;
 
 module.exports = function (env) {
 
@@ -9,20 +10,25 @@ module.exports = function (env) {
 
   // We can mangle (compress) the following props for better minification, since they aren't used publicly
   var mangleProps = [
-    // colorModels/*.js
-    "toHsv",
-    "fromHsv",
-    "name",
-    // util.dom.js
-    "create",
-    "attr",
-    "append",
-    "listen",
-    "unlisten",
-    "whenReady",
-    // ui/gradient.js
-    "radial",
-    "linear"
+    // ui/svg.js
+    "insert",
+    "setAttrs",
+    "setTransform",
+    "arc",
+    "circle",
+    "gradient",
+    "class",
+    // "color",
+    "stopColor",
+    "stopOpacity",
+    "offset",
+    "opacity",
+    "stroke",
+    "strokeWidth",
+    "fill",
+    // "translate",
+    // "rotate",
+    // "scale"
   ]
 
   var config = {
@@ -30,8 +36,7 @@ module.exports = function (env) {
     entry: "./iro.js",
     output: {
       library: "iro",
-      libraryTarget: "var",
-      publicPath: "/test",
+      libraryTarget: "umd",
       path: path.resolve(__dirname, "dist"),
       filename: isDevMode ? "iro.js" : "iro.min.js",
       sourceMapFilename: isDevMode ? "iro.js.map" : "iro.min.js.map",
@@ -51,11 +56,7 @@ module.exports = function (env) {
           test: /\.js?$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader",
-            options: {
-              "babelrc": false,
-              "presets": ["es2015", "stage-2"]
-            }
+            loader: "babel-loader"
           }
         }
       ]
@@ -63,18 +64,21 @@ module.exports = function (env) {
     plugins: [
       new webpack.BannerPlugin({
         banner: [
-          "iro.js",
-          "----------------",
-          "Author: James Daniel (github.com/jaames | rakujira.jp)",
-          "Last updated: " + new Date().toDateString(),
+          "iro.js v" + version,
+          "2016-2017 James Daniel",
+          "Released under the MIT license",
+          "github.com/jaames/iro.js"
         ].join("\n")
       }),
+      new webpack.DefinePlugin({
+        VERSION: JSON.stringify(version)
+      })
     ],
     devtool: "source-map",
     devServer: {
       port: process.env.PORT || 8080,
       host: "localhost",
-      publicPath: "http://localhost:8080/test/",
+      publicPath: "http://localhost:8080",
       contentBase: path.join(__dirname, "./"),
       watchContentBase: true,
     }
@@ -83,7 +87,7 @@ module.exports = function (env) {
   if (!isDevMode) {
     config.plugins = config.plugins.concat([
       new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true,
+        sourceMap: false,
         mangle: {
           props: {
             // Mangle protected properties (which start with "_"), and combine all the ones listed in the config

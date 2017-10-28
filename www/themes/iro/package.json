@@ -1,0 +1,9 @@
+{
+  "name": "iro-hexo-theme",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "foundation-sites": "^6.4.3"
+  }
+}

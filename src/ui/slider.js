@@ -1,99 +1,83 @@
-import gradient from "ui/gradient";
 import marker from "ui/marker";
-import hslString from "colorModels/hslString";
+import iroColor from "modules/color";
+
+// css class prefix for this element
+var CLASS_PREFIX = "iro__slider";
 
 /**
   * @constructor slider UI
+  * @param {svgRoot} svg - svgRoot object
+  * @param {Object} opts - options
 */
-let slider = function (layers, opts) {
-  this._ctx = layers.main.ctx;
-  opts.x1 = opts.x;
-  opts.y1 = opts.y;
-  opts.x2 = opts.x + opts.w;
-  opts.y2 = opts.y + opts.h;
+const slider = function (svg, opts) {
+  var r = opts.r,
+  w = opts.w,
+  h = opts.h,
+  x = opts.x,
+  y = opts.y,
+  borderWidth = opts.border.w;
 
   // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
   opts.range = {
-    min: opts.x + opts.r,
-    max: opts.x2 - opts.r,
-    w: opts.w - (opts.r * 2)
+    min: x + r,
+    max: (x + w) - r,
+    w: w - (r * 2)
   };
+
   opts.sliderType = opts.sliderType || "v";
+
   this.type = "slider";
-  this.marker = new marker(layers.over.ctx, opts.marker);
   this._opts = opts;
+
+  var gradient = svg.gradient("linear", {
+    0: {color: "#000"},
+    100: {color: "#fff"}
+  });
+
+  this._gradient = gradient;
+
+  var radius = r + borderWidth / 2;
+
+  var baseGroup = svg.g({
+    class: CLASS_PREFIX,
+  });
+
+  baseGroup.insert("rect", {
+    class: CLASS_PREFIX + "__value",
+    rx: radius,
+    ry: radius,
+    x: x - borderWidth / 2,
+    y: y - borderWidth / 2,
+    width: w + borderWidth,
+    height: h + borderWidth,
+    fill: gradient.url,
+    strokeWidth: borderWidth,
+    stroke: opts.border.color,
+  });
+
+  this.marker = new marker(baseGroup, opts.marker);
 };
 
 slider.prototype = {
-  /**
-    * @desc redraw this UI element
-  */
-  draw: function (hsv) {
-    var ctx = this._ctx;
-    var opts = this._opts;
-    var x1 = opts.x1,
-        y1 = opts.y1,
-        x2 = opts.x2,
-        y2 = opts.y2,
-        w = opts.w,
-        h = opts.h,
-        r = opts.r,
-        border = opts.border,
-        borderWidth = border.w;
-
-    // Clear the existing UI
-    ctx.clearRect(x1 - borderWidth, y1 - borderWidth, w + (borderWidth * 2), h + (borderWidth * 2));
-
-    // Draw a rounded rect
-    // Modified from http://stackoverflow.com/a/7838871
-    ctx.beginPath();
-    ctx.moveTo(x1 + r, y1);
-    ctx.arcTo(x2, y1, x2, y2, r);
-    ctx.arcTo(x2, y2, x1, y2, r);
-    ctx.arcTo(x1, y2, x1, y1, r);
-    ctx.arcTo(x1, y1, x2, y1, r);
-    ctx.closePath();
-
-    // I plan to have different slider "types" in the future
-    // (I'd like to add a transparency slider at some point, for example)
-    var fill;
-
-    // For now the only type is "V", meaning this slider adjusts the HSV V channel
-    if (opts.sliderType == "v") {
-      fill = gradient.linear(ctx, x1, y1, x2, y2, {
-        0: "#000",
-        1: hslString.fromHsv({h: hsv.h, s: hsv.s, v: 100}),
-      });
-    }
-
-    // Draw border
-    if (borderWidth) {
-      ctx.strokeStyle = border.color;
-      ctx.lineWidth = borderWidth * 2;
-      ctx.stroke();
-    }
-
-    // Draw gradient
-    ctx.fillStyle = fill;
-    ctx.fill();
-  },
+  constructor: slider,
 
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
     * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
   */
-  update: function (color, changes) {
+  update: function(color, changes) {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color.hsv;
+    var hsl = iroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
     if (opts.sliderType == "v") {
       if (changes.h || changes.s) {
-        this.draw(hsv);
+        this._gradient.stops[1].setAttrs({stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"});
       }
       if (changes.v) {
         var percent = (hsv.v / 100);
-        this.marker.move(range.min + (percent * range.w), opts.y1 + (opts.h / 2));
+        this.marker.move(range.min + (percent * range.w), opts.y + (opts.h / 2));
       }
     }
   },
@@ -104,7 +88,7 @@ slider.prototype = {
     * @param {Number} y - point y coordinate
     * @return {Object} - new HSV color values (some channels may be missing)
   */
-  input: function (x, y) {
+  input: function(x, y) {
     var opts = this._opts;
     var range = opts.range;
     var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
@@ -119,10 +103,11 @@ slider.prototype = {
     * @param {Number} y - point y coordinate
     * @return {Boolean} - true if the point is a "hit", else false
   */
-  checkHit: function (x, y) {
+  checkHit: function(x, y) {
     var opts = this._opts;
-    return (x > opts.x1) && (x < opts.x2) && (y > opts.y1) && (y < opts.y2);
+    return (x > opts.x) && (x < opts.x + opts.w) && (y > opts.y) && (y < opts.y + opts.h);
   }
+
 };
 
 module.exports = slider;

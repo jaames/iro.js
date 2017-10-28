@@ -1,0 +1,127 @@
+.navigation {}
+
+.navigation__head, .navigation__body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: $dark-gray;
+}
+
+.navigation__head {
+  z-index: 2;
+  height: $mobile-navbar-height;
+  padding: 0 3px;
+  .iroLogo {
+    height: $mobile-navbar-logo-height;
+    margin: (($mobile-navbar-height - $mobile-navbar-logo-height) / 2) 9px;
+    fill: $accent-color;
+  }
+}
+
+.navigation__body {
+  z-index: 1;
+  bottom: 0;
+  top: $mobile-navbar-height;
+  // padding: 1em 0;
+  transform: translateX(-100%);
+  transition: 0.2s ease;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .is-active & {
+    transform: translateX(0);
+  }
+}
+
+.navmenu {
+  // text-align: right;
+  padding: 0 24px;
+
+  .navmenu__category {
+
+  }
+
+  .category__title {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: normal;
+    text-transform: capitalize;
+    margin: 1rem 0 0.5rem 0;
+  }
+
+  .category__list {
+    line-height: 2rem;
+    font-size: 0.85rem;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    // margin-left: 0.5rem;
+  }
+
+  .list__item a {
+    color: #fff;
+  }
+
+}
+
+.navigation__toggle {
+  float: right;
+  height: $mobile-navbar-toggle-height;
+  padding: (($mobile-navbar-height - $mobile-navbar-toggle-height) / 2) 9px;
+  
+  .icon {
+    position: relative;
+    margin: ($mobile-navbar-toggle-height / 3) 0;
+  }
+  
+  .icon, .icon:before, .icon:after {
+    transition: background-color, transform 0.2s ease;
+    background-color: $accent-color;
+    display: block;
+    width: $mobile-navbar-toggle-height;
+    height: 4px; 
+  }
+
+  .icon:before, .icon:after { position: absolute; content: ""; }
+  .icon:before { top: -$mobile-navbar-toggle-height / 3; }
+  .icon:after { top: $mobile-navbar-toggle-height / 3; }
+
+  &.is-active .icon { background-color: transparent; }
+  &.is-active .icon:before { transform: translateY($mobile-navbar-toggle-height / 3) rotate(45deg); }
+  &.is-active .icon:after { transform: translateY(-$mobile-navbar-toggle-height / 3) rotate(-45deg); }
+}
+
+@include breakpoint(medium) {
+  .navigation__head, .navigation__body {
+    width: $sidebar-width;
+    right: initial;
+  }
+
+  .navigation__head {
+    padding: 0;
+    height: auto;
+    background-color: $accent-color;
+    .iroLogo {
+      fill: #fff;
+      display: block;
+      height: 32px;
+      margin: 32px 24px;
+    }
+  }
+
+  .navigation__body {
+    top: 32px + 64px;
+  }
+
+  .navigation__body, .is-active .navigation__body {
+    transform: none;
+  }
+
+  .navigation__toggle {
+    display: none;
+    visibility: hidden;
+  }
+
+}

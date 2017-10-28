@@ -1,0 +1,130 @@
+// I hate that I have to use a full relative path for this but hexo-sass-renderer doesn't seem to give me very flexible import path options
+@import "../../node_modules/foundation-sites/scss/foundation.scss";
+
+$breakpoints: (
+  small: 0,
+  medium: 960px,
+  large: 1024px,
+  xlarge: 1200px,
+  xxlarge: 1440px
+);
+
+$header-sizes: (
+  small: (
+    h1: 36,
+    h2: 30,
+    h3: 24,
+    h4: 18,
+    h5: 16,
+    h6: 16
+  ),
+  medium: (
+    h1: 44,
+    h2: 36,
+    h3: 28,
+    h4: 22,
+    h5: 18,
+    h6: 16
+  )
+);
+
+$black: #141414;
+$white: #ffffff;
+$dark-gray: #233a54;
+$medium-gray: #B6BBC2;
+$light-gray: #ecf0f1;
+$accent-color: #906bff;
+
+$global-font-size: 16px;
+
+$body-background: $light-gray;
+$body-font-color: $black;
+$header-color: inherit;
+$body-font-family: "Open Sans";
+$header-font-family: "Poppins";
+
+$anchor-color: $accent-color;
+
+$frame-width: 4px;
+$frame-padding: 12px;
+$frame-color: $accent-color;
+
+$sidebar-width: 300px;
+$mobile-navbar-height: 68px;
+$mobile-navbar-toggle-height: 24px;
+$mobile-navbar-logo-height: 28px;
+
+$button-main: #ffffff;
+$button-alt: #141414;
+
+$hero-bg: $dark-gray;
+$hero-main: $white;
+$hero-logo-stroke: $white;
+$hero-logo-fill: $accent-color;
+
+$codeSyntax: (
+  color: #252525,
+  background: darken($light-gray, 4),
+  comment: #4C5666,
+  punctuation: #252525,
+  property: darken($accent-color, 8),
+  boolean: #E6416F,
+  string: #519725,
+  variable: darken($accent-color, 8),
+  atrule: #4352ff,
+  keyword: darken($accent-color, 8),
+  regex: #eb6f1d
+);
+
+@include foundation-global-styles;
+@include foundation-typography-base;
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  @include clearfix();
+}
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  padding: .5rem 1rem;
+  cursor: pointer;
+  border: 2px solid $button-main;
+  color: $button-main;
+  border-radius: 3px;
+  background: transparent;
+  transition: background-color .15s ease-out
+}
+
+.button:hover {
+  // border-color: $button-alt;
+  color: $button-alt;
+  background-color: $button-main;
+}
+
+.content {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 12px;
+  margin-top: $mobile-navbar-height;
+}
+
+@include breakpoint(medium) {
+  .content {
+    margin: 0;
+    margin-left: $sidebar-width + 32;
+    padding: 32px;
+  }
+}
+
+@import "_partials/index.scss";
+@import "_partials/article.scss";
+@import "_partials/navigation.scss";
+@import "_partials/prism.scss";

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <script src="iro.js" charset="utf-8"></script>
   </head>
   <body>
     <div id="demoWheel"></div>
-    <script src="test/iro.js" charset="utf-8"></script>
     <script type="text/javascript">
       var demo = new iro.ColorPicker("#demoWheel", {
         width: 360,
@@ -15,14 +15,15 @@
         color: "#f00",
         borderWidth: 2,
         padding: 4,
+        anticlockwise: true,
         css: {
           body: {
-            "background-color": "rgb",
-            "color": "rgb"
+            "background-color": "$color",
+            "color": "$color"
           },
           ".test": {
-            "border-color": "rgb",
-            "color": "rgb"
+            "border-color": "$color",
+            "color": "$color"
           }
         }
       });

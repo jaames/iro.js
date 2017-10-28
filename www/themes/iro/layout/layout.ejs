@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="<%- url_for(theme.favicon_url) %>" />
+    <title><%- page.title ? page.title + " — " : "" %><%- config.title %></title>
+    <meta name="description" content="<%- config.description %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%- config.title %>">
+    <meta name="twitter:title" property="og:title" content="<%- page.title ? page.title + " — " : "" %><%- config.title %>">
+    <meta name="twitter:description" property="og:description" content="<%- config.description %>">
+    <meta name="twitter:image" property="og:image" content="<%- url_for(theme.og_image_url) %>">
+    <meta name="twitter:image:width" property="og:image:width" content="<%- theme.og_image_width %>">
+    <meta name="twitter:image:height" property="og:image:height" content="<%- theme.og_image_height %>">
+    <meta name="twitter:url" property="og:url" content="<%- url %>"> 
+    <%- css("css/main.css") %>
+    <%- js("js/iro.min.js") %>
+    <% if (theme.google_font_families) { %>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script>
+      WebFont.load({
+        google: {
+          families: <%- '["' + theme.google_font_families.join('", "') + '"]'%>
+        }
+      });
+    </script>
+    <% } %>
+  </head>
+  <body>
+    <%- body %>
+    <%- js("js/prism.js") %>
+    <script>
+      function $(selector) {return document.querySelector(selector)};
+      function $$(selector) {return Array.prototype.slice.call(document.querySelectorAll(selector))};
+      // Navmenu code
+      var nav = $(".navigation");
+      var navToggle = $(".navigation__toggle");
+      var isNavActive = false;
+      function openNav() {
+        nav.classList.add("is-active");
+        navToggle.classList.add("is-active");
+        isNavActive = true;
+      }
+      function closeNav() {
+        nav.classList.remove("is-active");
+        navToggle.classList.remove("is-active");
+        isNavActive = false;
+      }
+      function toggleNav() {
+        var fn = isNavActive ? closeNav : openNav;
+        fn();
+      }
+      if (nav && navToggle) {
+        // Navmenu toggle
+        navToggle.addEventListener("click", toggleNav, false);
+        // Navmenu links (close mobile menu on click)
+        nav.addEventListener("click", function(e) {
+          var target = e.target || e.srcElement;
+          if (target.hash) closeNav();
+        }, false);
+      }
+      // Fix codeblocks so they work with prism
+      $$("pre code").forEach(function(block) {
+        block.className = "language-" + block.className;
+      });
+    </script>
+    <!-- Looking for this site's source code? No problem! https://github.com/jaames/iro.js/tree/master/www -->
+  </body>
+</html>

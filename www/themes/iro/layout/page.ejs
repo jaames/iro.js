@@ -1,0 +1,45 @@
+<div class="page">
+  <div class="navigation">
+    <div class="navigation__head">
+      <a href="<%= config.root %>"><%- partial("./_partial/logo.ejs", {outline: false, height: 48}) %></a>
+      <div class="navigation__toggle">
+        <span class="icon"></span>
+      </div>
+    </div>
+    <div class="navigation__body">
+      <nav class="navmenu">
+        <% var menudata = site.data.navigation; for (var category in menudata) { %>
+          <div class="navmenu__category">
+            <% if(menudata[category].link) { %>
+              <a href="<%= menudata[category].link %>"><h3 class="category__title"><%= category %></h3></a>
+            <% } else { %>
+              <h3 class="category__title"><%= category %></h3>
+            <% } %>
+            <ul class="category__list">
+            <% for (var link in menudata[category].submenu) { %>
+              <li class="list__item">
+                <a href="<%- menudata[category].submenu[link] %>"><%= link %></a>
+              </li>
+            <% } %>
+            </ul>
+          </div>
+        <% } %>
+      </nav>
+    </div>
+  </div>
+  <div class="content">
+    <% if(!page.index) { %>
+    <article class="article">
+      <div class="article__head">
+        <h1 class="article__title"><%- page.title %></h1>
+      </div>
+      <div class="article__body">
+        <%- page.content %>
+      </div>
+      <div class="article__foot">
+        Found a mistake or want to contribute to this documentation? <a href="<%- page.github_url %>">Edit this page on Github!</a>
+      </div>
+    </article>
+    <% } %>
+  </div>
+</div>

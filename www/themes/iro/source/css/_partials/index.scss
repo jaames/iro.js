@@ -1,0 +1,107 @@
+.frame {
+  background-color: $frame-color;
+  display: block;
+  z-index: 100;
+  position: absolute;
+}
+
+.frame.frame--left, .frame.frame--right {
+  width: $frame-width;
+  top: $frame-padding;
+  bottom: $frame-padding;
+}
+
+.frame.frame--top, .frame.frame--bottom {
+  height: $frame-width;
+  left: $frame-padding;
+  right: $frame-padding;
+}
+
+.frame.frame--left {left: $frame-padding;}
+.frame.frame--right {right: $frame-padding;}
+.frame.frame--top {top: $frame-padding;}
+.frame.frame--bottom {bottom: $frame-padding;}
+
+.hero {
+  overflow: hidden;
+  min-height: 100vh;
+  max-width: 100vw;
+  background-color: $hero-bg;
+  color: $hero-main;
+  position: relative;
+
+  .hero__wrap {
+    padding: 3em 0;
+  }
+  
+  .half {
+    padding: 1em 0;
+  }
+  
+  .wheelDemo {
+    max-width: 290px;
+    margin: 0 auto;
+  }
+  
+  .iroLogo {
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 32px;
+    stroke-width: 3px;
+    stroke: $hero-logo-stroke;
+  }
+  
+  .subheading {
+    color: inherit;
+    font-weight: normal;
+    font-size: 1.17em;
+    margin: 0.5rem 0 1rem 0;
+    padding: 0 4em;
+    text-align: center;
+  }
+  
+  .buttonGroup {
+    margin: 0 -4px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  
+  .buttonGroup .button {
+    margin: 0 4px;
+  }
+
+}
+
+@include breakpoint(medium) {
+  .hero {
+    .hero__wrap {
+      padding: 8em 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .half {
+      padding: 0;
+      min-width: 50%;
+    }
+    
+    .iroLogo {
+      height: 130px;
+      margin: 0;
+      margin-top: 64px;
+    }
+
+    .subheading {
+      padding: 0;
+      text-align: left;
+    }
+
+    .buttonGroup {
+      text-align: left;
+    }
+  }
+}

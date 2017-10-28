@@ -1,8 +1,8 @@
 {
   "name": "iro.js",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "A sleek and lightweight JS color picker - with zero dependencies",
-  "main": "src/iro.js",
+  "main": "dist/iro.js",
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
@@ -20,10 +20,13 @@
     "webpack-dev-server": "2"
   },
   "scripts": {
-    "build": "webpack --env=dev --progress --colors && webpack --env=prod --progress --colors",
+    "build": "webpack --env=dev --progress --colors && webpack --env=prod --progress --colors && \\cp -r dist/ www/themes/iro/source/js",
     "dev": "webpack-dev-server --env=dev --hot --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-core/register --colors ./tests/*.spec.js"
   },
+  "files": [
+    "dist/iro.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jaames/iro.js.git"

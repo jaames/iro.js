@@ -1,95 +1,92 @@
-import gradient from "ui/gradient";
 import marker from "ui/marker";
 
+// css class prefix for this element
+var CLASS_PREFIX = "iro__wheel";
 // Quick references to reused math functions
 var PI = Math.PI,
-    pow = Math.pow,
     sqrt = Math.sqrt,
     abs = Math.abs,
     round = Math.round;
 
 /**
   * @constructor hue wheel UI
+  * @param {svgRoot} svg - svgRoot object
+  * @param {Object} opts - options
 */
-let wheel = function (layers, opts) {
-  this._ctx = layers.main.ctx;
+const wheel = function (svg, opts) {
   this._opts = opts;
   this.type = "wheel";
-  this.marker = new marker(layers.over.ctx, opts.marker);
+
+  var cY = opts.cY,
+      cX = opts.cX,
+      r = opts.r,
+      border = opts.border;
+
+  var gradient = svg.gradient("radial", {
+    0: {
+      color: "#fff"
+    },
+    100: {
+      color:"#fff", 
+      opacity: 0
+    },
+  });
+
+  var baseGroup = svg.g({
+    class: CLASS_PREFIX,
+  });
+
+  baseGroup.circle(cX, cY, r + border.w / 2, {
+    class: CLASS_PREFIX + "__border",
+    fill: "#fff",
+    stroke: border.color,
+    strokeWidth: border.w,
+  });
+
+  var ringGroup = baseGroup.g({
+    class: CLASS_PREFIX + "__hue",
+    strokeWidth: r,
+    fill: "none",
+  });
+
+  for (var hue = 0; hue < 360; hue++) {
+    ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
+      stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)",
+    });
+  }
+
+  baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__saturation",
+    fill: gradient.url,
+  });
+
+  this._lightness = baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__lightness"
+  });
+
+  this.marker = new marker(baseGroup, opts.marker);
 };
 
 wheel.prototype = {
-
-  /**
-    * @desc redraw this UI element
-    * @param {Number} value - The hsv value component to use when drawing
-  */
-  draw: function (value) {
-    var ctx = this._ctx;
-    var opts = this._opts;
-    var x = opts.cX,
-        y = opts.cY,
-        border = opts.border,
-        borderWidth = border.w,
-        radius = opts.r;
-
-    // Clear the area where the wheel will be drawn
-    ctx.clearRect((x - radius) - borderWidth, (y - radius) - borderWidth, (radius + borderWidth) * 2, (radius + borderWidth) * 2);
-
-    // Draw border
-    if (borderWidth) {
-      ctx.lineWidth = radius + (borderWidth * 2);
-      ctx.strokeStyle = border.color;
-      ctx.beginPath();
-      ctx.arc(x, y, radius / 2, 0, 2 * PI);
-      ctx.stroke();
-    }
-
-    ctx.lineWidth = radius;
-
-    // The hue wheel is basically drawn with a series of thin "pie slices" - one slice for each hue degree
-    // Here we calculate the angle for each slice, in radians
-    var sliceAngle = (2 * PI) / 360;
-
-    // Create a loop to draw each slice
-    for (var hue = 0, sliceStart = 0; hue < 360; hue++, sliceStart += sliceAngle) {
-      // Create a HSL color for the slice using the current hue value
-      ctx.strokeStyle = "hsl(" + hue + ",100%," + (value / 2) + "%)";
-      ctx.beginPath();
-      // For whatever reason (maybe a rounding issue?) the slices had a slight gap between them, which caused rendering artifacts
-      // So we make them overlap ever so slightly by adding a tiny value to the slice angle
-      ctx.arc(x, y, radius / 2, sliceStart, sliceStart + sliceAngle + 0.04);
-      ctx.stroke();
-    }
-
-    // Create a radial gradient for "saturation"
-    var hslString = "hsla(0,0%," + value + "%,";
-    ctx.fillStyle = gradient.radial(ctx, x, y, 0, opts.rMax, {
-      // The center of the color wheel should be pure white (0% saturation)
-      0: hslString + "1)",
-      // It gradially tapers to transparent white (or, visually, 100% saturation color already drawn) at the edge of the wheel
-      1: hslString + "0)",
-    });
-    // Draw a rect using the gradient as a fill style
-    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-  },
+  constructor: wheel,
 
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
     * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
   */
-  update: function (color, changes) {
+  update: function(color, changes) {
     var opts = this._opts;
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
     if (changes.v) {
-      this.draw(hsv.v);
+      this._lightness.setAttrs({opacity: (1 - hsv.v / 100).toFixed(2) });
+      // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
       // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = hsv.h * (PI/180);
+      var hueAngle = (opts.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
@@ -103,20 +100,21 @@ wheel.prototype = {
     * @param {Number} y - point y coordinate
     * @return {Object} - new HSV color values (some channels may be missing)
   */
-  input: function (x, y) {
+  input: function(x, y) {
     var opts = this._opts,
-        cX = opts.cX,
-        cY = opts.cY,
-        radius = opts.r,
-        rangeMax = opts.rMax;
+        rangeMax = opts.rMax,
+        _x = opts.cX - x,
+        _y = opts.cY - y;
 
-    // Angle in radians, anticlockwise starting at 12 o'clock
-    var angle = Math.atan2(x - cX, y - cY),
-        // Calculate the hue by converting the angle to radians, and normalising the angle to 3 o'clock
-        hue = 360 - (round(angle * (180 / PI)) + 270) % 360,
+    var angle = Math.atan2(_y, _x),
+        // Calculate the hue by converting the angle to radians
+        hue = round(angle * (180 / PI)) + 180,
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
-        dist = Math.min(sqrt(pow(cX - x, 2) + pow(cY - y, 2)), rangeMax);
+        dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
+
+    
+    hue = (opts.anticlockwise ? 360 - hue : hue);
 
     // Return just the H and S channels, the wheel element doesn't do anything with the L channel
     return {
@@ -131,7 +129,7 @@ wheel.prototype = {
     * @param {Number} y - point y coordinate
     * @return {Boolean} - true if the point is a "hit", else false
   */
-  checkHit: function (x, y) {
+  checkHit: function(x, y) {
     var opts = this._opts;
 
     // Check if the point is within the hue ring by comparing the point's distance from the centre to the ring's radius
