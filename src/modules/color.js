@@ -226,6 +226,18 @@ function clamp(value, min, max) {
 };
 
 /**
+  * @desc compare values between two objects, returns a object representing changes with true/false values
+  * @param {Object} a
+  * @param {Object} b
+  * @return {Object}
+*/
+function compareObjs(a, b) {
+  var changes = {};
+  for (var key in a) changes[key] = b[key] != a[key];
+  return changes;
+};
+
+/**
   * @desc mix two colors
   * @param {Object | String | color} color1 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
   * @param {Object | String | color} color2 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
@@ -326,6 +338,37 @@ color.prototype = {
       }
     }
   },
+
+  /**
+    * @desc shortcut to set a specific channel value
+    * @param {String} model - hsv | hsl | rgb
+    * @param {String} channel - individual channel to set, for example if model = hsl, chanel = h | s | l
+    * @param {Number} value - new value for the channel
+  */
+  setChannel: function (model, channel, value) {
+    var v = this[model];
+    v[channel] = value;
+    this[model] = v;
+  },
+
+  /**
+    * @desc make new color instance with the same value as this one
+    * @return {color}
+  */
+  clone: function () {
+    return new color(this);
+  },
+
+  /**
+    * @desc compare this color against another, returns a object representing changes with true/false values
+    * @param {Object | String | color} color - color to compare against
+    * @param {String} model - hsv | hsl | rgb
+    * @return {Object}
+  */
+  compare: function (color, model) {
+    model = model || "hsv";
+    return compareObjs(this[model], getColor(color)[model]);
+  },
   
   /**
     * @desc mix a color into this one
@@ -364,13 +407,11 @@ Object.defineProperties(color.prototype, {
       // If this color is being watched for changes we need to compare the new and old values to check the difference
       // Otherwise we can just be lazy
       if (this._onChange) {
-        var changes = {};
         var oldValue = this._value;
-        // Loop through the channels and check if any of them have changed
         for (var channel in oldValue) {
           if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
-          changes[channel] = newValue[channel] != oldValue[channel];
         }
+        var changes = compareObjs(oldValue, newValue);
         // Update the old value
         this._value = newValue;
         // If the value has changed, call hook callback
