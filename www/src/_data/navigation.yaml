@@ -9,8 +9,8 @@ Guide:
   submenu: 
     Getting Started: guide.html#Getting-Started
     Color Picker Options: guide.html#Color-Picker-Options
-    Events: guide.html#Events
     Using the Selected Color: guide.html#Using-the-Selected-Color
+    Events: guide.html#Events
     Dynamic CSS: guide.html#Dynamic-CSS
 API:
   link: false

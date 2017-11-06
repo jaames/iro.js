@@ -36,6 +36,33 @@ Any param with type `{Color}` listed below can be any one of these formats, or a
 
 **Details:** Set the color from any [supported color format](#Supported-Color-Formats).
 
+##### setChannel
+
+**Arguments:**
+
+* `{String} model`
+* `{String} channel`
+* `{Number} value`
+
+**Details:** Set a specific color channel to a new value. `model` can be either `hsv`, `hsl` or `rgb`, and `channel` should be a single letter representing which channel from the model you wish to set.
+
+##### compare
+
+**Arguments:**
+
+* `{Color} color`
+* `{String} model`
+
+**Returns:** `{Object}`
+
+**Details:** Compare differences between this color and another, returning an object that represents which channels have changed between the two. `model` can be used to specify either `hsv`, `hsl` or `rgb` (default is `hsv`). 
+
+##### clone
+
+**Returns:** `{Color}`
+
+**Details:** Copy this color object, returning a new color object with the same value.
+
 ##### mix
 
 **Arguments:**
