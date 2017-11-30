@@ -850,6 +850,8 @@ colorPicker.prototype = {
     * @access protected
   */
   _init: function _init(el, opts) {
+    var _this3 = this;
+
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = "string" == typeof el ? document.querySelector(el) : el;
     // Find the width and height for the UI
@@ -901,6 +903,12 @@ colorPicker.prototype = {
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color._onChange = this._update.bind(this);
     this.color.set(opts.color || opts.defaultValue || "#fff");
+    // Hacky workaround for a couple of Safari SVG url bugs
+    // See https://github.com/jaames/iro.js/issues/18
+    // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
+    this.on("history:stateChange", function (base) {
+      _this3.svg.updateUrls(base);
+    });
     // Listen to events
     listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   },
@@ -1101,22 +1109,14 @@ var slider = function slider(svg, opts) {
   this.type = "slider";
   this._opts = opts;
 
-  var gradient = svg.gradient("linear", {
-    0: { color: "#000" },
-    100: { color: "#fff" }
-  });
-
-  this._gradient = gradient;
-
   var radius = r + borderWidth / 2;
 
   var baseGroup = svg.g({
     class: CLASS_PREFIX
   });
 
-  baseGroup.insert("rect", {
+  var rect = baseGroup.insert("rect", {
     class: CLASS_PREFIX + "__value",
-    fill: gradient.getUrl(),
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
@@ -1126,6 +1126,13 @@ var slider = function slider(svg, opts) {
     strokeWidth: borderWidth,
     stroke: opts.border.color
   });
+
+  rect.setGradient("fill", svg.gradient("linear", {
+    0: { color: "#000" },
+    100: { color: "#fff" }
+  }));
+
+  this._gradient = rect.gradient;
 
   this.marker = new _marker2.default(baseGroup, opts.marker);
 };
@@ -1321,6 +1328,14 @@ svgElement.prototype = {
       var name = attr in SVG_ATTRIBUTE_SHORTHANDS ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
       this.el.setAttribute(name, attrs[attr]);
     }
+  },
+
+  setGradient: function setGradient(attr, gradient) {
+    var attrs = {};
+    attrs[attr] = gradient.getUrl();
+    gradient._refs[attr] = this;
+    this.gradient = gradient;
+    this.setAttrs(attrs);
   }
 };
 
@@ -1345,10 +1360,11 @@ var svgGradient = function svgGradient(root, type, stops) {
   }
   this.el = gradient.el;
   this.stops = stopElements;
+  this._refs = {};
 };
 
-svgGradient.prototype.getUrl = function () {
-  return "url(" + window.location.href + "#" + this.el.id + ")";
+svgGradient.prototype.getUrl = function (base) {
+  return "url(" + (base || window.location.href) + "#" + this.el.id + ")";
 };
 
 /**
@@ -1360,12 +1376,25 @@ svgGradient.prototype.getUrl = function () {
 var svgRoot = function svgRoot(parent, width, height) {
   svgElement.call(this, this, parent, "svg", { width: width, height: height, style: "display:block" });
   this._defs = this.insert("defs");
+  this._gradients = [];
 };
 
 svgRoot.prototype = Object.create(svgElement.prototype);
 svgRoot.prototype.constructor = svgRoot;
 svgRoot.prototype.gradient = function (type, stops) {
-  return new svgGradient(this, type, stops);
+  var gradient = new svgGradient(this, type, stops);
+  this._gradients.push(gradient);
+  return gradient;
+};
+svgRoot.prototype.updateUrls = function (base) {
+  var gradients = this._gradients;
+  for (var i = 0; i < gradients.length; i++) {
+    for (var key in gradients[i]._refs) {
+      var attrs = {};
+      attrs[key] = gradients[i].getUrl(base);
+      gradients[i]._refs[key].setAttrs(attrs);
+    }
+  }
 };
 
 module.exports = svgRoot;
@@ -1405,16 +1434,6 @@ var wheel = function wheel(svg, opts) {
       r = opts.r,
       border = opts.border;
 
-  var gradient = svg.gradient("radial", {
-    0: {
-      color: "#fff"
-    },
-    100: {
-      color: "#fff",
-      opacity: 0
-    }
-  });
-
   var baseGroup = svg.g({
     class: CLASS_PREFIX
   });
@@ -1438,10 +1457,19 @@ var wheel = function wheel(svg, opts) {
     });
   }
 
-  baseGroup.circle(cX, cY, r, {
-    class: CLASS_PREFIX + "__saturation",
-    fill: gradient.getUrl()
+  var saturation = baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__saturation"
   });
+
+  saturation.setGradient("fill", svg.gradient("radial", {
+    0: {
+      color: "#fff"
+    },
+    100: {
+      color: "#fff",
+      opacity: 0
+    }
+  }));
 
   this._lightness = baseGroup.circle(cX, cY, r, {
     class: CLASS_PREFIX + "__lightness"
