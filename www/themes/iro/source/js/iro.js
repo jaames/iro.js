@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.1.0
+ * iro.js v3.1.1
  * 2016-2017 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
@@ -1053,7 +1053,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.1.0"
+  version: "3.1.1"
 };
 
 /***/ }),
@@ -1116,13 +1116,13 @@ var slider = function slider(svg, opts) {
 
   baseGroup.insert("rect", {
     class: CLASS_PREFIX + "__value",
+    fill: gradient.getUrl(),
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
     y: y - borderWidth / 2,
     width: w + borderWidth,
     height: h + borderWidth,
-    fill: gradient.url,
     strokeWidth: borderWidth,
     stroke: opts.border.color
   });
@@ -1344,8 +1344,11 @@ var svgGradient = function svgGradient(root, type, stops) {
     }));
   }
   this.el = gradient.el;
-  this.url = "url(#" + gradient.el.id + ")";
   this.stops = stopElements;
+};
+
+svgGradient.prototype.getUrl = function () {
+  return "url(" + window.location.href + "#" + this.el.id + ")";
 };
 
 /**
@@ -1437,7 +1440,7 @@ var wheel = function wheel(svg, opts) {
 
   baseGroup.circle(cX, cY, r, {
     class: CLASS_PREFIX + "__saturation",
-    fill: gradient.url
+    fill: gradient.getUrl()
   });
 
   this._lightness = baseGroup.circle(cX, cY, r, {

@@ -44,13 +44,13 @@ const slider = function (svg, opts) {
 
   baseGroup.insert("rect", {
     class: CLASS_PREFIX + "__value",
+    fill: gradient.getUrl(),
     rx: radius,
     ry: radius,
     x: x - borderWidth / 2,
     y: y - borderWidth / 2,
     width: w + borderWidth,
     height: h + borderWidth,
-    fill: gradient.url,
     strokeWidth: borderWidth,
     stroke: opts.border.color,
   });

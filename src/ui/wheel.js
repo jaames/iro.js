@@ -57,7 +57,7 @@ const wheel = function (svg, opts) {
 
   baseGroup.circle(cX, cY, r, {
     class: CLASS_PREFIX + "__saturation",
-    fill: gradient.url,
+    fill: gradient.getUrl(),
   });
 
   this._lightness = baseGroup.circle(cX, cY, r, {

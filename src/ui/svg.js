@@ -151,8 +151,11 @@ const svgGradient = function(root, type, stops) {
     }));
   }
   this.el = gradient.el;
-  this.url = "url(#" + gradient.el.id + ")";
   this.stops = stopElements;
+};
+
+svgGradient.prototype.getUrl = function() {
+  return "url(" + window.location.href + "#" + this.el.id + ")";
 };
 
 /**
