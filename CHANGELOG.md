@@ -1,5 +1,19 @@
 ### Changelog
 
+#### 3.1.1
+
+This version works around two bugs in Safari's handling of SVG gradient URLs. The first issue is caused by the library being used in combination with the HTML `<base>` element, and the second is a similar issue that may arise when using a client-side routing library that uses the HTML5 history API to navigate between views. More details can be found in [this issue thread](https://github.com/jaames/iro.js/issues/18).
+
+##### Additions
+
+- If you are using iro.js in a web application that uses client-side routing, `iro.ColorPicker` instances now have a `history:stateChange` event that should be emitted whenever the user navigates to another view. Doing so force-updates the SVG gradient URLs, working around a bug present in Safari. To emit the event, call `emit("history:stateChange")` on your `iro.ColorPicker` instance.
+
+#### 3.1.0
+
+##### Additions
+
+ - `iro.Color` instances have new `clone`, `compare` and `setChannel` methods.
+
 #### 3.0.0
 
 Another major release, there are some breaking changes this time around, particularly for those still using remnants of the older v1 API like `watch` and `unwatch`. While I understand that this may be frustrating (and bad practice...) I felt that it was important to remove/change a number of things to make iro.js more pleasant to use. I'm pretty happy with the current API as it stands, so I think it can be considered "locked" from here on. \ o /

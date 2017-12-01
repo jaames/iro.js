@@ -7,17 +7,17 @@ github_url: https://github.com/jaames/iro.js/blob/master/www/src/introduction.md
  * Customizable SVG-based UI
  * Convert colors between RGB, HSV, HSL and hex RGB
  * Dynamicly update CSS styles when the selected color changes
- * Lightweight, at just over 12KB minified (or ~5KB minified + gzipped)
+ * Lightweight, at around 13KB minified (or ~5KB minified + gzipped)
  * Zero dependencies (not even jQuery or extra stylesheets/images)
  * Supports IE9+
 
 ### Download
 
 [Development Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js) 
-Uncompressed with comments at around 45kb
+Uncompressed with comments at around 50kb
 
 [Production Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js) 
-Minified to just above 12kb
+Minified to just above 13kb
 
 ### Installation
 

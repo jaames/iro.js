@@ -9,7 +9,7 @@
  * Customizable SVG-based UI
  * Convert colors between RGB, HSV, HSL and hex RGB
  * Dynamicly update CSS styles when the selected color changes
- * Lightweight, at just over 12KB minified (or ~5KB minified + gzipped)
+ * Lightweight, at around 13KB minified (or ~5KB minified + gzipped)
  * Zero dependencies (not even jQuery or extra stylesheets/images)
 
 ### Browser Support
