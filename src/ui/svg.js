@@ -17,9 +17,10 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
-// sniff useragent string to check if the user is running IE or Edge
-var IS_IE = /msie|trident|edge/.test(window.navigator.userAgent.toLowerCase());
-
+// sniff useragent string to check if the user is running IE, Edge or Safari
+var ua = window.navigator.userAgent.toLowerCase();
+var IS_IE = /msie|trident|edge/.test(ua);
+var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(ua);
 /**
   * @constructor svg element wrapper
   * @param {svgRoot} root - svgRoot object
@@ -164,7 +165,8 @@ const svgGradient = function(root, type, stops) {
 };
 
 svgGradient.prototype.getUrl = function(base) {
-  return "url(" + (base || window.location.href) + "#" + this.el.id + ")";
+  var root = IS_SAFARI ? (base || window.location.href) : "";
+  return "url(" + root + "#" + this.el.id + ")";
 };
 
 /**
@@ -187,12 +189,14 @@ svgRoot.prototype.gradient = function(type, stops) {
   return gradient;
 };
 svgRoot.prototype.updateUrls = function(base) {
-  var gradients = this._gradients;
-  for (var i = 0; i < gradients.length; i++) {
-    for (var key in gradients[i]._refs) {
-      var attrs = {};
-      attrs[key] = gradients[i].getUrl(base);
-      gradients[i]._refs[key].setAttrs(attrs);
+  if (IS_SAFARI) {
+    var gradients = this._gradients;
+    for (var i = 0; i < gradients.length; i++) {
+      for (var key in gradients[i]._refs) {
+        var attrs = {};
+        attrs[key] = gradients[i].getUrl(base);
+        gradients[i]._refs[key].setAttrs(attrs);
+      }
     }
   }
 };
