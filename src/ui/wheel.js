@@ -60,7 +60,8 @@ const wheel = function (svg, opts) {
   }));
 
   this._lightness = baseGroup.circle(cX, cY, r, {
-    class: CLASS_PREFIX + "__lightness"
+    class: CLASS_PREFIX + "__lightness",
+    opacity: 0
   });
 
   this.marker = new marker(baseGroup, opts.marker);
@@ -78,9 +79,8 @@ wheel.prototype = {
     var opts = this._opts;
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
-    if (changes.v) {
+    if (changes.v && opts.lightness) {
       this._lightness.setAttrs({opacity: (1 - hsv.v / 100).toFixed(2) });
-      // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {
@@ -111,7 +111,6 @@ wheel.prototype = {
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
         dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
-
     
     hue = (opts.anticlockwise ? 360 - hue : hue);
 
