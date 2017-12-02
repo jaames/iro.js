@@ -17,6 +17,7 @@ github_url: https://github.com/jaames/iro.js/blob/master/www/src/colorPicker_api
   * `{Number} padding`
   * `{Number} sliderMargin`
   * `{Number} sliderHeight`
+  * `{Boolean} wheelLightness`
   * `{Number} markerRadius`
   * `{Number} borderWidth`
   * `{String} borderColor`

@@ -116,6 +116,7 @@ colorPicker.prototype = {
         rMax: wheelRadius - (markerRadius + padding),
         marker: marker,
         border: borderStyles,
+        lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
         anticlockwise: opts.anticlockwise
       }),
       new slider(this.svg, {

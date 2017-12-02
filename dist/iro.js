@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.1.1
+ * iro.js v3.2.0
  * 2016-2017 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
@@ -885,6 +885,7 @@ colorPicker.prototype = {
       rMax: wheelRadius - (markerRadius + padding),
       marker: marker,
       border: borderStyles,
+      lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
       anticlockwise: opts.anticlockwise
     }), new _slider2.default(this.svg, {
       sliderType: "v",
@@ -1061,7 +1062,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.1.1"
+  version: "3.2.0"
 };
 
 /***/ }),
@@ -1476,7 +1477,8 @@ var wheel = function wheel(svg, opts) {
   }));
 
   this._lightness = baseGroup.circle(cX, cY, r, {
-    class: CLASS_PREFIX + "__lightness"
+    class: CLASS_PREFIX + "__lightness",
+    opacity: 0
   });
 
   this.marker = new _marker2.default(baseGroup, opts.marker);
@@ -1494,9 +1496,8 @@ wheel.prototype = {
     var opts = this._opts;
     var hsv = color.hsv;
     // If the V channel has changed, redraw the wheel UI with the new value
-    if (changes.v) {
+    if (changes.v && opts.lightness) {
       this._lightness.setAttrs({ opacity: (1 - hsv.v / 100).toFixed(2) });
-      // this.draw(hsv.v);
     }
     // If the H or S channel has changed, move the marker to the right position
     if (changes.h || changes.s) {

@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.2.0
+
+##### Additions
+
+ - `iro.ColorPicker` instances now have a `wheelLightness` option, as requested in issue threads [#9](https://github.com/jaames/iro.js/issues/9) and [#19](https://github.com/jaames/iro.js/issues/19).
+
 #### 3.1.1
 
 This version works around two bugs in Safari's handling of SVG gradient URLs. The first issue is caused by the library being used in combination with the HTML `<base>` element, and the second is a similar issue that may arise when using a client-side routing library that uses the HTML5 history API to navigate between views. More details can be found in [this issue thread](https://github.com/jaames/iro.js/issues/18).
