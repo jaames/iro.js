@@ -17,9 +17,10 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
-// sniff useragent string to check if the user is running IE or Edge
-var IS_IE = /msie|trident|edge/.test(window.navigator.userAgent.toLowerCase());
-
+// sniff useragent string to check if the user is running IE, Edge or Safari
+var ua = window.navigator.userAgent.toLowerCase();
+var IS_IE = /msie|trident|edge/.test(ua);
+var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(ua);
 /**
   * @constructor svg element wrapper
   * @param {svgRoot} root - svgRoot object
@@ -123,11 +124,19 @@ svgElement.prototype = {
     * @desc set attributes on this element
     * @param {Object} attrs - element attributes
   */
-  setAttrs (attrs) {
+  setAttrs: function (attrs) {
     for (var attr in attrs) {
       var name = (attr in SVG_ATTRIBUTE_SHORTHANDS) ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
       this.el.setAttribute(name, attrs[attr]);
     }
+  },
+
+  setGradient: function(attr, gradient) {
+    var attrs = {};
+    attrs[attr] = gradient.getUrl();
+    gradient._refs[attr] = this;
+    this.gradient = gradient;
+    this.setAttrs(attrs);
   }
 };
 
@@ -151,8 +160,13 @@ const svgGradient = function(root, type, stops) {
     }));
   }
   this.el = gradient.el;
-  this.url = "url(#" + gradient.el.id + ")";
   this.stops = stopElements;
+  this._refs = {};
+};
+
+svgGradient.prototype.getUrl = function(base) {
+  var root = IS_SAFARI ? (base || window.location.href) : "";
+  return "url(" + root + "#" + this.el.id + ")";
 };
 
 /**
@@ -164,12 +178,27 @@ const svgGradient = function(root, type, stops) {
 const svgRoot = function(parent, width, height) {
   svgElement.call(this, this, parent, "svg", {width, height, style: "display:block"});
   this._defs = this.insert("defs");
+  this._gradients = [];
 };
 
 svgRoot.prototype = Object.create(svgElement.prototype);
 svgRoot.prototype.constructor = svgRoot;
 svgRoot.prototype.gradient = function(type, stops) {
-  return new svgGradient(this, type, stops);
+  var gradient = new svgGradient(this, type, stops);
+  this._gradients.push(gradient);
+  return gradient;
+};
+svgRoot.prototype.updateUrls = function(base) {
+  if (IS_SAFARI) {
+    var gradients = this._gradients;
+    for (var i = 0; i < gradients.length; i++) {
+      for (var key in gradients[i]._refs) {
+        var attrs = {};
+        attrs[key] = gradients[i].getUrl(base);
+        gradients[i]._refs[key].setAttrs(attrs);
+      }
+    }
+  }
 };
 
 module.exports = svgRoot;

@@ -29,20 +29,13 @@ const slider = function (svg, opts) {
   this.type = "slider";
   this._opts = opts;
 
-  var gradient = svg.gradient("linear", {
-    0: {color: "#000"},
-    100: {color: "#fff"}
-  });
-
-  this._gradient = gradient;
-
   var radius = r + borderWidth / 2;
 
   var baseGroup = svg.g({
     class: CLASS_PREFIX,
   });
 
-  baseGroup.insert("rect", {
+  var rect = baseGroup.insert("rect", {
     class: CLASS_PREFIX + "__value",
     rx: radius,
     ry: radius,
@@ -50,10 +43,16 @@ const slider = function (svg, opts) {
     y: y - borderWidth / 2,
     width: w + borderWidth,
     height: h + borderWidth,
-    fill: gradient.url,
     strokeWidth: borderWidth,
     stroke: opts.border.color,
   });
+
+  rect.setGradient("fill", svg.gradient("linear", {
+    0: {color: "#000"},
+    100: {color: "#fff"}
+  }));
+
+  this._gradient = rect.gradient;
 
   this.marker = new marker(baseGroup, opts.marker);
 };

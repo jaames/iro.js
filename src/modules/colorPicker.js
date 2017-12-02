@@ -136,6 +136,10 @@ colorPicker.prototype = {
     // Whenever the selected color changes, trigger a colorWheel update too
     this.color._onChange = this._update.bind(this);
     this.color.set(opts.color || opts.defaultValue || "#fff")
+    // Hacky workaround for a couple of Safari SVG url bugs
+    // See https://github.com/jaames/iro.js/issues/18
+    // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
+    this.on("history:stateChange", (base) => {this.svg.updateUrls(base)});
     // Listen to events
     listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   },

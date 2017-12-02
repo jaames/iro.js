@@ -22,16 +22,6 @@ const wheel = function (svg, opts) {
       r = opts.r,
       border = opts.border;
 
-  var gradient = svg.gradient("radial", {
-    0: {
-      color: "#fff"
-    },
-    100: {
-      color:"#fff", 
-      opacity: 0
-    },
-  });
-
   var baseGroup = svg.g({
     class: CLASS_PREFIX,
   });
@@ -55,10 +45,19 @@ const wheel = function (svg, opts) {
     });
   }
 
-  baseGroup.circle(cX, cY, r, {
-    class: CLASS_PREFIX + "__saturation",
-    fill: gradient.url,
+  var saturation = baseGroup.circle(cX, cY, r, {
+    class: CLASS_PREFIX + "__saturation"
   });
+
+  saturation.setGradient("fill", svg.gradient("radial", {
+    0: {
+      color: "#fff"
+    },
+    100: {
+      color:"#fff", 
+      opacity: 0
+    },
+  }));
 
   this._lightness = baseGroup.circle(cX, cY, r, {
     class: CLASS_PREFIX + "__lightness"
