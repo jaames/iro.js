@@ -61,7 +61,8 @@ var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
 | `sliderMargin`  | Distance between the hue/saturation wheel and the slider controls. | `24` |
 | `sliderHeight`  | Slider control height (by default this will be calculated automatically). | `undefined` |
 | `borderWidth`   | Width of the border around the controls. Defaults to 0 (no border). | `0` |
-| `borderColor`   | Color of the border, any valid CSS color is supported. | `#fff` |
+| `borderColor`   | Color of the border, any valid CSS color is supported. | `"#fff"` |
+| `display`       | SVG element's CSS display property value. | `"block"` |
 | `anticlockwise` | If set to `true`, the color wheel will be drawn in the other direction, with blues and purples towards the lower half of the wheel. | `false` |
 | `wheelLightness`| If set to `false`, the color wheel will not fade to black as the color's lightness decreases. This is not recommended, for reasons noted in [this issue thread](https://github.com/jaames/iro.js/issues/9#issuecomment-336628451) | `undefined` |
 | `css`           | The CSS template used for the [Dynamic CSS](#Dynamic-CSS) feature. | `{}` |

@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.2.0
+ * iro.js v3.2.1
  * 2016-2017 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
@@ -877,7 +877,7 @@ colorPicker.prototype = {
 
     // Create UI elements
     this.el = el;
-    this.svg = new _svg2.default(el, width, height);
+    this.svg = new _svg2.default(el, width, height, opts.display);
     this.ui = [new _wheel2.default(this.svg, {
       cX: leftMargin + bodyWidth / 2,
       cY: bodyWidth / 2,
@@ -1062,7 +1062,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.2.0"
+  version: "3.2.1"
 };
 
 /***/ }),
@@ -1376,8 +1376,12 @@ svgGradient.prototype.getUrl = function (base) {
   * @param {Number} width - svg width
   * @param {Number} height - svg height
 */
-var svgRoot = function svgRoot(parent, width, height) {
-  svgElement.call(this, this, parent, "svg", { width: width, height: height, style: "display:block" });
+var svgRoot = function svgRoot(parent, width, height, display) {
+  svgElement.call(this, this, parent, "svg", {
+    width: width,
+    height: height,
+    style: "display:" + (display || "block")
+  });
   this._defs = this.insert("defs");
   this._gradients = [];
 };

@@ -107,7 +107,7 @@ colorPicker.prototype = {
 
     // Create UI elements
     this.el = el;
-    this.svg = new svg(el, width, height);
+    this.svg = new svg(el, width, height, opts.display);
     this.ui = [
       new wheel(this.svg, {
         cX: leftMargin + bodyWidth / 2,

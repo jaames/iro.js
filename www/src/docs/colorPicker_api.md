@@ -21,6 +21,7 @@ github_url: https://github.com/jaames/iro.js/blob/master/www/src/colorPicker_api
   * `{Number} markerRadius`
   * `{Number} borderWidth`
   * `{String} borderColor`
+  * `{String} display`
   * `{Boolean} anticlockwise`
   * `{Object} css`
 

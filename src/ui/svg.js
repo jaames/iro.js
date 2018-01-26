@@ -175,8 +175,12 @@ svgGradient.prototype.getUrl = function(base) {
   * @param {Number} width - svg width
   * @param {Number} height - svg height
 */
-const svgRoot = function(parent, width, height) {
-  svgElement.call(this, this, parent, "svg", {width, height, style: "display:block"});
+const svgRoot = function(parent, width, height, display) {
+  svgElement.call(this, this, parent, "svg", {
+    width, 
+    height, 
+    style: "display:" + (display || "block")
+  });
   this._defs = this.insert("defs");
   this._gradients = [];
 };
