@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.2.1
+
+##### Additions
+
+ - `iro.ColorPicker` instances now have a `display` option, as requested in issue thread [#32](https://github.com/jaames/iro.js/issues/23).
+
 #### 3.2.0
 
 ##### Additions
