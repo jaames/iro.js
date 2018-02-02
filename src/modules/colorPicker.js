@@ -192,7 +192,7 @@ colorPicker.prototype = {
   */
   off: function(eventType, callback) {
     var eventList = this._events[eventType];
-    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
+    if (eventList) eventList.splice(eventList.indexOf(callback), 1);
   },
 
   /**
