@@ -65,7 +65,7 @@ module.exports = function (env) {
       new webpack.BannerPlugin({
         banner: [
           "iro.js v" + version,
-          "2016-2017 James Daniel",
+          "2016-2018 James Daniel",
           "Released under the MIT license",
           "github.com/jaames/iro.js"
         ].join("\n")

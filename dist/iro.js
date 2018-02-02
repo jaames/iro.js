@@ -1,6 +1,6 @@
 /*!
- * iro.js v3.2.1
- * 2016-2017 James Daniel
+ * iro.js v3.2.2
+ * 2016-2018 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
  */
@@ -961,7 +961,7 @@ colorPicker.prototype = {
   */
   off: function off(eventType, callback) {
     var eventList = this._events[eventType];
-    if (eventList) evenList.splice(eventList.indexOf(callback), 1);
+    if (eventList) eventList.splice(eventList.indexOf(callback), 1);
   },
 
   /**
@@ -1062,7 +1062,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.2.1"
+  version: "3.2.2"
 };
 
 /***/ }),

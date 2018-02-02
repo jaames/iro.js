@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.2.2
+
+##### Fixes
+
+ - Fix typo in `iro.ColorPicker`'s `off` method. Thanks to @mdmower for their [pull request](https://github.com/jaames/iro.js/pull/25).
+
 #### 3.2.1
 
 ##### Additions
