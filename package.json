@@ -1,6 +1,6 @@
 {
-  "name": "iro.js",
-  "version": "3.2.2",
+  "name": "@jaames/iro",
+  "version": "3.3.0",
   "description": "A sleek and lightweight JS color picker - with zero dependencies",
   "main": "dist/iro.js",
   "devDependencies": {
@@ -26,6 +26,18 @@
   },
   "files": [
     "dist/iro.js"
+  ],
+  "keywords": [
+    "color",
+    "colour",
+    "picker",
+    "wheel",
+    "stylesheet",
+    "svg",
+    "ui",
+    "rgb",
+    "hsl",
+    "hsv"
   ],
   "repository": {
     "type": "git",
