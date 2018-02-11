@@ -35,20 +35,20 @@ Before starting you'll want to [download](#Download) iro.js and add it to your p
 
 ----
 
-Alternatively, you can grab the latest version of iro.js from GitHub via NPM:
+Alternatively, you can grab the latest version of iro.js from NPM
 
 ```bash
-$ npm install git+https://git@github.com/jaames/iro.js.git --save
+$ npm install @jaames/iro
 ```
 
 Then using a module bundler like Rollup or Webpack, use as you would anything else:
 
 ```js
-// Using ES6 modules
-import iro from "iro.js";
+// Using ES6 module syntax
+import iro from "@jaames/iro";
 
-// Using CommonJS modules
-var iro = require("iro.js");
+// Using CommonJS
+var iro = require("@jaames/iro");
 ```
 
 ### What's Next?

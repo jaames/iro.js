@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 3.3.0
+
+iro is now available as an [npm module](https://www.npmjs.com/package/@jaames/iro).
+
 #### 3.2.2
 
 ##### Fixes
