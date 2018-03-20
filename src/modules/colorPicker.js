@@ -68,20 +68,20 @@ const colorPicker = function(el, opts) {
   this._mouseTarget = false;
   this._colorChangeActive = false;
   this.css = opts.css || opts.styles || undefined;
-  // Wait for the document to be ready, then init the UI
-  whenReady(() => {this._init(el, opts)});
+  // Wait for the document to be ready, then mount the UI
+  whenReady(() => {this._mount(el, opts)});
 }
 
 colorPicker.prototype = {
   constructor: colorPicker,
 
   /**
-    * @desc init the color picker UI
+    * @desc mount the color picker UI into the DOM
     * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
     * @param {Object} opts - options for this instance
     * @access protected
   */
-  _init: function(el, opts) {
+  _mount: function(el, opts) {
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = ("string" == typeof el) ? document.querySelector(el) : el;
     // Find the width and height for the UI
@@ -143,6 +143,7 @@ colorPicker.prototype = {
     this.on("history:stateChange", (base) => {this.svg.updateUrls(base)});
     // Listen to events
     listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    this.emit("mount", this);
   },
 
   /**
@@ -235,7 +236,7 @@ colorPicker.prototype = {
             // Attach event listeners
             listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
             // Emit input start event
-            this.emit("input:start");
+            this.emit("input:start", this.color);
             // Finally, use the position to update the picked color
             this.color.hsv = this._mouseTarget.input(x, y);
           }
@@ -249,7 +250,7 @@ colorPicker.prototype = {
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
         this._mouseTarget = false;
-        this.emit("input:end");
+        this.emit("input:end", this.color);
         unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
         break;
     }

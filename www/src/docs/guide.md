@@ -115,18 +115,25 @@ demoColorPicker.off("input:start", onInputStart);
 
 #### Event Types
 
+###### mount
+
+Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. 
+The callback functions for this event are given the 
+
 ###### input:start
 
-Fired whenever the users starts interacting with the color picker controls.
+Fired whenever the users starts interacting with the color picker controls. 
+The colorPicker's `color` object is passed to this event's callback function.
 
 ###### input:end
 
 Fired whenever the user stops interacting with the color picker controls.
+The colorPicker's `color` object is passed to this event's callback function.
 
 ###### color:change
 
 Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. 
-This event is special, in that its callback function gets passed two values:
+This event's callback function gets passed two values:
  * `color`: the colorPicker's `color` object
  * `changes`: an object showing which HSV channels have changed since the last time the event was fired
 

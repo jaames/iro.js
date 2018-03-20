@@ -44,9 +44,10 @@ Add listeners to color picker events.
 
 | `eventType`    | usage |
 |----------------|-------|
-| `color:change` | when the color has changed, the callback gets passed the new `color` object |
-| `input:start` | when the user starts interacting with the color picker |
-| `input:end` | when the user has finished interacting with the color picker |
+| `color:change` | when the color has changed, the callback gets passed the `color` object and an object providing which color channels (out of H, S, V) have changed. |
+| `input:start` | when the user starts interacting with the color picker, the callback gets passed the `color` object |
+| `input:end` | when the user has finished interacting with the color picker, the callback gets passed the `color` object |
+| `mount` | fired when the color picker UI has been mounted into the DOM |
 | `*` | listen to all events |
 
 **See also:** The [Events](http://localhost:4000/projects/iro/docs/guide.html#Events) guide.

@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.4.0
+
+`iro.ColorPicker` has a new `mount` event which fires once color picker's UI has been inserted into the DOM, as requested in [#28](https://github.com/jaames/iro.js/issues/28).
+
+In addition, the `input:start` and `input:end` events now get passed the color picker's `color` object as per [#24](https://github.com/jaames/iro.js/issues/24).
+
 #### 3.3.0
 
 iro is now available as an [npm module](https://www.npmjs.com/package/@jaames/iro).
@@ -14,7 +20,7 @@ iro is now available as an [npm module](https://www.npmjs.com/package/@jaames/ir
 
 ##### Additions
 
- - `iro.ColorPicker` instances now have a `display` option, as requested in issue thread [#32](https://github.com/jaames/iro.js/issues/23).
+ - `iro.ColorPicker` instances now have a `display` option, as requested in issue thread [#23](https://github.com/jaames/iro.js/issues/23).
 
 #### 3.2.0
 
