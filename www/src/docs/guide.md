@@ -118,7 +118,7 @@ demoColorPicker.off("input:start", onInputStart);
 ###### mount
 
 Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. 
-The callback functions for this event are given the 
+A reference to the colorPicker object is passed to this event's callback function.
 
 ###### input:start
 
