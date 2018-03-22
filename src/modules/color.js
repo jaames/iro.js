@@ -112,9 +112,9 @@ function hsl2Str(hsl) {
 */
 function rgb2Hex(rgb) {
   var str = "#";
-  str += round(rgb.r).toString(16).padStart(2, "0");
-  str += round(rgb.g).toString(16).padStart(2, "0");
-  str += round(rgb.b).toString(16).padStart(2, "0");
+  str += rgb.r.toString(16).padStart(2, "0");
+  str += rgb.g.toString(16).padStart(2, "0");
+  str += rgb.b.toString(16).padStart(2, "0");
   return str;
 };
 
