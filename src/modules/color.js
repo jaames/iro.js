@@ -1,7 +1,5 @@
-var round = Math.round,
-    floor = Math.floor;
-
-// TODO: compare(rgb, hsv, hsl) + clone methods
+var round = Math.round;
+var floor = Math.floor;
 
 /**
   * @desc convert hsv object to rgb
@@ -49,9 +47,9 @@ function rgb2Hsv(rgb) {
   }
   hue /= 6;
   return {
-    h: round(hue * 360),
-    s: round(max == 0 ? 0 : (delta / max) * 100),
-    v: round(max * 100)
+    h: hue * 360,
+    s: max == 0 ? 0 : (delta / max) * 100,
+    v: max * 100
   };
 };
 
@@ -67,8 +65,8 @@ function hsv2Hsl(hsv) {
   s = v * s / (1 - Math.abs(2 * l - 1));
   return {
     h: hsv.h,
-    s: round(s * 100) || 0,
-    l: round(l * 100)
+    s: s * 100 || 0,
+    l: l * 100
   };
 };
 
@@ -84,8 +82,8 @@ function hsl2Hsv(hsl) {
   s *= (l <= 1) ? l : 2 - l;
   return {
     h: hsl.h,
-    s: round(((2 * s) / (l + s)) * 100),
-    v: round(((l + s) / 2) * 100)
+    s: ((2 * s) / (l + s)) * 100,
+    v: ((l + s) / 2) * 100
   };
 };
 
@@ -113,23 +111,11 @@ function hsl2Str(hsl) {
   * @return {Object} hex string
 */
 function rgb2Hex(rgb) {
-  var r = rgb.r,
-      g = rgb.g,
-      b = rgb.b;
-  // If each RGB channel's value is a multiple of 17, we can use HEX shorthand notation
-  var useShorthand = (r % 17 == 0) && (g % 17 == 0) && (b % 17 == 0),
-      // If we're using shorthand notation, divide each channel by 17
-      divider = useShorthand ? 17 : 1,
-      // bitLength of each channel (for example, F is 4 bits long while FF is 8 bits long)
-      bitLength = useShorthand ? 4 : 8,
-      // Target length of the string (ie "#FFF" or "#FFFFFF")
-      strLength = useShorthand ? 4 : 7,
-      // Combine the channels together into a single integer
-      int = (r / divider) << (bitLength * 2) | (g / divider) << bitLength | (b / divider),
-      // Convert that integer to a hex string
-      str = int.toString(16);
-      // Add right amount of left-padding
-      return "#" + (new Array(strLength - str.length).join("0")) + str;  
+  var str = "#";
+  str += rgb.r.toString(16).padStart(2, "0");
+  str += rgb.g.toString(16).padStart(2, "0");
+  str += rgb.b.toString(16).padStart(2, "0");
+  return str;
 };
 
 /**
@@ -423,7 +409,12 @@ Object.defineProperties(color.prototype, {
   },
   rgb: {
     get: function() {
-      return hsv2Rgb(this._value);
+      var rgb = hsv2Rgb(this._value);
+      return {
+        r: round(rgb.r),
+        g: round(rgb.g),
+        b: round(rgb.b),
+      };
     },
     set: function(value) {
       this.hsv = rgb2Hsv(value);
@@ -431,7 +422,12 @@ Object.defineProperties(color.prototype, {
   },
   hsl: {
     get: function() {
-      return hsv2Hsl(this._value);
+      var hsl = hsv2Hsl(this._value);
+      return {
+        h: round(hsl.h),
+        s: round(hsl.s),
+        l: round(hsl.l),
+      };
     },
     set: function(value) {
       this.hsv = hsl2Hsv(value);
