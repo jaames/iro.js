@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.4.0
+ * iro.js v3.4.1
  * 2016-2018 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
@@ -1054,7 +1054,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.4.0"
+  version: "3.4.1"
 };
 
 /***/ }),

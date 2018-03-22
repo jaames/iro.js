@@ -1,10 +1,18 @@
 ### Changelog
 
+#### 3.4.1
+
+##### Fixes
+
+ - Fixed rounding issues when converting between color models, particularly when converting certain colors from RGB hex -> HSL -> RGB hex. See issue #26 for more details
+
 #### 3.4.0
 
-`iro.ColorPicker` has a new `mount` event which fires once color picker's UI has been inserted into the DOM, as requested in [#28](https://github.com/jaames/iro.js/issues/28).
+##### Additions
 
-In addition, the `input:start` and `input:end` events now get passed the color picker's `color` object as per [#24](https://github.com/jaames/iro.js/issues/24).
+ - `iro.ColorPicker` has a new `mount` event which fires once color picker's UI has been inserted into the DOM, as requested in [#28](https://github.com/jaames/iro.js/issues/28).
+
+ - The `input:start` and `input:end` events now get passed the color picker's `color` object as per [#24](https://github.com/jaames/iro.js/issues/24).
 
 #### 3.3.0
 
