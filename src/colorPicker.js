@@ -1,8 +1,8 @@
-import wheel from "ui/wheel";
-import slider from "ui/slider";
-import svg from "ui/svg";
-import iroColor from "modules/color";
-import iroStyleSheet from "modules/stylesheet";
+import wheel from "./components/wheel";
+import slider from "./components/slider";
+import svg from "./util/svg";
+import iroColor from "./color";
+import iroStyleSheet from "./stylesheet";
 
 const EVENT_MOUSEDOWN = "mousedown",
       EVENT_MOUSEMOVE = "mousemove",
@@ -56,24 +56,22 @@ function whenReady(callback) {
   }
 };
 
-/**
-  * @constructor color wheel object
-  * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
-  * @param {Object} opts - options for this instance
-*/
-const colorPicker = function(el, opts) {
-  opts = opts || {};
-  // event storage for `on` and `off`
-  this._events = {};
-  this._mouseTarget = false;
-  this._colorChangeActive = false;
-  this.css = opts.css || opts.styles || undefined;
-  // Wait for the document to be ready, then mount the UI
-  whenReady(() => {this._mount(el, opts)});
-}
-
-colorPicker.prototype = {
-  constructor: colorPicker,
+export default class colorPicker {
+  /**
+    * @constructor color wheel object
+    * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+    * @param {Object} opts - options for this instance
+  */
+  constructor(el, opts) {
+    opts = opts || {};
+    // event storage for `on` and `off`
+    this._events = {};
+    this._mouseTarget = false;
+    this._colorChangeActive = false;
+    this.css = opts.css || opts.styles || undefined;
+    // Wait for the document to be ready, then mount the UI
+    whenReady(() => {this._mount(el, opts)});
+  }
 
   /**
     * @desc mount the color picker UI into the DOM
@@ -81,7 +79,7 @@ colorPicker.prototype = {
     * @param {Object} opts - options for this instance
     * @access protected
   */
-  _mount: function(el, opts) {
+  _mount(el, opts) {
     // If `el` is a string, use it to select an Element, else assume it's an element
     el = ("string" == typeof el) ? document.querySelector(el) : el;
     // Find the width and height for the UI
@@ -144,7 +142,7 @@ colorPicker.prototype = {
     // Listen to events
     listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
     this.emit("mount", this);
-  },
+  }
 
   /**
     * @desc update the selected color
@@ -153,7 +151,7 @@ colorPicker.prototype = {
     * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
     * @access protected
   */
-  _update: function(color, changes) {
+  _update(color, changes) {
     var rgb = color.rgbString;
     var css = this.css;
     // Loop through each UI element and update it
@@ -174,46 +172,46 @@ colorPicker.prototype = {
       this.emit("color:change", color, changes);
       this._colorChangeActive = false;
     }
-  },
+  }
 
-    /**
+  /**
     * @desc Set a callback function for an event
     * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
     * @param {Function} callback The watch callback
   */
-  on: function(eventType, callback) {
+  on(eventType, callback) {
     var events = this._events;
     (events[eventType] || (events[eventType] = [])).push(callback);
-  },
+  }
 
   /**
     * @desc Remove a callback function for an event added with on()
     * @param {String} eventType The name of the event
     * @param {Function} callback The watch callback to remove from the event
   */
-  off: function(eventType, callback) {
+  off(eventType, callback) {
     var eventList = this._events[eventType];
     if (eventList) eventList.splice(eventList.indexOf(callback), 1);
-  },
+  }
 
   /**
     * @desc Emit an event
     * @param {String} eventType The name of the event to emit
     * @param {Array} args array of args to pass to callbacks
   */
-  emit: function(eventType, ...args) {
+  emit(eventType, ...args) {
     var events = this._events,
         callbackList = (events[eventType] || []).concat((events["*"] || []));
     for (var i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args); 
     }
-  },
+  }
 
   /**
     * @desc DOM event handler
     * @param {Event} e DOM event (currently either mouse or touch events)
   */
-  handleEvent: function(e) {
+  handleEvent(e) {
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e,
@@ -259,5 +257,3 @@ colorPicker.prototype = {
     }
   }
 }
-
-module.exports = colorPicker;

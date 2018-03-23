@@ -33,7 +33,7 @@ module.exports = function (env) {
 
   var config = {
     context: path.resolve(__dirname, "src"),
-    entry: "./iro.js",
+    entry: "./index.js",
     output: {
       library: "iro",
       libraryTarget: "umd",
@@ -44,10 +44,8 @@ module.exports = function (env) {
     resolve: {
       extensions: [".js"],
       alias: {
-        "ui": path.resolve(__dirname, "src/ui/"),
+        "components": path.resolve(__dirname, "src/components/"),
         "util": path.resolve(__dirname, "src/util/"),
-        "colorModels": path.resolve(__dirname, "src/colorModels/"),
-        "modules": path.resolve(__dirname, "src/modules/"),
       }
     },
     module: {
@@ -76,9 +74,9 @@ module.exports = function (env) {
     ],
     devtool: "source-map",
     devServer: {
-      port: process.env.PORT || 8080,
+      port: process.env.PORT || 4000,
       host: "localhost",
-      publicPath: "http://localhost:8080",
+      publicPath: "http://localhost:4000",
       contentBase: path.join(__dirname, "./"),
       watchContentBase: true,
     }
