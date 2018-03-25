@@ -1,16 +1,19 @@
 import marker from "./marker";
+import base from "./base";
 import iroColor from "../color";
 
 // css class prefix for this element
 var CLASS_PREFIX = "iro__slider";
 
-export default class slider {
+export default class slider extends base {
   /**
     * @constructor slider UI
     * @param {svgRoot} svg - svgRoot object
     * @param {Object} opts - options
   */
-  constructor(svg, opts) {
+  constructor(parent, opts) {
+    super(parent, CLASS_PREFIX);
+    var svg = parent.svg;
     var r = opts.r,
     w = opts.w,
     h = opts.h,
@@ -19,17 +22,15 @@ export default class slider {
     borderWidth = opts.border.w;
     // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
     opts.range = {
-      min: x + r,
-      max: (x + w) - r,
+      min: r,
+      max: w - r,
       w: w - (r * 2)
     };
     opts.sliderType = opts.sliderType || "v";
     this.type = "slider";
     this._opts = opts;
+    var baseGroup = this.g;
     var radius = r + borderWidth / 2;
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX,
-    });
     var rect = baseGroup.insert("rect", {
       class: CLASS_PREFIX + "__value",
       rx: radius,
@@ -65,7 +66,7 @@ export default class slider {
       }
       if (changes.v) {
         var percent = (hsv.v / 100);
-        this.marker.move(range.min + (percent * range.w), opts.y + (opts.h / 2));
+        this.marker.move((opts.x + opts.r) + (percent * range.w), opts.y + (opts.h / 2));
       }
     }
   }
@@ -74,25 +75,15 @@ export default class slider {
     * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
+    * @param {String} type - input type, START, MOVE, END
     * @return {Object} - new HSV color values (some channels may be missing)
   */
-  input(x, y) {
+  input(x, y, type) {
     var opts = this._opts;
     var range = opts.range;
     var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
     return {
       v: Math.round((100 / range.w) * dist),
     };
-  }
-
-  /**
-    * @desc Check if a point at (x, y) is inside this element
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Boolean} - true if the point is a "hit", else false
-  */
-  checkHit(x, y) {
-    var opts = this._opts;
-    return (x > opts.x) && (x < opts.x + opts.w) && (y > opts.y) && (y < opts.y + opts.h);
   }
 }
