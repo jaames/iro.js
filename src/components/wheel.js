@@ -1,4 +1,4 @@
-import marker from "./marker";
+import handle from "./handle";
 import base from "./base";
 
 // css class prefix for this element
@@ -66,7 +66,7 @@ export default class wheel extends base {
       opacity: 0
     });
   
-    this.marker = new marker(baseGroup, opts.marker);
+    this.handle = new handle(baseGroup, opts.marker);
   }
 
   /**
@@ -88,7 +88,7 @@ export default class wheel extends base {
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
-      this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+      this.handle.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
     }
   }
 

@@ -1,24 +1,24 @@
 // css class prefix for this element
-var CLASS_PREFIX = "iro__marker";
+var CLASS_PREFIX = "iro__handle";
 
 
-export default class marker {
+export default class handle {
   /**
-    * @constructor marker UI
+    * @constructor ui handle
     * @param {svgRoot} svg - svgRoot object
-    * @param {Object} opts - options
+    * @param {Object} props - options
   */
-  constructor(svg, opts) {
+  constructor(svg, props) {
     var baseGroup = svg.g({
       class: CLASS_PREFIX
     });
-    baseGroup.circle(0, 0, opts.r, {
+    baseGroup.circle(0, 0, props.r, {
       class: CLASS_PREFIX + "__outer",
       fill: "none",
       strokeWidth: 5,
       stroke: "#000",
     });
-    baseGroup.circle(0, 0, opts.r, {
+    baseGroup.circle(0, 0, props.r, {
       class: CLASS_PREFIX + "__inner",
       fill: "none",
       strokeWidth: 2,
@@ -28,7 +28,7 @@ export default class marker {
   }
 
   /**
-    * @desc move marker to centerpoint (x, y) and redraw
+    * @desc move handle to centerpoint (x, y) and redraw
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
   */

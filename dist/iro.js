@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.4.1
+ * iro.js v4.0.0-beta
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -12,18 +12,18 @@
 }(this, (function () { 'use strict';
 
   // css class prefix for this element
-  var CLASS_PREFIX = "iro__marker";
-  var marker = function marker(svg, opts) {
+  var CLASS_PREFIX = "iro__handle";
+  var handle = function handle(svg, props) {
     var baseGroup = svg.g({
       class: CLASS_PREFIX
     });
-    baseGroup.circle(0, 0, opts.r, {
+    baseGroup.circle(0, 0, props.r, {
       class: CLASS_PREFIX + "__outer",
       fill: "none",
       strokeWidth: 5,
       stroke: "#000"
     });
-    baseGroup.circle(0, 0, opts.r, {
+    baseGroup.circle(0, 0, props.r, {
       class: CLASS_PREFIX + "__inner",
       fill: "none",
       strokeWidth: 2,
@@ -32,138 +32,229 @@
     this.g = baseGroup;
   };
   /**
-    * @desc move marker to centerpoint (x, y) and redraw
+    * @desc move handle to centerpoint (x, y) and redraw
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
   */
 
 
-  marker.prototype.move = function move (x, y) {
+  handle.prototype.move = function move (x, y) {
     this.g.setTransform("translate", [x, y]);
+  };
+
+  var EVENT_READYSTATE_CHANGE = "readystatechange",
+        READYSTATE_COMPLETE = "complete";
+  /**
+  * @desc listen to one or more events on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to listen to
+  * @param {Function} callback the event callback function
+  */
+
+  function listen(el, eventList, callback) {
+    for (var i = 0; i < eventList.length; i++) {
+      el.addEventListener(eventList[i], callback);
+    }
+  }
+  /**
+  * @desc remove an event listener on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to remove
+  * @param {Function} callback the event callback function
+  */
+
+  function unlisten(el, eventList, callback) {
+    for (var i = 0; i < eventList.length; i++) {
+      el.removeEventListener(eventList[i], callback);
+    }
+  }
+  /**
+  * @desc call fn callback when the page document is ready
+  * @param {Function} callback callback function to be called
+  */
+
+  function whenReady(callback) {
+
+    if (document.readyState == READYSTATE_COMPLETE) {
+      callback();
+    } else {
+      listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
+        if (document.readyState == READYSTATE_COMPLETE) {
+          callback();
+          unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
+        }
+      });
+    }
+  }
+
+  var EVENT_MOUSEDOWN = "mousedown",
+        EVENT_MOUSEMOVE = "mousemove",
+        EVENT_MOUSEUP = "mouseup",
+        EVENT_TOUCHSTART = "touchstart",
+        EVENT_TOUCHMOVE = "touchmove",
+        EVENT_TOUCHEND = "touchend";
+  var baseComponent = function baseComponent(parent, className) {
+    var g = parent.svg.g({
+      class: className
+    });
+    var el = g.el;
+    listen(el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    this.g = g;
+    this.el = el;
+    this.parent = parent;
+  };
+
+  baseComponent.prototype.handleEvent = function handleEvent (e) {
+    // Detect if the event is a touch event by checking if it has the `touches` property
+    // If it is a touch event, use the first touch input
+    e.preventDefault();
+    var point = e.touches ? e.changedTouches[0] : e,
+        // Get the screen position of the UI
+    rect = this.el.getBoundingClientRect(),
+        // Convert the screen-space pointer position to local-space
+    x = point.clientX - rect.left,
+        y = point.clientY - rect.top;
+    var hsv;
+    var color = this.parent.color;
+
+    switch (e.type) {
+      case EVENT_MOUSEDOWN:
+      case EVENT_TOUCHSTART:
+        // Attach event listeners
+        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        hsv = this.input(x, y, "START");
+        this.parent.emit("input:start", color);
+        break;
+
+      case EVENT_MOUSEMOVE:
+      case EVENT_TOUCHMOVE:
+        // Use the position to update the picker color
+        hsv = this.input(x, y, "MOVE");
+        break;
+
+      case EVENT_MOUSEUP:
+      case EVENT_TOUCHEND:
+        hsv = this.input(x, y, "END");
+        this.parent.emit("input:end", color);
+        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        break;
+    }
+
+    if (hsv) { color.hsv = hsv; }
   };
 
   var CLASS_PREFIX$1 = "iro__wheel"; // Quick references to reused math functions
 
   var PI = Math.PI,
       sqrt = Math.sqrt,
-      abs = Math.abs,
       round = Math.round;
-  var wheel = function wheel(svg, opts) {
-    this._opts = opts;
-    this.type = "wheel";
-    var cY = opts.cY,
-        cX = opts.cX,
-        r = opts.r,
-        border = opts.border;
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX$1
-    });
-    baseGroup.circle(cX, cY, r + border.w / 2, {
-      class: CLASS_PREFIX$1 + "__border",
-      fill: "#fff",
-      stroke: border.color,
-      strokeWidth: border.w
-    });
-    var ringGroup = baseGroup.g({
-      class: CLASS_PREFIX$1 + "__hue",
-      strokeWidth: r,
-      fill: "none"
-    });
-
-    for (var hue = 0; hue < 360; hue++) {
-      ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
-        stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)"
+  var wheel = (function (base) {
+    function wheel(parent, opts) {
+      base.call(this, parent, CLASS_PREFIX$1);
+      this._opts = opts;
+      this.type = "wheel";
+      var cY = opts.cY,
+          cX = opts.cX,
+          r = opts.r,
+          border = opts.border;
+      var svg = parent.svg;
+      var baseGroup = this.g;
+      baseGroup.circle(cX, cY, r + border.w / 2, {
+        class: CLASS_PREFIX$1 + "__border",
+        fill: "#fff",
+        stroke: border.color,
+        strokeWidth: border.w
       });
-    }
+      var ringGroup = baseGroup.g({
+        class: CLASS_PREFIX$1 + "__hue",
+        strokeWidth: r,
+        fill: "none"
+      });
 
-    var saturation = baseGroup.circle(cX, cY, r, {
-      class: CLASS_PREFIX$1 + "__saturation"
-    });
-    saturation.setGradient("fill", svg.gradient("radial", {
-      0: {
-        color: "#fff"
-      },
-      100: {
-        color: "#fff",
-        opacity: 0
+      for (var hue = 0; hue < 360; hue++) {
+        ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
+          stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)"
+        });
       }
-    }));
-    this._lightness = baseGroup.circle(cX, cY, r, {
-      class: CLASS_PREFIX$1 + "__lightness",
-      opacity: 0
-    });
-    this.marker = new marker(baseGroup, opts.marker);
-  };
-  /**
-    * @desc updates this element to represent a new color value
-    * @param {Object} color - an iroColor object with the new color value
-    * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
-  */
 
-
-  wheel.prototype.update = function update (color, changes) {
-    var opts = this._opts;
-    var hsv = color.hsv; // If the V channel has changed, redraw the wheel UI with the new value
-
-    if (changes.v && opts.lightness) {
-      this._lightness.setAttrs({
-        opacity: (1 - hsv.v / 100).toFixed(2)
+      var saturation = baseGroup.circle(cX, cY, r, {
+        class: CLASS_PREFIX$1 + "__saturation"
       });
-    } // If the H or S channel has changed, move the marker to the right position
-
-
-    if (changes.h || changes.s) {
-      // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = (opts.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180); // convert the saturation value to a distance between the center of the ring and the edge
-
-      var dist = hsv.s / 100 * opts.rMax; // Move the marker based on the angle and distance
-
-      this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+      saturation.setGradient("fill", svg.gradient("radial", {
+        0: {
+          color: "#fff"
+        },
+        100: {
+          color: "#fff",
+          opacity: 0
+        }
+      }));
+      this._lightness = baseGroup.circle(cX, cY, r, {
+        class: CLASS_PREFIX$1 + "__lightness",
+        opacity: 0
+      });
+      this.handle = new handle(baseGroup, opts.marker);
     }
-  };
-  /**
-    * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Object} - new HSV color values (some channels may be missing)
-  */
+
+    if ( base ) wheel.__proto__ = base;
+    wheel.prototype = Object.create( base && base.prototype );
+    wheel.prototype.constructor = wheel;
+    /**
+      * @desc updates this element to represent a new color value
+      * @param {Object} color - an iroColor object with the new color value
+      * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
+    */
 
 
-  wheel.prototype.input = function input (x, y) {
-    var opts = this._opts,
-        rangeMax = opts.rMax,
-        _x = opts.cX - x,
-        _y = opts.cY - y;
+    wheel.prototype.update = function update (color, changes) {
+      var opts = this._opts;
+      var hsv = color.hsv; // If the V channel has changed, redraw the wheel UI with the new value
 
-    var angle = Math.atan2(_y, _x),
-        // Calculate the hue by converting the angle to radians
-    hue = round(angle * (180 / PI)) + 180,
-        // Find the point's distance from the center of the wheel
-    // This is used to show the saturation level
-    dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
-    hue = opts.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
+      if (changes.v && opts.lightness) {
+        this._lightness.setAttrs({
+          opacity: (1 - hsv.v / 100).toFixed(2)
+        });
+      } // If the H or S channel has changed, move the marker to the right position
 
-    return {
-      h: hue,
-      s: round(100 / rangeMax * dist)
+
+      if (changes.h || changes.s) {
+        // convert the hue value to radians, since we'll use it as an angle
+        var hueAngle = (opts.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180); // convert the saturation value to a distance between the center of the ring and the edge
+
+        var dist = hsv.s / 100 * opts.rMax; // Move the marker based on the angle and distance
+
+        this.handle.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+      }
     };
-  };
-  /**
-    * @desc Check if a point at (x, y) is inside this element
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Boolean} - true if the point is a "hit", else false
-  */
+    /**
+      * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
+      * @param {Number} x - point x coordinate
+      * @param {Number} y - point y coordinate
+      * @return {Object} - new HSV color values (some channels may be missing)
+    */
 
 
-  wheel.prototype.checkHit = function checkHit (x, y) {
-    var opts = this._opts; // Check if the point is within the hue ring by comparing the point's distance from the centre to the ring's radius
-    // If the distance is smaller than the radius, then we have a hit
+    wheel.prototype.input = function input (x, y) {
+      var opts = this._opts,
+          rangeMax = opts.rMax;
+      x = opts.r - x;
+      y = opts.r - y;
+      var angle = Math.atan2(y, x),
+          // Calculate the hue by converting the angle to radians
+      hue = round(angle * (180 / PI)) + 180,
+          // Find the point's distance from the center of the wheel
+      // This is used to show the saturation level
+      dist = Math.min(sqrt(x * x + y * y), rangeMax);
+      hue = opts.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
 
-    var dx = abs(x - opts.cX),
-        dy = abs(y - opts.cY);
-    return sqrt(dx * dx + dy * dy) < opts.r;
-  };
+      return {
+        h: hue,
+        s: round(100 / rangeMax * dist)
+      };
+    };
+
+    return wheel;
+  }(baseComponent));
 
   var round$1 = Math.round;
   var floor = Math.floor;
@@ -667,106 +758,103 @@
   Object.defineProperties( color.prototype, prototypeAccessors );
 
   var CLASS_PREFIX$2 = "iro__slider";
-  var slider = function slider(svg, opts) {
-    var r = opts.r,
-        w = opts.w,
-        h = opts.h,
-        x = opts.x,
-        y = opts.y,
-        borderWidth = opts.border.w; // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
+  var slider = (function (base) {
+    function slider(parent, opts) {
+      base.call(this, parent, CLASS_PREFIX$2);
+      var svg = parent.svg;
+      var r = opts.r,
+          w = opts.w,
+          h = opts.h,
+          x = opts.x,
+          y = opts.y,
+          borderWidth = opts.border.w; // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
 
-    opts.range = {
-      min: x + r,
-      max: x + w - r,
-      w: w - r * 2
-    };
-    opts.sliderType = opts.sliderType || "v";
-    this.type = "slider";
-    this._opts = opts;
-    var radius = r + borderWidth / 2;
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX$2
-    });
-    var rect = baseGroup.insert("rect", {
-      class: CLASS_PREFIX$2 + "__value",
-      rx: radius,
-      ry: radius,
-      x: x - borderWidth / 2,
-      y: y - borderWidth / 2,
-      width: w + borderWidth,
-      height: h + borderWidth,
-      strokeWidth: borderWidth,
-      stroke: opts.border.color
-    });
-    rect.setGradient("fill", svg.gradient("linear", {
-      0: {
-        color: "#000"
-      },
-      100: {
-        color: "#fff"
-      }
-    }));
-    this._gradient = rect.gradient;
-    this.marker = new marker(baseGroup, opts.marker);
-  };
-  /**
-    * @desc updates this element to represent a new color value
-    * @param {Object} color - an iroColor object with the new color value
-    * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
-  */
-
-
-  slider.prototype.update = function update (color$$1, changes) {
-    var opts = this._opts;
-    var range = opts.range;
-    var hsv = color$$1.hsv;
-    var hsl = color.hsv2Hsl({
-      h: hsv.h,
-      s: hsv.s,
-      v: 100
-    });
-
-    if (opts.sliderType == "v") {
-      if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttrs({
-          stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"
-        });
-      }
-
-      if (changes.v) {
-        var percent = hsv.v / 100;
-        this.marker.move(range.min + percent * range.w, opts.y + opts.h / 2);
-      }
+      opts.range = {
+        min: r,
+        max: w - r,
+        w: w - r * 2
+      };
+      opts.sliderType = opts.sliderType || "v";
+      this.type = "slider";
+      this._opts = opts;
+      var baseGroup = this.g;
+      var radius = r + borderWidth / 2;
+      var rect = baseGroup.insert("rect", {
+        class: CLASS_PREFIX$2 + "__value",
+        rx: radius,
+        ry: radius,
+        x: x - borderWidth / 2,
+        y: y - borderWidth / 2,
+        width: w + borderWidth,
+        height: h + borderWidth,
+        strokeWidth: borderWidth,
+        stroke: opts.border.color
+      });
+      rect.setGradient("fill", svg.gradient("linear", {
+        0: {
+          color: "#000"
+        },
+        100: {
+          color: "#fff"
+        }
+      }));
+      this._gradient = rect.gradient;
+      this.handle = new handle(baseGroup, opts.marker);
     }
-  };
-  /**
-    * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Object} - new HSV color values (some channels may be missing)
-  */
+
+    if ( base ) slider.__proto__ = base;
+    slider.prototype = Object.create( base && base.prototype );
+    slider.prototype.constructor = slider;
+    /**
+      * @desc updates this element to represent a new color value
+      * @param {Object} color - an iroColor object with the new color value
+      * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
+    */
 
 
-  slider.prototype.input = function input (x, y) {
-    var opts = this._opts;
-    var range = opts.range;
-    var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
-    return {
-      v: Math.round(100 / range.w * dist)
+    slider.prototype.update = function update (color$$1, changes) {
+      var opts = this._opts;
+      var range = opts.range;
+      var hsv = color$$1.hsv;
+      var hsl = color.hsv2Hsl({
+        h: hsv.h,
+        s: hsv.s,
+        v: 100
+      });
+
+      if (opts.sliderType == "v") {
+        if (changes.h || changes.s) {
+          this._gradient.stops[1].setAttrs({
+            stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"
+          });
+        }
+
+        if (changes.v) {
+          var percent = hsv.v / 100;
+          this.handle.move(opts.x + opts.r + percent * range.w, opts.y + opts.h / 2);
+        }
+      }
     };
-  };
-  /**
-    * @desc Check if a point at (x, y) is inside this element
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Boolean} - true if the point is a "hit", else false
-  */
+    /**
+      * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
+      * @param {Number} x - point x coordinate
+      * @param {Number} y - point y coordinate
+      * @param {String} type - input type, START, MOVE, END
+      * @return {Object} - new HSV color values (some channels may be missing)
+    */
 
 
-  slider.prototype.checkHit = function checkHit (x, y) {
-    var opts = this._opts;
-    return x > opts.x && x < opts.x + opts.w && y > opts.y && y < opts.y + opts.h;
-  };
+    slider.prototype.input = function input (x, y, type) {
+      var opts = this._opts;
+      var range = opts.range;
+      var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
+      return {
+        v: Math.round(100 / range.w * dist)
+      };
+    };
+
+    return slider;
+  }(baseComponent));
 
   var GRADIENT_INDEX = 0;
   var GRADIENT_SUFFIX = "Gradient";
@@ -1089,56 +1177,6 @@
 
   Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
 
-  var EVENT_MOUSEDOWN = "mousedown",
-        EVENT_MOUSEMOVE = "mousemove",
-        EVENT_MOUSEUP = "mouseup",
-        EVENT_TOUCHSTART = "touchstart",
-        EVENT_TOUCHMOVE = "touchmove",
-        EVENT_TOUCHEND = "touchend",
-        EVENT_READYSTATE_CHANGE = "readystatechange",
-        READYSTATE_COMPLETE = "complete";
-  /**
-    * @desc listen to one or more events on an element
-    * @param {Element} el target element
-    * @param {Array} eventList the events to listen to
-    * @param {Function} callback the event callback function
-  */
-
-  function listen(el, eventList, callback) {
-    for (var i = 0; i < eventList.length; i++) {
-      el.addEventListener(eventList[i], callback);
-    }
-  }
-  /**
-    * @desc remove an event listener on an element
-    * @param {Element} el target element
-    * @param {Array} eventList the events to remove
-    * @param {Function} callback the event callback function
-  */
-
-  function unlisten(el, eventList, callback) {
-    for (var i = 0; i < eventList.length; i++) {
-      el.removeEventListener(eventList[i], callback);
-    }
-  }
-  /**
-    * @desc call fn callback when the page document is ready
-    * @param {Function} callback callback function to be called
-  */
-
-  function whenReady(callback) {
-
-    if (document.readyState == READYSTATE_COMPLETE) {
-      callback();
-    } else {
-      listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-        if (document.readyState == READYSTATE_COMPLETE) {
-          callback();
-          unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
-        }
-      });
-    }
-  }
   var colorPicker = function colorPicker(el, opts) {
     var this$1 = this;
 
@@ -1189,7 +1227,7 @@
 
     this.el = el;
     this.svg = new svgRoot(el, width, height, opts.display);
-    this.ui = [new wheel(this.svg, {
+    this.ui = [new wheel(this, {
       cX: leftMargin + bodyWidth / 2,
       cY: bodyWidth / 2,
       r: wheelRadius,
@@ -1198,7 +1236,7 @@
       border: borderStyles,
       lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
       anticlockwise: opts.anticlockwise
-    }), new slider(this.svg, {
+    }), new slider(this, {
       sliderType: "v",
       x: leftMargin + borderWidth,
       y: bodyWidth + sliderMargin,
@@ -1221,8 +1259,8 @@
     this.on("history:stateChange", function (base) {
       this$1.svg.updateUrls(base);
     }); // Listen to events
+    // listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
 
-    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
     this.emit("mount", this);
   };
   /**
@@ -1301,70 +1339,12 @@
       callbackList[i].apply(null, args);
     }
   };
-  /**
-    * @desc DOM event handler
-    * @param {Event} e DOM event (currently either mouse or touch events)
-  */
-
-
-  colorPicker.prototype.handleEvent = function handleEvent (e) {
-      var this$1 = this;
-
-    // Detect if the event is a touch event by checking if it has the `touches` property
-    // If it is a touch event, use the first touch input
-    var point = e.touches ? e.changedTouches[0] : e,
-        // Get the screen position of the UI
-    rect = this.svg.el.getBoundingClientRect(),
-        // Convert the screen-space pointer position to local-space
-    x = point.clientX - rect.left,
-        y = point.clientY - rect.top;
-
-    switch (e.type) {
-      case EVENT_MOUSEDOWN:
-      case EVENT_TOUCHSTART:
-        // Loop through each UI element and check if the point "hits" it
-        for (var i = 0; i < this.ui.length; i++) {
-          var uiElement = this$1.ui[i]; // If the element is hit, this means the user has clicked the element and is trying to interact with it
-
-          if (uiElement.checkHit(x, y)) {
-            // Set an internal reference to the uiElement being interacted with, for other internal event handlers
-            this$1._mouseTarget = uiElement; // Attach event listeners
-
-            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this$1); // Emit input start event
-
-            this$1.emit("input:start", this$1.color); // Finally, use the position to update the picked color
-
-            this$1.color.hsv = this$1._mouseTarget.input(x, y);
-          }
-        }
-
-        break;
-
-      case EVENT_MOUSEMOVE:
-      case EVENT_TOUCHMOVE:
-        // Use the position to update the picker color
-        this.color.hsv = this._mouseTarget.input(x, y);
-        break;
-
-      case EVENT_MOUSEUP:
-      case EVENT_TOUCHEND:
-        this._mouseTarget = false;
-        this.emit("input:end", this.color);
-        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
-        break;
-    }
-
-    if (this._mouseTarget) {
-      e.preventDefault();
-    }
-  };
 
   var index = {
     Color: color,
     ColorPicker: colorPicker,
     Stylesheet: stylesheet,
-    version: "3.4.1",
-    test: "heellooo"
+    version: "4.0.0-beta"
   };
 
   return index;

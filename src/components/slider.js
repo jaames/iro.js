@@ -1,4 +1,4 @@
-import marker from "./marker";
+import handle from "./handle";
 import base from "./base";
 import iroColor from "../color";
 
@@ -47,7 +47,7 @@ export default class slider extends base {
       100: {color: "#fff"}
     }));
     this._gradient = rect.gradient;
-    this.marker = new marker(baseGroup, opts.marker);
+    this.handle = new handle(baseGroup, opts.marker);
   }
 
   /**
@@ -66,7 +66,7 @@ export default class slider extends base {
       }
       if (changes.v) {
         var percent = (hsv.v / 100);
-        this.marker.move((opts.x + opts.r) + (percent * range.w), opts.y + (opts.h / 2));
+        this.handle.move((opts.x + opts.r) + (percent * range.w), opts.y + (opts.h / 2));
       }
     }
   }
