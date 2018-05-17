@@ -1,4 +1,5 @@
-import marker from "./marker";
+import handle from "./handle";
+import base from "./base";
 
 // css class prefix for this element
 var CLASS_PREFIX = "iro__wheel";
@@ -8,13 +9,14 @@ var PI = Math.PI,
     abs = Math.abs,
     round = Math.round;
 
-export default class wheel {
+export default class wheel extends base {
   /**
     * @constructor hue wheel UI
     * @param {svgRoot} svg - svgRoot object
     * @param {Object} opts - options
   */
-  constructor(svg, opts) {
+  constructor(parent, opts) {
+    super(parent, CLASS_PREFIX);
     this._opts = opts;
     this.type = "wheel";
   
@@ -23,9 +25,8 @@ export default class wheel {
         r = opts.r,
         border = opts.border;
   
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX,
-    });
+    var svg = parent.svg;
+    var baseGroup = this.g;
   
     baseGroup.circle(cX, cY, r + border.w / 2, {
       class: CLASS_PREFIX + "__border",
@@ -65,7 +66,7 @@ export default class wheel {
       opacity: 0
     });
   
-    this.marker = new marker(baseGroup, opts.marker);
+    this.handle = new handle(baseGroup, opts.marker);
   }
 
   /**
@@ -87,7 +88,7 @@ export default class wheel {
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
-      this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+      this.handle.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
     }
   }
 
@@ -99,16 +100,17 @@ export default class wheel {
   */
   input(x, y) {
     var opts = this._opts,
-        rangeMax = opts.rMax,
-        _x = opts.cX - x,
-        _y = opts.cY - y;
+        rangeMax = opts.rMax;
 
-    var angle = Math.atan2(_y, _x),
+    x = opts.r - x;
+    y = opts.r - y;
+
+    var angle = Math.atan2(y, x),
         // Calculate the hue by converting the angle to radians
         hue = round(angle * (180 / PI)) + 180,
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
-        dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
+        dist = Math.min(sqrt(x * x + y * y), rangeMax);
     
     hue = (opts.anticlockwise ? 360 - hue : hue);
 
@@ -117,21 +119,5 @@ export default class wheel {
       h: hue,
       s: round((100 / rangeMax) * dist)
     };
-  }
-
-  /**
-    * @desc Check if a point at (x, y) is inside this element
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Boolean} - true if the point is a "hit", else false
-  */
-  checkHit(x, y) {
-    var opts = this._opts;
-
-    // Check if the point is within the hue ring by comparing the point's distance from the centre to the ring's radius
-    // If the distance is smaller than the radius, then we have a hit
-    var dx = abs(x - opts.cX),
-        dy = abs(y - opts.cY);
-    return sqrt(dx * dx + dy * dy) < opts.r;
   }
 }

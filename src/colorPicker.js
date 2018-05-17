@@ -1,60 +1,9 @@
 import wheel from "./components/wheel";
 import slider from "./components/slider";
 import svg from "./util/svg";
+import {whenReady} from "./util/dom";
 import iroColor from "./color";
 import iroStyleSheet from "./stylesheet";
-
-const EVENT_MOUSEDOWN = "mousedown",
-      EVENT_MOUSEMOVE = "mousemove",
-      EVENT_MOUSEUP = "mouseup",
-      EVENT_TOUCHSTART = "touchstart",
-      EVENT_TOUCHMOVE = "touchmove",
-      EVENT_TOUCHEND = "touchend",
-      EVENT_READYSTATE_CHANGE = "readystatechange",
-      READYSTATE_COMPLETE = "complete";
-
-/**
-  * @desc listen to one or more events on an element
-  * @param {Element} el target element
-  * @param {Array} eventList the events to listen to
-  * @param {Function} callback the event callback function
-*/
-function listen(el, eventList, callback) {
-  for (var i = 0; i < eventList.length; i++) {
-    el.addEventListener(eventList[i], callback);
-  }
-};
-
-/**
-  * @desc remove an event listener on an element
-  * @param {Element} el target element
-  * @param {Array} eventList the events to remove
-  * @param {Function} callback the event callback function
-*/
-function unlisten(el, eventList, callback) {
-  for (var i = 0; i < eventList.length; i++) {
-    el.removeEventListener(eventList[i], callback);
-  }
-};
-
-/**
-  * @desc call fn callback when the page document is ready
-  * @param {Function} callback callback function to be called
-*/
-function whenReady(callback) {
-  var _this = this;
-  if (document.readyState == READYSTATE_COMPLETE) {
-    callback();
-  }
-  else {
-    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-      if (document.readyState == READYSTATE_COMPLETE) {
-        callback();
-        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
-      }
-    });
-  }
-};
 
 export default class colorPicker {
   /**
@@ -107,7 +56,7 @@ export default class colorPicker {
     this.el = el;
     this.svg = new svg(el, width, height, opts.display);
     this.ui = [
-      new wheel(this.svg, {
+      new wheel(this, {
         cX: leftMargin + bodyWidth / 2,
         cY: bodyWidth / 2,
         r: wheelRadius,
@@ -117,7 +66,7 @@ export default class colorPicker {
         lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
         anticlockwise: opts.anticlockwise
       }),
-      new slider(this.svg, {
+      new slider(this, {
         sliderType: "v",
         x: leftMargin + borderWidth,
         y: bodyWidth + sliderMargin,
@@ -140,7 +89,7 @@ export default class colorPicker {
     // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
     this.on("history:stateChange", (base) => {this.svg.updateUrls(base)});
     // Listen to events
-    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    // listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
     this.emit("mount", this);
   }
 
@@ -204,56 +153,6 @@ export default class colorPicker {
         callbackList = (events[eventType] || []).concat((events["*"] || []));
     for (var i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args); 
-    }
-  }
-
-  /**
-    * @desc DOM event handler
-    * @param {Event} e DOM event (currently either mouse or touch events)
-  */
-  handleEvent(e) {
-    // Detect if the event is a touch event by checking if it has the `touches` property
-    // If it is a touch event, use the first touch input
-    var point = e.touches ? e.changedTouches[0] : e,
-        // Get the screen position of the UI
-        rect = this.svg.el.getBoundingClientRect(),
-        // Convert the screen-space pointer position to local-space
-        x = point.clientX - rect.left,
-        y = point.clientY - rect.top;
-        
-    switch (e.type) {
-      case EVENT_MOUSEDOWN:
-      case EVENT_TOUCHSTART:
-        // Loop through each UI element and check if the point "hits" it
-        for (var i = 0; i < this.ui.length; i++) {
-          var uiElement = this.ui[i];
-          // If the element is hit, this means the user has clicked the element and is trying to interact with it
-          if (uiElement.checkHit(x, y)) {
-            // Set an internal reference to the uiElement being interacted with, for other internal event handlers
-            this._mouseTarget = uiElement;
-            // Attach event listeners
-            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
-            // Emit input start event
-            this.emit("input:start", this.color);
-            // Finally, use the position to update the picked color
-            this.color.hsv = this._mouseTarget.input(x, y);
-          }
-        }
-        break;
-      case EVENT_MOUSEMOVE:
-      case EVENT_TOUCHMOVE:
-        // Use the position to update the picker color
-        this.color.hsv = this._mouseTarget.input(x, y);
-        break;
-      case EVENT_MOUSEUP:
-      case EVENT_TOUCHEND:
-        this._mouseTarget = false;
-        this.emit("input:end", this.color);
-        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
-        break;
-    }
-    if (this._mouseTarget) {
-      e.preventDefault();
     }
   }
 }
