@@ -50,7 +50,7 @@ Add listeners to color picker events.
 | `mount` | fired once the color picker UI has been mounted into the DOM |
 | `*` | listen to all events |
 
-**See also:** The [Events](http://localhost:4000/projects/iro/docs/guide.html#Events) guide.
+**See also:** The [Events](http://rakujira.jp/projects/iro/docs/guide.html#Events) guide.
 
 **Example:**
 
