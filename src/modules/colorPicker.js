@@ -19,9 +19,9 @@ const EVENT_MOUSEDOWN = "mousedown",
   * @param {Array} eventList the events to listen to
   * @param {Function} callback the event callback function
 */
-function listen(el, eventList, callback) {
+function listen(el, eventList, callback, params={}) {
   for (var i = 0; i < eventList.length; i++) {
-    el.addEventListener(eventList[i], callback);
+    el.addEventListener(eventList[i], callback, params);
   }
 };
 
@@ -142,7 +142,7 @@ colorPicker.prototype = {
     // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
     this.on("history:stateChange", (base) => {this.svg.updateUrls(base)});
     // Listen to events
-    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {passive:false});
     this.emit("mount", this);
   },
 

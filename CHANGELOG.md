@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.4.2
+
+##### Fixes
+
+ - Fixes a warning caused by [some recent Chrome changes](https://www.chromestatus.com/features/5093566007214080), as reported in [#36](https://github.com/jaames/iro.js/issues/36).
+
 #### 3.4.1
 
 ##### Fixes

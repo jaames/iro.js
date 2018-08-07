@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.4.1
+ * iro.js v3.4.2
  * 2016-2018 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
@@ -776,8 +776,10 @@ var EVENT_MOUSEDOWN = "mousedown",
   * @param {Function} callback the event callback function
 */
 function listen(el, eventList, callback) {
+  var params = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
   for (var i = 0; i < eventList.length; i++) {
-    el.addEventListener(eventList[i], callback);
+    el.addEventListener(eventList[i], callback, params);
   }
 };
 
@@ -902,7 +904,7 @@ colorPicker.prototype = {
       _this3.svg.updateUrls(base);
     });
     // Listen to events
-    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive: false });
     this.emit("mount", this);
   },
 
@@ -1054,7 +1056,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.4.1"
+  version: "3.4.2"
 };
 
 /***/ }),
