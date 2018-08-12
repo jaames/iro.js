@@ -18,6 +18,7 @@ const EVENT_MOUSEDOWN = "mousedown",
   * @param {Element} el target element
   * @param {Array} eventList the events to listen to
   * @param {Function} callback the event callback function
+  * @param {Object} params params to pass to addEventListener
 */
 function listen(el, eventList, callback, params={}) {
   for (var i = 0; i < eventList.length; i++) {
@@ -142,7 +143,7 @@ colorPicker.prototype = {
     // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
     this.on("history:stateChange", (base) => {this.svg.updateUrls(base)});
     // Listen to events
-    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {passive:false});
+    listen(this.svg.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
     this.emit("mount", this);
   },
 
@@ -234,7 +235,7 @@ colorPicker.prototype = {
             // Set an internal reference to the uiElement being interacted with, for other internal event handlers
             this._mouseTarget = uiElement;
             // Attach event listeners
-            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive:false });
             // Emit input start event
             this.emit("input:start", this.color);
             // Finally, use the position to update the picked color

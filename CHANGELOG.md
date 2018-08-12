@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.4.3
+
+##### Fixes
+
+ - Further fixes to touch scrolling intervention in Chrome, referencing the advice given [here](https://developers.google.com/web/updates/2017/01/scrolling-intervention).
+
 #### 3.4.2
 
 ##### Fixes

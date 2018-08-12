@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.4.2
+ * iro.js v3.4.3
  * 2016-2018 James Daniel
  * Released under the MIT license
  * github.com/jaames/iro.js
@@ -774,6 +774,7 @@ var EVENT_MOUSEDOWN = "mousedown",
   * @param {Element} el target element
   * @param {Array} eventList the events to listen to
   * @param {Function} callback the event callback function
+  * @param {Object} params params to pass to addEventListener
 */
 function listen(el, eventList, callback) {
   var params = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
@@ -1003,7 +1004,7 @@ colorPicker.prototype = {
             // Set an internal reference to the uiElement being interacted with, for other internal event handlers
             this._mouseTarget = uiElement;
             // Attach event listeners
-            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+            listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
             // Emit input start event
             this.emit("input:start", this.color);
             // Finally, use the position to update the picked color
@@ -1056,7 +1057,7 @@ module.exports = {
   Color: _color2.default,
   ColorPicker: _colorPicker2.default,
   Stylesheet: _stylesheet2.default,
-  version: "3.4.2"
+  version: "3.4.3"
 };
 
 /***/ }),
@@ -1374,7 +1375,7 @@ var svgRoot = function svgRoot(parent, width, height, display) {
   svgElement.call(this, this, parent, "svg", {
     width: width,
     height: height,
-    style: "display:" + (display || "block")
+    style: "display:" + (display || "block") + ";touch-action:none"
   });
   this._defs = this.insert("defs");
   this._gradients = [];

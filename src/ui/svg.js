@@ -179,7 +179,7 @@ const svgRoot = function(parent, width, height, display) {
   svgElement.call(this, this, parent, "svg", {
     width, 
     height, 
-    style: "display:" + (display || "block")
+    style: "display:" + (display || "block") + ";touch-action:none"
   });
   this._defs = this.insert("defs");
   this._gradients = [];
