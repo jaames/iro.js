@@ -1,5 +1,17 @@
 ### Changelog
 
+#### 3.5.0
+
+This is more of a spring cleaning release, no changes / fixes that might affect the API have been made.
+
+##### Changes
+
+ - Rewritten API classes using the es6 syntax -- more could be rewritten to use other es6 features such as the spread operator, etc, but I'll save that for v4. Everything should remain functionally identical to the previous version for now.
+
+ - Moved the build process from webpack to [bili](https://github.com/egoist/bili) (which uses rollup under the hood). I've found the code it produces to be more lightweight than webpack + babel while still having the same functionality (even *before* messing about with force-mangling specific property names!). Config is also a lot cleaner.
+
+ - Removed `yarn.lock` file. Yarn was neat back in late 2017 because it fixed a lot of issues that NPM had at the time, but they've since caught up so Yarn is no longer relevant imo.
+
 #### 3.4.3
 
 ##### Fixes
