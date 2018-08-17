@@ -1,6 +1,3 @@
 ---
-index: true
-layout: SpecialLayout
+home: true
 ---
-
-Hello
