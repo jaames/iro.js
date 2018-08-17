@@ -21,42 +21,41 @@ var SVG_TRANSFORM_SHORTHANDS = {
 var ua = window.navigator.userAgent.toLowerCase();
 var IS_IE = /msie|trident|edge/.test(ua);
 var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(ua);
-/**
-  * @constructor svg element wrapper
-  * @param {svgRoot} root - svgRoot object
-  * @param {svgElement | Element} parent - parent node 
-  * @param {String} type - element tag name
-  * @param {Object} attrs - element attributes
-*/
-const svgElement = function(root, parent, type, attrs) {
-  var el = document.createElementNS(SVG_NAMESPACE, type);
-  this.el = el;
-  this.setAttrs(attrs);
-  (parent.el || parent).appendChild(el);
-  this._root = root;
-  this._svgTransforms = {};
-  this._transformList = el.transform ? el.transform.baseVal : false;
-};
 
-svgElement.prototype = {
-  constructor: svgElement,
+class svgElement {
+  /**
+    * @constructor svg element wrapper
+    * @param {svgRoot} root - svgRoot object
+    * @param {svgElement | Element} parent - parent node 
+    * @param {String} type - element tag name
+    * @param {Object} attrs - element attributes
+  */
+  constructor(root, parent, type, attrs) {
+    var el = document.createElementNS(SVG_NAMESPACE, type);
+    this.el = el;
+    this.setAttrs(attrs);
+    (parent.el || parent).appendChild(el);
+    this._root = root;
+    this._svgTransforms = {};
+    this._transformList = el.transform ? el.transform.baseVal : false;
+  }
 
   /**
     * @desc insert a new svgElement
     * @param {String} type - element tag name
     * @param {Object} attrs - element attributes
   */
-  insert: function(type, attrs) {
+  insert(type, attrs) {
     return new svgElement(this._root, this, type, attrs);
-  },
+  }
 
   /**
     * @desc shorthand to insert a new group svgElement
     * @param {Object} attrs - element attributes
   */
-  g: function(attrs) {
+  g(attrs) {
     return this.insert("g", attrs);
-  },
+  }
 
   /**
     * @desc shorthand to insert a new arc svgElement
@@ -67,7 +66,7 @@ svgElement.prototype = {
     * @param {Number} endAngle - arc end angle (in degrees)
     * @param {Object} attrs - element attributes
   */
-  arc: function(cx, cy, radius, startAngle, endAngle, attrs) {
+  arc(cx, cy, radius, startAngle, endAngle, attrs) {
     var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
     startAngle *= Math.PI / 180;
     endAngle *= Math.PI / 180;
@@ -78,7 +77,7 @@ svgElement.prototype = {
     attrs = attrs || {};
     attrs.d = ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
     return this.insert("path", attrs);
-  },
+  }
 
   /**
     * @desc shorthand to insert a new circle svgElement
@@ -87,20 +86,20 @@ svgElement.prototype = {
     * @param {Number} radius - circle radius
     * @param {Object} attrs - element attributes
   */
-  circle: function(cx, cy, radius, attrs) {
+  circle(cx, cy, radius, attrs) {
     attrs = attrs || {};
     attrs.cx = cx;
     attrs.cy = cy;
     attrs.r = radius;
     return this.insert("circle", attrs);
-  },
+  }
 
   /**
     * @desc set a rotate/translate/scale transform on this element
     * @param {String} type - transform (rotate | translate | scale)
     * @param {Array} args - transform values
   */
-  setTransform: function(type, args) {
+  setTransform(type, args) {
     if (!IS_IE) {  
       var transform, transformFn;
       var svgTransforms = this._svgTransforms;
@@ -118,91 +117,94 @@ svgElement.prototype = {
       // We have to force them instead... geez
       this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
     }
-  },
+  }
 
   /**
     * @desc set attributes on this element
     * @param {Object} attrs - element attributes
   */
-  setAttrs: function (attrs) {
+  setAttrs(attrs) {
     for (var attr in attrs) {
       var name = (attr in SVG_ATTRIBUTE_SHORTHANDS) ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
       this.el.setAttribute(name, attrs[attr]);
     }
-  },
+  }
 
-  setGradient: function(attr, gradient) {
+  setGradient(attr, gradient) {
     var attrs = {};
     attrs[attr] = gradient.getUrl();
     gradient._refs[attr] = this;
     this.gradient = gradient;
     this.setAttrs(attrs);
   }
-};
+}
 
-/**
-  * @constructor svg gradient wrapper
-  * @param {svgRoot} root - svgRoot object
-  * @param {String} type - gradient type (linear | radial)
-  * @param {Object} stops - gradient stops = {color, opacity} keyed by offset value
-*/
-const svgGradient = function(root, type, stops) {
-  var stopElements = [];
-  var gradient = root._defs.insert(type + GRADIENT_SUFFIX, {
-    id: "iro" + GRADIENT_SUFFIX + (GRADIENT_INDEX++)
-  });
-  for (var offset in stops) {
-    var stop = stops[offset];
-    stopElements.push(gradient.insert("stop", {
-      offset: offset + "%",
-      stopColor: stop.color,
-      stopOpacity: stop.opacity === undefined ? 1 : stop.opacity,
-    }));
+
+class svgGradient {
+  /**
+    * @constructor svg gradient wrapper
+    * @param {svgRoot} root - svgRoot object
+    * @param {String} type - gradient type (linear | radial)
+    * @param {Object} stops - gradient stops = {color, opacity} keyed by offset value
+  */
+  constructor(root, type, stops) {
+    var stopElements = [];
+    var gradient = root._defs.insert(type + GRADIENT_SUFFIX, {
+      id: "iro" + GRADIENT_SUFFIX + (GRADIENT_INDEX++)
+    });
+    for (var offset in stops) {
+      var stop = stops[offset];
+      stopElements.push(gradient.insert("stop", {
+        offset: offset + "%",
+        stopColor: stop.color,
+        stopOpacity: stop.opacity === undefined ? 1 : stop.opacity,
+      }));
+    }
+    this.el = gradient.el;
+    this.stops = stopElements;
+    this._refs = {};
   }
-  this.el = gradient.el;
-  this.stops = stopElements;
-  this._refs = {};
-};
 
-svgGradient.prototype.getUrl = function(base) {
-  var root = IS_SAFARI ? (base || window.location.href) : "";
-  return "url(" + root + "#" + this.el.id + ")";
-};
+  getUrl(base) {
+    var root = IS_SAFARI ? (base || window.location.href) : "";
+    return "url(" + root + "#" + this.el.id + ")";
+  }
+}
 
-/**
-  * @constructor svg root element (inherits svgElement)
-  * @param {svgElement | Element} parent - parent node 
-  * @param {Number} width - svg width
-  * @param {Number} height - svg height
-*/
-const svgRoot = function(parent, width, height, display) {
-  svgElement.call(this, this, parent, "svg", {
-    width, 
-    height, 
-    style: "display:" + (display || "block") + ";touch-action:none"
-  });
-  this._defs = this.insert("defs");
-  this._gradients = [];
-};
+export default class svgRoot extends svgElement {
+  /**
+    * @constructor svg root element (inherits svgElement)
+    * @param {svgElement | Element} parent - parent node 
+    * @param {Number} width - svg width
+    * @param {Number} height - svg height
+  */
+  constructor(parent, width, height, display) {
+    super(null, parent, "svg", {
+      width, 
+      height, 
+      style: "display:" + (display || "block") + ";touch-action:none"
+    });
+    this._root = this;
+    this._defs = this.insert("defs");
+    this._gradients = [];
+  }
 
-svgRoot.prototype = Object.create(svgElement.prototype);
-svgRoot.prototype.constructor = svgRoot;
-svgRoot.prototype.gradient = function(type, stops) {
-  var gradient = new svgGradient(this, type, stops);
-  this._gradients.push(gradient);
-  return gradient;
-};
-svgRoot.prototype.updateUrls = function(base) {
-  if (IS_SAFARI) {
-    var gradients = this._gradients;
-    for (var i = 0; i < gradients.length; i++) {
-      for (var key in gradients[i]._refs) {
-        var attrs = {};
-        attrs[key] = gradients[i].getUrl(base);
-        gradients[i]._refs[key].setAttrs(attrs);
+  gradient(type, stops) {
+    var gradient = new svgGradient(this, type, stops);
+    this._gradients.push(gradient);
+    return gradient;
+  }
+
+  updateUrls(base) {
+    if (IS_SAFARI) {
+      var gradients = this._gradients;
+      for (var i = 0; i < gradients.length; i++) {
+        for (var key in gradients[i]._refs) {
+          var attrs = {};
+          attrs[key] = gradients[i].getUrl(base);
+          gradients[i]._refs[key].setAttrs(attrs);
+        }
       }
     }
   }
-};
-
-module.exports = svgRoot;
+}
