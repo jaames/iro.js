@@ -134,4 +134,3 @@ export default class wheel {
     return sqrt(dx * dx + dy * dy) < opts.r;
   }
 }
-module.exports = wheel;

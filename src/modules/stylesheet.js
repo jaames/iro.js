@@ -40,11 +40,7 @@ export default class stylesheet {
     }
     return ret.join("\n");
   }
-
-  /**
-    * @desc Get an object representing the current css styles
-    * @return {Object} css object
-  */
+  
   get css() {
     var map = this.map;
     var ret = {};

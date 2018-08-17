@@ -43,7 +43,6 @@ function unlisten(el, eventList, callback) {
   * @param {Function} callback callback function to be called
 */
 function whenReady(callback) {
-  var _this = this;
   if (document.readyState == READYSTATE_COMPLETE) {
     callback();
   }
@@ -147,8 +146,7 @@ export default class colorPicker {
 
   /**
     * @desc update the selected color
-    * @param {Object} newValue - the new HSV values
-    * @param {Object} oldValue - the old HSV values
+    * @param {Object} color - an iroColor object with the new color value
     * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
     * @access protected
   */
@@ -177,8 +175,8 @@ export default class colorPicker {
 
   /**
     * @desc Set a callback function for an event
-    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
-    * @param {Function} callback The watch callback
+    * @param {String} eventType Name of the event to listen to, pass "*" to listen to all events
+    * @param {Function} callback Event callback
   */
   on(eventType, callback) {
     var events = this._events;
