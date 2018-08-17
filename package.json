@@ -1,7 +1,8 @@
 {
   "name": "@jaames/iro",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "A sleek and lightweight JS color picker - with zero dependencies",
+  "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "devDependencies": {
     "bili": "^3.0.13",
@@ -15,7 +16,8 @@
     "test": ""
   },
   "files": [
-    "dist/iro.js"
+    "dist/iro.js",
+    "dist/iro.es.js"
   ],
   "keywords": [
     "color",

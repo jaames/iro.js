@@ -12,7 +12,7 @@ const banner = `/*!
 module.exports = {
   banner,
   input: "./src/iro.js",
-  format: ["umd", "umd-min"],
+  format: ["umd", "umd-min", "es"],
   moduleName: "iro",
   js: "buble",
   alias: {
