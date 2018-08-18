@@ -76,8 +76,12 @@ html {
   box-sizing: inherit;
 }
 
+$hero-frame-padding-mobile: 8px;
 $hero-frame-padding: 48px;
 $hero-frame-radius: 12px;
+
+$breakpoint-medium: 760px;
+$breakpoint-large: 1140px;
 
 .navbar {
   display: none;
@@ -86,9 +90,13 @@ $hero-frame-radius: 12px;
 .hero {
   width: 100vw;
   min-height: 100vh;
-  padding: $hero-frame-padding;
+  padding: $hero-frame-padding-mobile;
   display: flex;
   position: relative;
+
+  @media (min-width: $breakpoint-large) {
+    padding: $hero-frame-padding;
+  }
 }
 
 .hero__frame {
@@ -145,6 +153,60 @@ $hero-frame-radius: 12px;
   -webkit-transform: translate3d(0,0,0);
 }
 
+.hero__body {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @media (min-width: $breakpoint-medium) {
+    flex-direction: row-reverse;
+  }
+  @media (min-width: $breakpoint-large) {
+    padding: 6rem;
+  }
+}
+
+.hero__head, .hero__foot {
+  flex: 0;
+  padding: 16px 24px;
+}
+
+.hero__foot {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: right;
+}
+
+.hero__half {
+  padding: 2rem;
+  @media (min-width: $breakpoint-medium) {
+    flex: 1;
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  @media (min-width: $breakpoint-large) {
+    padding: 0;
+  }
+}
+
+.intro {
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 60px;
+  max-width: 320px;
+  @media (min-width: $breakpoint-medium) {
+    margin-top: 80px;
+    max-width: none;
+  }
+}
+
+.demo {
+  justify-content: center;
+  align-items: center;
+}
+
 .githubCorner {
   display: block;
   position: absolute;
@@ -165,42 +227,6 @@ $hero-frame-radius: 12px;
   .githubCorner:hover & {
     transform: translate(-5px, 5px);
   }
-}
-
-.hero__body {
-  flex: 1;
-  display: flex;
-  flex-direction: row-reverse;
-  padding: 0 6rem;
-}
-
-.hero__head, .hero__foot {
-  flex: 0;
-  padding: 16px 24px;
-}
-
-.hero__foot {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
-  text-align: right;
-}
-
-.hero__half {
-  flex: 1;
-  flex-basis: 50%;
-  display: flex;
-  flex-direction: column;
-}
-
-.intro {
-  justify-content: center;
-  align-items: flex-start;
-  margin-top: 80px;
-}
-
-.demo {
-  justify-content: center;
-  align-items: center;
 }
 
 .logo {
