@@ -7,10 +7,11 @@
   "devDependencies": {
     "bili": "^3.0.13",
     "concurrently": "^3.5.1",
-    "node-sass": "^4.9.3",
     "node-static": "^0.7.10",
+    "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
-    "vuepress": "^0.14.2"
+    "vuepress": "^0.14.2",
+    "foundation-sites": "^6.5.0-rc.2"
   },
   "scripts": {
     "build": "bili && \\cp -r dist/ docs/.vuepress/theme/js",

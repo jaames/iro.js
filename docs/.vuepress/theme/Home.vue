@@ -27,21 +27,18 @@
             <h3 class="intro__sub">A lightweight, SVG-based color picker library.</h3>
             <div class="intro__buttons">
               <a href="//codepen.io/rakujira/pen/WZOeNq?editors=0010" target="_blank" class="button">Codepen Demo</a>
-              <a href="" class="button">Get Started →</a>
+              <router-link class="button" to="/introduction.html">Get Started →</router-link>
             </div>
           </div>
           <div class="hero__half demo" ref="demoContainer"></div>
         </div>
-        <div class="hero__foot">Designed & Built by James Daniel (@rakujira)</div>
+        <div class="hero__foot">Designed & Built by <a href="//rakujira.jp">James Daniel</a></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
-import iro from "./js/iro.es.js";
-
 export default {
   computed: {
     data () {
@@ -49,39 +46,31 @@ export default {
     }
   },
   mounted() {
-    this.wheel = new iro.ColorPicker(this.$refs.demoContainer, {
-      sliderMargin: 24,
-      markerRadius: 8,
-      borderWidth: 2,
-      borderColor: "#fff",
-      width: 320,
-      height: 320,
-      anticlockwise: true,
-      color: "#906bff",
-      css: {
-        ":root": {
-          "--bgcolor": "$color",
+    // https://vuepress.vuejs.org/guide/using-vue.html#browser-api-access-restrictions
+    import("./js/iro.es.js").then(module => {
+      const iro = module.default;
+      this.wheel = new iro.ColorPicker(this.$refs.demoContainer, {
+        sliderMargin: 24,
+        markerRadius: 8,
+        borderWidth: 2,
+        borderColor: "#fff",
+        width: 320,
+        height: 320,
+        anticlockwise: true,
+        color: "#906bff",
+        css: {
+          ":root": {
+            "--bgcolor": "$color",
+          }
         }
-      }
+      });
     });
   }
 }
 </script>
 
 <style lang="scss">
-html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-$hero-frame-padding-mobile: 8px;
-$hero-frame-padding: 48px;
-$hero-frame-radius: 12px;
-
-$breakpoint-medium: 760px;
-$breakpoint-large: 1140px;
+@import "./styles/config";
 
 .navbar {
   display: none;
@@ -94,13 +83,13 @@ $breakpoint-large: 1140px;
   display: flex;
   position: relative;
 
-  @media (min-width: $breakpoint-large) {
+  @include breakpoint(large) {
     padding: $hero-frame-padding;
   }
 }
 
 .hero__frame {
-  background-color: var(--bgcolor);
+  background-color: var(--bgcolor, $primary-color);
   // neat gradient effect, but causes performance dips :<
   // background-image: linear-gradient(#fff, #c1d5f1);
   // background-attachment: fixed;
@@ -113,13 +102,23 @@ $breakpoint-large: 1140px;
 .hero__frame--left, .hero__frame--right {
   top: 0;
   bottom: 0;
-  width: $hero-frame-padding + $hero-frame-radius;
+  width: $hero-frame-padding-mobile + $hero-frame-radius;
 }
 
 .hero__frame--top, .hero__frame--bottom {
   left: 0;
   right: 0;
-  height: $hero-frame-padding + $hero-frame-radius;
+  height: $hero-frame-padding-mobile + $hero-frame-radius;
+}
+
+@include breakpoint(medium) {
+  .hero__frame--left, .hero__frame--right {
+    width: $hero-frame-padding + $hero-frame-radius;
+  }
+
+  .hero__frame--top, .hero__frame--bottom {
+    height: $hero-frame-padding + $hero-frame-radius;
+  }
 }
 
 .hero__frame--left {
@@ -139,10 +138,10 @@ $breakpoint-large: 1140px;
 }
 
 .hero__content {
-  background: #171F30;
-  color: white;
+  background: $background;
+  color: $text-invert;
   border-radius: $hero-frame-radius;
-  box-shadow: 0 10px 15px -5px rgba(32, 32, 65, 0.25);
+  box-shadow: 0 10px 15px -5px rgba(32, 32, 64, 0.25);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -159,10 +158,10 @@ $breakpoint-large: 1140px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media (min-width: $breakpoint-medium) {
+  @include breakpoint(medium) {
     flex-direction: row-reverse;
   }
-  @media (min-width: $breakpoint-large) {
+  @include breakpoint(large) {
     padding: 6rem;
   }
 }
@@ -173,20 +172,20 @@ $breakpoint-large: 1140px;
 }
 
 .hero__foot {
-  font-size: 14px;
+  font-size: .9rem;
   color: rgba(255, 255, 255, 0.75);
   text-align: right;
 }
 
 .hero__half {
   padding: 2rem;
-  @media (min-width: $breakpoint-medium) {
+  @include breakpoint(medium) {
     flex: 1;
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
   }
-  @media (min-width: $breakpoint-large) {
+  @include breakpoint(large) {
     padding: 0;
   }
 }
@@ -196,13 +195,30 @@ $breakpoint-large: 1140px;
   align-items: flex-start;
   margin-top: 60px;
   max-width: 320px;
-  @media (min-width: $breakpoint-medium) {
-    margin-top: 80px;
+  @include breakpoint(medium) {
     max-width: none;
+  }
+  @include breakpoint(large) {
+    margin-top: 90px;
   }
 }
 
+.intro__buttons {
+  padding-top: 1rem;
+  margin: 0 -.5rem;
+  display: flex;
+}
+
+.intro__sub {
+  font-weight: normal;
+  font-size: 1.25rem;
+  margin: 1em 0;
+  padding-bottom: 0;
+  border: 0;
+}
+
 .demo {
+  padding-top: 1rem;
   justify-content: center;
   align-items: center;
 }
@@ -217,11 +233,11 @@ $breakpoint-large: 1140px;
 .githubCorner__svg {
   width: 90px;
   height: 90px;
-  fill: #fff;
+  fill: $text-invert;
   transition: transform 0.2s ease;
 
   .octo-arm, .octo-body {
-    fill: #171F30;
+    fill: $background;
   }
 
   .githubCorner:hover & {
@@ -235,7 +251,7 @@ $breakpoint-large: 1140px;
   margin-right: auto;
   & path, & ellipse {
     fill: none;
-    stroke:white;
+    stroke: $text-invert;
     stroke-width: 3px;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -243,27 +259,17 @@ $breakpoint-large: 1140px;
   }
 }
 
-.intro__buttons {
-  padding-top: 1rem;
-  margin: 0 -.5rem;
-  display: flex;
-}
-
-.intro__sub {
-  font-weight: normal;
-}
-
 .button {
   margin: 0 .5rem;
-  background: #fff;
-  color: #000;
+  background: $text-invert;
+  color: $text;
   border-radius: 5px;
   padding: .75rem 1rem;
   text-decoration: none;
-  transition: transform 0.2s ease;
+  // transition: transform 0.2s ease;
 
   &:hover {
-    transform: scale(1.05);
+    // transform: scale(1.05);
   }
 
   &:visited {
