@@ -1,5 +1,35 @@
 ### Changelog
 
+#### 3.5.1
+
+##### Additions
+
+ - Add es6 module build, since both rollup and webpack [will import this directly](https://github.com/rollup/rollup/wiki/pkg.module) if it's available.
+
+#### 3.5.0
+
+This is more of a spring cleaning release, no changes / fixes that might affect the API have been made.
+
+##### Changes
+
+ - Rewritten API classes using the es6 syntax -- more could be rewritten to use other es6 features such as the spread operator, etc, but I'll save that for v4. Everything should remain functionally identical to the previous version for now.
+
+ - Moved the build process from webpack to [bili](https://github.com/egoist/bili) (which uses rollup under the hood). I've found the code it produces to be more lightweight than webpack + babel while still having the same functionality (even *before* messing about with force-mangling specific property names!). Config is also a lot cleaner.
+
+ - Removed `yarn.lock` file. Yarn was neat back in late 2017 because it fixed a lot of issues that NPM had at the time, but they've since caught up so Yarn is no longer relevant imo.
+
+#### 3.4.3
+
+##### Fixes
+
+ - Further fixes to touch scrolling intervention in Chrome, referencing the advice given [here](https://developers.google.com/web/updates/2017/01/scrolling-intervention).
+
+#### 3.4.2
+
+##### Fixes
+
+ - Fixes a warning caused by [some recent Chrome changes](https://www.chromestatus.com/features/5093566007214080), as reported in [#36](https://github.com/jaames/iro.js/issues/36).
+
 #### 3.4.1
 
 ##### Fixes

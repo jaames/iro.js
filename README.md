@@ -2,8 +2,6 @@
 
 <img width="100%" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
 
-⚠️ Migrating from version 2.x ? Please make sure to read the [changelog](https://github.com/jaames/iro.js/blob/master/CHANGELOG.md#3.0.0).
-
 ### Main Features
 
  * Customizable SVG-based UI
@@ -14,7 +12,7 @@
 
 ### Browser Support
 
-iro.js aims to support all modern browsers, and has been successfully tested on IE 9 +.
+iro.js aims to support all modern browsers, but it has been successfully tested as far back as IE 9 +.
 
 ### Get Started
 

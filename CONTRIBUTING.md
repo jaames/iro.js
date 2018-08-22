@@ -3,7 +3,6 @@
  * Add code tests (I really need to learn how to do this tbh, it's super important)
  * Plugin support
  * Add transparency support
- * Publish on NPM
 
 ### Building
 
