@@ -10,13 +10,11 @@ const EVENT_MOUSEDOWN = "mousedown",
 export default class baseComponent {
 
   constructor(parent, className) {
-    var g = parent.svg.g({
+    var root = parent.svg.svg({
       class: className
     });
-    var el = g.el;
-    listen(el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
-    this.g = g;
-    this.el = el;
+    listen(root.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
+    this.root = root;
     this.parent = parent;
   }
 
@@ -26,7 +24,7 @@ export default class baseComponent {
     e.preventDefault();
     var point = e.touches ? e.changedTouches[0] : e,
         // Get the screen position of the UI
-        rect = this.el.getBoundingClientRect(),
+        rect = this.root.el.getBoundingClientRect(),
         // Convert the screen-space pointer position to local-space
         x = point.clientX - rect.left,
         y = point.clientY - rect.top;

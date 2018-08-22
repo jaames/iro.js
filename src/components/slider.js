@@ -29,7 +29,7 @@ export default class slider extends base {
     opts.sliderType = opts.sliderType || "v";
     this.type = "slider";
     this._opts = opts;
-    var baseGroup = this.g;
+    var baseGroup = this.root;
     var radius = r + borderWidth / 2;
     var rect = baseGroup.insert("rect", {
       class: CLASS_PREFIX + "__value",
@@ -39,7 +39,7 @@ export default class slider extends base {
       y: y - borderWidth / 2,
       width: w + borderWidth,
       height: h + borderWidth,
-      strokeWidth: borderWidth,
+      "stroke-width": borderWidth,
       stroke: opts.border.color,
     });
     rect.setGradient("fill", svg.gradient("linear", {

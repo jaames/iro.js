@@ -1,22 +1,12 @@
 var GRADIENT_INDEX = 0;
 var GRADIENT_SUFFIX = "Gradient";
 var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-var SVG_ATTRIBUTE_SHORTHANDS = {
-  class: "class",
-  stroke: "stroke",
-  strokeWidth: "stroke-width",
-  fill: "fill",
-  opacity: "opacity",
-  offset: "offset",
-  stopColor: "stop-color",
-  stopOpacity: "stop-opacity",
-};
 // TODO: figure out why these aren't being compressed properly?
-var SVG_TRANSFORM_SHORTHANDS = {
-  translate: "setTranslate",
-  scale: "setScale",
-  rotate: "setRotate"
-};
+// var SVG_TRANSFORM_SHORTHANDS = {
+//   translate: "setTranslate",
+//   scale: "setScale",
+//   rotate: "setRotate"
+// };
 // sniff useragent string to check if the user is running IE, Edge or Safari
 var ua = window.navigator.userAgent.toLowerCase();
 var IS_IE = /msie|trident|edge/.test(ua);
@@ -47,6 +37,14 @@ class svgElement {
   */
   insert(type, attrs) {
     return new svgElement(this._root, this, type, attrs);
+  }
+
+  /**
+    * @desc shorthand to insert a new svg element
+    * @param {Object} attrs - element attributes
+  */
+  svg(attrs) {
+    return this.insert("svg", attrs);
   }
 
   /**
@@ -94,29 +92,37 @@ class svgElement {
     return this.insert("circle", attrs);
   }
 
-  /**
-    * @desc set a rotate/translate/scale transform on this element
-    * @param {String} type - transform (rotate | translate | scale)
-    * @param {Array} args - transform values
-  */
-  setTransform(type, args) {
-    if (!IS_IE) {  
-      var transform, transformFn;
-      var svgTransforms = this._svgTransforms;
-      if (!svgTransforms[type]) {
-        transform = this._root.el.createSVGTransform();
-        svgTransforms[type] = transform;
-        this._transformList.appendItem(transform);
-      } else {
-        transform = svgTransforms[type];
-      }
-      transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
-      transform[transformFn].apply(transform, args);
-    } else {
-      // Microsoft still can't make a web browser that actually works, as such, Edge + IE dont implement SVG transforms properly.
-      // We have to force them instead... geez
-      this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
+  // /**
+  //   * @desc set a rotate/translate/scale transform on this element
+  //   * @param {String} type - transform (rotate | translate | scale)
+  //   * @param {Array} args - transform values
+  // */
+  // setTransform(type, args) {
+  //   if (!IS_IE) {  
+  //     var transform, transformFn;
+  //     var svgTransforms = this._svgTransforms;
+  //     if (!svgTransforms[type]) {
+  //       transform = this._root.el.createSVGTransform();
+  //       svgTransforms[type] = transform;
+  //       this._transformList.appendItem(transform);
+  //     } else {
+  //       transform = svgTransforms[type];
+  //     }
+  //     transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
+  //     transform[transformFn].apply(transform, args);
+  //   } else {
+  //     // Microsoft still can't make a web browser that actually works, as such, Edge + IE dont implement SVG transforms properly.
+  //     // We have to force them instead... geez
+  //     this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
+  //   }
+  // }
+
+  css(styles) {
+    let cssText = "";
+    for (prop in styles) {
+      cssText += prop + ":" + styles[prop] + ";";
     }
+    this.setAttrs({style: cssText});
   }
 
   /**
@@ -124,9 +130,8 @@ class svgElement {
     * @param {Object} attrs - element attributes
   */
   setAttrs(attrs) {
-    for (var attr in attrs) {
-      var name = (attr in SVG_ATTRIBUTE_SHORTHANDS) ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
-      this.el.setAttribute(name, attrs[attr]);
+    for (var name in attrs) {
+      this.el.setAttribute(name, attrs[name]);
     }
   }
 
@@ -155,8 +160,8 @@ class svgGradient {
       var stop = stops[offset];
       stopElements.push(gradient.insert("stop", {
         offset: offset + "%",
-        stopColor: stop.color,
-        stopOpacity: stop.opacity === undefined ? 1 : stop.opacity,
+        "stop-color": stop.color,
+        "stop-opacity": stop.opacity === undefined ? 1 : stop.opacity,
       }));
     }
     this.el = gradient.el;

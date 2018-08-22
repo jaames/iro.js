@@ -26,18 +26,18 @@ export default class wheel extends base {
         border = opts.border;
   
     var svg = parent.svg;
-    var baseGroup = this.g;
+    var baseGroup = this.root;
   
     baseGroup.circle(cX, cY, r + border.w / 2, {
       class: CLASS_PREFIX + "__border",
       fill: "#fff",
       stroke: border.color,
-      strokeWidth: border.w,
+      "stroke-width": border.w,
     });
   
     var ringGroup = baseGroup.g({
       class: CLASS_PREFIX + "__hue",
-      strokeWidth: r,
+      "stroke-width": r,
       fill: "none",
     });
   

@@ -9,22 +9,23 @@ export default class handle {
     * @param {Object} props - options
   */
   constructor(svg, props) {
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX
+    var baseGroup = svg.svg({
+      class: CLASS_PREFIX,
+      style: "overflow:visible"
     });
     baseGroup.circle(0, 0, props.r, {
       class: CLASS_PREFIX + "__outer",
       fill: "none",
-      strokeWidth: 5,
+      "stroke-width": 5,
       stroke: "#000",
     });
     baseGroup.circle(0, 0, props.r, {
       class: CLASS_PREFIX + "__inner",
       fill: "none",
-      strokeWidth: 2,
+      "stroke-width": 2,
       stroke: "#fff",
     });
-    this.g = baseGroup;
+    this.root = baseGroup;
   }
 
   /**
@@ -33,6 +34,6 @@ export default class handle {
     * @param {Number} y - point y coordinate
   */
   move(x, y) {
-    this.g.setTransform("translate", [x, y]);
+    this.root.setAttrs({x, y});
   }
 }
