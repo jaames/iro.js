@@ -1,22 +1,26 @@
 ---
 title: Guide
-github_url: https://github.com/jaames/iro.js/blob/master/www/src/guide.md
 ---
 
-### Getting Started
+## Getting Started
 
-To set up a color picker, we need to make a HTML element with a unique identifier (an `id` attribute works well!) to act as a container:
+In your HTML, create an element to act as a container for the color picker. This container element needs to have a unique identifier such as an `id` attribute:
+
 ```html
 <div id="color-picker-container"></div>
 ```
 
-Now all we need to do is create a new instance of `iro.ColorPicker`, and tell it to use the container element we just made by providing a matching [CSS selector](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors):
+Now in JavaScript, create a new `iro.ColorPicker` and attach it to the container by providing a matching CSS selector:
+
 ```js
 var demoColorPicker = new iro.ColorPicker("#color-picker-container");
 ```
-**Note:** You can provide a DOM object instead of a CSS selector if you prefer!
 
-Of course you might want to customise some things, just provide a list of options when creating a new color picker:
+::: tip
+You can also use a DOM object instead of a CSS selector if needed -- this might be more suitable if you're integrating iro.js into an application created with a frontend framework such as Vue or React.
+:::
+
+The second parameter allows you to provide custom options to the color picker:
 
 ```js
 var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
@@ -28,11 +32,9 @@ var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
 });
 ```
 
-For a full list of options, check out the options guide below.
+## Color Picker Options
 
-### Color Picker Options
-
-As mentioned in the Getting Started section, when creating a new color picker you can customise it by providing a list of options:
+When creating a new color picker you can customise it by providing a list of options:
 
 ```js
 var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
@@ -49,11 +51,11 @@ var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
 });
 ```
 
-##### Available Options
+### Available Options
 
 | Name            | Description | Default |
 |:----------------|:------------|:--------|
-| `color`         | Set the default color from any [supported color format](color_api.html#Supported-Color-Formats), or even an instance of [iro.Color](color_api.html). | `"#fff"` |
+| `color`         | Set the default color from any [supported color format](/color_api.html#Supported-Color-Formats), or even an instance of [iro.Color](/color_api.html). | `"#fff"` |
 | `width`         | Total width of the control UI | `320` |
 | `height`        | Total height of the control UI | `320` |
 | `padding`       | Padding between the markers and the edge of the controls. | `6` |
@@ -67,11 +69,11 @@ var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
 | `wheelLightness`| If set to `false`, the color wheel will not fade to black as the color's lightness decreases. This is not recommended, for reasons noted in [this issue thread](https://github.com/jaames/iro.js/issues/9#issuecomment-336628451) | `undefined` |
 | `css`           | The CSS template used for the [Dynamic CSS](#Dynamic-CSS) feature. | `{}` |
 
-### Using the Selected Color
+## Using the Selected Color
 
-Each color picker instance has a [`color`](color_api.html) object, which, as you might expect, stores the current color.
+Each color picker instance has a [`color`](/color_api.html) object which stores the current color.
 
-##### Getting and Setting the Color
+### Getting and Setting the Color
 
 The color object has a few properties that can be used to both get and set the selected color in different formats such as RGB and HSL. When the color is set this way, the UI will update and the [`color:change`](#color:change) event will fire.
 
@@ -86,7 +88,7 @@ var rgb = demoColorPicker.color.rgb;
 demoColorPicker.color.rgb = { r: 255, g: 0, b: 0 };
 ```
 
-##### Property List
+### Property List
 
 | Name  | Example Format |
 |:------|:---------------|
@@ -97,9 +99,9 @@ demoColorPicker.color.rgb = { r: 255, g: 0, b: 0 };
 | `hexString` | `"#FF0000"` |
 | `hslString` | `"hsl(360, 100%, 50%)"` |
 
-### Events
+## Events
 
-Each color picker has an event system that can be used to listen to certain events, like when the user starts interacting with the color picker. Event listers are added with the [`on`](colorPicker_api.html#on) method, and can be removed with the [`off`](colorPicker_api.html#off) method.
+Each color picker has an event system that can be used to listen to certain events, like when the user starts interacting with the color picker. Event listers are added with the [`on`](/colorPicker_api.html#on) method, and can be removed with the [`off`](/colorPicker_api.html#off) method.
 
 Here's an example showing what adding and then removing a listener to the `input:start` event might look like:
 
@@ -113,24 +115,24 @@ demoColorPicker.on("input:start", function onInputStart() {
 demoColorPicker.off("input:start", onInputStart);
 ```
 
-#### Event Types
+## Event Types
 
-###### mount
+### mount
 
 Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. 
 A reference to the colorPicker object is passed to this event's callback function.
 
-###### input:start
+### input:start
 
 Fired whenever the users starts interacting with the color picker controls. 
 The colorPicker's `color` object is passed to this event's callback function.
 
-###### input:end
+### input:end
 
 Fired whenever the user stops interacting with the color picker controls.
 The colorPicker's `color` object is passed to this event's callback function.
 
-###### color:change
+### color:change
 
 Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. 
 This event's callback function gets passed two values:
@@ -165,9 +167,11 @@ demoColorPicker.on("color:change", function(color, changes) {
 });
 ```
 
-**Note:** the `color:change` event will fire _very_ quickly as the user drags the controls around. To slow it down you may want to try [debouncing](https://davidwalsh.name/javascript-debounce-function) your callback function.
+::: tip
+The `color:change` event will fire _very_ quickly as the user drags the controls around. To slow it down you may want to try [debouncing](https://davidwalsh.name/javascript-debounce-function) your callback function.
+:::
 
-### Dynamic CSS
+## Dynamic CSS
 
 With the Dynamic CSS feature you can automatically write CSS styles and update them as the selected color changes. All you need to do is provide a CSS "template" when creating the color picker:
 

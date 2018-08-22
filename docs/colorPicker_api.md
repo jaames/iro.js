@@ -1,9 +1,8 @@
 ---
 title: Color Picker API
-github_url: https://github.com/jaames/iro.js/blob/master/www/src/colorPicker_api.md
 ---
 
-### Constructor
+## Constructor
 
 **Arguments:**
 
@@ -25,11 +24,11 @@ github_url: https://github.com/jaames/iro.js/blob/master/www/src/colorPicker_api
   * `{Boolean} anticlockwise`
   * `{Object} css`
 
-**See also:** The [Color Picker Options](guide.html#Color-Picker-Options) guide.
+**See also:** The [Color Picker Options](/guide.html#Color-Picker-Options) guide.
 
-### Methods
+## Methods
 
-##### on
+### on
 
 **Arguments:**
 
@@ -50,7 +49,7 @@ Add listeners to color picker events.
 | `mount` | fired once the color picker UI has been mounted into the DOM |
 | `*` | listen to all events |
 
-**See also:** The [Events](http://rakujira.jp/projects/iro/docs/guide.html#Events) guide.
+**See also:** The [Events](/guide.html#Events) guide.
 
 **Example:**
 
@@ -64,7 +63,7 @@ function colorChangeHandler(color) {
 example.on("color:change", colorChangeHandler)
 ```
 
-##### off
+### off
 
 **Arguments:**
 
@@ -90,37 +89,37 @@ example.on("color:change", colorChangeHandler);
 example.off("color:change", colorChangeHandler);
 ```
 
-### Properties
+## Properties
 
-##### color
-
-**Details:**
-
-An [`iro.Color`](colorPicker_api.html) object representing the currently selected color. It is tied to the color picker, as such updating this color object will also update the color picker.
-
-**See also:** [Using the Selected Color](guide.html#Using-the-Selected-Color)
-
-#### stylesheet
+### color
 
 **Details:**
 
-An [`iro.Stylesheet`](stylesheet_api.html) object representing the dynamic CSS stylesheet for the color picker.
+An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. It is tied to the color picker, as such updating this color object will also update the color picker.
 
-**See also:** [Dynamic CSS](guide.html#Dynamic-CSS)
+**See also:** [Using the Selected Color](/guide.html#Using-the-Selected-Color)
 
-##### el
+### stylesheet
+
+**Details:**
+
+An [`iro.Stylesheet`](/stylesheet_api.html) object representing the dynamic CSS stylesheet for the color picker.
+
+**See also:** [Dynamic CSS](/guide.html#Dynamic-CSS)
+
+### el
 
 **Details:**
 
 The DOM object for the HTML element being used as a wrapper for the color picker.
 
-##### ui
+### ui
 
 **Details:**
 
 An array of "components" used to make up the color picker's UI.
 
-##### css
+### css
 
 **Details:**
 

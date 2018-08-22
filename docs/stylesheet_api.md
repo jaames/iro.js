@@ -1,17 +1,14 @@
 ---
 title: Stylesheet API
-github_url: https://github.com/jaames/iro.js/blob/master/www/src/stylesheet_api.md
 ---
 
 The stylesheet API is used by colorPicker objects to dynamically update CSS styles whenever the selected color changes.
 
-Under the hood, it works with the [StyleSheet API](https://developer.mozilla.org/en-US/docs/Web/API/Stylesheet) to update the contents of a `<style>` element rather than using inline `style=""` attributes, so it's actually rather flexible once cross-browser inconsistencies have been taken care of.
+Under the hood, it works with the [StyleSheet API](https://developer.mozilla.org/en-US/docs/Web/API/Stylesheet) to update the contents of a `<style>` element rather than using inline `style=""` attributes.
 
-The API is made accessible through the `iro.Stylesheet` constructor so that developers can make use of it should they wish to, however if you're looking for more functionality then I highly recommend using something like [cssobj](https://github.com/cssobj/cssobj). Iro is a color picker widget at heart, not a fancy CSS-in-JS library. :P
+## Methods
 
-### Methods
-
-##### setRule
+### setRule
 
 **Arguments:**
 
@@ -35,15 +32,15 @@ stylesheet.setRule("body", "background-color", "red")
 stylesheet.setRule(".example", "border", "1px solid red")
 ```
 
-### Properties
+## Properties
 
-##### enabled
+### enabled
 
 **Details:**
 
 Used to enable/disable a stylesheet; if set to `false`, the styles will not be applied to the page.
 
-##### css
+### css
 
 **Details:**
 
@@ -58,7 +55,7 @@ The stylesheet's current CSS rules as an object. For example:
 }
 ```
 
-##### cssText
+### cssText
 
 **Details:**
 
@@ -73,13 +70,13 @@ body {
 }
 ```
 
-##### sheet
+### sheet
 
 **Details:**
 
 A reference to the stylesheet's [CSSStyleSheet](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet) object.
 
-##### rules
+### rules
 
 **Details:**
 
