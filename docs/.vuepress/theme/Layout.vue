@@ -2,18 +2,11 @@
   <div
     class="theme-container"
     :class="pageClasses"
-    @touchstart="onTouchStart"
-    @touchend="onTouchEnd"
   >
     <Navbar
       v-if="shouldShowNavbar"
       @toggle-sidebar="toggleSidebar"
     />
-
-    <div
-      class="sidebar-mask"
-      @click="toggleSidebar(false)"
-    ></div>
 
     <Sidebar
       :items="sidebarItems"
@@ -105,6 +98,7 @@ export default {
     },
 
     sidebarItems () {
+
       return resolveSidebarItems(
         this.$page,
         this.$route,
@@ -150,26 +144,6 @@ export default {
   methods: {
     toggleSidebar (to) {
       this.isSidebarOpen = typeof to === 'boolean' ? to : !this.isSidebarOpen
-    },
-
-    // side swipe
-    onTouchStart (e) {
-      this.touchStart = {
-        x: e.changedTouches[0].clientX,
-        y: e.changedTouches[0].clientY
-      }
-    },
-
-    onTouchEnd (e) {
-      const dx = e.changedTouches[0].clientX - this.touchStart.x
-      const dy = e.changedTouches[0].clientY - this.touchStart.y
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-        if (dx > 0 && this.touchStart.x <= 80) {
-          this.toggleSidebar(true)
-        } else {
-          this.toggleSidebar(false)
-        }
-      }
     },
 
     onSWUpdated (e) {

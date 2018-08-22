@@ -1,13 +1,22 @@
+@import "~foundation-sites/scss/foundation";
+
 // colors
 $primary-color: #906bff;
 $primary-color-light: #b298ff;
 $text: #141414;
 $text-invert: #fff;
 $background: #171F30;
-$anchor-color: #b298ff;
+$light-gray: #f3f5f7;
+$medium-gray: #cbd2da;
+$anchor-color: $primary-color;
 $anchor-color-hover: #8284ff;
 $body-font-color: $text;
 $code-color: $text;
+$code-background: $light-gray;
+$table-striped-background: $light-gray;
+$table-head-background: $table-striped-background;
+$table-body-background: $table-striped-background;
+$hr-color: $dark-gray;
 
 // type
 $body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -15,22 +24,23 @@ $font-family-monospace: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 $header-font-weight: bold;
 $hr-margin: 1em 0;
 $hr-width: none;
+$code-border: none;
+$table-border: 1px solid $light-gray;
 
-// code layout
+// syntax highlighting
 $codeSyntax: (
-  color: #eeeeee,
-  background: $background,
+  color: $text,
+  background: $code-background,
   comment: #7e8a9c,
-  punctuation: #c9c9c9,
-  property: $primary-color-light,
+  punctuation: #9ea5af,
+  property: $primary-color,
   boolean: #fa628d,
-  string: #5aec9c,
-  variable: $primary-color-light,
-  atrule: #75b1ff,
-  keyword: $primary-color-light,
+  string: #20af50,
+  variable: $primary-color,
+  atrule: #2196f3,
+  keyword: $primary-color,
   regex: #eb6f1d
 );
-$code-border: none;
 
 // layout
 $hero-frame-padding-mobile: 8px;
@@ -43,5 +53,3 @@ $breakpoints: (
   medium: 760px,
   large: 1140px
 );
-
-@import "~foundation-sites/scss/foundation";

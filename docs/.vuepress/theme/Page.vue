@@ -2,7 +2,9 @@
   <div class="page">
     <slot name="top"/>
 
-    <Content :custom="false"/>
+    <h1>{{$page.title}}</h1>
+
+    <Content class="markdown" :custom="false"/>
 
     <div class="page-edit">
       <div
@@ -13,48 +15,19 @@
           :href="editLink"
           target="_blank"
           rel="noopener noreferrer"
-        >{{ editLinkText }}</a>
+        >Edit this page on GitHub
         <OutboundLink/>
-      </div>
-
-      <div
-        class="last-updated"
-        v-if="lastUpdated"
-      >
-        <span class="prefix">{{ lastUpdatedText }}: </span>
-        <span class="time">{{ lastUpdated }}</span>
+        </a>
       </div>
     </div>
 
-    <div class="page-nav" v-if="prev || next">
-      <p class="inner">
-        <span
-          v-if="prev"
-          class="prev"
-        >
-          ←
-          <router-link
-            v-if="prev"
-            class="prev"
-            :to="prev.path"
-          >
-            {{ prev.title || prev.path }}
-          </router-link>
-        </span>
-
-        <span
-          v-if="next"
-          class="next"
-        >
-          <router-link
-            v-if="next"
-            :to="next.path"
-          >
-            {{ next.title || next.path }}
-          </router-link>
-          →
-        </span>
-      </p>
+    <div class="pageNav" v-if="prev || next">
+      <router-link v-if="prev" :to="prev.path" class="pageNav__prev">
+        ← {{ prev.title || prev.path }}
+      </router-link>
+      <router-link v-if="next" :to="next.path" class="pageNav__next">
+        {{ next.title || next.path }} →
+      </router-link>
     </div>
 
     <slot name="bottom"/>
@@ -127,14 +100,6 @@ export default {
       if (docsRepo && editLinks) {
         return this.createEditLink(repo, docsRepo, docsDir, docsBranch, path)
       }
-    },
-
-    editLinkText () {
-      return (
-        this.$themeLocaleConfig.editLinkText ||
-        this.$site.themeConfig.editLinkText ||
-        `Edit this page`
-      )
     }
   },
 
@@ -193,3 +158,19 @@ function find (page, items, offset) {
   }
 }
 </script>
+<style lang="scss">
+  .pageNav {
+    margin: 3rem 0;
+    display: flex;
+  }
+
+  .pageNav__prev {
+    margin-right: auto;
+  }
+
+  .pageNav__next {
+    margin-left: auto;
+  }
+
+</style>
+

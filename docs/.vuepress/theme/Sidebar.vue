@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
+    <Logo class="logo"/>
     <NavLinks/>
-    <slot name="top"/>
     <ul class="sidebar-links" v-if="items.length">
       <li v-for="(item, i) in items" :key="i">
         <SidebarGroup
@@ -15,7 +15,6 @@
         <SidebarLink v-else :item="item"/>
       </li>
     </ul>
-    <slot name="bottom"/>
   </div>
 </template>
 
@@ -23,10 +22,11 @@
 import SidebarGroup from './SidebarGroup.vue'
 import SidebarLink from './SidebarLink.vue'
 import NavLinks from './NavLinks.vue'
+import Logo from './icons/logo.svg'
 import { isActive } from './util'
 
 export default {
-  components: { SidebarGroup, SidebarLink, NavLinks },
+  components: { Logo, SidebarGroup, SidebarLink, NavLinks },
 
   props: ['items'],
 
@@ -78,36 +78,43 @@ function resolveOpenGroupIndex (route, items) {
 }
 </script>
 
-<style lang="stylus">
-@import './styles/config.styl'
+<style lang="scss">
+@import "./styles/config.scss";
 
-.sidebar
-  ul
-    padding 0
-    margin 0
-    list-style-type none
-  a
-    display inline-block
-  .nav-links
-    display none
-    border-bottom 1px solid $borderColor
-    padding 0.5rem 0 0.75rem 0
-    a
-      font-weight 600
-    .nav-item, .repo-link
-      display block
-      line-height 1.25rem
-      font-size 1.1em
-      padding 0.5rem 0 0.5rem 1.5rem
-  .sidebar-links
-    padding 1.5rem 0
+.sidebar {
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
 
-@media (max-width: $MQMobile)
-  .sidebar
-    .nav-links
-      display block
-      .dropdown-wrapper .nav-dropdown .dropdown-item a.router-link-active::after
-        top calc(1rem - 2px)
-    .sidebar-links
-      padding 1rem 0
+  a {
+    // color: $text-invert;
+    display: inline-block;
+  }
+
+  .logo {
+    width: 160px;
+    margin: 1rem 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .nav-links {
+    display: none;
+    padding: 0.5rem 0 0.75rem 0;
+
+    a {
+      font-weight: 600;
+    }
+    .nav-item, .repo-link {
+      display: block;
+      line-height: 1.25rem;
+      font-size: 1.1em;
+      padding: 0.5rem 0 0.5rem 1.5rem;
+    }
+  }
+  .sidebar-links {
+    // padding: 1.5rem 0;
+  }
+}
 </style>

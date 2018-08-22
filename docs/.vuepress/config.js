@@ -14,10 +14,27 @@ module.exports = {
     ['meta', { name: 'twitter:image:height', property: 'og:image:height', content: '400' }],
   ],
   themeConfig: {
+    repo: 'jaames/iro.js',
+    docsDir: 'docs',
+    docsBranch: 'gh-pages',
     sidebar: [
       '/',
-      '/page-a',
-      ['/page-b', 'Explicit link text']
+      '/introduction.html',
+      '/guide.html',
+      '/colorPicker_api.html',
+      '/color_api.html',
+      '/stylesheet_api.html',
     ]
+  },
+  configureWebpack: (config, isServer) => {
+    config.module.rules
+      .filter(r => r.test.toString().includes("svg"))
+      .forEach(r => {
+        r.test = /\.(png|jpe?g|gif)$/;
+      });
+    config.module.rules.push({
+      test: /\.svg$/,
+      loader: 'vue-svg-loader'
+    });
   }
 }

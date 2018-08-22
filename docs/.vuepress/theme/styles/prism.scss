@@ -1,7 +1,6 @@
 code[class*="language-"],
 pre[class*="language-"] {
   color: map-get($codeSyntax, color);
-  position: relative;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -20,14 +19,6 @@ pre[class*="language-"] {
 pre[class*="language-"] code {
   color: map-get($codeSyntax, color);
   background: inherit;
-}
-
-/* Code blocks */
-pre[class*="language-"] {
-  padding: 1em;
-  margin: .5em 0;
-  overflow: auto;
-  border-radius: 0.3em;
 }
 
 :not(pre) > code[class*="language-"],
