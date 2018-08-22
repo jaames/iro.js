@@ -1,4 +1,4 @@
-import {listen, unlisten} from "../util/dom";
+import {listen, unlisten} from "util/dom";
 
 const EVENT_MOUSEDOWN = "mousedown",
       EVENT_MOUSEMOVE = "mousemove",
@@ -14,7 +14,7 @@ export default class baseComponent {
       class: className
     });
     var el = g.el;
-    listen(el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    listen(el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
     this.g = g;
     this.el = el;
     this.parent = parent;
@@ -37,7 +37,7 @@ export default class baseComponent {
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:
         // Attach event listeners
-        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive:false });
         hsv = this.input(x, y, "START");
         this.parent.emit("input:start", color);
         break;

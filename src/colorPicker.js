@@ -1,7 +1,7 @@
-import wheel from "./components/wheel";
-import slider from "./components/slider";
-import svg from "./util/svg";
-import {whenReady} from "./util/dom";
+import wheel from "components/wheel";
+import slider from "components/slider";
+import svg from "util/svg";
+import {whenReady} from "util/dom";
 import iroColor from "./color";
 import iroStyleSheet from "./stylesheet";
 

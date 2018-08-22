@@ -181,7 +181,7 @@ export default class svgRoot extends svgElement {
     super(null, parent, "svg", {
       width, 
       height, 
-      style: "display:" + (display || "block")
+      style: "display:" + (display || "block") + ";touch-action:none"
     });
     this._root = this;
     this._defs = this.insert("defs");

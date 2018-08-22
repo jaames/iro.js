@@ -45,15 +45,18 @@
   var EVENT_READYSTATE_CHANGE = "readystatechange",
         READYSTATE_COMPLETE = "complete";
   /**
-  * @desc listen to one or more events on an element
-  * @param {Element} el target element
-  * @param {Array} eventList the events to listen to
-  * @param {Function} callback the event callback function
+    * @desc listen to one or more events on an element
+    * @param {Element} el target element
+    * @param {Array} eventList the events to listen to
+    * @param {Function} callback the event callback function
+    * @param {Object} params params to pass to addEventListener
   */
 
-  function listen(el, eventList, callback) {
+  function listen(el, eventList, callback, params) {
+    if ( params === void 0 ) params = {};
+
     for (var i = 0; i < eventList.length; i++) {
-      el.addEventListener(eventList[i], callback);
+      el.addEventListener(eventList[i], callback, params);
     }
   }
   /**
@@ -98,7 +101,9 @@
       class: className
     });
     var el = g.el;
-    listen(el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    listen(el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
+      passive: false
+    });
     this.g = g;
     this.el = el;
     this.parent = parent;
@@ -121,7 +126,9 @@
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:
         // Attach event listeners
-        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, {
+          passive: false
+        });
         hsv = this.input(x, y, "START");
         this.parent.emit("input:start", color);
         break;
@@ -1032,7 +1039,7 @@
       svgElement.call(this, null, parent, "svg", {
         width: width,
         height: height,
-        style: "display:" + (display || "block")
+        style: "display:" + (display || "block") + ";touch-action:none"
       });
       this._root = this;
       this._defs = this.insert("defs");

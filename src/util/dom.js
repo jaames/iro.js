@@ -2,14 +2,15 @@ const EVENT_READYSTATE_CHANGE = "readystatechange",
 READYSTATE_COMPLETE = "complete";
 
 /**
-* @desc listen to one or more events on an element
-* @param {Element} el target element
-* @param {Array} eventList the events to listen to
-* @param {Function} callback the event callback function
+  * @desc listen to one or more events on an element
+  * @param {Element} el target element
+  * @param {Array} eventList the events to listen to
+  * @param {Function} callback the event callback function
+  * @param {Object} params params to pass to addEventListener
 */
-export function listen(el, eventList, callback) {
+export function listen(el, eventList, callback, params={}) {
   for (var i = 0; i < eventList.length; i++) {
-    el.addEventListener(eventList[i], callback);
+    el.addEventListener(eventList[i], callback, params);
   }
 };
 

@@ -1,4 +1,5 @@
 const { version } = require("./package");
+const path = require("path");
 
 const banner = `/*!
  * iro.js v${version}
@@ -11,9 +12,13 @@ const banner = `/*!
 module.exports = {
   banner,
   input: "./src/index.js",
-  format: ["umd", "umd-min"],
+  format: ["umd", "umd-min", "es"],
   moduleName: "iro",
   js: "buble",
+  alias: {
+    "components": path.resolve(__dirname, "src/components/"),
+    "util": path.resolve(__dirname, "src/util/")
+  },
   env: {
     VERSION: version
   }
