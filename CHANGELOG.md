@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.5.1
+
+##### Additions
+
+ - Add es6 module build, since both rollup and webpack [will import this directly](https://github.com/rollup/rollup/wiki/pkg.module) if it's available.
+
 #### 3.5.0
 
 This is more of a spring cleaning release, no changes / fixes that might affect the API have been made.

@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.0
+ * iro.js v3.5.1
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -1354,7 +1354,7 @@ var iro = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
-  version: "3.5.0"
+  version: "3.5.1"
 };
 
 export default iro;
