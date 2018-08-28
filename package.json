@@ -15,7 +15,7 @@
     "vuepress": "^0.14.2"
   },
   "scripts": {
-    "build": "bili && \\cp -r dist/ docs/.vuepress/theme/js",
+    "build": "bili && \\cp dist/iro.es.js docs/.vuepress/theme/js/iro.es.js",
     "dev": "concurrently 'npm run serve' 'bili --watch --no-logUpdate'",
     "serve": "static -c 0 -a 0.0.0.0 -p 4000",
     "docs:dev": "vuepress dev docs",

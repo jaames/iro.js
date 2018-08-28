@@ -195,9 +195,18 @@ function resolveItem (item, pages, base, isNested) {
   if (typeof item === 'string') {
     return resolvePage(pages, item, base)
   } else if (Array.isArray(item)) {
-    return Object.assign(resolvePage(pages, item[0], base), {
-      title: item[1]
-    })
+    // handle external URLs
+    if (/^https?/.test(item[0])) {
+      return {
+        type: "external",
+        path: item[0],
+        title: item[1]
+      }
+    } else {
+      return Object.assign(resolvePage(pages, item[0], base), {
+        title: item[1]
+      })
+    }
   } else {
     if (isNested) {
       console.error(

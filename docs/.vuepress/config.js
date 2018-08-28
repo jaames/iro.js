@@ -1,6 +1,9 @@
+const path = require('path');
+
 module.exports = {
   title: 'iro.js',
   description: 'A lightweight, SVG-based color picker library for the modern web.',
+  // base: '/iro.js/',
   ga: 'UA-52026208-5',
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
@@ -16,7 +19,8 @@ module.exports = {
   themeConfig: {
     repo: 'jaames/iro.js',
     docsDir: 'docs',
-    docsBranch: 'gh-pages',
+    docsBranch: 'master',
+    editLinks: true,
     sidebar: [
       '/',
       '/introduction.html',
@@ -24,6 +28,15 @@ module.exports = {
       '/colorPicker_api.html',
       '/color_api.html',
       '/stylesheet_api.html',
+      {
+        title: 'Links',
+        children: [
+          ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
+          ['https://github.com/jaames/iro.js', 'iro.js on GitHub'],
+          ['https://github.com/jaames/iro.js/issues', 'Submit an Issue / Request'],
+          ['https://twitter.com/rakujira', 'Follow me on Twitter'],
+        ]
+      }
     ]
   },
   configureWebpack: (config, isServer) => {

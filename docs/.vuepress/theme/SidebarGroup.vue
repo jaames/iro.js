@@ -9,11 +9,12 @@
       @click="$emit('toggle')"
     >
       <span>{{ item.title }}</span>
-      <span
+      <img src='https:icon.now.sh/chevron/down' alt='chevron icon' />
+      <!-- <span
         class="arrow"
         v-if="collapsable"
         :class="open ? 'down' : 'right'">
-      </span>
+      </span> -->
     </p>
 
     <DropdownTransition>
@@ -41,37 +42,42 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-.sidebar-group
-  &:not(.first)
-    margin-top 1em
-  .sidebar-group
-    padding-left 0.5em
-  &:not(.collapsable)
-    .sidebar-heading
-      cursor auto
-      color inherit
+<style lang="scss">
+@import "./styles/config.scss";
 
-.sidebar-heading
-  color #999
-  transition color .15s ease
-  cursor pointer
-  font-size 1.1em
-  font-weight bold
-  // text-transform uppercase
-  padding 0 1.5rem
-  margin-top 0
-  margin-bottom 0.5rem
-  &.open, &:hover
-    color inherit
-  .arrow
-    position relative
-    top -0.12em
-    left 0.5em
-  &:.open .arrow
-    top -0.18em
+.sidebar-group {
+  &:not(.first) {
+    margin-top: 1em;
+  }
+  .sidebar-group {
+    padding-left: 0.5em;
+  }
+  &:not(.collapsable) {
+    .sidebar-heading {
+      cursor: auto;
+      color: inherit;
+    }
+  }
+}
 
-.sidebar-group-items
-  transition height .1s ease-out
-  overflow hidden
+.sidebar-heading {
+  color: $text-invert;
+  cursor: pointer;
+  padding: 0 calc(1.2rem + 4px);
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  .arrow {
+    position: relative;
+    top: -0.12em;
+    left: 0.5em;
+  }
+  &.open .arrow {
+    top: -0.18em;
+  }
+}
+
+.sidebar-group-items {
+  transition: height .1s ease-out;
+  overflow: hidden;
+}
 </style>

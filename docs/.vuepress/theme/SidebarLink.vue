@@ -15,7 +15,7 @@ export default {
     const active = item.type === 'auto'
       ? selfActive || item.children.some(c => isActive($route, item.basePath + '#' + c.slug))
       : selfActive
-    const link = renderLink(h, item.path, item.title || item.path, active)
+    const link = renderLink(h, item.type, item.path, item.title || item.path, active)
     const configDepth = $page.frontmatter.sidebarDepth != null
       ? $page.frontmatter.sidebarDepth
       : $site.themeConfig.sidebarDepth
@@ -32,18 +32,29 @@ export default {
   }
 }
 
-function renderLink (h, to, text, active) {
-  return h('router-link', {
-    props: {
-      to,
-      activeClass: '',
-      exactActiveClass: ''
-    },
-    class: {
-      active,
-      'sidebar-link': true
-    }
-  }, text)
+function renderLink (h, type, to, text, active) {
+  if (type === 'external') {
+    return h('a', {
+      attrs: {
+        href: to,
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      },
+      class: 'sidebar-link'
+    }, text)
+  } else {
+    return h('router-link', {
+      props: {
+        to,
+        activeClass: '',
+        exactActiveClass: ''
+      },
+      class: {
+        active,
+        'sidebar-link': true
+      }
+    }, text)
+  }
 }
 
 function renderChildren (h, children, path, route, maxDepth, depth = 1) {
@@ -51,7 +62,7 @@ function renderChildren (h, children, path, route, maxDepth, depth = 1) {
   return h('ul', { class: 'sidebar-sub-headers' }, children.map(c => {
     const active = isActive(route, path + '#' + c.slug)
     return h('li', { class: 'sidebar-sub-header' }, [
-      renderLink(h, path + '#' + c.slug, c.title, active),
+      renderLink(h, 'page', path + '#' + c.slug, c.title, active),
       renderChildren(h, c.children, path, route, maxDepth, depth + 1)
     ])
   }))
@@ -68,15 +79,17 @@ function renderChildren (h, children, path, route, maxDepth, depth = 1) {
 
 a.sidebar-link {
   font-weight: 400;
+  color: $text-invert;
   display: inline-block;
-  border-left: 0.25rem solid transparent;
-  padding: 0.35rem 1rem 0.35rem 1.25rem;
+  border-left: 4px solid transparent;
+  padding: 0.4rem 1.2rem;
   line-height: 1.4;
   width: 100%;
   box-sizing: border-box;
 
   &.active {
     font-weight: 600;
+    color: $primary-color;
     border-left-color: currentColor;
   }
   .sidebar-group & {

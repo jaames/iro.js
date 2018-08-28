@@ -2,24 +2,9 @@
   <div class="page">
     <slot name="top"/>
 
-    <h1>{{$page.title}}</h1>
+    <h1 class="title">{{$page.title}}</h1>
 
     <Content class="markdown" :custom="false"/>
-
-    <div class="page-edit">
-      <div
-        class="edit-link"
-        v-if="editLink"
-      >
-        <a
-          :href="editLink"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Edit this page on GitHub
-        <OutboundLink/>
-        </a>
-      </div>
-    </div>
 
     <div class="pageNav" v-if="prev || next">
       <router-link v-if="prev" :to="prev.path" class="pageNav__prev">
@@ -28,6 +13,13 @@
       <router-link v-if="next" :to="next.path" class="pageNav__next">
         {{ next.title || next.path }} →
       </router-link>
+    </div>
+
+    <div class="pageFooter">
+      Caught a mistake or want to contribute to the documentation?
+      <a :href="editLink" target="_blank" rel="noopener noreferrer">
+        Edit this page on GitHub<OutboundLink/>
+      </a>
     </div>
 
     <slot name="bottom"/>
@@ -41,22 +33,6 @@ export default {
   props: ['sidebarItems'],
 
   computed: {
-    lastUpdated () {
-      if (this.$page.lastUpdated) {
-        return new Date(this.$page.lastUpdated).toLocaleString(this.$lang)
-      }
-    },
-
-    lastUpdatedText () {
-      if (typeof this.$themeLocaleConfig.lastUpdated === 'string') {
-        return this.$themeLocaleConfig.lastUpdated
-      }
-      if (typeof this.$site.themeConfig.lastUpdated === 'string') {
-        return this.$site.themeConfig.lastUpdated
-      }
-      return 'Last Updated'
-    },
-
     prev () {
       const prev = this.$page.frontmatter.prev
       if (prev === false) {
@@ -159,8 +135,37 @@ function find (page, items, offset) {
 }
 </script>
 <style lang="scss">
+  @import "./styles/config.scss";
+
+  .page {
+    width: 100%;
+    padding: 0 16px;
+    padding-top: $mobile-navbar-height;
+    max-width: 720px + 16px * 2;
+
+    @include breakpoint(medium) {
+      flex: 1;
+      margin-left: 240px;
+      padding: 0 24px;
+      max-width: 720px + 24px * 2;
+    }
+    @include breakpoint(large) {
+      margin-left: 320px;
+    }
+  }
+
+  .title {
+    display: inline-block;
+    // color: $primary-color;
+    font-size: 2rem;
+    margin: 2rem 0;
+    @include breakpoint(medium) {
+      margin: 4rem 0 2rem 0;
+    }
+  }
+
   .pageNav {
-    margin: 3rem 0;
+    margin: 2rem 0;
     display: flex;
   }
 
@@ -172,5 +177,11 @@ function find (page, items, offset) {
     margin-left: auto;
   }
 
+  .pageFooter {
+    color: $dark-gray;
+    padding: 2em 0;
+    border-top: 1px solid $medium-gray;
+    font-size: .9em;
+  }
 </style>
 

@@ -1,48 +1,19 @@
 <template>
-  <div
-    class="theme-container"
-    :class="pageClasses"
-  >
-    <Navbar
-      v-if="shouldShowNavbar"
-      @toggle-sidebar="toggleSidebar"
-    />
-
-    <Sidebar
-      :items="sidebarItems"
-      @toggle-sidebar="toggleSidebar"
-    >
-      <slot
-        name="sidebar-top"
-        slot="top"
-      />
-      <slot
-        name="sidebar-bottom"
-        slot="bottom"
-      />
+  <div class="container" :class="pageClasses">
+    <Sidebar v-if="!$page.frontmatter.home" :items="sidebarItems">
+      <slot name="sidebar-top" slot="top"/>
+      <slot name="sidebar-bottom" slot="bottom"/>
     </Sidebar>
 
-    <div
-      class="custom-layout"
-      v-if="$page.frontmatter.layout"
-    >
+    <div class="custom-layout" v-if="$page.frontmatter.layout">
       <component :is="$page.frontmatter.layout"/>
     </div>
 
     <Home v-else-if="$page.frontmatter.home"/>
 
-    <Page
-      v-else
-      :sidebar-items="sidebarItems"
-    >
-      <slot
-        name="page-top"
-        slot="top"
-      />
-      <slot
-        name="page-bottom"
-        slot="bottom"
-      />
+    <Page v-else :sidebar-items="sidebarItems">
+      <slot name="page-top" slot="top"/>
+      <slot name="page-bottom" slot="bottom"/>
     </Page>
 
     <SWUpdatePopup :updateEvent="swUpdateEvent"/>
@@ -51,20 +22,17 @@
 
 <script>
 import Vue from 'vue'
-import nprogress from 'nprogress'
 import Home from './Home.vue'
-import Navbar from './Navbar.vue'
 import Page from './Page.vue'
 import Sidebar from './Sidebar.vue'
 import SWUpdatePopup from './SWUpdatePopup.vue'
 import { resolveSidebarItems } from './util'
 
 export default {
-  components: { Home, Page, Sidebar, Navbar, SWUpdatePopup },
+  components: { Home, Page, Sidebar, SWUpdatePopup },
 
   data () {
     return {
-      isSidebarOpen: false,
       swUpdateEvent: null
     }
   },
@@ -122,30 +90,10 @@ export default {
 
   mounted () {
     window.addEventListener('scroll', this.onScroll)
-
-    // configure progress bar
-    nprogress.configure({ showSpinner: false })
-
-    this.$router.beforeEach((to, from, next) => {
-      if (to.path !== from.path && !Vue.component(to.name)) {
-        nprogress.start()
-      }
-      next()
-    })
-
-    this.$router.afterEach(() => {
-      nprogress.done()
-      this.isSidebarOpen = false
-    })
-
     this.$on('sw-updated', this.onSWUpdated)
   },
 
   methods: {
-    toggleSidebar (to) {
-      this.isSidebarOpen = typeof to === 'boolean' ? to : !this.isSidebarOpen
-    },
-
     onSWUpdated (e) {
       this.swUpdateEvent = e
     }
