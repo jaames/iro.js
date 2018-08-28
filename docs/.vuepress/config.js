@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   title: 'iro.js',
   description: 'A lightweight, SVG-based color picker library for the modern web.',
-  // base: '/iro.js/',
+  base: '/iro.js/',
   ga: 'UA-52026208-5',
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
