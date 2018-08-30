@@ -9,7 +9,6 @@
       @click="$emit('toggle')"
     >
       <span>{{ item.title }}</span>
-      <img src='https:icon.now.sh/chevron/down' alt='chevron icon' />
       <!-- <span
         class="arrow"
         v-if="collapsable"

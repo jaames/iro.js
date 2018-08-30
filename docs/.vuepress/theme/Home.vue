@@ -56,6 +56,9 @@ export default {
           }
         }
       });
+      // expose iro globally incase people wanna use devtools to play with it
+      window.colorPicker = this.wheel;
+      window.iro = iro;
     });
   }
 }
