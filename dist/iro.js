@@ -21,13 +21,15 @@
       class: CLASS_PREFIX + "__outer",
       fill: "none",
       strokeWidth: 5,
-      stroke: "#000"
+      stroke: "#000",
+      "vector-effect": "non-scaling-stroke"
     });
     baseGroup.circle(0, 0, opts.r, {
       class: CLASS_PREFIX + "__inner",
       fill: "none",
       strokeWidth: 2,
-      stroke: "#fff"
+      stroke: "#fff",
+      "vector-effect": "non-scaling-stroke"
     });
     this.g = baseGroup;
   };
@@ -62,7 +64,8 @@
       class: CLASS_PREFIX$1 + "__border",
       fill: "#fff",
       stroke: border.color,
-      strokeWidth: border.w
+      strokeWidth: border.w,
+      "vector-effect": "non-scaling-stroke"
     });
     var ringGroup = baseGroup.g({
       class: CLASS_PREFIX$1 + "__hue",
@@ -697,7 +700,8 @@
       width: w + borderWidth,
       height: h + borderWidth,
       strokeWidth: borderWidth,
-      stroke: opts.border.color
+      stroke: opts.border.color,
+      "vector-effect": "non-scaling-stroke"
     });
     rect.setGradient("fill", svg.gradient("linear", {
       0: {
@@ -945,7 +949,8 @@
       svgElement.call(this, null, parent, "svg", {
         width: width,
         height: height,
-        style: "display:" + (display || "block") + ";touch-action:none"
+        viewBox: ("0 0 " + width + " " + height),
+        style: ("display:" + (display || "block") + "; touch-action:none;")
       });
       this._root = this;
       this._defs = this.insert("defs");

@@ -9,19 +9,21 @@ export default class marker {
   */
   constructor(svg, opts) {
     var baseGroup = svg.g({
-      class: CLASS_PREFIX
+      class: CLASS_PREFIX,
     });
     baseGroup.circle(0, 0, opts.r, {
       class: CLASS_PREFIX + "__outer",
       fill: "none",
       strokeWidth: 5,
       stroke: "#000",
+      "vector-effect": "non-scaling-stroke",
     });
     baseGroup.circle(0, 0, opts.r, {
       class: CLASS_PREFIX + "__inner",
       fill: "none",
       strokeWidth: 2,
       stroke: "#fff",
+      "vector-effect": "non-scaling-stroke",
     });
     this.g = baseGroup;
   }

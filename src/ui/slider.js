@@ -46,6 +46,7 @@ export default class slider {
       height: h + borderWidth,
       strokeWidth: borderWidth,
       stroke: opts.border.color,
+      "vector-effect": "non-scaling-stroke",
     });
   
     rect.setGradient("fill", svg.gradient("linear", {

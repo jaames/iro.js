@@ -32,6 +32,7 @@ export default class wheel {
       fill: "#fff",
       stroke: border.color,
       strokeWidth: border.w,
+      "vector-effect": "non-scaling-stroke",
     });
 
     var ringGroup = baseGroup.g({
