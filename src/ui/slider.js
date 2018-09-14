@@ -1,27 +1,33 @@
+import component from "ui/component";
 import marker from "ui/marker";
 import iroColor from "modules/color";
 
 // css class prefix for this element
 var CLASS_PREFIX = "iro__slider";
 
-export default class slider {
+export default class slider extends component {
   /**
     * @constructor slider UI
     * @param {svgRoot} svg - svgRoot object
     * @param {Object} opts - options
   */
-  constructor(svg, opts) {
+  constructor(parent, opts) {
+    super(parent, {
+      class: CLASS_PREFIX,
+      x: opts.x,
+      y: opts.y
+    });
     var r = opts.r,
     w = opts.w,
     h = opts.h,
-    x = opts.x,
-    y = opts.y,
     borderWidth = opts.border.w;
+
+    var baseGroup = this.root;
   
     // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
     opts.range = {
-      min: x + r,
-      max: (x + w) - r,
+      min: r,
+      max: w - r,
       w: w - (r * 2)
     };
   
@@ -32,16 +38,12 @@ export default class slider {
   
     var radius = r + borderWidth / 2;
   
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX,
-    });
-  
     var rect = baseGroup.insert("rect", {
       class: CLASS_PREFIX + "__value",
       rx: radius,
       ry: radius,
-      x: x - borderWidth / 2,
-      y: y - borderWidth / 2,
+      x: -borderWidth / 2,
+      y: -borderWidth / 2,
       width: w + borderWidth,
       height: h + borderWidth,
       strokeWidth: borderWidth,
@@ -49,7 +51,7 @@ export default class slider {
       "vector-effect": "non-scaling-stroke",
     });
   
-    rect.setGradient("fill", svg.gradient("linear", {
+    rect.setGradient("fill", parent.svg.gradient("linear", {
       0: {color: "#000"},
       100: {color: "#fff"}
     }));
@@ -74,7 +76,7 @@ export default class slider {
       }
       if (changes.v) {
         var percent = (hsv.v / 100);
-        this.marker.move(range.min + (percent * range.w), opts.y + (opts.h / 2));
+        this.marker.move(range.min + (percent * range.w), (opts.h / 2));
       }
     }
   }
@@ -85,7 +87,9 @@ export default class slider {
     * @param {Number} y - point y coordinate
     * @return {Object} - new HSV color values (some channels may be missing)
   */
-  input(x, y) {
+  input(x, y, rect, type) {
+    x = x - rect.left;
+    y = y - rect.top;
     var opts = this._opts;
     var range = opts.range;
     var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
@@ -94,15 +98,15 @@ export default class slider {
     };
   }
 
-  /**
-    * @desc Check if a point at (x, y) is inside this element
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Boolean} - true if the point is a "hit", else false
-  */
-  checkHit(x, y) {
-    var opts = this._opts;
-    return (x > opts.x) && (x < opts.x + opts.w) && (y > opts.y) && (y < opts.y + opts.h);
-  }
+  // /**
+  //   * @desc Check if a point at (x, y) is inside this element
+  //   * @param {Number} x - point x coordinate
+  //   * @param {Number} y - point y coordinate
+  //   * @return {Boolean} - true if the point is a "hit", else false
+  // */
+  // checkHit(x, y) {
+  //   var opts = this._opts;
+  //   return (x > opts.x) && (x < opts.x + opts.w) && (y > opts.y) && (y < opts.y + opts.h);
+  // }
 
 }

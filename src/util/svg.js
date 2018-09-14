@@ -12,11 +12,11 @@ var SVG_ATTRIBUTE_SHORTHANDS = {
   stopOpacity: "stop-opacity",
 };
 // TODO: figure out why these aren't being compressed properly?
-var SVG_TRANSFORM_SHORTHANDS = {
-  translate: "setTranslate",
-  scale: "setScale",
-  rotate: "setRotate"
-};
+// var SVG_TRANSFORM_SHORTHANDS = {
+//   translate: "setTranslate",
+//   scale: "setScale",
+//   rotate: "setRotate"
+// };
 // sniff useragent string to check if the user is running IE, Edge or Safari
 var ua = window.navigator.userAgent.toLowerCase();
 var IS_IE = /msie|trident|edge/.test(ua);
@@ -36,8 +36,8 @@ class svgElement {
     this.setAttrs(attrs);
     (parent.el || parent).appendChild(el);
     this._root = root;
-    this._svgTransforms = {};
-    this._transformList = el.transform ? el.transform.baseVal : false;
+    // this._svgTransforms = {};
+    // this._transformList = el.transform ? el.transform.baseVal : false;
   }
 
   /**
@@ -55,6 +55,13 @@ class svgElement {
   */
   g(attrs) {
     return this.insert("g", attrs);
+  }
+
+  svg(attrs) {
+    return this.insert("svg", {
+      ...attrs,
+      overflow: "visible",
+    });
   }
 
   /**
@@ -94,30 +101,30 @@ class svgElement {
     return this.insert("circle", attrs);
   }
 
-  /**
-    * @desc set a rotate/translate/scale transform on this element
-    * @param {String} type - transform (rotate | translate | scale)
-    * @param {Array} args - transform values
-  */
-  setTransform(type, args) {
-    if (!IS_IE) {  
-      var transform, transformFn;
-      var svgTransforms = this._svgTransforms;
-      if (!svgTransforms[type]) {
-        transform = this._root.el.createSVGTransform();
-        svgTransforms[type] = transform;
-        this._transformList.appendItem(transform);
-      } else {
-        transform = svgTransforms[type];
-      }
-      transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
-      transform[transformFn].apply(transform, args);
-    } else {
-      // Microsoft still can't make a web browser that actually works, as such, Edge + IE dont implement SVG transforms properly.
-      // We have to force them instead... geez
-      this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
-    }
-  }
+  // /**
+  //   * @desc set a rotate/translate/scale transform on this element
+  //   * @param {String} type - transform (rotate | translate | scale)
+  //   * @param {Array} args - transform values
+  // */
+  // setTransform(type, args) {
+  //   if (!IS_IE) {  
+  //     var transform, transformFn;
+  //     var svgTransforms = this._svgTransforms;
+  //     if (!svgTransforms[type]) {
+  //       transform = this._root.el.createSVGTransform();
+  //       svgTransforms[type] = transform;
+  //       this._transformList.appendItem(transform);
+  //     } else {
+  //       transform = svgTransforms[type];
+  //     }
+  //     transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
+  //     transform[transformFn].apply(transform, args);
+  //   } else {
+  //     // Microsoft still can't make a web browser that actually works, as such, Edge + IE dont implement SVG transforms properly.
+  //     // We have to force them instead... geez
+  //     this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
+  //   }
+  // }
 
   /**
     * @desc set attributes on this element

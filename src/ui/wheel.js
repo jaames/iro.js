@@ -1,3 +1,4 @@
+import component from "ui/component";
 import marker from "ui/marker";
 
 // css class prefix for this element
@@ -8,24 +9,30 @@ var PI = Math.PI,
     abs = Math.abs,
     round = Math.round;
 
-export default class wheel {
+export default class wheel extends component {
   /**
     * @constructor hue wheel UI
     * @param {svgRoot} svg - svgRoot object
     * @param {Object} opts - options
   */
-  constructor(svg, opts) {
+  constructor(parent, opts) {
+    super(parent, {
+      class: CLASS_PREFIX,
+      x: opts.x,
+      y: opts.y,
+    });
     this._opts = opts;
     this.type = "wheel";
 
-    var cY = opts.cY,
-        cX = opts.cX,
-        r = opts.r,
-        border = opts.border;
+    var r = opts.r;
+    var border = opts.border;
+    var borderWidth = border.w;
+    var cY = borderWidth + r;
+    var cX = borderWidth + r;
+    var baseGroup = this.root;
 
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX,
-    });
+    this.cX = cX;
+    this.cY = cY;
 
     baseGroup.circle(cX, cY, r + border.w / 2, {
       class: CLASS_PREFIX + "__border",
@@ -51,7 +58,7 @@ export default class wheel {
       class: CLASS_PREFIX + "__saturation"
     });
 
-    saturation.setGradient("fill", svg.gradient("radial", {
+    saturation.setGradient("fill", parent.svg.gradient("radial", {
       0: {
         color: "#fff"
       },
@@ -87,7 +94,7 @@ export default class wheel {
       // convert the saturation value to a distance between the center of the ring and the edge
       var dist = (hsv.s / 100) * opts.rMax;
       // Move the marker based on the angle and distance
-      this.marker.move(opts.cX + dist * Math.cos(hueAngle), opts.cY + dist * Math.sin(hueAngle));
+      this.marker.move(this.cX + dist * Math.cos(hueAngle), this.cY + dist * Math.sin(hueAngle));
     }
   }
 
@@ -97,18 +104,23 @@ export default class wheel {
     * @param {Number} y - point y coordinate
     * @return {Object} - new HSV color values (some channels may be missing)
   */
-  input(x, y) {
-    var opts = this._opts,
-        rangeMax = opts.rMax,
-        _x = opts.cX - x,
-        _y = opts.cY - y;
+  input(x, y, rect, type) {
+    var opts = this._opts;
+    var rangeMax = opts.rMax;
+    var cX = rect.width / 2;
+    var cY = rect.height / 2;
 
-    var angle = Math.atan2(_y, _x),
+    console.log(rect)
+
+    x = cX - (x - rect.left);
+    y = cY - (y - rect.top);
+
+    var angle = Math.atan2(y, x),
         // Calculate the hue by converting the angle to radians
         hue = round(angle * (180 / PI)) + 180,
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
-        dist = Math.min(sqrt(_x * _x + _y * _y), rangeMax);
+        dist = Math.min(sqrt(x * x + y * y), rangeMax);
     
     hue = (opts.anticlockwise ? 360 - hue : hue);
 
@@ -119,19 +131,19 @@ export default class wheel {
     };
   }
 
-  /**
-    * @desc Check if a point at (x, y) is inside this element
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @return {Boolean} - true if the point is a "hit", else false
-  */
-  checkHit(x, y) {
-    var opts = this._opts;
+  // /**
+  //   * @desc Check if a point at (x, y) is inside this element
+  //   * @param {Number} x - point x coordinate
+  //   * @param {Number} y - point y coordinate
+  //   * @return {Boolean} - true if the point is a "hit", else false
+  // */
+  // checkHit(x, y) {
+  //   var opts = this._opts;
 
-    // Check if the point is within the hue ring by comparing the point's distance from the centre to the ring's radius
-    // If the distance is smaller than the radius, then we have a hit
-    var dx = abs(x - opts.cX),
-        dy = abs(y - opts.cY);
-    return sqrt(dx * dx + dy * dy) < opts.r;
-  }
+  //   // Check if the point is within the hue ring by comparing the point's distance from the centre to the ring's radius
+  //   // If the distance is smaller than the radius, then we have a hit
+  //   var dx = abs(x - opts.cX),
+  //       dy = abs(y - opts.cY);
+  //   return sqrt(dx * dx + dy * dy) < opts.r;
+  // }
 }

@@ -8,8 +8,8 @@ export default class marker {
     * @param {Object} opts - options
   */
   constructor(svg, opts) {
-    var baseGroup = svg.g({
-      class: CLASS_PREFIX,
+    var baseGroup = svg.svg({
+      class: CLASS_PREFIX
     });
     baseGroup.circle(0, 0, opts.r, {
       class: CLASS_PREFIX + "__outer",
@@ -34,6 +34,7 @@ export default class marker {
     * @param {Number} y - point y coordinate
   */
   move(x, y) {
-    this.g.setTransform("translate", [x, y]);
+    this.g.setAttrs({x, y});
+    // this.g.setTransform("translate", [x, y]);
   }
 }
