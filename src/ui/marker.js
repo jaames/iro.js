@@ -1,40 +1,8 @@
-// css class prefix for this element
-var CLASS_PREFIX = "iro__marker";
-
-export default class marker {
-   /**
-    * @constructor marker UI
-    * @param {svgRoot} svg - svgRoot object
-    * @param {Object} opts - options
-  */
-  constructor(svg, opts) {
-    var baseGroup = svg.svg({
-      class: CLASS_PREFIX
-    });
-    baseGroup.circle(0, 0, opts.r, {
-      class: CLASS_PREFIX + "__outer",
-      fill: "none",
-      strokeWidth: 5,
-      stroke: "#000",
-      "vector-effect": "non-scaling-stroke",
-    });
-    baseGroup.circle(0, 0, opts.r, {
-      class: CLASS_PREFIX + "__inner",
-      fill: "none",
-      strokeWidth: 2,
-      stroke: "#fff",
-      "vector-effect": "non-scaling-stroke",
-    });
-    this.g = baseGroup;
-  }
-
-  /**
-    * @desc move marker to centerpoint (x, y) and redraw
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-  */
-  move(x, y) {
-    this.g.setAttrs({x, y});
-    // this.g.setTransform("translate", [x, y]);
-  }
+export default function IroMarker(props) {
+  return (
+    <svg class="iro__marker" x={props.x} y={props.y} overflow="visible">
+      <circle class="iro__marker__outer" x={0} y={0} fill="none" stroke-width={5} stroke="#000" vectorEffect="non-scaling-stroke"></circle>
+      <circle class="iro__marker__inner" x={0} y={0} fill="none" stroke-width={7} stroke="#fff" vectorEffect="non-scaling-stroke"></circle>
+    </svg>
+  );
 }

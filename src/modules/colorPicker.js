@@ -1,6 +1,5 @@
 import wheel from "ui/wheel";
 import slider from "ui/slider";
-import svg from "util/svg";
 import iroColor from "modules/color";
 import iroStyleSheet from "modules/stylesheet";
 
@@ -54,9 +53,8 @@ export default class colorPicker {
 
     // Create UI elements
     this.el = el;
-    this.svg = new svg(el, width, height, opts.display);
     this.ui = [
-      new wheel(this, {
+      new wheel({
         x: leftMargin,
         y: 0,
         r: wheelRadius,
@@ -66,7 +64,7 @@ export default class colorPicker {
         lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
         anticlockwise: opts.anticlockwise
       }),
-      new slider(this, {
+      new slider({
         sliderType: "v",
         x: leftMargin + borderWidth,
         y: bodyWidth + sliderMargin,

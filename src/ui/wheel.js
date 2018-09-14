@@ -1,79 +1,66 @@
-import component from "ui/component";
-import marker from "ui/marker";
+import IroComponent from "ui/component";
+import Marker from "ui/marker";
 
-// css class prefix for this element
-var CLASS_PREFIX = "iro__wheel";
 // Quick references to reused math functions
 var PI = Math.PI,
     sqrt = Math.sqrt,
     abs = Math.abs,
     round = Math.round;
 
-export default class wheel extends component {
-  /**
-    * @constructor hue wheel UI
-    * @param {svgRoot} svg - svgRoot object
-    * @param {Object} opts - options
-  */
-  constructor(parent, opts) {
-    super(parent, {
-      class: CLASS_PREFIX,
-      x: opts.x,
-      y: opts.y,
-    });
-    this._opts = opts;
-    this.type = "wheel";
+function arcPath(cx, cy, radius, startAngle, endAngle) {
+  var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  startAngle *= Math.PI / 180;
+  endAngle *= Math.PI / 180;
+  var x1 = cx + radius * Math.cos(endAngle),
+      y1 = cy + radius * Math.sin(endAngle),
+      x2 = cx + radius * Math.cos(startAngle),
+      y2 = cy + radius * Math.sin(startAngle);
+  return ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
+}
 
-    var r = opts.r;
-    var border = opts.border;
-    var borderWidth = border.w;
-    var cY = borderWidth + r;
-    var cX = borderWidth + r;
-    var baseGroup = this.root;
+export default class IroWheel extends IroComponent {
 
-    this.cX = cX;
-    this.cY = cY;
-
-    baseGroup.circle(cX, cY, r + border.w / 2, {
-      class: CLASS_PREFIX + "__border",
-      fill: "#fff",
-      stroke: border.color,
-      strokeWidth: border.w,
-      "vector-effect": "non-scaling-stroke",
-    });
-
-    var ringGroup = baseGroup.g({
-      class: CLASS_PREFIX + "__hue",
-      strokeWidth: r,
-      fill: "none",
-    });
-
-    for (var hue = 0; hue < 360; hue++) {
-      ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
-        stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)",
-      });
-    }
-
-    var saturation = baseGroup.circle(cX, cY, r, {
-      class: CLASS_PREFIX + "__saturation"
-    });
-
-    saturation.setGradient("fill", parent.svg.gradient("radial", {
-      0: {
-        color: "#fff"
-      },
-      100: {
-        color:"#fff", 
-        opacity: 0
-      },
-    }));
-
-    this._lightness = baseGroup.circle(cX, cY, r, {
-      class: CLASS_PREFIX + "__lightness",
-      opacity: 0
-    });
-
-    this.marker = new marker(baseGroup, opts.marker);
+  render(props) {
+    return (
+      <svg class="iro__wheel" x={0} y={0} ref={el => this.root = el}>
+        <defs>
+          <radialGradient id="iroGradient2">
+            <stop offset="0%" stop-color="#fff" />
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle 
+          class="iro__wheel__border"
+          cx={0}
+          cy={0}
+          r={0}
+          fill="#fff"
+          stroke="#fff"
+          stroke-width={2}
+          vector-effect="non-scaling-stroke"
+        />
+        <g class="__hue" stroke-width={2} fill="none">
+          { new Array(360).fill(0).map((_, hue) => (
+            <path d={ arcPath(0, 0, hue, hue + 1.5) } stroke={`hsl(${ props.anticlockwise ? 360 - hue : hue }, 100%, 50%)`} />
+          ))}
+        </g>
+        <circle 
+          class="iro__wheel__saturation"
+          cx={0}
+          cy={0}
+          r={0}
+          fill="url(#iroGradient2)"
+        />
+        <circle 
+          class="iro__wheel__lightness"
+          cx={0}
+          cy={0}
+          r={0}
+          opacity={0}
+        />
+        <Marker x={0} y={0} />
+      </svg>
+    );
   }
   /**
     * @desc updates this element to represent a new color value
@@ -109,8 +96,6 @@ export default class wheel extends component {
     var rangeMax = opts.rMax;
     var cX = rect.width / 2;
     var cY = rect.height / 2;
-
-    console.log(rect)
 
     x = cX - (x - rect.left);
     y = cY - (y - rect.top);

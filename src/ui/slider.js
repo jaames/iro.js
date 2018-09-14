@@ -1,65 +1,37 @@
-import component from "ui/component";
-import marker from "ui/marker";
+import IroComponent from "ui/component";
+import Marker from "ui/marker";
+
 import iroColor from "modules/color";
 
-// css class prefix for this element
-var CLASS_PREFIX = "iro__slider";
+export default class IroSlider extends IroComponent {
 
-export default class slider extends component {
-  /**
-    * @constructor slider UI
-    * @param {svgRoot} svg - svgRoot object
-    * @param {Object} opts - options
-  */
-  constructor(parent, opts) {
-    super(parent, {
-      class: CLASS_PREFIX,
-      x: opts.x,
-      y: opts.y
-    });
-    var r = opts.r,
-    w = opts.w,
-    h = opts.h,
-    borderWidth = opts.border.w;
-
-    var baseGroup = this.root;
-  
-    // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
-    opts.range = {
-      min: r,
-      max: w - r,
-      w: w - (r * 2)
-    };
-  
-    opts.sliderType = opts.sliderType || "v";
-  
-    this.type = "slider";
-    this._opts = opts;
-  
-    var radius = r + borderWidth / 2;
-  
-    var rect = baseGroup.insert("rect", {
-      class: CLASS_PREFIX + "__value",
-      rx: radius,
-      ry: radius,
-      x: -borderWidth / 2,
-      y: -borderWidth / 2,
-      width: w + borderWidth,
-      height: h + borderWidth,
-      strokeWidth: borderWidth,
-      stroke: opts.border.color,
-      "vector-effect": "non-scaling-stroke",
-    });
-  
-    rect.setGradient("fill", parent.svg.gradient("linear", {
-      0: {color: "#000"},
-      100: {color: "#fff"}
-    }));
-  
-    this._gradient = rect.gradient;
-  
-    this.marker = new marker(baseGroup, opts.marker);
+  render(props) {
+    return (
+      <svg class="iro__slider" x={0} y={0} ref={el => this.root = el}>
+        <defs>
+          <linearGradient id="iroGradient1">
+            <stop offset="0%" stop-color="#000" />
+            <stop offset="100%" stop-color="#fff" />
+          </linearGradient>
+        </defs>
+        <rect 
+          class="iro__slider__value"
+          rx={0} 
+          ry={0} 
+          x={0} 
+          y={0} 
+          width={0} 
+          height={0}
+          stroke-width={2}
+          stroke="#fff"
+          fill="url(#iroGradient1)"
+          vectorEffect="non-scaling-stroke"
+        />
+        <Marker x={0} y={0} />
+      </svg>
+    );
   }
+
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
@@ -97,16 +69,4 @@ export default class slider extends component {
       v: Math.round((100 / range.w) * dist),
     };
   }
-
-  // /**
-  //   * @desc Check if a point at (x, y) is inside this element
-  //   * @param {Number} x - point x coordinate
-  //   * @param {Number} y - point y coordinate
-  //   * @return {Boolean} - true if the point is a "hit", else false
-  // */
-  // checkHit(x, y) {
-  //   var opts = this._opts;
-  //   return (x > opts.x) && (x < opts.x + opts.w) && (y > opts.y) && (y < opts.y + opts.h);
-  // }
-
 }

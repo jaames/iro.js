@@ -15,6 +15,7 @@ module.exports = {
   format: ["umd", "umd-min", "es"],
   moduleName: "iro",
   js: "buble",
+  jsx: "h",
   alias: {
     "ui": path.resolve(__dirname, "src/ui/"),
     "util": path.resolve(__dirname, "src/util/"),

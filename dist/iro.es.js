@@ -1,9 +1,11 @@
 /*!
- * iro.js v3.5.1
+ * iro.js v4.0.0-alpha
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
  */
+
+import { Component } from 'preact';
 
 var EVENT_READYSTATE_CHANGE = "readystatechange";
 var READYSTATE_COMPLETE = "complete";
@@ -59,156 +61,169 @@ var EVENT_MOUSEDOWN = "mousedown",
       EVENT_TOUCHSTART = "touchstart",
       EVENT_TOUCHMOVE = "touchmove",
       EVENT_TOUCHEND = "touchend";
-var component = function component(parent, attrs) {
-  this.parent = parent;
-  this.root = parent.svg.svg(attrs);
-  listen(this.root.el, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
-    passive: false
-  });
-};
-
-component.prototype.handleEvent = function handleEvent (e) {
-  var ref = this;
-    var parent = ref.parent;
-    var root = ref.root; // Detect if the event is a touch event by checking if it has the `touches` property
-  // If it is a touch event, use the first touch input
-
-  e.preventDefault();
-  var point = e.touches ? e.changedTouches[0] : e;
-  var x = point.clientX;
-  var y = point.clientY; // Get the screen position of the component
-
-  var rect = root.el.getBoundingClientRect();
-  var hsv;
-
-  switch (e.type) {
-    case EVENT_MOUSEDOWN:
-    case EVENT_TOUCHSTART:
-      listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, {
-        passive: false
-      });
-      hsv = this.input(x, y, rect, "START");
-      parent.emit("input:start", parent.color);
-      break;
-
-    case EVENT_MOUSEMOVE:
-    case EVENT_TOUCHMOVE:
-      // Use the position to update the picker color
-      hsv = this.input(x, y, rect, "MOVE");
-      break;
-
-    case EVENT_MOUSEUP:
-    case EVENT_TOUCHEND:
-      hsv = this.input(x, y, rect, "END");
-      parent.emit("input:end", parent.color);
-      unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
-      break;
+var IroComponent = (function (Component$$1) {
+  function IroComponent () {
+    Component$$1.apply(this, arguments);
   }
 
-  if (hsv) { parent.color.hsv = hsv; }
-};
+  if ( Component$$1 ) IroComponent.__proto__ = Component$$1;
+  IroComponent.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  IroComponent.prototype.constructor = IroComponent;
 
-component.prototype.input = function input (x, y, rect, type) {};
+  IroComponent.prototype.componentDidMount = function componentDidMount () {
+    console.log(this.root);
+    listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
+      passive: false
+    });
+  };
 
-// css class prefix for this element
-var CLASS_PREFIX = "iro__marker";
-var marker = function marker(svg, opts) {
-  var baseGroup = svg.svg({
-    class: CLASS_PREFIX
-  });
-  baseGroup.circle(0, 0, opts.r, {
-    class: CLASS_PREFIX + "__outer",
+  IroComponent.prototype.componentWillUnmount = function componentWillUnmount () {
+    unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+  };
+
+  IroComponent.prototype.handleEvent = function handleEvent (e) {
+    var ref = this;
+    var root = ref.root; // Detect if the event is a touch event by checking if it has the `touches` property
+    // If it is a touch event, use the first touch input
+
+    e.preventDefault();
+    var point = e.touches ? e.changedTouches[0] : e;
+    var x = point.clientX;
+    var y = point.clientY; // Get the screen position of the component
+
+    var rect = root.getBoundingClientRect();
+    var hsv;
+
+    switch (e.type) {
+      case EVENT_MOUSEDOWN:
+      case EVENT_TOUCHSTART:
+        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, {
+          passive: false
+        });
+        hsv = this.input(x, y, rect, "START"); // parent.emit("input:start", parent.color);
+
+        break;
+
+      case EVENT_MOUSEMOVE:
+      case EVENT_TOUCHMOVE:
+        // Use the position to update the picker color
+        hsv = this.input(x, y, rect, "MOVE");
+        break;
+
+      case EVENT_MOUSEUP:
+      case EVENT_TOUCHEND:
+        hsv = this.input(x, y, rect, "END"); // parent.emit("input:end", parent.color);
+
+        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        break;
+    } // if (hsv) parent.color.hsv = hsv;
+
+  };
+
+  IroComponent.prototype.input = function input (x, y, rect, type) {};
+
+  return IroComponent;
+}(Component));
+
+function IroMarker(props) {
+  return h("svg", {
+    class: "iro__marker",
+    x: props.x,
+    y: props.y,
+    overflow: "visible"
+  }, h("circle", {
+    class: "iro__marker__outer",
+    x: 0,
+    y: 0,
     fill: "none",
-    strokeWidth: 5,
+    "stroke-width": 5,
     stroke: "#000",
-    "vector-effect": "non-scaling-stroke"
-  });
-  baseGroup.circle(0, 0, opts.r, {
-    class: CLASS_PREFIX + "__inner",
+    vectorEffect: "non-scaling-stroke"
+  }), h("circle", {
+    class: "iro__marker__inner",
+    x: 0,
+    y: 0,
     fill: "none",
-    strokeWidth: 2,
+    "stroke-width": 7,
     stroke: "#fff",
-    "vector-effect": "non-scaling-stroke"
-  });
-  this.g = baseGroup;
-};
-/**
-  * @desc move marker to centerpoint (x, y) and redraw
-  * @param {Number} x - point x coordinate
-  * @param {Number} y - point y coordinate
-*/
-
-
-marker.prototype.move = function move (x, y) {
-  this.g.setAttrs({
-    x: x,
-    y: y
-  }); // this.g.setTransform("translate", [x, y]);
-};
-
-var CLASS_PREFIX$1 = "iro__wheel"; // Quick references to reused math functions
+    vectorEffect: "non-scaling-stroke"
+  }));
+}
 
 var PI = Math.PI,
     sqrt = Math.sqrt,
     round = Math.round;
-var wheel = (function (component$$1) {
-  function wheel(parent, opts) {
-    component$$1.call(this, parent, {
-      class: CLASS_PREFIX$1,
-      x: opts.x,
-      y: opts.y
-    });
-    this._opts = opts;
-    this.type = "wheel";
-    var r = opts.r;
-    var border = opts.border;
-    var borderWidth = border.w;
-    var cY = borderWidth + r;
-    var cX = borderWidth + r;
-    var baseGroup = this.root;
-    this.cX = cX;
-    this.cY = cY;
-    baseGroup.circle(cX, cY, r + border.w / 2, {
-      class: CLASS_PREFIX$1 + "__border",
-      fill: "#fff",
-      stroke: border.color,
-      strokeWidth: border.w,
-      "vector-effect": "non-scaling-stroke"
-    });
-    var ringGroup = baseGroup.g({
-      class: CLASS_PREFIX$1 + "__hue",
-      strokeWidth: r,
-      fill: "none"
-    });
 
-    for (var hue = 0; hue < 360; hue++) {
-      ringGroup.arc(cX, cY, r / 2, hue, hue + 1.5, {
-        stroke: "hsl(" + (opts.anticlockwise ? 360 - hue : hue) + ",100%,50%)"
-      });
-    }
+function arcPath(cx, cy, radius, startAngle, endAngle) {
+  var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  startAngle *= Math.PI / 180;
+  endAngle *= Math.PI / 180;
+  var x1 = cx + radius * Math.cos(endAngle),
+      y1 = cy + radius * Math.sin(endAngle),
+      x2 = cx + radius * Math.cos(startAngle),
+      y2 = cy + radius * Math.sin(startAngle);
+  return ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
+}
 
-    var saturation = baseGroup.circle(cX, cY, r, {
-      class: CLASS_PREFIX$1 + "__saturation"
-    });
-    saturation.setGradient("fill", parent.svg.gradient("radial", {
-      0: {
-        color: "#fff"
-      },
-      100: {
-        color: "#fff",
-        opacity: 0
-      }
-    }));
-    this._lightness = baseGroup.circle(cX, cY, r, {
-      class: CLASS_PREFIX$1 + "__lightness",
-      opacity: 0
-    });
-    this.marker = new marker(baseGroup, opts.marker);
+var IroWheel = (function (IroComponent$$1) {
+  function IroWheel () {
+    IroComponent$$1.apply(this, arguments);
   }
 
-  if ( component$$1 ) wheel.__proto__ = component$$1;
-  wheel.prototype = Object.create( component$$1 && component$$1.prototype );
-  wheel.prototype.constructor = wheel;
+  if ( IroComponent$$1 ) IroWheel.__proto__ = IroComponent$$1;
+  IroWheel.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
+  IroWheel.prototype.constructor = IroWheel;
+
+  IroWheel.prototype.render = function render (props) {
+    var this$1 = this;
+
+    return h("svg", {
+      class: "iro__wheel",
+      x: 0,
+      y: 0,
+      ref: function (el) { return this$1.root = el; }
+    }, h("defs", null, h("radialGradient", {
+      id: "iroGradient2"
+    }, h("stop", {
+      offset: "0%",
+      "stop-color": "#fff"
+    }), h("stop", {
+      offset: "100%",
+      "stop-color": "#fff",
+      "stop-opacity": "0"
+    }))), h("circle", {
+      class: "iro__wheel__border",
+      cx: 0,
+      cy: 0,
+      r: 0,
+      fill: "#fff",
+      stroke: "#fff",
+      "stroke-width": 2,
+      "vector-effect": "non-scaling-stroke"
+    }), h("g", {
+      class: "__hue",
+      "stroke-width": 2,
+      fill: "none"
+    }, new Array(360).fill(0).map(function (_, hue) { return h("path", {
+      d: arcPath(0, 0, hue, hue + 1.5),
+      stroke: ("hsl(" + (props.anticlockwise ? 360 - hue : hue) + ", 100%, 50%)")
+    }); })), h("circle", {
+      class: "iro__wheel__saturation",
+      cx: 0,
+      cy: 0,
+      r: 0,
+      fill: "url(#iroGradient2)"
+    }), h("circle", {
+      class: "iro__wheel__lightness",
+      cx: 0,
+      cy: 0,
+      r: 0,
+      opacity: 0
+    }), h(IroMarker, {
+      x: 0,
+      y: 0
+    }));
+  };
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
@@ -216,7 +231,7 @@ var wheel = (function (component$$1) {
   */
 
 
-  wheel.prototype.update = function update (color, changes) {
+  IroWheel.prototype.update = function update (color, changes) {
     var opts = this._opts;
     var hsv = color.hsv; // If the V channel has changed, redraw the wheel UI with the new value
 
@@ -244,12 +259,11 @@ var wheel = (function (component$$1) {
   */
 
 
-  wheel.prototype.input = function input (x, y, rect, type) {
+  IroWheel.prototype.input = function input (x, y, rect, type) {
     var opts = this._opts;
     var rangeMax = opts.rMax;
     var cX = rect.width / 2;
     var cY = rect.height / 2;
-    console.log(rect);
     x = cX - (x - rect.left);
     y = cY - (y - rect.top);
     var angle = Math.atan2(y, x),
@@ -266,8 +280,8 @@ var wheel = (function (component$$1) {
     };
   };
 
-  return wheel;
-}(component));
+  return IroWheel;
+}(IroComponent));
 
 var round$1 = Math.round;
 var floor = Math.floor;
@@ -771,56 +785,48 @@ color.prototype.darken = function darken$1 (amount) {
 
 Object.defineProperties( color.prototype, prototypeAccessors );
 
-var CLASS_PREFIX$2 = "iro__slider";
-var slider = (function (component$$1) {
-  function slider(parent, opts) {
-    component$$1.call(this, parent, {
-      class: CLASS_PREFIX$2,
-      x: opts.x,
-      y: opts.y
-    });
-    var r = opts.r,
-        w = opts.w,
-        h = opts.h,
-        borderWidth = opts.border.w;
-    var baseGroup = this.root; // "range" limits how far the slider's marker can travel, and where it stops and starts along the X axis
-
-    opts.range = {
-      min: r,
-      max: w - r,
-      w: w - r * 2
-    };
-    opts.sliderType = opts.sliderType || "v";
-    this.type = "slider";
-    this._opts = opts;
-    var radius = r + borderWidth / 2;
-    var rect = baseGroup.insert("rect", {
-      class: CLASS_PREFIX$2 + "__value",
-      rx: radius,
-      ry: radius,
-      x: -borderWidth / 2,
-      y: -borderWidth / 2,
-      width: w + borderWidth,
-      height: h + borderWidth,
-      strokeWidth: borderWidth,
-      stroke: opts.border.color,
-      "vector-effect": "non-scaling-stroke"
-    });
-    rect.setGradient("fill", parent.svg.gradient("linear", {
-      0: {
-        color: "#000"
-      },
-      100: {
-        color: "#fff"
-      }
-    }));
-    this._gradient = rect.gradient;
-    this.marker = new marker(baseGroup, opts.marker);
+var IroSlider = (function (IroComponent$$1) {
+  function IroSlider () {
+    IroComponent$$1.apply(this, arguments);
   }
 
-  if ( component$$1 ) slider.__proto__ = component$$1;
-  slider.prototype = Object.create( component$$1 && component$$1.prototype );
-  slider.prototype.constructor = slider;
+  if ( IroComponent$$1 ) IroSlider.__proto__ = IroComponent$$1;
+  IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
+  IroSlider.prototype.constructor = IroSlider;
+
+  IroSlider.prototype.render = function render (props) {
+    var this$1 = this;
+
+    return h("svg", {
+      class: "iro__slider",
+      x: 0,
+      y: 0,
+      ref: function (el) { return this$1.root = el; }
+    }, h("defs", null, h("linearGradient", {
+      id: "iroGradient1"
+    }, h("stop", {
+      offset: "0%",
+      "stop-color": "#000"
+    }), h("stop", {
+      offset: "100%",
+      "stop-color": "#fff"
+    }))), h("rect", {
+      class: "iro__slider__value",
+      rx: 0,
+      ry: 0,
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      "stroke-width": 2,
+      stroke: "#fff",
+      fill: "url(#iroGradient1)",
+      vectorEffect: "non-scaling-stroke"
+    }), h(IroMarker, {
+      x: 0,
+      y: 0
+    }));
+  };
   /**
     * @desc updates this element to represent a new color value
     * @param {Object} color - an iroColor object with the new color value
@@ -828,7 +834,7 @@ var slider = (function (component$$1) {
   */
 
 
-  slider.prototype.update = function update (color$$1, changes) {
+  IroSlider.prototype.update = function update (color$$1, changes) {
     var opts = this._opts;
     var range = opts.range;
     var hsv = color$$1.hsv;
@@ -859,7 +865,7 @@ var slider = (function (component$$1) {
   */
 
 
-  slider.prototype.input = function input (x, y, rect, type) {
+  IroSlider.prototype.input = function input (x, y, rect, type) {
     x = x - rect.left;
     y = y - rect.top;
     var opts = this._opts;
@@ -870,220 +876,8 @@ var slider = (function (component$$1) {
     };
   };
 
-  return slider;
-}(component));
-
-var GRADIENT_INDEX = 0;
-var GRADIENT_SUFFIX = "Gradient";
-var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-var SVG_ATTRIBUTE_SHORTHANDS = {
-  class: "class",
-  stroke: "stroke",
-  strokeWidth: "stroke-width",
-  fill: "fill",
-  opacity: "opacity",
-  offset: "offset",
-  stopColor: "stop-color",
-  stopOpacity: "stop-opacity"
-}; // TODO: figure out why these aren't being compressed properly?
-// var SVG_TRANSFORM_SHORTHANDS = {
-//   translate: "setTranslate",
-//   scale: "setScale",
-//   rotate: "setRotate"
-// };
-// sniff useragent string to check if the user is running IE, Edge or Safari
-
-var ua = window.navigator.userAgent.toLowerCase();
-var IS_IE = /msie|trident|edge/.test(ua);
-var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(ua);
-
-var svgElement = function svgElement(root, parent, type, attrs) {
-  var el = document.createElementNS(SVG_NAMESPACE, type);
-  this.el = el;
-  this.setAttrs(attrs);
-  (parent.el || parent).appendChild(el);
-  this._root = root; // this._svgTransforms = {};
-  // this._transformList = el.transform ? el.transform.baseVal : false;
-};
-/**
-  * @desc insert a new svgElement
-  * @param {String} type - element tag name
-  * @param {Object} attrs - element attributes
-*/
-
-
-svgElement.prototype.insert = function insert (type, attrs) {
-  return new svgElement(this._root, this, type, attrs);
-};
-/**
-  * @desc shorthand to insert a new group svgElement
-  * @param {Object} attrs - element attributes
-*/
-
-
-svgElement.prototype.g = function g (attrs) {
-  return this.insert("g", attrs);
-};
-
-svgElement.prototype.svg = function svg (attrs) {
-  return this.insert("svg", Object.assign({}, attrs, {
-    overflow: "visible"
-  }));
-};
-/**
-  * @desc shorthand to insert a new arc svgElement
-  * @param {Number} cx - arc center x
-  * @param {Number} cy - arc center y
-  * @param {Number} radius - arc radius
-  * @param {Number} startAngle - arc start angle (in degrees)
-  * @param {Number} endAngle - arc end angle (in degrees)
-  * @param {Object} attrs - element attributes
-*/
-
-
-svgElement.prototype.arc = function arc (cx, cy, radius, startAngle, endAngle, attrs) {
-  var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-  startAngle *= Math.PI / 180;
-  endAngle *= Math.PI / 180;
-  var x1 = cx + radius * Math.cos(endAngle),
-      y1 = cy + radius * Math.sin(endAngle),
-      x2 = cx + radius * Math.cos(startAngle),
-      y2 = cy + radius * Math.sin(startAngle);
-  attrs = attrs || {};
-  attrs.d = ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
-  return this.insert("path", attrs);
-};
-/**
-  * @desc shorthand to insert a new circle svgElement
-  * @param {Number} cx - circle center x
-  * @param {Number} cy - circle center y
-  * @param {Number} radius - circle radius
-  * @param {Object} attrs - element attributes
-*/
-
-
-svgElement.prototype.circle = function circle (cx, cy, radius, attrs) {
-  attrs = attrs || {};
-  attrs.cx = cx;
-  attrs.cy = cy;
-  attrs.r = radius;
-  return this.insert("circle", attrs);
-}; // /**
-// * @desc set a rotate/translate/scale transform on this element
-// * @param {String} type - transform (rotate | translate | scale)
-// * @param {Array} args - transform values
-// */
-// setTransform(type, args) {
-// if (!IS_IE) {  
-//   var transform, transformFn;
-//   var svgTransforms = this._svgTransforms;
-//   if (!svgTransforms[type]) {
-//     transform = this._root.el.createSVGTransform();
-//     svgTransforms[type] = transform;
-//     this._transformList.appendItem(transform);
-//   } else {
-//     transform = svgTransforms[type];
-//   }
-//   transformFn = (type in SVG_TRANSFORM_SHORTHANDS) ? SVG_TRANSFORM_SHORTHANDS[type] : type;
-//   transform[transformFn].apply(transform, args);
-// } else {
-//   // Microsoft still can't make a web browser that actually works, as such, Edge + IE dont implement SVG transforms properly.
-//   // We have to force them instead... geez
-//   this.setAttrs({"transform": type + "(" + args.join(", ") + ")"});
-// }
-// }
-
-/**
-  * @desc set attributes on this element
-  * @param {Object} attrs - element attributes
-*/
-
-
-svgElement.prototype.setAttrs = function setAttrs (attrs) {
-    var this$1 = this;
-
-  for (var attr in attrs) {
-    var name = attr in SVG_ATTRIBUTE_SHORTHANDS ? SVG_ATTRIBUTE_SHORTHANDS[attr] : attr;
-    this$1.el.setAttribute(name, attrs[attr]);
-  }
-};
-
-svgElement.prototype.setGradient = function setGradient (attr, gradient) {
-  var attrs = {};
-  attrs[attr] = gradient.getUrl();
-  gradient._refs[attr] = this;
-  this.gradient = gradient;
-  this.setAttrs(attrs);
-};
-
-var svgGradient = function svgGradient(root, type, stops) {
-  var stopElements = [];
-
-  var gradient = root._defs.insert(type + GRADIENT_SUFFIX, {
-    id: "iro" + GRADIENT_SUFFIX + GRADIENT_INDEX++
-  });
-
-  for (var offset in stops) {
-    var stop = stops[offset];
-    stopElements.push(gradient.insert("stop", {
-      offset: offset + "%",
-      stopColor: stop.color,
-      stopOpacity: stop.opacity === undefined ? 1 : stop.opacity
-    }));
-  }
-
-  this.el = gradient.el;
-  this.stops = stopElements;
-  this._refs = {};
-};
-
-svgGradient.prototype.getUrl = function getUrl (base) {
-  var root = IS_SAFARI ? base || window.location.href : "";
-  return "url(" + root + "#" + this.el.id + ")";
-};
-
-var svgRoot = (function (svgElement) {
-  function svgRoot(parent, width, height, display) {
-    svgElement.call(this, null, parent, "svg", {
-      width: width,
-      height: height,
-      viewBox: ("0 0 " + width + " " + height),
-      style: ("display:" + (display || "block") + "; touch-action:none;")
-    });
-    this._root = this;
-    this._defs = this.insert("defs");
-    this._gradients = [];
-  }
-
-  if ( svgElement ) svgRoot.__proto__ = svgElement;
-  svgRoot.prototype = Object.create( svgElement && svgElement.prototype );
-  svgRoot.prototype.constructor = svgRoot;
-
-  svgRoot.prototype.gradient = function gradient (type, stops) {
-    var gradient = new svgGradient(this, type, stops);
-
-    this._gradients.push(gradient);
-
-    return gradient;
-  };
-
-  svgRoot.prototype.updateUrls = function updateUrls (base) {
-    if (IS_SAFARI) {
-      var gradients = this._gradients;
-
-      for (var i = 0; i < gradients.length; i++) {
-        for (var key in gradients[i]._refs) {
-          var attrs = {};
-          attrs[key] = gradients[i].getUrl(base);
-
-          gradients[i]._refs[key].setAttrs(attrs);
-        }
-      }
-    }
-  };
-
-  return svgRoot;
-}(svgElement));
+  return IroSlider;
+}(IroComponent));
 
 var stylesheet = function stylesheet() {
   // Create a new style element
@@ -1233,8 +1027,7 @@ colorPicker.prototype._mount = function _mount (el, opts) {
   }; // Create UI elements
 
   this.el = el;
-  this.svg = new svgRoot(el, width, height, opts.display);
-  this.ui = [new wheel(this, {
+  this.ui = [new IroWheel({
     x: leftMargin,
     y: 0,
     r: wheelRadius,
@@ -1243,7 +1036,7 @@ colorPicker.prototype._mount = function _mount (el, opts) {
     border: borderStyles,
     lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
     anticlockwise: opts.anticlockwise
-  }), new slider(this, {
+  }), new IroSlider({
     sliderType: "v",
     x: leftMargin + borderWidth,
     y: bodyWidth + sliderMargin,
@@ -1349,7 +1142,7 @@ var iro = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
-  version: "3.5.1"
+  version: "4.0.0-alpha"
 };
 
 export default iro;
