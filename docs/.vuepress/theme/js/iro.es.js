@@ -5,10 +5,8 @@
  * github.com/jaames/iro.js
  */
 
-import { Component } from 'preact';
+import { Component, h } from 'preact';
 
-var EVENT_READYSTATE_CHANGE = "readystatechange";
-var READYSTATE_COMPLETE = "complete";
 /**
   * @desc listen to one or more events on an element
   * @param {Element} el target element
@@ -36,24 +34,6 @@ function unlisten(el, eventList, callback) {
     el.removeEventListener(eventList[i], callback);
   }
 }
-/**
-* @desc call fn callback when the page document is ready
-* @param {Function} callback callback function to be called
-*/
-
-function whenReady(callback) {
-
-  if (document.readyState == READYSTATE_COMPLETE) {
-    callback();
-  } else {
-    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-      if (document.readyState == READYSTATE_COMPLETE) {
-        callback();
-        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
-      }
-    });
-  }
-}
 
 var EVENT_MOUSEDOWN = "mousedown",
       EVENT_MOUSEMOVE = "mousemove",
@@ -71,7 +51,6 @@ var IroComponent = (function (Component$$1) {
   IroComponent.prototype.constructor = IroComponent;
 
   IroComponent.prototype.componentDidMount = function componentDidMount () {
-    console.log(this.root);
     listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
       passive: false
     });
@@ -138,7 +117,7 @@ function IroMarker(props) {
     fill: "none",
     "stroke-width": 5,
     stroke: "#000",
-    vectorEffect: "non-scaling-stroke"
+    "vector-effect": "non-scaling-stroke"
   }), h("circle", {
     class: "iro__marker__inner",
     x: 0,
@@ -146,22 +125,18 @@ function IroMarker(props) {
     fill: "none",
     "stroke-width": 7,
     stroke: "#fff",
-    vectorEffect: "non-scaling-stroke"
+    "vector-effect": "non-scaling-stroke"
   }));
 }
-
-var PI = Math.PI,
-    sqrt = Math.sqrt,
-    round = Math.round;
 
 function arcPath(cx, cy, radius, startAngle, endAngle) {
   var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
   startAngle *= Math.PI / 180;
   endAngle *= Math.PI / 180;
-  var x1 = cx + radius * Math.cos(endAngle),
-      y1 = cy + radius * Math.sin(endAngle),
-      x2 = cx + radius * Math.cos(startAngle),
-      y2 = cy + radius * Math.sin(startAngle);
+  var x1 = cx + radius * Math.cos(endAngle);
+  var y1 = cy + radius * Math.sin(endAngle);
+  var x2 = cx + radius * Math.cos(startAngle);
+  var y2 = cy + radius * Math.sin(startAngle);
   return ["M", x1, y1, "A", radius, radius, 0, largeArcFlag, 0, x2, y2].join(" ");
 }
 
@@ -177,10 +152,16 @@ var IroWheel = (function (IroComponent$$1) {
   IroWheel.prototype.render = function render (props) {
     var this$1 = this;
 
+    var hsv = props.hsv;
+    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
+    var markerDist = hsv.s / 100 * props.rMax;
+    var radius = props.radius;
+    var cX = 50;
+    var cY = 50;
     return h("svg", {
       class: "iro__wheel",
-      x: 0,
-      y: 0,
+      x: props.x,
+      y: props.y,
       ref: function (el) { return this$1.root = el; }
     }, h("defs", null, h("radialGradient", {
       id: "iroGradient2"
@@ -190,66 +171,40 @@ var IroWheel = (function (IroComponent$$1) {
     }), h("stop", {
       offset: "100%",
       "stop-color": "#fff",
-      "stop-opacity": "0"
+      "stop-opacity": 0
     }))), h("circle", {
       class: "iro__wheel__border",
-      cx: 0,
-      cy: 0,
-      r: 0,
-      fill: "#fff",
-      stroke: "#fff",
-      "stroke-width": 2,
+      cx: cX,
+      cy: cY,
+      r: radius,
+      fill: "none",
+      stroke: props.borderColor,
+      "stroke-width": props.borderWidth,
       "vector-effect": "non-scaling-stroke"
     }), h("g", {
       class: "__hue",
-      "stroke-width": 2,
+      "stroke-width": radius / 2,
       fill: "none"
     }, new Array(360).fill(0).map(function (_, hue) { return h("path", {
-      d: arcPath(0, 0, hue, hue + 1.5),
+      d: arcPath(cX, cY, hue, hue + 1.5),
       stroke: ("hsl(" + (props.anticlockwise ? 360 - hue : hue) + ", 100%, 50%)")
     }); })), h("circle", {
       class: "iro__wheel__saturation",
-      cx: 0,
-      cy: 0,
-      r: 0,
+      cx: cX,
+      cy: cY,
+      r: radius,
       fill: "url(#iroGradient2)"
     }), h("circle", {
       class: "iro__wheel__lightness",
-      cx: 0,
-      cy: 0,
-      r: 0,
-      opacity: 0
+      cx: cX,
+      cy: cY,
+      r: radius,
+      fill: "#000",
+      opacity: 1 - hsv.v / 100
     }), h(IroMarker, {
-      x: 0,
-      y: 0
+      x: cX + markerDist * Math.cos(markerAngle),
+      y: cY + markerDist * Math.sin(markerAngle)
     }));
-  };
-  /**
-    * @desc updates this element to represent a new color value
-    * @param {Object} color - an iroColor object with the new color value
-    * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
-  */
-
-
-  IroWheel.prototype.update = function update (color, changes) {
-    var opts = this._opts;
-    var hsv = color.hsv; // If the V channel has changed, redraw the wheel UI with the new value
-
-    if (changes.v && opts.lightness) {
-      this._lightness.setAttrs({
-        opacity: (1 - hsv.v / 100).toFixed(2)
-      });
-    } // If the H or S channel has changed, move the marker to the right position
-
-
-    if (changes.h || changes.s) {
-      // convert the hue value to radians, since we'll use it as an angle
-      var hueAngle = (opts.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180); // convert the saturation value to a distance between the center of the ring and the edge
-
-      var dist = hsv.s / 100 * opts.rMax; // Move the marker based on the angle and distance
-
-      this.marker.move(this.cX + dist * Math.cos(hueAngle), this.cY + dist * Math.sin(hueAngle));
-    }
   };
   /**
     * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
@@ -266,24 +221,24 @@ var IroWheel = (function (IroComponent$$1) {
     var cY = rect.height / 2;
     x = cX - (x - rect.left);
     y = cY - (y - rect.top);
-    var angle = Math.atan2(y, x),
-        // Calculate the hue by converting the angle to radians
-    hue = round(angle * (180 / PI)) + 180,
-        // Find the point's distance from the center of the wheel
+    var angle = Math.atan2(y, x); // Calculate the hue by converting the angle to radians
+
+    var hue = Math.round(angle * (180 / Math.PI)) + 180; // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
-    dist = Math.min(sqrt(x * x + y * y), rangeMax);
+
+    var dist = Math.min(Math.sqrt(x * x + y * y), rangeMax);
     hue = opts.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
 
     return {
       h: hue,
-      s: round(100 / rangeMax * dist)
+      s: Math.round(100 / rangeMax * dist)
     };
   };
 
   return IroWheel;
 }(IroComponent));
 
-var round$1 = Math.round;
+var round = Math.round;
 var floor = Math.floor;
 /**
   * @desc generic parser for hsl / rgb / etc string
@@ -404,11 +359,11 @@ color.darken = function darken (color, amount) {
 
 color.hsv2Rgb = function hsv2Rgb (hsv) {
   var r, g, b, i, f, p, q, t;
-  var h = hsv.h / 360,
+  var h$$1 = hsv.h / 360,
       s = hsv.s / 100,
       v = hsv.v / 100;
-  i = floor(h * 6);
-  f = h * 6 - i;
+  i = floor(h$$1 * 6);
+  f = h$$1 * 6 - i;
   p = v * (1 - s);
   q = v * (1 - f * s);
   t = v * (1 - (1 - f) * s);
@@ -440,9 +395,9 @@ color.hsv2Rgb = function hsv2Rgb (hsv) {
   }
 
   return {
-    r: round$1(r * 255),
-    g: round$1(g * 255),
-    b: round$1(b * 255)
+    r: round(r * 255),
+    g: round(g * 255),
+    b: round(b * 255)
   };
 };
 /**
@@ -647,9 +602,9 @@ prototypeAccessors.hsv.set = function (newValue) {
 prototypeAccessors.rgb.get = function () {
   var rgb = color.hsv2Rgb(this._value);
   return {
-    r: round$1(rgb.r),
-    g: round$1(rgb.g),
-    b: round$1(rgb.b)
+    r: round(rgb.r),
+    g: round(rgb.g),
+    b: round(rgb.b)
   };
 };
 
@@ -660,9 +615,9 @@ prototypeAccessors.rgb.set = function (value) {
 prototypeAccessors.hsl.get = function () {
   var hsl = color.hsv2Hsl(this._value);
   return {
-    h: round$1(hsl.h),
-    s: round$1(hsl.s),
-    l: round$1(hsl.l)
+    h: round(hsl.h),
+    s: round(hsl.s),
+    l: round(hsl.l)
   };
 };
 
@@ -797,10 +752,18 @@ var IroSlider = (function (IroComponent$$1) {
   IroSlider.prototype.render = function render (props) {
     var this$1 = this;
 
+    var width = 300;
+    var height = props.sliderHeight;
+    var hsv = props.hsv;
+    var hsl = color.hsv2Hsl({
+      h: hsv.h,
+      s: hsv.s,
+      v: 100
+    });
     return h("svg", {
       class: "iro__slider",
-      x: 0,
-      y: 0,
+      x: props.x,
+      y: props.y,
       ref: function (el) { return this$1.root = el; }
     }, h("defs", null, h("linearGradient", {
       id: "iroGradient1"
@@ -809,53 +772,23 @@ var IroSlider = (function (IroComponent$$1) {
       "stop-color": "#000"
     }), h("stop", {
       offset: "100%",
-      "stop-color": "#fff"
+      "stop-color": ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.v) + "%)")
     }))), h("rect", {
       class: "iro__slider__value",
-      rx: 0,
-      ry: 0,
+      rx: height / 2,
+      ry: height / 2,
       x: 0,
       y: 0,
-      width: 0,
-      height: 0,
-      "stroke-width": 2,
-      stroke: "#fff",
+      width: width,
+      height: height,
+      "stroke-width": props.borderWidth,
+      stroke: props.borderColor,
       fill: "url(#iroGradient1)",
       vectorEffect: "non-scaling-stroke"
     }), h(IroMarker, {
-      x: 0,
-      y: 0
+      x: hsv.v / 100 * width,
+      y: height / 2
     }));
-  };
-  /**
-    * @desc updates this element to represent a new color value
-    * @param {Object} color - an iroColor object with the new color value
-    * @param {Object} changes - an object that gives a boolean for each HSV channel, indicating whether ot not that channel has changed
-  */
-
-
-  IroSlider.prototype.update = function update (color$$1, changes) {
-    var opts = this._opts;
-    var range = opts.range;
-    var hsv = color$$1.hsv;
-    var hsl = color.hsv2Hsl({
-      h: hsv.h,
-      s: hsv.s,
-      v: 100
-    });
-
-    if (opts.sliderType == "v") {
-      if (changes.h || changes.s) {
-        this._gradient.stops[1].setAttrs({
-          stopColor: "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"
-        });
-      }
-
-      if (changes.v) {
-        var percent = hsv.v / 100;
-        this.marker.move(range.min + percent * range.w, opts.h / 2);
-      }
-    }
   };
   /**
     * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
@@ -978,169 +911,163 @@ stylesheet.prototype.setRule = function setRule (selector, property, value) {
 
 Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
 
-var colorPicker = function colorPicker(el, opts) {
-  var this$1 = this;
-
-  opts = opts || {}; // event storage for `on` and `off`
-
-  this._events = {};
-  this._mouseTarget = false;
-  this._colorChangeActive = false;
-  this.css = opts.css || opts.styles || undefined; // Wait for the document to be ready, then mount the UI
-
-  whenReady(function () {
-    this$1._mount(el, opts);
-  });
-};
-/**
-  * @desc mount the color picker UI into the DOM
-  * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
-  * @param {Object} opts - options for this instance
-  * @access protected
-*/
-
-
-colorPicker.prototype._mount = function _mount (el, opts) {
-    var this$1 = this;
-
-  // If `el` is a string, use it to select an Element, else assume it's an element
-  el = "string" == typeof el ? document.querySelector(el) : el; // Find the width and height for the UI
-  // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-
-  var width = opts.width || parseInt(el.width) || 320;
-  var height = opts.height || parseInt(el.height) || 320; // Calculate layout variables
-
-  var padding = opts.padding + 2 || 6,
-      borderWidth = opts.borderWidth || 0,
-      markerRadius = opts.markerRadius || 8,
-      sliderMargin = opts.sliderMargin || 24,
-      sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
-      bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
-      wheelRadius = bodyWidth / 2 - borderWidth,
-      leftMargin = (width - bodyWidth) / 2;
-  var marker = {
-    r: markerRadius
-  };
-  var borderStyles = {
-    w: borderWidth,
-    color: opts.borderColor || "#fff"
-  }; // Create UI elements
-
-  this.el = el;
-  this.ui = [new IroWheel({
-    x: leftMargin,
-    y: 0,
-    r: wheelRadius,
-    padding: padding,
-    marker: marker,
-    border: borderStyles,
-    lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
-    anticlockwise: opts.anticlockwise
-  }), new IroSlider({
-    sliderType: "v",
-    x: leftMargin + borderWidth,
-    y: bodyWidth + sliderMargin,
-    w: bodyWidth - borderWidth * 2,
-    h: sliderHeight - borderWidth * 2,
-    r: sliderHeight / 2 - borderWidth,
-    padding: padding,
-    marker: marker,
-    border: borderStyles
-  })]; // Create an iroStyleSheet for this colorWheel's CSS overrides
-
-  this.stylesheet = new stylesheet(); // Create an iroColor to store this colorWheel's selected color
-
-  this.color = new color(); // Whenever the selected color changes, trigger a colorWheel update too
-
-  this.color._onChange = this._update.bind(this);
-  this.color.set(opts.color || opts.defaultValue || "#fff"); // Hacky workaround for a couple of Safari SVG url bugs
-  // See https://github.com/jaames/iro.js/issues/18
-  // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
-
-  this.on("history:stateChange", function (base) {
-    this$1.svg.updateUrls(base);
-  });
-  this.emit("mount", this);
-};
-/**
-  * @desc update the selected color
-  * @param {Object} color - an iroColor object with the new color value
-  * @param {Object} changes - booleans for each HSV channel: true if the new value is different to the old value, else false
-  * @access protected
-*/
-
-
-colorPicker.prototype._update = function _update (color$$1, changes) {
-    var this$1 = this;
-
-  var rgb = color$$1.rgbString;
-  var css = this.css; // Loop through each UI element and update it
-
-  for (var i = 0; i < this.ui.length; i++) {
-    this$1.ui[i].update(color$$1, changes);
-  } // Update the stylesheet too
-
-
-  for (var selector in css) {
-    var properties = css[selector];
-
-    for (var prop in properties) {
-      this$1.stylesheet.setRule(selector, prop, rgb);
-    }
-  } // Prevent infinite loops if the color is set inside a `color:change` callback
-
-
-  if (!this._colorChangeActive) {
-    // While _colorChangeActive = true, this event cannot be fired
-    this._colorChangeActive = true;
-    this.emit("color:change", color$$1, changes);
+var ColorPicker = (function (Component$$1) {
+  function ColorPicker(props) {
+    Component$$1.call(this, props);
+    this._events = {};
     this._colorChangeActive = false;
+    this.css = props.css || props.styles || undefined;
+    this.color = new color(opts.color);
+    this.state = {
+      hsv: this.color.hsv
+    };
   }
-};
-/**
-  * @desc Set a callback function for an event
-  * @param {String} eventType Name of the event to listen to, pass "*" to listen to all events
-  * @param {Function} callback Event callback
-*/
+
+  if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
+  ColorPicker.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  ColorPicker.prototype.constructor = ColorPicker;
+
+  ColorPicker.prototype.componentDidMount = function componentDidMount () {
+    // Create an iroStyleSheet for this colorWheel's CSS overrides
+    this.stylesheet = new stylesheet();
+    this.emit("mount", this);
+  };
+
+  ColorPicker.prototype.componentWillUnmount = function componentWillUnmount () {};
+  /**
+    * @desc update the selected color
+    * @param {Object} hsv - new hsv value
+    * @access protected
+  */
 
 
-colorPicker.prototype.on = function on (eventType, callback) {
-  var events = this._events;
-  (events[eventType] || (events[eventType] = [])).push(callback);
-};
-/**
-  * @desc Remove a callback function for an event added with on()
-  * @param {String} eventType The name of the event
-  * @param {Function} callback The watch callback to remove from the event
-*/
+  ColorPicker.prototype.setHsv = function setHsv (hsv, changes) {
+    var this$1 = this;
+
+    this.color.hsv = hsv;
+    this.setState({
+      hsv: hsv
+    });
+    var rgb = this.color.rgbString;
+    var css = this.css;
+
+    for (var selector in css) {
+      var properties = css[selector];
+
+      for (var prop in properties) {
+        this$1.stylesheet.setRule(selector, prop, rgb);
+      }
+    } // Prevent infinite loops if the color is set inside a `color:change` callback
 
 
-colorPicker.prototype.off = function off (eventType, callback) {
-  var eventList = this._events[eventType];
-  if (eventList) { eventList.splice(eventList.indexOf(callback), 1); }
-};
-/**
-  * @desc Emit an event
-  * @param {String} eventType The name of the event to emit
-  * @param {Array} args array of args to pass to callbacks
-*/
+    if (!this._colorChangeActive) {
+      // While _colorChangeActive = true, this event cannot be fired
+      this._colorChangeActive = true;
+      this.emit("color:change", this.color);
+      this._colorChangeActive = false;
+    }
+  };
+  /**
+    * @desc Set a callback function for an event
+    * @param {String} eventType Name of the event to listen to, pass "*" to listen to all events
+    * @param {Function} callback Event callback
+  */
 
 
-colorPicker.prototype.emit = function emit (eventType) {
+  ColorPicker.prototype.on = function on (eventType, callback) {
+    var events = this._events;
+    (events[eventType] || (events[eventType] = [])).push(callback);
+  };
+  /**
+    * @desc Remove a callback function for an event added with on()
+    * @param {String} eventType The name of the event
+    * @param {Function} callback The watch callback to remove from the event
+  */
+
+
+  ColorPicker.prototype.off = function off (eventType, callback) {
+    var eventList = this._events[eventType];
+    if (eventList) { eventList.splice(eventList.indexOf(callback), 1); }
+  };
+  /**
+    * @desc Emit an event
+    * @param {String} eventType The name of the event to emit
+    * @param {Array} args array of args to pass to callbacks
+  */
+
+
+  ColorPicker.prototype.emit = function emit (eventType) {
     var args = [], len = arguments.length - 1;
     while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
 
-  var events = this._events,
-      callbackList = (events[eventType] || []).concat(events["*"] || []);
+    var events = this._events,
+        callbackList = (events[eventType] || []).concat(events["*"] || []);
 
-  for (var i = 0; i < callbackList.length; i++) {
-    callbackList[i].apply(null, args);
-  }
-};
+    for (var i = 0; i < callbackList.length; i++) {
+      callbackList[i].apply(null, args);
+    }
+  };
+
+  ColorPicker.prototype.render = function render (props, state) {
+    var this$1 = this;
+
+    h("svg", {
+      class: "iro__svg",
+      width: props.width,
+      height: props.height,
+      viewBox: ("0 0 " + (props.width) + " " + (props.height)),
+      style: {
+        "display": props.display || "block",
+        "touch-action": "none"
+      },
+      ref: function (el) { return this$1.el = el; }
+    }, h(IroWheel, {
+      hsv: state.hsv
+    }), h(IroSlider, {
+      hsv: state.hsv
+    }));
+  };
+  /**
+    * @desc mount the color picker UI into the DOM
+    * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+    * @param {Object} opts - options for this instance
+    * @access protected
+  */
+
+
+  ColorPicker.prototype._mount = function _mount (el, opts) {
+    var this$1 = this;
+
+    // If `el` is a string, use it to select an Element, else assume it's an element
+    el = "string" == typeof el ? document.querySelector(el) : el; // Find the width and height for the UI
+    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
+
+    var width = opts.width || parseInt(el.width) || 320;
+    var height = opts.height || parseInt(el.height) || 320; // Calculate layout variables
+
+    var padding = opts.padding + 2 || 6,
+        borderWidth = opts.borderWidth || 0,
+        markerRadius = opts.markerRadius || 8,
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2;
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff"
+    }; // Hacky workaround for a couple of Safari SVG url bugs
+    // See https://github.com/jaames/iro.js/issues/18
+    // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
+
+    this.on("history:stateChange", function (base) {
+      this$1.svg.updateUrls(base);
+    });
+  };
+
+  return ColorPicker;
+}(Component));
 
 var iro = {
   Color: color,
-  ColorPicker: colorPicker,
+  ColorPicker: ColorPicker,
   Stylesheet: stylesheet,
   version: "4.0.0-alpha"
 };

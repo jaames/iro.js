@@ -11,12 +11,11 @@ const EVENT_MOUSEDOWN = "mousedown",
 export default class IroComponent extends Component {
 
   componentDidMount() {
-    console.log(this.root);
-    listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
+    if (this.root) listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
   }
 
   componentWillUnmount() {
-    unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    if (this.root) unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   }
 
   handleEvent(e) {
