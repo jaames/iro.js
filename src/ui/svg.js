@@ -166,7 +166,7 @@ class svgGradient {
   }
 
   getUrl(base) {
-    var root = IS_SAFARI ? (base || window.location.href) : "";
+    var root = IS_SAFARI ? (base || location.protocol + "//" + location.host + location.pathname) : "";
     return "url(" + root + "#" + this.el.id + ")";
   }
 }
