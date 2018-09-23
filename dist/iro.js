@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.1
+ * iro.js v3.5.2
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -1360,7 +1360,7 @@
     Color: color,
     ColorPicker: colorPicker,
     Stylesheet: stylesheet,
-    version: "3.5.1"
+    version: "3.5.2"
   };
 
   return iro;

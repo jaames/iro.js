@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.5.2
+
+##### Fixes
+
+- Fixes an unforseen issue with the Safari gradient URL workaround implemented in [3.1.1](#311). Further details are noted in issue thread #40.
+
 #### 3.5.1
 
 ##### Additions
