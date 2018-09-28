@@ -67,6 +67,7 @@ var demoColorPicker = new iro.ColorPicker("#color-picker-container", {
 | `display`       | SVG element's CSS display property value. | `"block"` |
 | `anticlockwise` | If set to `true`, the color wheel will be drawn in the other direction, with blues and purples towards the lower half of the wheel. | `false` |
 | `wheelLightness`| If set to `false`, the color wheel will not fade to black as the color's lightness decreases. This is not recommended, for reasons noted in [this issue thread](https://github.com/jaames/iro.js/issues/9#issuecomment-336628451) | `undefined` |
+| `removeSlider`  | If set to `true`, the brightness slider won't be displayed. | `undefined` |
 | `css`           | The CSS template used for the [Dynamic CSS](#Dynamic-CSS) feature. | `{}` |
 
 ## Using the Selected Color
@@ -119,12 +120,12 @@ demoColorPicker.off("input:start", onInputStart);
 
 ### mount
 
-Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. 
+Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction.
 A reference to the colorPicker object is passed to this event's callback function.
 
 ### input:start
 
-Fired whenever the users starts interacting with the color picker controls. 
+Fired whenever the users starts interacting with the color picker controls.
 The colorPicker's `color` object is passed to this event's callback function.
 
 ### input:end
@@ -134,7 +135,7 @@ The colorPicker's `color` object is passed to this event's callback function.
 
 ### color:change
 
-Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. 
+Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code.
 This event's callback function gets passed two values:
  * `color`: the colorPicker's `color` object
  * `changes`: an object showing which HSV channels have changed since the last time the event was fired

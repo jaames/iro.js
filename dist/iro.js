@@ -1172,7 +1172,8 @@
         sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
         bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
         wheelRadius = bodyWidth / 2 - borderWidth,
-        leftMargin = (width - bodyWidth) / 2;
+        leftMargin = (width - bodyWidth) / 2,
+        removeSlider = opts.removeSlider || false;
     var marker = {
       r: markerRadius
     };
@@ -1183,25 +1184,40 @@
 
     this.el = el;
     this.svg = new svgRoot(el, width, height, opts.display);
-    this.ui = [new wheel(this.svg, {
-      cX: leftMargin + bodyWidth / 2,
-      cY: bodyWidth / 2,
-      r: wheelRadius,
-      rMax: wheelRadius - (markerRadius + padding),
-      marker: marker,
-      border: borderStyles,
-      lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
-      anticlockwise: opts.anticlockwise
-    }), new slider(this.svg, {
-      sliderType: "v",
-      x: leftMargin + borderWidth,
-      y: bodyWidth + sliderMargin,
-      w: bodyWidth - borderWidth * 2,
-      h: sliderHeight - borderWidth * 2,
-      r: sliderHeight / 2 - borderWidth,
-      marker: marker,
-      border: borderStyles
-    })]; // Create an iroStyleSheet for this colorWheel's CSS overrides
+
+    if (!removeSlider) {
+      this.ui = [new wheel(this.svg, {
+        cX: leftMargin + bodyWidth / 2,
+        cY: bodyWidth / 2,
+        r: wheelRadius,
+        rMax: wheelRadius - (markerRadius + padding),
+        marker: marker,
+        border: borderStyles,
+        lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
+        anticlockwise: opts.anticlockwise
+      }), new slider(this.svg, {
+        sliderType: "v",
+        x: leftMargin + borderWidth,
+        y: bodyWidth + sliderMargin,
+        w: bodyWidth - borderWidth * 2,
+        h: sliderHeight - borderWidth * 2,
+        r: sliderHeight / 2 - borderWidth,
+        marker: marker,
+        border: borderStyles
+      })];
+    } else {
+      this.ui = [new wheel(this.svg, {
+        cX: leftMargin + bodyWidth / 2,
+        cY: bodyWidth / 2,
+        r: wheelRadius,
+        rMax: wheelRadius - (markerRadius + padding),
+        marker: marker,
+        border: borderStyles,
+        lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
+        anticlockwise: opts.anticlockwise
+      })];
+    } // Create an iroStyleSheet for this colorWheel's CSS overrides
+
 
     this.stylesheet = new stylesheet(); // Create an iroColor to store this colorWheel's selected color
 

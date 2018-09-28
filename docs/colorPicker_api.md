@@ -17,6 +17,7 @@ title: Color Picker API
   * `{Number} sliderMargin`
   * `{Number} sliderHeight`
   * `{Boolean} wheelLightness`
+  * `{Boolean} displaySlider`
   * `{Number} markerRadius`
   * `{Number} borderWidth`
   * `{String} borderColor`
