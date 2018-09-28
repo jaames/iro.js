@@ -94,7 +94,8 @@ export default class colorPicker {
         sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2,
         bodyWidth = Math.min(height - sliderHeight - sliderMargin, width),
         wheelRadius = bodyWidth / 2 - borderWidth,
-        leftMargin = (width - bodyWidth) / 2;
+        leftMargin = (width - bodyWidth) / 2,
+        removeSlider = opts.removeSlider || false;
     var marker = {
       r: markerRadius
     };
@@ -106,28 +107,45 @@ export default class colorPicker {
     // Create UI elements
     this.el = el;
     this.svg = new svg(el, width, height, opts.display);
-    this.ui = [
-      new wheel(this.svg, {
-        cX: leftMargin + bodyWidth / 2,
-        cY: bodyWidth / 2,
-        r: wheelRadius,
-        rMax: wheelRadius - (markerRadius + padding),
-        marker: marker,
-        border: borderStyles,
-        lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
-        anticlockwise: opts.anticlockwise
-      }),
-      new slider(this.svg, {
-        sliderType: "v",
-        x: leftMargin + borderWidth,
-        y: bodyWidth + sliderMargin,
-        w: bodyWidth - borderWidth * 2,
-        h: sliderHeight - borderWidth * 2,
-        r: sliderHeight / 2 - borderWidth,
-        marker: marker,
-        border: borderStyles
-      })
-    ];
+
+    if(!removeSlider){
+      this.ui = [
+        new wheel(this.svg, {
+          cX: leftMargin + bodyWidth / 2,
+          cY: bodyWidth / 2,
+          r: wheelRadius,
+          rMax: wheelRadius - (markerRadius + padding),
+          marker: marker,
+          border: borderStyles,
+          lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
+          anticlockwise: opts.anticlockwise
+        }),
+        new slider(this.svg, {
+          sliderType: "v",
+          x: leftMargin + borderWidth,
+          y: bodyWidth + sliderMargin,
+          w: bodyWidth - borderWidth * 2,
+          h: sliderHeight - borderWidth * 2,
+          r: sliderHeight / 2 - borderWidth,
+          marker: marker,
+          border: borderStyles
+        })
+      ];
+    }else{
+      this.ui = [
+        new wheel(this.svg, {
+          cX: leftMargin + bodyWidth / 2,
+          cY: bodyWidth / 2,
+          r: wheelRadius,
+          rMax: wheelRadius - (markerRadius + padding),
+          marker: marker,
+          border: borderStyles,
+          lightness: opts.wheelLightness == undefined ? true : opts.wheelLightness,
+          anticlockwise: opts.anticlockwise
+        })
+      ];
+    }
+
     // Create an iroStyleSheet for this colorWheel's CSS overrides
     this.stylesheet = new iroStyleSheet();
     // Create an iroColor to store this colorWheel's selected color
@@ -155,7 +173,7 @@ export default class colorPicker {
     var css = this.css;
     // Loop through each UI element and update it
     for (var i = 0; i < this.ui.length; i++) {
-      this.ui[i].update(color, changes); 
+      this.ui[i].update(color, changes);
     }
     // Update the stylesheet too
     for (var selector in css) {
@@ -163,7 +181,7 @@ export default class colorPicker {
       for (var prop in properties) {
         this.stylesheet.setRule(selector, prop, rgb);
       }
-    } 
+    }
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
@@ -202,7 +220,7 @@ export default class colorPicker {
     var events = this._events,
         callbackList = (events[eventType] || []).concat((events["*"] || []));
     for (var i = 0; i < callbackList.length; i++) {
-      callbackList[i].apply(null, args); 
+      callbackList[i].apply(null, args);
     }
   }
 
@@ -219,7 +237,7 @@ export default class colorPicker {
         // Convert the screen-space pointer position to local-space
         x = point.clientX - rect.left,
         y = point.clientY - rect.top;
-        
+
     switch (e.type) {
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:

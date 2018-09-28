@@ -26,7 +26,7 @@ class svgElement {
   /**
     * @constructor svg element wrapper
     * @param {svgRoot} root - svgRoot object
-    * @param {svgElement | Element} parent - parent node 
+    * @param {svgElement | Element} parent - parent node
     * @param {String} type - element tag name
     * @param {Object} attrs - element attributes
   */
@@ -100,7 +100,7 @@ class svgElement {
     * @param {Array} args - transform values
   */
   setTransform(type, args) {
-    if (!IS_IE) {  
+    if (!IS_IE) {
       var transform, transformFn;
       var svgTransforms = this._svgTransforms;
       if (!svgTransforms[type]) {
@@ -174,14 +174,14 @@ class svgGradient {
 export default class svgRoot extends svgElement {
   /**
     * @constructor svg root element (inherits svgElement)
-    * @param {svgElement | Element} parent - parent node 
+    * @param {svgElement | Element} parent - parent node
     * @param {Number} width - svg width
     * @param {Number} height - svg height
   */
   constructor(parent, width, height, display) {
     super(null, parent, "svg", {
-      width, 
-      height, 
+      width,
+      height,
       style: "display:" + (display || "block") + ";touch-action:none"
     });
     this._root = this;
