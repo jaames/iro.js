@@ -92,6 +92,7 @@ export default class ColorPicker extends Component {
   }
 
   render(props, state) {
+   return (
     <svg 
       class="iro__svg"
       width={ props.width } 
@@ -103,8 +104,12 @@ export default class ColorPicker extends Component {
       }}
       ref={ el => this.el = el }
     >
-      <IroWheel hsv={ state.hsv } />
-      <IroSlider hsv={ state.hsv } />
     </svg>
+  )
   }
+}
+
+ColorPicker.defaultProps = {
+  width: 300,
+  height: 300
 }
