@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.5.3
+
+##### Fixes
+
+- Fixes an issue where falling back to the dimensions of the color picker's container element wasn't working. Thanks @DenVys for the contribution! 
+
 #### 3.5.2
 
 ##### Fixes

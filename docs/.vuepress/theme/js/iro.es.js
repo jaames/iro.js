@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.2
+ * iro.js v3.5.3
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -1155,14 +1155,13 @@ colorPicker.prototype._mount = function _mount (el, opts) {
   // If `el` is a string, use it to select an Element, else assume it's an element
   el = "string" == typeof el ? document.querySelector(el) : el; // Find the width and height for the UI
   // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-  var elWidth = parseInt(getComputedStyle(el).width);
-  var elHeight = parseInt(getComputedStyle(el).height);
 
-  //choose the smallest side of the container
-  if(elHeight < elWidth && elHeight != 0) {
+  var elWidth = parseInt(getComputedStyle(el).width);
+  var elHeight = parseInt(getComputedStyle(el).height); //choose the smallest side of the container
+
+  if (elHeight < elWidth && elHeight != 0) {
     elWidth = elHeight;
-  }
-  else if(elWidth != 0) {
+  } else if (elWidth != 0) {
     elHeight = elWidth;
   }
 
@@ -1364,7 +1363,7 @@ var iro = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
-  version: "3.5.2"
+  version: "3.5.3"
 };
 
 export default iro;
