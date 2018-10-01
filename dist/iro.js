@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.2
+ * iro.js v3.5.3
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -1162,8 +1162,17 @@
     el = "string" == typeof el ? document.querySelector(el) : el; // Find the width and height for the UI
     // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
 
-    var width = opts.width || parseInt(el.width) || 320;
-    var height = opts.height || parseInt(el.height) || 320; // Calculate layout variables
+    var elWidth = parseInt(getComputedStyle(el).width);
+    var elHeight = parseInt(getComputedStyle(el).height); //choose the smallest side of the container
+
+    if (elHeight < elWidth && elHeight != 0) {
+      elWidth = elHeight;
+    } else if (elWidth != 0) {
+      elHeight = elWidth;
+    }
+
+    var width = opts.width || elWidth || 320;
+    var height = opts.height || elHeight || 320; // Calculate layout variables
 
     var padding = opts.padding + 2 || 6,
         borderWidth = opts.borderWidth || 0,
@@ -1360,7 +1369,7 @@
     Color: color,
     ColorPicker: colorPicker,
     Stylesheet: stylesheet,
-    version: "3.5.2"
+    version: "3.5.3"
   };
 
   return iro;
