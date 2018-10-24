@@ -8,7 +8,6 @@ import iroColor from "modules/color";
 export default class IroSlider extends IroComponent {
 
   render(props) {
-
     const width = 300;
     const height = props.sliderHeight;
     const hsv = props.hsv;
@@ -45,12 +44,13 @@ export default class IroSlider extends IroComponent {
   }
 
   /**
-    * @desc Takes a point at (x, y) and returns HSV values based on this input -- use this to update a color from mouse input
+    * @desc handles mouse input for this component
     * @param {Number} x - point x coordinate
     * @param {Number} y - point y coordinate
-    * @return {Object} - new HSV color values (some channels may be missing)
+    * @param {DOMRect} rect - bounding client rect for the component's base element
+    * @param {String} type - input type: "START", "MOVE" or "END"
   */
-  input(x, y, rect, type) {
+  handleInput(x, y, rect, type) {
     x = x - rect.left;
     y = y - rect.top;
     var props = this.props;

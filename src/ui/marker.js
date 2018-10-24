@@ -5,8 +5,6 @@ export default function IroMarker(props) {
     <svg class="iro__marker" x={ props.x } y={ props.y } overflow="visible">
       <circle 
         class="iro__marker__inner"
-        x={ 0 }
-        y={ 0 }
         r={ props.r }
         fill="none"
         stroke-width={ 5 }
@@ -14,8 +12,6 @@ export default function IroMarker(props) {
       />
       <circle 
         class="iro__marker__outer" 
-        x={ 0 }
-        y={ 0 }
         r={ props.r }
         fill="none"
         stroke-width={ 2 }

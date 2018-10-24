@@ -33,15 +33,15 @@ export default class IroComponent extends Component {
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:
         listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive:false });
-        this.input(x, y, rect, "START");
+        this.handleInput(x, y, rect, "START");
         break;
       case EVENT_MOUSEMOVE:
       case EVENT_TOUCHMOVE:
-        this.input(x, y, rect, "MOVE");
+        this.handleInput(x, y, rect, "MOVE");
         break;
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
-        this.input(x, y, rect, "END");
+        this.handleInput(x, y, rect, "END");
         unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
         break;
     }
