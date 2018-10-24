@@ -17,16 +17,15 @@ function arcPath(cx, cy, radius, startAngle, endAngle) {
 export default class IroWheel extends IroComponent {
   
   render(props) {
-
     const hsv = props.hsv;
-    const markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
+    const markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
     const markerDist = (hsv.s / 100) * props.rMax;
     const radius = props.radius;
-    const cX = 50;
-    const cY = 50;
+    const cX = 100;
+    const cY = 100;
 
     return (
-      <svg class="iro__wheel" x={ props.x } y={ props.y } ref={ el => this.root = el }>
+      <svg class="iro__wheel" x={ props.x } y={ props.y }>
         <defs>
           <radialGradient id="iroGradient2">
             <stop offset="0%" stop-color="#fff" />
@@ -43,11 +42,11 @@ export default class IroWheel extends IroComponent {
           stroke-width={ props.borderWidth }
           vector-effect="non-scaling-stroke"
         />
-        <g class="__hue" stroke-width={ radius / 2 } fill="none">
+        <g class="__hue" stroke-width={ radius } fill="none">
           {new Array(360).fill(0).map((_, hue) => (
             <path 
               key={ hue }
-              d={ arcPath(cX, cY, hue, hue + 1.5) } 
+              d={ arcPath(cX, cY, radius / 2, hue, hue + 1.5) } 
               stroke={ `hsl(${ props.anticlockwise ? 360 - hue : hue }, 100%, 50%)` }
             />
           ))}
@@ -68,7 +67,7 @@ export default class IroWheel extends IroComponent {
           opacity={ 1 - hsv.v / 100 }
         />
         <Marker 
-          r={ markerRadius }
+          r={ props.markerRadius }
           x={ cX + markerDist * Math.cos(markerAngle) }
           y={ cY + markerDist * Math.sin(markerAngle) }
         />
@@ -83,8 +82,8 @@ export default class IroWheel extends IroComponent {
     * @return {Object} - new HSV color values (some channels may be missing)
   */
   input(x, y, rect, type) {
-    var opts = this._opts;
-    var rangeMax = opts.rMax;
+    var props = this.props;
+    var rangeMax = 100;
     var cX = rect.width / 2;
     var cY = rect.height / 2;
 
@@ -98,12 +97,10 @@ export default class IroWheel extends IroComponent {
     // This is used to show the saturation level
     var dist = Math.min(Math.sqrt(x * x + y * y), rangeMax);
     
-    hue = (opts.anticlockwise ? 360 - hue : hue);
-
-    // Return just the H and S channels, the wheel element doesn't do anything with the L channel
-    return {
+    hue = (props.anticlockwise ? 360 - hue : hue);
+    props.onInput(type, {
       h: hue,
       s: Math.round((100 / rangeMax) * dist)
-    };
+    });
   }
 }

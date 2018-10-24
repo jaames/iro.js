@@ -5,7 +5,25 @@
  * github.com/jaames/iro.js
  */
 
-import { Component, h } from 'preact';
+import { Component, h, render } from 'preact';
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
 
 /**
   * @desc listen to one or more events on an element
@@ -51,13 +69,13 @@ var IroComponent = (function (Component$$1) {
   IroComponent.prototype.constructor = IroComponent;
 
   IroComponent.prototype.componentDidMount = function componentDidMount () {
-    listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
+    if (this.root) { listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
       passive: false
-    });
+    }); }
   };
 
   IroComponent.prototype.componentWillUnmount = function componentWillUnmount () {
-    unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
+    if (this.root) { unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this); }
   };
 
   IroComponent.prototype.handleEvent = function handleEvent (e) {
@@ -117,8 +135,7 @@ function IroMarker(props) {
     r: props.r,
     fill: "none",
     "stroke-width": 5,
-    stroke: "#000",
-    "vector-effect": "non-scaling-stroke"
+    stroke: "#000"
   }), h("circle", {
     class: "iro__marker__inner",
     x: 0,
@@ -126,8 +143,7 @@ function IroMarker(props) {
     r: props.r,
     fill: "none",
     "stroke-width": 7,
-    stroke: "#fff",
-    "vector-effect": "non-scaling-stroke"
+    stroke: "#fff"
   }));
 }
 IroMarker.defaultProps = {
@@ -156,11 +172,11 @@ var IroWheel = (function (IroComponent$$1) {
   IroWheel.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroWheel.prototype.constructor = IroWheel;
 
-  IroWheel.prototype.render = function render (props) {
+  IroWheel.prototype.render = function render$$1 (props) {
     var this$1 = this;
 
     var hsv = props.hsv;
-    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
+    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
     var markerDist = hsv.s / 100 * props.rMax;
     var radius = props.radius;
     var cX = 50;
@@ -194,7 +210,7 @@ var IroWheel = (function (IroComponent$$1) {
       fill: "none"
     }, new Array(360).fill(0).map(function (_, hue) { return h("path", {
       key: hue,
-      d: arcPath(cX, cY, hue, hue + 1.5),
+      d: arcPath(cX, cY, radius, hue, hue + 1.5),
       stroke: ("hsl(" + (props.anticlockwise ? 360 - hue : hue) + ", 100%, 50%)")
     }); })), h("circle", {
       class: "iro__wheel__saturation",
@@ -210,7 +226,7 @@ var IroWheel = (function (IroComponent$$1) {
       fill: "#000",
       opacity: 1 - hsv.v / 100
     }), h(IroMarker, {
-      r: markerRadius,
+      r: props.markerRadius,
       x: cX + markerDist * Math.cos(markerAngle),
       y: cY + markerDist * Math.sin(markerAngle)
     }));
@@ -224,8 +240,8 @@ var IroWheel = (function (IroComponent$$1) {
 
 
   IroWheel.prototype.input = function input (x, y, rect, type) {
-    var opts = this._opts;
-    var rangeMax = opts.rMax;
+    var props = this.props;
+    var rangeMax = 100;
     var cX = rect.width / 2;
     var cY = rect.height / 2;
     x = cX - (x - rect.left);
@@ -236,7 +252,7 @@ var IroWheel = (function (IroComponent$$1) {
     // This is used to show the saturation level
 
     var dist = Math.min(Math.sqrt(x * x + y * y), rangeMax);
-    hue = opts.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
+    hue = props.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
 
     return {
       h: hue,
@@ -758,7 +774,7 @@ var IroSlider = (function (IroComponent$$1) {
   IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroSlider.prototype.constructor = IroSlider;
 
-  IroSlider.prototype.render = function render (props) {
+  IroSlider.prototype.render = function render$$1 (props) {
     var this$1 = this;
 
     var width = 300;
@@ -795,7 +811,7 @@ var IroSlider = (function (IroComponent$$1) {
       fill: "url(#iroGradient1)",
       vectorEffect: "non-scaling-stroke"
     }), h(IroMarker, {
-      r: markerRadius,
+      r: props.markerRadius,
       x: hsv.v / 100 * width,
       y: height / 2
     }));
@@ -811,8 +827,8 @@ var IroSlider = (function (IroComponent$$1) {
   IroSlider.prototype.input = function input (x, y, rect, type) {
     x = x - rect.left;
     y = y - rect.top;
-    var opts = this._opts;
-    var range = opts.range;
+    var opts = this.props;
+    var range = opts.width;
     var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
     return {
       v: Math.round(100 / range.w * dist)
@@ -927,10 +943,15 @@ var ColorPicker = (function (Component$$1) {
     this._events = {};
     this._colorChangeActive = false;
     this.css = props.css || props.styles || undefined;
-    this.color = new color(opts.color);
+    this.color = new color(props.color);
     this.state = {
-      hsv: this.color.hsv
+      hsv: {
+        h: 0,
+        s: 0,
+        v: 0
+      }
     };
+    this.components = [IroWheel, IroSlider];
   }
 
   if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
@@ -1018,10 +1039,10 @@ var ColorPicker = (function (Component$$1) {
     }
   };
 
-  ColorPicker.prototype.render = function render (props, state) {
+  ColorPicker.prototype.render = function render$$1 (props, state) {
     var this$1 = this;
 
-    h("svg", {
+    return h("svg", {
       class: "iro__svg",
       width: props.width,
       height: props.height,
@@ -1031,54 +1052,42 @@ var ColorPicker = (function (Component$$1) {
         "touch-action": "none"
       },
       ref: function (el) { return this$1.el = el; }
-    }, h(IroWheel, {
-      hsv: state.hsv
-    }), h(IroSlider, {
-      hsv: state.hsv
-    }));
-  };
-  /**
-    * @desc mount the color picker UI into the DOM
-    * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
-    * @param {Object} opts - options for this instance
-    * @access protected
-  */
-
-
-  ColorPicker.prototype._mount = function _mount (el, opts) {
-    var this$1 = this;
-
-    // If `el` is a string, use it to select an Element, else assume it's an element
-    el = "string" == typeof el ? document.querySelector(el) : el; // Find the width and height for the UI
-    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
-
-    var width = opts.width || parseInt(el.width) || 320;
-    var height = opts.height || parseInt(el.height) || 320; // Calculate layout variables
-
-    var padding = opts.padding + 2 || 6,
-        borderWidth = opts.borderWidth || 0,
-        markerRadius = opts.markerRadius || 8,
-        sliderMargin = opts.sliderMargin || 24,
-        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2;
-    var borderStyles = {
-      w: borderWidth,
-      color: opts.borderColor || "#fff"
-    }; // Hacky workaround for a couple of Safari SVG url bugs
-    // See https://github.com/jaames/iro.js/issues/18
-    // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
-
-    this.on("history:stateChange", function (base) {
-      this$1.svg.updateUrls(base);
-    });
+    }, h("defs", null), h(IroWheel, _extends({
+      hsv: state.hsv,
+      x: 0,
+      y: 0,
+      radius: 100,
+      rMax: 100,
+      onChange: function () {
+        console.log('aaa');
+      }
+    }, props)));
   };
 
   return ColorPicker;
 }(Component));
+ColorPicker.defaultProps = {
+  width: 300,
+  height: 300,
+  markerRadius: 8,
+  borderColor: "#fff",
+  borderWidth: 0,
+  anticlockwise: false,
+  sliderHeight: 24,
+  sliderMargin: 8
+};
 
 var iro = {
   Color: color,
-  ColorPicker: ColorPicker,
+  ColorPicker: function (el, props) {
+    return render(h(ColorPicker, null), document.querySelector(el))._component;
+  },
   Stylesheet: stylesheet,
+  ui: {
+    Marker: IroMarker,
+    Slider: IroSlider,
+    Wheel: IroWheel
+  },
   version: "4.0.0-alpha"
 };
 

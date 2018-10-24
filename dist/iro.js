@@ -704,7 +704,29 @@
 		},
 		render: function render() {}
 	});
+
+	function render(vnode, parent, merge) {
+	  return diff(merge, vnode, {}, false, parent, false);
+	}
 	//# sourceMappingURL=preact.mjs.map
+
+	function _extends() {
+	  _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	      var source = arguments[i];
+
+	      for (var key in source) {
+	        if (Object.prototype.hasOwnProperty.call(source, key)) {
+	          target[key] = source[key];
+	        }
+	      }
+	    }
+
+	    return target;
+	  };
+
+	  return _extends.apply(this, arguments);
+	}
 
 	/**
 	  * @desc listen to one or more events on an element
@@ -816,8 +838,7 @@
 	    r: props.r,
 	    fill: "none",
 	    "stroke-width": 5,
-	    stroke: "#000",
-	    "vector-effect": "non-scaling-stroke"
+	    stroke: "#000"
 	  }), h("circle", {
 	    class: "iro__marker__inner",
 	    x: 0,
@@ -825,8 +846,7 @@
 	    r: props.r,
 	    fill: "none",
 	    "stroke-width": 7,
-	    stroke: "#fff",
-	    "vector-effect": "non-scaling-stroke"
+	    stroke: "#fff"
 	  }));
 	}
 	IroMarker.defaultProps = {
@@ -859,7 +879,7 @@
 	    var this$1 = this;
 
 	    var hsv = props.hsv;
-	    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
+	    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
 	    var markerDist = hsv.s / 100 * props.rMax;
 	    var radius = props.radius;
 	    var cX = 50;
@@ -893,7 +913,7 @@
 	      fill: "none"
 	    }, new Array(360).fill(0).map(function (_, hue) { return h("path", {
 	      key: hue,
-	      d: arcPath(cX, cY, hue, hue + 1.5),
+	      d: arcPath(cX, cY, radius, hue, hue + 1.5),
 	      stroke: ("hsl(" + (props.anticlockwise ? 360 - hue : hue) + ", 100%, 50%)")
 	    }); })), h("circle", {
 	      class: "iro__wheel__saturation",
@@ -909,7 +929,7 @@
 	      fill: "#000",
 	      opacity: 1 - hsv.v / 100
 	    }), h(IroMarker, {
-	      r: markerRadius,
+	      r: props.markerRadius,
 	      x: cX + markerDist * Math.cos(markerAngle),
 	      y: cY + markerDist * Math.sin(markerAngle)
 	    }));
@@ -923,8 +943,8 @@
 
 
 	  IroWheel.prototype.input = function input (x, y, rect, type) {
-	    var opts = this._opts;
-	    var rangeMax = opts.rMax;
+	    var props = this.props;
+	    var rangeMax = 100;
 	    var cX = rect.width / 2;
 	    var cY = rect.height / 2;
 	    x = cX - (x - rect.left);
@@ -935,7 +955,7 @@
 	    // This is used to show the saturation level
 
 	    var dist = Math.min(Math.sqrt(x * x + y * y), rangeMax);
-	    hue = opts.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
+	    hue = props.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
 
 	    return {
 	      h: hue,
@@ -1494,7 +1514,7 @@
 	      fill: "url(#iroGradient1)",
 	      vectorEffect: "non-scaling-stroke"
 	    }), h(IroMarker, {
-	      r: markerRadius,
+	      r: props.markerRadius,
 	      x: hsv.v / 100 * width,
 	      y: height / 2
 	    }));
@@ -1510,8 +1530,8 @@
 	  IroSlider.prototype.input = function input (x, y, rect, type) {
 	    x = x - rect.left;
 	    y = y - rect.top;
-	    var opts = this._opts;
-	    var range = opts.range;
+	    var opts = this.props;
+	    var range = opts.width;
 	    var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
 	    return {
 	      v: Math.round(100 / range.w * dist)
@@ -1628,7 +1648,11 @@
 	    this.css = props.css || props.styles || undefined;
 	    this.color = new color(props.color);
 	    this.state = {
-	      hsv: this.color.hsv
+	      hsv: {
+	        h: 0,
+	        s: 0,
+	        v: 0
+	      }
 	    };
 	  }
 
@@ -1720,7 +1744,7 @@
 	  ColorPicker.prototype.render = function render$$1 (props, state) {
 	    var this$1 = this;
 
-	    h("svg", {
+	    return h("svg", {
 	      class: "iro__svg",
 	      width: props.width,
 	      height: props.height,
@@ -1730,20 +1754,44 @@
 	        "touch-action": "none"
 	      },
 	      ref: function (el) { return this$1.el = el; }
-	    }, h(IroWheel, {
-	      hsv: state.hsv
-	    }), h(IroSlider, {
-	      hsv: state.hsv
-	    }));
+	    }, h("defs", {
+	      rel: "aaa"
+	    }), h(IroWheel, _extends({
+	      hsv: state.hsv,
+	      x: 0,
+	      y: 0,
+	      radius: 100,
+	      rMax: 100,
+	      onChange: function () {
+	        console.log('aaa');
+	      }
+	    }, props)));
 	  };
 
 	  return ColorPicker;
 	}(Component));
+	ColorPicker.defaultProps = {
+	  width: 300,
+	  height: 300,
+	  markerRadius: 8,
+	  borderColor: "#fff",
+	  borderWidth: 0,
+	  anticlockwise: false,
+	  sliderHeight: 24,
+	  sliderMargin: 8
+	};
 
 	var iro = {
 	  Color: color,
-	  ColorPicker: ColorPicker,
+	  ColorPicker: function (el, props) {
+	    return render(h(ColorPicker, null), document.querySelector(el))._component;
+	  },
 	  Stylesheet: stylesheet,
+	  ui: {
+	    Marker: IroMarker,
+	    Slider: IroSlider,
+	    Wheel: IroWheel
+	  },
 	  version: "4.0.0-alpha"
 	};
 

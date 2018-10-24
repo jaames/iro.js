@@ -8,22 +8,30 @@
     "preact": "^8.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-transform-react-jsx": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
     "bili": "^3.0.13",
     "concurrently": "^3.5.1",
+    "cross-env": "^5.2.0",
     "foundation-sites": "^6.5.0-rc.2",
+    "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.3",
     "node-static": "^0.7.10",
     "sass-loader": "^7.1.0",
     "vue-svg-loader": "^0.5.0",
-    "vuepress": "^0.14.2"
+    "vuepress": "^0.14.2",
+    "webpack": "^4.22.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
   },
   "scripts": {
-    "build": "bili && \\cp dist/iro.es.js docs/.vuepress/theme/js/iro.es.js",
-    "dev": "concurrently 'npm run serve' 'bili --watch --no-logUpdate'",
-    "serve": "static -c 0 -a 0.0.0.0 -p 4000",
+    "start": "cross-env DEV_SERVER=true webpack-dev-server --open --info=false --mode development",
+    "dev": "cross-env NODE_ENV=development webpack",
+    "build": "npm run dev && cross-env NODE_ENV=production webpack -p",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "test": ""
+    "docs:build": "vuepress build docs"
   },
   "files": [
     "dist/iro.js",

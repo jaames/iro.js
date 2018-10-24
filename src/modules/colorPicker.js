@@ -24,6 +24,7 @@ export default class ColorPicker extends Component {
   componentDidMount() {
     // Create an iroStyleSheet for this colorWheel's CSS overrides
     this.stylesheet = new iroStyleSheet();
+    this.el = this.base;
     this.emit("mount", this);
   }
 
@@ -91,25 +92,45 @@ export default class ColorPicker extends Component {
     }
   }
 
+  handleInput(type, hsv) {
+
+    this.color.hsv = hsv;
+
+    if (type === "START") {
+      this.emit("input:start", this.color);
+    } else if (type === "END") {
+      this.emit("input:end", this.color)
+    };
+  }
+
   render(props, state) {
-   return (
-    <svg 
-      class="iro__svg"
-      width={ props.width } 
-      height={ props.height } 
-      viewBox={`0 0 ${ props.width } ${ props.height }`}
-      style={{
-        "display": props.display || "block",
-        "touch-action": "none"
-      }}
-      ref={ el => this.el = el }
-    >
-    </svg>
-  )
+    const handleInput = (type, hsv) => this.handleInput(type, hsv);
+    return (
+      <svg 
+        class="iro__svg"
+        width={ props.width } 
+        height={ props.height } 
+        viewBox={`0 0 ${ props.width } ${ props.height }`}
+        style={{
+          "display": props.display || "block",
+          "touch-action": "none"
+        }}
+      >
+        <IroWheel parent={this} hsv={state.hsv} x={0} y={0} radius={100} rMax={100} onInput={handleInput} {...props}/>
+        <IroSlider parent={this} hsv={state.hsv} x={0} y={0} onInput={handleInput} {...props}/>
+      </svg>
+    )
   }
 }
 
 ColorPicker.defaultProps = {
   width: 300,
-  height: 300
+  height: 300,
+  markerRadius: 8,
+  color: "#fff",
+  borderColor: "#fff",
+  borderWidth: 0,
+  anticlockwise: false,
+  sliderHeight: 24,
+  sliderMargin: 8
 }

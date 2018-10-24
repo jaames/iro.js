@@ -15,11 +15,11 @@ export default class IroSlider extends IroComponent {
     const hsl = iroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
-      <svg class="iro__slider" x={ props.x } y={ props.y } ref={ el => this.root = el }>
+      <svg class="iro__slider" x={ props.x } y={ props.y }>
         <defs>
           <linearGradient id="iroGradient1">
             <stop offset="0%" stop-color="#000" />
-            <stop offset="100%" stop-color={ `hsl(${hsl.h}, ${hsl.s}%, ${hsl.v}%)` } />
+            <stop offset="100%" stop-color={ `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` } />
           </linearGradient>
         </defs>
         <rect 
@@ -36,7 +36,7 @@ export default class IroSlider extends IroComponent {
           vectorEffect="non-scaling-stroke"
         />
         <Marker 
-          r={ markerRadius }
+          r={ props.markerRadius }
           x={ (hsv.v / 100) * width }
           y={ height / 2 }
         />
@@ -53,11 +53,11 @@ export default class IroSlider extends IroComponent {
   input(x, y, rect, type) {
     x = x - rect.left;
     y = y - rect.top;
-    var opts = this._opts;
-    var range = opts.range;
-    var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
-    return {
-      v: Math.round((100 / range.w) * dist),
-    };
+    var props = this.props;
+    var width = props.width;
+    var dist = Math.max(Math.min(x, width), 0);
+    props.onInput(type, {
+      v: Math.round((100 / width) * dist)
+    });
   }
 }
