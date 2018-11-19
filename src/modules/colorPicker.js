@@ -5,17 +5,20 @@ import IroSlider from "ui/slider";
 
 import IroColor from "modules/color";
 import IroStyleSheet from "modules/stylesheet";
+import { runInThisContext } from "vm";
 
 export default class ColorPicker extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      hsv: {h: 0, s: 0, v: 0}
-    };
     this._events = {};
     this._colorChangeActive = false;
-    this.css = props.css || props.styles || undefined;
+    this.color = new IroColor();
+    this.color.set(props.color);
+    this.color._onChange = this.update.bind(this);
+    this.state = {
+      hsv: this.color.hsv
+    };
     this.ui = [
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}},
@@ -25,9 +28,7 @@ export default class ColorPicker extends Component {
   componentDidMount() {
     this.el = this.base;
     this.stylesheet = new IroStyleSheet();
-    this.color = new IroColor();
-    this.color._onChange = this.update.bind(this);
-    this.color.set(this.props.color);
+    this.updateStylesheet();
     this.emit("mount", this);
   }
 
@@ -35,18 +36,20 @@ export default class ColorPicker extends Component {
 
   // }
 
-  update(color, changes) {
-    this.setState({ hsv: color.hsv });
-
-    var css = this.css;
-    var rgb = color.rgbString;
-
+  updateStylesheet() {
+    const css = this.props.css;
+    const rgb = this.color.rgbString;
     for (var selector in css) {
       var properties = css[selector];
       for (var prop in properties) {
         this.stylesheet.setRule(selector, prop, rgb);
       }
     } 
+  }
+
+  update(color) {
+    this.setState({ hsv: color.hsv });
+    this.updateStylesheet();
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
@@ -101,20 +104,27 @@ export default class ColorPicker extends Component {
   render(props, state) {
     const handleInput = (type, hsv) => this.handleInput(type, hsv);
     return (
-      <svg 
-        class="iro__svg"
-        width={ props.width } 
-        height={ props.height } 
-        viewBox={`0 0 ${ props.width } ${ props.height }`}
+      <div 
+        class="iro__colorPicker"
         style={{
-          "display": props.display || "block",
+          "display": props.display || "flex",
+          "flex-direction": "column",
           "touch-action": "none"
         }}
       >
         {this.ui.map(({element: UiElement, options: options}) => (
-          <UiElement parent={this} hsv={state.hsv} x={0} y={0} radius={100} rMax={100} onInput={handleInput} {...props}/>
+          <UiElement 
+            parent={this} 
+            hsv={state.hsv}
+            x={0}
+            y={0} 
+            width={360}
+            onInput={handleInput} 
+            {...props}
+            {...options}
+          />
         ))}
-      </svg>
+      </div>
     )
   }
 }
@@ -127,6 +137,8 @@ ColorPicker.defaultProps = {
   borderColor: "#fff",
   borderWidth: 0,
   anticlockwise: false,
-  sliderHeight: 24,
-  sliderMargin: 8
+  sliderHeight: 32,
+  sliderMargin: 8,
+  padding: 6,
+  css: {}
 }

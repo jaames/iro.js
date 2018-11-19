@@ -8,13 +8,22 @@ import iroColor from "modules/color";
 export default class IroSlider extends IroComponent {
 
   render(props) {
-    const width = 300;
+    const width = props.width;
     const height = props.sliderHeight;
+    const radius = height / 2;
+    const range = width - radius * 2;
+    const borderWidth = props.borderWidth;
     const hsv = props.hsv;
     const hsl = iroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
-      <svg class="iro__slider" x={ props.x } y={ props.y }>
+      <svg 
+        class="iro__slider"
+        x={ props.x }
+        y={ props.y }
+        width={ width }
+        height={ height }
+      >
         <defs>
           <linearGradient id="iroGradient1">
             <stop offset="0%" stop-color="#000" />
@@ -23,20 +32,19 @@ export default class IroSlider extends IroComponent {
         </defs>
         <rect 
           class="iro__slider__value"
-          rx={ height / 2 } 
-          ry={ height / 2 } 
-          x={ 0 } 
-          y={ 0 } 
-          width={ width } 
-          height={ height }
-          stroke-width={ props.borderWidth }
+          rx={ radius } 
+          ry={ radius } 
+          x={ borderWidth / 2 } 
+          y={ borderWidth / 2 } 
+          width={ width - borderWidth } 
+          height={ height - borderWidth }
+          stroke-width={ borderWidth }
           stroke={ props.borderColor }
           fill="url(#iroGradient1)"
-          vectorEffect="non-scaling-stroke"
         />
         <Marker 
           r={ props.markerRadius }
-          x={ (hsv.v / 100) * width }
+          x={ radius + ((hsv.v / 100) * range) }
           y={ height / 2 }
         />
       </svg>
@@ -51,13 +59,13 @@ export default class IroSlider extends IroComponent {
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
   handleInput(x, y, rect, type) {
-    x = x - rect.left;
-    y = y - rect.top;
     var props = this.props;
-    var width = props.width;
-    var dist = Math.max(Math.min(x, width), 0);
+    var radius = props.sliderHeight / 2;
+    var range = props.width - (radius * 2);
+    x = x - (rect.left + radius);
+    var dist = Math.max(Math.min(x, range), 0);
     props.onInput(type, {
-      v: Math.round((100 / width) * dist)
+      v: Math.round((100 / range) * dist)
     });
   }
 }

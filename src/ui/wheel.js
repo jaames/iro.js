@@ -18,32 +18,23 @@ export default class IroWheel extends IroComponent {
   
   render(props) {
     const hsv = props.hsv;
+
+    const radius = (props.width / 2) - props.borderWidth;
     const markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
-    const markerDist = (hsv.s / 100) * props.rMax;
-    const radius = props.radius;
-    const cX = 100;
-    const cY = 100;
+    const markerDist = (hsv.s / 100) * (radius - props.padding - props.markerRadius);
+    const cX = props.x + radius + props.borderWidth;
+    const cY = props.y + radius + props.borderWidth;
     
     return (
-      <svg class="iro__wheel" x={ props.x } y={ props.y }>
+      <svg class="iro__wheel" width={props.width} height={props.height} x={ props.x } y={ props.y }>
         <defs>
           <radialGradient id="iroGradient2">
             <stop offset="0%" stop-color="#fff" />
             <stop offset="100%" stop-color="#fff" stop-opacity={ 0 }/>
           </radialGradient>
         </defs>
-        <circle 
-          class="iro__wheel__border"
-          cx={ cX }
-          cy={ cY }
-          r={ radius }
-          fill="none"
-          stroke={ props.borderColor }
-          stroke-width={ props.borderWidth }
-          vector-effect="non-scaling-stroke"
-        />
-        <g class="__hue" stroke-width={ radius } fill="none">
-          {new Array(360).fill(0).map((_, hue) => (
+        <g class="iro__wheel__hue" stroke-width={ radius } fill="none">
+          {Array.apply(null, { length: 360 }).map((_, hue) => (
             <path 
               key={ hue }
               d={ arcPath(cX, cY, radius / 2, hue, hue + 1.5) } 
@@ -66,6 +57,15 @@ export default class IroWheel extends IroComponent {
           fill="#000"
           opacity={ 1 - hsv.v / 100 }
         />
+        <circle 
+          class="iro__wheel__border"
+          cx={ cX }
+          cy={ cY }
+          r={ radius }
+          fill="none"
+          stroke={ props.borderColor }
+          stroke-width={ props.borderWidth }
+        />
         <Marker 
           r={ props.markerRadius }
           x={ cX + markerDist * Math.cos(markerAngle) }
@@ -84,9 +84,10 @@ export default class IroWheel extends IroComponent {
   */
   handleInput(x, y, rect, type) {
     var props = this.props;
-    var rangeMax = 100;
-    var cX = rect.width / 2;
-    var cY = rect.height / 2;
+    var radius = props.width / 2;
+    var markerRange = (radius - props.padding - props.markerRadius);
+    var cX = props.x + radius;
+    var cY = props.y + radius;
 
     x = cX - (x - rect.left);
     y = cY - (y - rect.top);
@@ -96,12 +97,12 @@ export default class IroWheel extends IroComponent {
     var hue = Math.round(angle * (180 / Math.PI)) + 180;
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
-    var dist = Math.min(Math.sqrt(x * x + y * y), rangeMax);
+    var dist = Math.min(Math.sqrt(x * x + y * y), markerRange);
     
     hue = (props.anticlockwise ? 360 - hue : hue);
     props.onInput(type, {
       h: hue,
-      s: Math.round((100 / rangeMax) * dist)
+      s: Math.round((100 / markerRange) * dist)
     });
   }
 }
