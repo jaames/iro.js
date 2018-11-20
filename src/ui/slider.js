@@ -2,13 +2,11 @@ import { h } from "preact";
 
 import IroComponent from "ui/component";
 import Handle from "ui/handle";
-
 import iroColor from "modules/color";
 
 export default class IroSlider extends IroComponent {
 
   render({ hsv, width, sliderHeight, sliderMargin, borderWidth, borderColor, handleRadius, urlBase }) {
-
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2;
     const hsl = iroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
@@ -19,7 +17,8 @@ export default class IroSlider extends IroComponent {
         width={ width }
         height={ sliderHeight }
         style= {{
-          "margin-top": sliderMargin
+          "margin-top": sliderMargin,
+          "overflow": "visible"
         }}
       >
         <defs>

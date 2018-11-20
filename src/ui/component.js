@@ -8,16 +8,21 @@ const EVENT_MOUSEDOWN = "mousedown",
       EVENT_TOUCHMOVE = "touchmove",
       EVENT_TOUCHEND = "touchend";
 
+// Base component class for all UI components
+// This will allow them to react to their own mouse/touch events
 export default class IroComponent extends Component {
-
+  
   componentDidMount() {
-    listen(this.base, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive:false });
+    listen(this.base, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive: false });
   }
 
   componentWillUnmount() {
     unlisten(this.base, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   }
 
+  // More info on handleEvent:
+  // http://download-cdn.miitomo.com/native/20180125111639/manifests/v2_20180405_3_android/manifest.json
+  // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   handleEvent(e) {
     e.preventDefault();
     const { base } = this;

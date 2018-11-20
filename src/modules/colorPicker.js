@@ -4,10 +4,7 @@ import IroWheel from "ui/wheel";
 import IroSlider from "ui/slider";
 import IroColor from "modules/color";
 import IroStyleSheet from "modules/stylesheet";
-
-// sniff useragent string to check if the user is running IE, Edge or Safari
-const USER_AGENT = window.navigator.userAgent.toLowerCase();
-const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(USER_AGENT);
+import getUrlBase from "util/urlBase";
 
 export default class ColorPicker extends Component {
   constructor(props) {
@@ -16,14 +13,21 @@ export default class ColorPicker extends Component {
     this._colorChangeActive = false;
     this.color = new IroColor();
     this.color.set(props.color);
+    // Whenever the color changes, update the color wheel
     this.color._onChange = this.update.bind(this);
     this.state = {
-      hsv: this.color.hsv
+      hsv: this.color.hsv,
+      urlBase: getUrlBase()
     };
     this.ui = [
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}},
     ];
+    // Fix for a gradient rendering but when certain cliet-side routing libraries in Safari
+    // See https://github.com/jaames/iro.js/issues/18
+    this.on("history:stateChange", () => {
+      this.setState({ urlBase: getUrlBase() });
+    });
   }
 
   componentDidMount() {
@@ -33,6 +37,9 @@ export default class ColorPicker extends Component {
     this.emit("mount", this);
   }
 
+  /**
+    * @desc Update dynamic stylesheet to match the current color
+  */
   updateStylesheet() {
     const css = this.props.css;
     const rgb = this.color.rgbString;
@@ -44,14 +51,19 @@ export default class ColorPicker extends Component {
     }
   }
 
-  update(color) {
+  /**
+    * @desc React to the color updating
+    * @param {IroColor} color current color
+    * @param {Object} changes shows which h,s,v color channels changed
+  */
+  update(color, changes) {
     this.setState({ hsv: color.hsv });
     this.updateStylesheet();
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
       this._colorChangeActive = true;
-      this.emit("color:change", this.color);
+      this.emit("color:change", color, changes);
       this._colorChangeActive = false;
     }
   }
@@ -88,7 +100,14 @@ export default class ColorPicker extends Component {
     }
   }
 
+  /**
+    * @desc Handle input from a UI control element
+    * @param {String} type "START" | "MOVE" | "END"
+    * @param {Object} hsv new hsv values for the color
+  */
   handleInput(type, hsv) {
+    // Setting the color HSV here will automatically update the UI
+    // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
     if (type === "START") {
       this.emit("input:start", this.color);
@@ -97,8 +116,7 @@ export default class ColorPicker extends Component {
     }
   }
 
-  render(props, { hsv }) {
-    const urlBase = IS_SAFARI ? (location.protocol + "//" + location.host + location.pathname) : "";
+  render(props, { hsv, urlBase }) {
     return (
       <div 
         class="iro__colorPicker"
