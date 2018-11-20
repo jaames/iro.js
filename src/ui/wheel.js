@@ -1,7 +1,7 @@
 import { h } from "preact";
 
 import IroComponent from "ui/component";
-import Marker from "ui/marker";
+import Handle from "ui/handle";
 
 function arcPath(cx, cy, radius, startAngle, endAngle) {
   var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
@@ -16,10 +16,10 @@ function arcPath(cx, cy, radius, startAngle, endAngle) {
 
 export default class IroWheel extends IroComponent {
   
-  render({ hsv, width, padding, borderWidth, borderColor, markerRadius, anticlockwise, urlBase }) {
+  render({ hsv, width, padding, borderWidth, borderColor, handleRadius, anticlockwise, urlBase }) {
     const radius = (width / 2) - borderWidth;
-    const markerAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
-    const markerDist = (hsv.s / 100) * (radius - padding - markerRadius);
+    const handleAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
+    const handleDist = (hsv.s / 100) * (radius - padding - handleRadius - borderWidth);
     const cX = radius + borderWidth;
     const cY = radius + borderWidth;
     
@@ -64,10 +64,10 @@ export default class IroWheel extends IroComponent {
           stroke={ borderColor }
           stroke-width={ borderWidth }
         />
-        <Marker 
-          r={ markerRadius }
-          x={ cX + markerDist * Math.cos(markerAngle) }
-          y={ cY + markerDist * Math.sin(markerAngle) }
+        <Handle 
+          r={ handleRadius }
+          x={ cX + handleDist * Math.cos(handleAngle) }
+          y={ cY + handleDist * Math.sin(handleAngle) }
         />
       </svg>
     );
@@ -81,25 +81,25 @@ export default class IroWheel extends IroComponent {
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
   handleInput(x, y, { left, top }, type) {
-    const { width, padding, markerRadius, anticlockwise, onInput } = this.props;
+    const { width, padding, handleRadius, borderWidth, anticlockwise, onInput } = this.props;
     const radius = width / 2;
-    const markerRange = (radius - padding - markerRadius);
+    const handleRange = (radius - padding - handleRadius - borderWidth);
     const cX = radius;
     const cY = radius;
 
     x = cX - (x - left);
     y = cY - (y - top);
 
-    let markerAngle = Math.atan2(y, x);
+    let handleAngle = Math.atan2(y, x);
     // Calculate the hue by converting the angle to radians
-    let hue = Math.round(markerAngle * (180 / Math.PI)) + 180;
+    let hue = Math.round(handleAngle * (180 / Math.PI)) + 180;
     hue = (anticlockwise ? 360 - hue : hue);
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
-    let markerDist = Math.min(Math.sqrt(x * x + y * y), markerRange);
+    let handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
     onInput(type, {
       h: hue,
-      s: Math.round((100 / markerRange) * markerDist)
+      s: Math.round((100 / handleRange) * handleDist)
     });
   }
 }

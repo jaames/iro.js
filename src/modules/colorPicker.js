@@ -127,7 +127,7 @@ export default class ColorPicker extends Component {
 ColorPicker.defaultProps = {
   width: 300,
   height: 300,
-  markerRadius: 8,
+  handleRadius: 8,
   color: "#fff",
   borderColor: "#fff",
   borderWidth: 0,

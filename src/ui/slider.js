@@ -1,13 +1,13 @@
 import { h } from "preact";
 
 import IroComponent from "ui/component";
-import Marker from "ui/marker";
+import Handle from "ui/handle";
 
 import iroColor from "modules/color";
 
 export default class IroSlider extends IroComponent {
 
-  render({ hsv, width, sliderHeight, sliderMargin, borderWidth, borderColor, markerRadius, urlBase }) {
+  render({ hsv, width, sliderHeight, sliderMargin, borderWidth, borderColor, handleRadius, urlBase }) {
 
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2;
@@ -40,8 +40,8 @@ export default class IroSlider extends IroComponent {
           stroke={ borderColor }
           fill={ `url(${urlBase}#iroSlider)` }
         />
-        <Marker
-          r={ markerRadius }
+        <Handle
+          r={ handleRadius }
           x={ cornerRadius + ((hsv.v / 100) * range) }
           y={ sliderHeight / 2 }
         />
@@ -59,11 +59,11 @@ export default class IroSlider extends IroComponent {
   handleInput(x, y, { left, right }, type) {
     const { sliderHeight, width, onInput } = this.props;
     const cornerRadius = sliderHeight / 2;
-    const markerRange = width - (cornerRadius * 2);
+    const handleRange = width - (cornerRadius * 2);
     x = x - (left + cornerRadius);
-    let dist = Math.max(Math.min(x, markerRange), 0);
+    let dist = Math.max(Math.min(x, handleRange), 0);
     onInput(type, {
-      v: Math.round((100 / markerRange) * dist)
+      v: Math.round((100 / handleRange) * dist)
     });
   }
 }

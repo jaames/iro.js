@@ -5,7 +5,7 @@ import Color from "modules/color";
 import Stylesheet from "modules/stylesheet";
 
 import Component from "./ui/component";
-import Marker from "./ui/marker";
+import Handle from "./ui/handle";
 import Slider from "./ui/slider";
 import Wheel from "./ui/wheel";
 
@@ -19,7 +19,7 @@ export default {
   Stylesheet,
   ui: {
     Component,
-    Marker,
+    Handle,
     Slider,
     Wheel
   },
