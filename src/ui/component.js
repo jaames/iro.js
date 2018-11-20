@@ -19,20 +19,20 @@ export default class IroComponent extends Component {
   }
 
   handleEvent(e) {
+    e.preventDefault();
     const { base } = this;
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
-    e.preventDefault();
-    var point = e.touches ? e.changedTouches[0] : e;
-    var x = point.clientX;
-    var y = point.clientY;
+    const point = e.touches ? e.changedTouches[0] : e;
+    const x = point.clientX;
+    const y = point.clientY;
     // Get the screen position of the component
-    var rect = base.getBoundingClientRect();
+    const rect = base.getBoundingClientRect();
 
     switch (e.type) {
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:
-        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive:false });
+        listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
         this.handleInput(x, y, rect, "START");
         break;
       case EVENT_MOUSEMOVE:

@@ -7,45 +7,40 @@ import iroColor from "modules/color";
 
 export default class IroSlider extends IroComponent {
 
-  render(props) {
-    const width = props.width;
-    const height = props.sliderHeight;
-    const radius = height / 2;
-    const range = width - radius * 2;
-    const borderWidth = props.borderWidth;
-    const hsv = props.hsv;
+  render({ hsv, width, sliderHeight, borderWidth, borderColor, markerRadius }) {
+
+    const cornerRadius = sliderHeight / 2;
+    const range = width - cornerRadius * 2;
     const hsl = iroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
       <svg 
         class="iro__slider"
-        x={ props.x }
-        y={ props.y }
         width={ width }
-        height={ height }
+        height={ sliderHeight }
       >
         <defs>
-          <linearGradient id="iroGradient1">
+          <linearGradient id="iroSlider">
             <stop offset="0%" stop-color="#000" />
             <stop offset="100%" stop-color={ `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` } />
           </linearGradient>
         </defs>
         <rect 
           class="iro__slider__value"
-          rx={ radius } 
-          ry={ radius } 
+          rx={ cornerRadius } 
+          ry={ cornerRadius } 
           x={ borderWidth / 2 } 
           y={ borderWidth / 2 } 
           width={ width - borderWidth } 
-          height={ height - borderWidth }
+          height={ sliderHeight - borderWidth }
           stroke-width={ borderWidth }
-          stroke={ props.borderColor }
-          fill="url(#iroGradient1)"
+          stroke={ borderColor }
+          fill="url(#iroSlider)"
         />
-        <Marker 
-          r={ props.markerRadius }
-          x={ radius + ((hsv.v / 100) * range) }
-          y={ height / 2 }
+        <Marker
+          r={ markerRadius }
+          x={ cornerRadius + ((hsv.v / 100) * range) }
+          y={ sliderHeight / 2 }
         />
       </svg>
     );
@@ -58,14 +53,14 @@ export default class IroSlider extends IroComponent {
     * @param {DOMRect} rect - bounding client rect for the component's base element
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
-  handleInput(x, y, rect, type) {
-    var props = this.props;
-    var radius = props.sliderHeight / 2;
-    var range = props.width - (radius * 2);
-    x = x - (rect.left + radius);
-    var dist = Math.max(Math.min(x, range), 0);
-    props.onInput(type, {
-      v: Math.round((100 / range) * dist)
+  handleInput(x, y, { left, right }, type) {
+    const { sliderHeight, width, onInput } = this.props;
+    const cornerRadius = sliderHeight / 2;
+    const markerRange = width - (cornerRadius * 2);
+    x = x - (left + cornerRadius);
+    let dist = Math.max(Math.min(x, markerRange), 0);
+    onInput(type, {
+      v: Math.round((100 / markerRange) * dist)
     });
   }
 }

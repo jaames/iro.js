@@ -5,7 +5,6 @@ import IroSlider from "ui/slider";
 
 import IroColor from "modules/color";
 import IroStyleSheet from "modules/stylesheet";
-import { runInThisContext } from "vm";
 
 export default class ColorPicker extends Component {
 
@@ -32,19 +31,15 @@ export default class ColorPicker extends Component {
     this.emit("mount", this);
   }
 
-  // componentWillUnmount() {
-
-  // }
-
   updateStylesheet() {
     const css = this.props.css;
     const rgb = this.color.rgbString;
-    for (var selector in css) {
-      var properties = css[selector];
-      for (var prop in properties) {
-        this.stylesheet.setRule(selector, prop, rgb);
+    for (let selector in css) {
+      let properties = css[selector];
+      for (let property in properties) {
+        this.stylesheet.setRule(selector, property, rgb);
       }
-    } 
+    }
   }
 
   update(color) {
@@ -65,7 +60,7 @@ export default class ColorPicker extends Component {
     * @param {Function} callback Event callback
   */
   on(eventType, callback) {
-    var events = this._events;
+    const events = this._events;
     (events[eventType] || (events[eventType] = [])).push(callback);
   }
 
@@ -75,8 +70,8 @@ export default class ColorPicker extends Component {
     * @param {Function} callback The watch callback to remove from the event
   */
   off(eventType, callback) {
-    var eventList = this._events[eventType];
-    if (eventList) eventList.splice(eventList.indexOf(callback), 1);
+    const callbackList = this._events[eventType];
+    if (callbackList) callbackList.splice(callbackList.indexOf(callback), 1);
   }
 
   /**
@@ -85,9 +80,8 @@ export default class ColorPicker extends Component {
     * @param {Array} args array of args to pass to callbacks
   */
   emit(eventType, ...args) {
-    var events = this._events,
-        callbackList = (events[eventType] || []).concat((events["*"] || []));
-    for (var i = 0; i < callbackList.length; i++) {
+    const callbackList = this._events[eventType] || [];
+    for (let i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args); 
     }
   }
@@ -97,12 +91,11 @@ export default class ColorPicker extends Component {
     if (type === "START") {
       this.emit("input:start", this.color);
     } else if (type === "END") {
-      this.emit("input:end", this.color)
-    };
+      this.emit("input:end", this.color);
+    }
   }
 
-  render(props, state) {
-    const handleInput = (type, hsv) => this.handleInput(type, hsv);
+  render(props, { hsv }) {
     return (
       <div 
         class="iro__colorPicker"
@@ -114,12 +107,10 @@ export default class ColorPicker extends Component {
       >
         {this.ui.map(({element: UiElement, options: options}) => (
           <UiElement 
-            parent={this} 
-            hsv={state.hsv}
-            x={0}
-            y={0} 
-            width={360}
-            onInput={handleInput} 
+            parent={ this } 
+            hsv={ hsv }
+            width={ props.width }
+            onInput={ (type, hsv) => this.handleInput(type, hsv) } 
             {...props}
             {...options}
           />

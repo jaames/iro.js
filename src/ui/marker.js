@@ -1,18 +1,18 @@
 import { h } from "preact";
 
-export default function IroMarker(props) {
+export default function IroMarker({ x, y, r }) {
   return (
-    <svg class="iro__marker" x={ props.x } y={ props.y } overflow="visible">
+    <svg class="iro__marker" x={ x } y={ y } overflow="visible">
       <circle 
         class="iro__marker__inner"
-        r={ props.r }
+        r={ r }
         fill="none"
         stroke-width={ 5 }
         stroke="#000"
       />
       <circle 
         class="iro__marker__outer" 
-        r={ props.r }
+        r={ r }
         fill="none"
         stroke-width={ 2 }
         stroke="#fff"
@@ -20,9 +20,3 @@ export default function IroMarker(props) {
     </svg>
   );
 }
-
-IroMarker.defaultProps = {
-  x: 0,
-  y: 0,
-  r: 8
-};
