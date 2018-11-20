@@ -2,12 +2,14 @@ import { h, Component } from "preact";
 
 import IroWheel from "ui/wheel";
 import IroSlider from "ui/slider";
-
 import IroColor from "modules/color";
 import IroStyleSheet from "modules/stylesheet";
 
-export default class ColorPicker extends Component {
+// sniff useragent string to check if the user is running IE, Edge or Safari
+const USER_AGENT = window.navigator.userAgent.toLowerCase();
+const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(USER_AGENT);
 
+export default class ColorPicker extends Component {
   constructor(props) {
     super(props);
     this._events = {};
@@ -96,6 +98,7 @@ export default class ColorPicker extends Component {
   }
 
   render(props, { hsv }) {
+    const urlBase = IS_SAFARI ? (location.protocol + "//" + location.host + location.pathname) : "";
     return (
       <div 
         class="iro__colorPicker"
@@ -110,6 +113,7 @@ export default class ColorPicker extends Component {
             parent={ this } 
             hsv={ hsv }
             width={ props.width }
+            urlBase = { urlBase }
             onInput={ (type, hsv) => this.handleInput(type, hsv) } 
             {...props}
             {...options}

@@ -16,7 +16,7 @@ function arcPath(cx, cy, radius, startAngle, endAngle) {
 
 export default class IroWheel extends IroComponent {
   
-  render({ hsv, width, padding, borderWidth, borderColor, markerRadius, anticlockwise }) {
+  render({ hsv, width, padding, borderWidth, borderColor, markerRadius, anticlockwise, urlBase }) {
     const radius = (width / 2) - borderWidth;
     const markerAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
     const markerDist = (hsv.s / 100) * (radius - padding - markerRadius);
@@ -45,7 +45,7 @@ export default class IroWheel extends IroComponent {
           cx={ cX }
           cy={ cY }
           r={ radius }
-          fill="url(#iroWheel)"
+          fill={ `url(${urlBase}#iroWheel)` }
         />
         <circle 
           class="iro__wheel__lightness"

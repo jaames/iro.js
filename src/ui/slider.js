@@ -7,7 +7,7 @@ import iroColor from "modules/color";
 
 export default class IroSlider extends IroComponent {
 
-  render({ hsv, width, sliderHeight, borderWidth, borderColor, markerRadius }) {
+  render({ hsv, width, sliderHeight, sliderMargin, borderWidth, borderColor, markerRadius, urlBase }) {
 
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2;
@@ -18,6 +18,9 @@ export default class IroSlider extends IroComponent {
         class="iro__slider"
         width={ width }
         height={ sliderHeight }
+        style= {{
+          "margin-top": sliderMargin
+        }}
       >
         <defs>
           <linearGradient id="iroSlider">
@@ -35,7 +38,7 @@ export default class IroSlider extends IroComponent {
           height={ sliderHeight - borderWidth }
           stroke-width={ borderWidth }
           stroke={ borderColor }
-          fill="url(#iroSlider)"
+          fill={ `url(${urlBase}#iroSlider)` }
         />
         <Marker
           r={ markerRadius }
