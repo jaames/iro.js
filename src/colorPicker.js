@@ -70,8 +70,8 @@ export default class ColorPicker extends Component {
 
   /**
     * @desc Set a callback function for an event
-    * @param {String} eventType Name of the event to listen to, pass "*" to listen to all events
-    * @param {Function} callback Event callback
+    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
+    * @param {Function} callback The watch callback
   */
   on(eventType, callback) {
     const events = this._events;

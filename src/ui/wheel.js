@@ -1,7 +1,7 @@
 import { h } from "preact";
 
-import IroComponent from "ui/component";
-import Handle from "ui/handle";
+import IroComponent from "../ui/component";
+import Handle from "../ui/handle";
 
 function arcPath(cx, cy, radius, startAngle, endAngle) {
   var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;

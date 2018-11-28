@@ -1,4 +1,3 @@
-
 export default class stylesheet {
   /**
     @constructor stylesheet writer
@@ -21,38 +20,6 @@ export default class stylesheet {
     // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
     // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
     this.map = {};
-  }
-
-  get enabled() {
-    return !this.sheet.disabled;
-  }
-
-  set enabled(value) {
-    this.sheet.disabled = !value;
-  }
-
-  // TODO: consider removing cssText + css properties since i don't tink they're that useful
-  get cssText() {
-    var map = this.map;
-    var ret = [];
-    for (var selector in map) {
-      ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-    }
-    return ret.join("\n");
-  }
-  
-  get css() {
-    var map = this.map;
-    var ret = {};
-    for (var selector in map) {
-      var ruleSet = map[selector];
-      ret[selector] = {};
-      for (var i = 0; i < ruleSet.length; i++) {
-        var property = ruleSet[i];
-        ret[selector][property] = ruleSet.getPropertyValue(property);
-      }
-    }
-    return ret;
   }
 
   /**
@@ -90,5 +57,44 @@ export default class stylesheet {
     else {
       map[selector].setProperty(property, value);
     }
+  }
+
+  get enabled() {
+    return !this.sheet.disabled;
+  }
+
+  set enabled(value) {
+    this.sheet.disabled = !value;
+  }
+
+  /**
+    * @desc Get the stylesheet text
+    * @return {String} css text
+  */
+  get cssText() {
+    var map = this.map;
+    var ret = [];
+    for (var selector in map) {
+      ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
+    }
+    return ret.join("\n");
+  }
+
+  /**
+    * @desc Get an object representing the current css styles
+    * @return {Object} css object
+  */
+  get css() {
+    var map = this.map;
+    var ret = {};
+    for (var selector in map) {
+      var ruleSet = map[selector];
+      ret[selector] = {};
+      for (var i = 0; i < ruleSet.length; i++) {
+        var property = ruleSet[i];
+        ret[selector][property] = ruleSet.getPropertyValue(property);
+      }
+    }
+    return ret;
   }
 }

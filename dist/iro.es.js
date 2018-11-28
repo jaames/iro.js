@@ -63,6 +63,7 @@ var IroComponent = (function (Component$$1) {
   function IroComponent () {
     Component$$1.apply(this, arguments);
   }
+}
 
   if ( Component$$1 ) IroComponent.__proto__ = Component$$1;
   IroComponent.prototype = Object.create( Component$$1 && Component$$1.prototype );
@@ -433,7 +434,6 @@ color.hsv2Rgb = function hsv2Rgb (hsv) {
 
 
 color.rgb2Hsv = function rgb2Hsv (rgb) {
-  // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
   var r = rgb.r / 255,
       g = rgb.g / 255,
       b = rgb.b / 255,
@@ -539,7 +539,7 @@ color.rgb2Hex = function rgb2Hex (rgb) {
 };
 /**
   * @desc parse hex string
-  * @param {String} str - color string
+  * @param {String} hex - color string
   * @return {Object} rgb object
 */
 
@@ -682,7 +682,7 @@ prototypeAccessors.hslString.set = function (value) {
 color.prototype.set = function set (value) {
   if (typeof value == "object") {
     if (value instanceof color) {
-      this.hsv = color.hsv;
+      this.hsv = color._value;
     } else if ("r" in value) {
       this.rgb = value;
     } else if ("v" in value) {
@@ -741,8 +741,8 @@ color.prototype.compare = function compare (color, model) {
 */
 
 
-color.prototype.mix = function mix$1 (color, weight) {
-  this.hsv = mix(this, color, weight).hsv;
+color.prototype.mix = function mix (color, weight) {
+  this.hsv = color.mix(this, color, weight).hsv;
 };
 /**
   * @desc lighten color by amount
@@ -750,8 +750,8 @@ color.prototype.mix = function mix$1 (color, weight) {
 */
 
 
-color.prototype.lighten = function lighten$1 (amount) {
-  lighten(this, amount);
+color.prototype.lighten = function lighten (amount) {
+  color.lighten(this, amount);
 };
 /**
   * @desc darken color by amount
@@ -759,8 +759,8 @@ color.prototype.lighten = function lighten$1 (amount) {
 */
 
 
-color.prototype.darken = function darken$1 (amount) {
-  darken(this, amount);
+color.prototype.darken = function darken (amount) {
+  color.darken(this, amount);
 };
 
 Object.defineProperties( color.prototype, prototypeAccessors );
@@ -859,43 +859,6 @@ var stylesheet = function stylesheet() {
 };
 
 var prototypeAccessors$1 = { enabled: { configurable: true },cssText: { configurable: true },css: { configurable: true } };
-
-prototypeAccessors$1.enabled.get = function () {
-  return !this.sheet.disabled;
-};
-
-prototypeAccessors$1.enabled.set = function (value) {
-  this.sheet.disabled = !value;
-}; // TODO: consider removing cssText + css properties since i don't tink they're that useful
-
-
-prototypeAccessors$1.cssText.get = function () {
-  var map = this.map;
-  var ret = [];
-
-  for (var selector in map) {
-    ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-  }
-
-  return ret.join("\n");
-};
-
-prototypeAccessors$1.css.get = function () {
-  var map = this.map;
-  var ret = {};
-
-  for (var selector in map) {
-    var ruleSet = map[selector];
-    ret[selector] = {};
-
-    for (var i = 0; i < ruleSet.length; i++) {
-      var property = ruleSet[i];
-      ret[selector][property] = ruleSet.getPropertyValue(property);
-    }
-  }
-
-  return ret;
-};
 /**
   * @desc Set a specific rule for a given selector
   * @param {String} selector - the CSS selector for this rule (e.g. "body", ".class", "#id")
@@ -935,7 +898,9 @@ stylesheet.prototype.setRule = function setRule (selector, property, value) {
   }
 };
 
-Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
+prototypeAccessors$1.enabled.get = function () {
+  return !this.sheet.disabled;
+};
 
 var ColorPicker = (function (Component$$1) {
   function ColorPicker(props) {
@@ -1077,7 +1042,7 @@ ColorPicker.defaultProps = {
   sliderMargin: 8
 };
 
-var iro = {
+var index = {
   Color: color,
   ColorPicker: function (el, props) {
     return render(h(ColorPicker, null), document.querySelector(el))._component;
@@ -1091,4 +1056,4 @@ var iro = {
   version: "4.0.0-alpha"
 };
 
-export default iro;
+export default index;

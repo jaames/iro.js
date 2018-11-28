@@ -75,7 +75,7 @@ export default class color {
   */
   static mix(color1, color2, weight) {
     var rgb1 = getColor(color1).rgb,
-        rgb2 = getColor(color2).rgb;
+      rgb2 = getColor(color2).rgb;
     weight = clamp((weight / 100 || 0.5), 0, 1);
     return new color({
       r: floor(rgb1.r + (rgb2.r - rgb1.r) * weight),
@@ -92,7 +92,7 @@ export default class color {
   */
   static lighten(color, amount) {
     var col = getColor(color),
-        hsv = col.hsv;
+       hsv = col.hsv;
     hsv.v = clamp(hsv.v + amount, 0, 100);
     col.hsv = hsv;
     return col;
@@ -142,14 +142,13 @@ export default class color {
     * @return {Object} hsv object
   */
   static rgb2Hsv(rgb) {
-    // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
     var r = rgb.r / 255,
-        g = rgb.g / 255,
-        b = rgb.b / 255,
-        max = Math.max(r, g, b),
-        min = Math.min(r, g, b),
-        delta = max - min,
-        hue;
+      g = rgb.g / 255,
+      b = rgb.b / 255,
+      max = Math.max(r, g, b),
+      min = Math.min(r, g, b),
+      delta = max - min,
+      hue;
     switch (max) {
       case min: hue = 0; break;
       case r: hue = (g - b) / delta + (g < b ? 6 : 0); break;
@@ -161,7 +160,7 @@ export default class color {
       h: hue * 360,
       s: max == 0 ? 0 : (delta / max) * 100,
       v: max * 100
-    };
+    }
   }
 
   /**
@@ -171,7 +170,7 @@ export default class color {
   */
   static hsv2Hsl(hsv) {
     var s = hsv.s / 100,
-        v = hsv.v / 100;
+      v = hsv.v / 100;
     var l = 0.5 * v * (2 - s);
     s = v * s / (1 - Math.abs(2 * l - 1));
     return {
@@ -231,7 +230,7 @@ export default class color {
 
   /**
     * @desc parse hex string
-    * @param {String} str - color string
+    * @param {String} hex - color string
     * @return {Object} rgb object
   */
   static parseHexStr(hex) {
@@ -363,7 +362,7 @@ export default class color {
   set(value) {
     if (typeof value == "object") {
       if (value instanceof color) {
-        this.hsv = color.hsv;
+        this.hsv = color._value;
       } else if ("r" in value) {
         this.rgb = value;
       } else if ("v" in value) {
@@ -419,7 +418,7 @@ export default class color {
     * @param {Number} weight - closer to 0 = more current color, closer to 100 = more new color
   */
   mix(color, weight) {
-    this.hsv = mix(this, color, weight).hsv;
+    this.hsv = color.mix(this, color, weight).hsv;
   }
 
   /**
@@ -427,7 +426,7 @@ export default class color {
     * @param {Number} amount
   */
   lighten(amount) {
-    lighten(this, amount);
+    color.lighten(this, amount);
   }
 
   /**
@@ -435,6 +434,6 @@ export default class color {
     * @param {Number} amount
   */
   darken(amount) {
-    darken(this, amount);
+    color.darken(this, amount);
   }
 }

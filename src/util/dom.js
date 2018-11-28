@@ -1,5 +1,5 @@
-const EVENT_READYSTATE_CHANGE = "readystatechange";
-const READYSTATE_COMPLETE = "complete";
+const EVENT_READYSTATE_CHANGE = "readystatechange",
+READYSTATE_COMPLETE = "complete";
 
 /**
   * @desc listen to one or more events on an element

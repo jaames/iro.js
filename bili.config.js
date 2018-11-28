@@ -11,16 +11,14 @@ const banner = `/*!
 
 module.exports = {
   banner,
-  input: "./src/iro.js",
+  input: "./src/index.js",
   format: ["umd", "umd-min", "es"],
   moduleName: "iro",
   js: "buble",
   jsx: "h",
   alias: {
-    "ui": path.resolve(__dirname, "src/ui/"),
-    "util": path.resolve(__dirname, "src/util/"),
-    "colorModels": path.resolve(__dirname, "src/colorModels/"),
-    "modules": path.resolve(__dirname, "src/modules/"),
+    "components": path.resolve(__dirname, "src/components/"),
+    "util": path.resolve(__dirname, "src/util/")
   },
   env: {
     VERSION: version
