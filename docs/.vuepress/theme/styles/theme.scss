@@ -1,0 +1,21 @@
+@import "./config";
+
+@include foundation-global-styles;
+@include foundation-forms;
+@include foundation-typography;
+@include foundation-table;
+
+@import "./markdown";
+@import "./prism";
+@import "./icons";
+@import "./buttons";
+@import "./custom-blocks";
+
+@include breakpoint(medium) {
+  .container {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+

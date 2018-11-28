@@ -5,25 +5,7 @@
  * github.com/jaames/iro.js
  */
 
-import { Component, h, render } from 'preact';
-
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
+import { Component, h } from 'preact';
 
 /**
   * @desc listen to one or more events on an element
@@ -63,20 +45,19 @@ var IroComponent = (function (Component$$1) {
   function IroComponent () {
     Component$$1.apply(this, arguments);
   }
-}
 
   if ( Component$$1 ) IroComponent.__proto__ = Component$$1;
   IroComponent.prototype = Object.create( Component$$1 && Component$$1.prototype );
   IroComponent.prototype.constructor = IroComponent;
 
   IroComponent.prototype.componentDidMount = function componentDidMount () {
-    if (this.root) { listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
+    listen(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, {
       passive: false
-    }); }
+    });
   };
 
   IroComponent.prototype.componentWillUnmount = function componentWillUnmount () {
-    if (this.root) { unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this); }
+    unlisten(this.root, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   };
 
   IroComponent.prototype.handleEvent = function handleEvent (e) {
@@ -133,25 +114,20 @@ function IroMarker(props) {
     class: "iro__marker__outer",
     x: 0,
     y: 0,
-    r: props.r,
     fill: "none",
     "stroke-width": 5,
-    stroke: "#000"
+    stroke: "#000",
+    "vector-effect": "non-scaling-stroke"
   }), h("circle", {
     class: "iro__marker__inner",
     x: 0,
     y: 0,
-    r: props.r,
     fill: "none",
     "stroke-width": 7,
-    stroke: "#fff"
+    stroke: "#fff",
+    "vector-effect": "non-scaling-stroke"
   }));
 }
-IroMarker.defaultProps = {
-  x: 0,
-  y: 0,
-  r: 8
-};
 
 function arcPath(cx, cy, radius, startAngle, endAngle) {
   var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
@@ -173,11 +149,11 @@ var IroWheel = (function (IroComponent$$1) {
   IroWheel.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroWheel.prototype.constructor = IroWheel;
 
-  IroWheel.prototype.render = function render$$1 (props) {
+  IroWheel.prototype.render = function render (props) {
     var this$1 = this;
 
     var hsv = props.hsv;
-    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
+    var markerAngle = (props.anticlockwise ? 360 - hsv.h : hsv.h) * (PI / 180);
     var markerDist = hsv.s / 100 * props.rMax;
     var radius = props.radius;
     var cX = 50;
@@ -210,8 +186,7 @@ var IroWheel = (function (IroComponent$$1) {
       "stroke-width": radius / 2,
       fill: "none"
     }, new Array(360).fill(0).map(function (_, hue) { return h("path", {
-      key: hue,
-      d: arcPath(cX, cY, radius, hue, hue + 1.5),
+      d: arcPath(cX, cY, hue, hue + 1.5),
       stroke: ("hsl(" + (props.anticlockwise ? 360 - hue : hue) + ", 100%, 50%)")
     }); })), h("circle", {
       class: "iro__wheel__saturation",
@@ -227,7 +202,6 @@ var IroWheel = (function (IroComponent$$1) {
       fill: "#000",
       opacity: 1 - hsv.v / 100
     }), h(IroMarker, {
-      r: props.markerRadius,
       x: cX + markerDist * Math.cos(markerAngle),
       y: cY + markerDist * Math.sin(markerAngle)
     }));
@@ -241,8 +215,8 @@ var IroWheel = (function (IroComponent$$1) {
 
 
   IroWheel.prototype.input = function input (x, y, rect, type) {
-    var props = this.props;
-    var rangeMax = 100;
+    var opts = this._opts;
+    var rangeMax = opts.rMax;
     var cX = rect.width / 2;
     var cY = rect.height / 2;
     x = cX - (x - rect.left);
@@ -253,7 +227,7 @@ var IroWheel = (function (IroComponent$$1) {
     // This is used to show the saturation level
 
     var dist = Math.min(Math.sqrt(x * x + y * y), rangeMax);
-    hue = props.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
+    hue = opts.anticlockwise ? 360 - hue : hue; // Return just the H and S channels, the wheel element doesn't do anything with the L channel
 
     return {
       h: hue,
@@ -434,6 +408,7 @@ color.hsv2Rgb = function hsv2Rgb (hsv) {
 
 
 color.rgb2Hsv = function rgb2Hsv (rgb) {
+  // Modified from https://github.com/bgrins/TinyColor/blob/master/tinycolor.js#L446
   var r = rgb.r / 255,
       g = rgb.g / 255,
       b = rgb.b / 255,
@@ -539,7 +514,7 @@ color.rgb2Hex = function rgb2Hex (rgb) {
 };
 /**
   * @desc parse hex string
-  * @param {String} hex - color string
+  * @param {String} str - color string
   * @return {Object} rgb object
 */
 
@@ -682,7 +657,7 @@ prototypeAccessors.hslString.set = function (value) {
 color.prototype.set = function set (value) {
   if (typeof value == "object") {
     if (value instanceof color) {
-      this.hsv = color._value;
+      this.hsv = color.hsv;
     } else if ("r" in value) {
       this.rgb = value;
     } else if ("v" in value) {
@@ -741,8 +716,8 @@ color.prototype.compare = function compare (color, model) {
 */
 
 
-color.prototype.mix = function mix (color, weight) {
-  this.hsv = color.mix(this, color, weight).hsv;
+color.prototype.mix = function mix$1 (color, weight) {
+  this.hsv = mix(this, color, weight).hsv;
 };
 /**
   * @desc lighten color by amount
@@ -750,8 +725,8 @@ color.prototype.mix = function mix (color, weight) {
 */
 
 
-color.prototype.lighten = function lighten (amount) {
-  color.lighten(this, amount);
+color.prototype.lighten = function lighten$1 (amount) {
+  lighten(this, amount);
 };
 /**
   * @desc darken color by amount
@@ -759,8 +734,8 @@ color.prototype.lighten = function lighten (amount) {
 */
 
 
-color.prototype.darken = function darken (amount) {
-  color.darken(this, amount);
+color.prototype.darken = function darken$1 (amount) {
+  darken(this, amount);
 };
 
 Object.defineProperties( color.prototype, prototypeAccessors );
@@ -774,7 +749,7 @@ var IroSlider = (function (IroComponent$$1) {
   IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroSlider.prototype.constructor = IroSlider;
 
-  IroSlider.prototype.render = function render$$1 (props) {
+  IroSlider.prototype.render = function render (props) {
     var this$1 = this;
 
     var width = 300;
@@ -811,7 +786,6 @@ var IroSlider = (function (IroComponent$$1) {
       fill: "url(#iroGradient1)",
       vectorEffect: "non-scaling-stroke"
     }), h(IroMarker, {
-      r: props.markerRadius,
       x: hsv.v / 100 * width,
       y: height / 2
     }));
@@ -827,8 +801,8 @@ var IroSlider = (function (IroComponent$$1) {
   IroSlider.prototype.input = function input (x, y, rect, type) {
     x = x - rect.left;
     y = y - rect.top;
-    var opts = this.props;
-    var range = opts.width;
+    var opts = this._opts;
+    var range = opts.range;
     var dist = Math.max(Math.min(x, range.max), range.min) - range.min;
     return {
       v: Math.round(100 / range.w * dist)
@@ -859,6 +833,43 @@ var stylesheet = function stylesheet() {
 };
 
 var prototypeAccessors$1 = { enabled: { configurable: true },cssText: { configurable: true },css: { configurable: true } };
+
+prototypeAccessors$1.enabled.get = function () {
+  return !this.sheet.disabled;
+};
+
+prototypeAccessors$1.enabled.set = function (value) {
+  this.sheet.disabled = !value;
+}; // TODO: consider removing cssText + css properties since i don't tink they're that useful
+
+
+prototypeAccessors$1.cssText.get = function () {
+  var map = this.map;
+  var ret = [];
+
+  for (var selector in map) {
+    ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
+  }
+
+  return ret.join("\n");
+};
+
+prototypeAccessors$1.css.get = function () {
+  var map = this.map;
+  var ret = {};
+
+  for (var selector in map) {
+    var ruleSet = map[selector];
+    ret[selector] = {};
+
+    for (var i = 0; i < ruleSet.length; i++) {
+      var property = ruleSet[i];
+      ret[selector][property] = ruleSet.getPropertyValue(property);
+    }
+  }
+
+  return ret;
+};
 /**
   * @desc Set a specific rule for a given selector
   * @param {String} selector - the CSS selector for this rule (e.g. "body", ".class", "#id")
@@ -898,9 +909,7 @@ stylesheet.prototype.setRule = function setRule (selector, property, value) {
   }
 };
 
-prototypeAccessors$1.enabled.get = function () {
-  return !this.sheet.disabled;
-};
+Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
 
 var ColorPicker = (function (Component$$1) {
   function ColorPicker(props) {
@@ -908,15 +917,10 @@ var ColorPicker = (function (Component$$1) {
     this._events = {};
     this._colorChangeActive = false;
     this.css = props.css || props.styles || undefined;
-    this.color = new color(props.color);
+    this.color = new color(opts.color);
     this.state = {
-      hsv: {
-        h: 0,
-        s: 0,
-        v: 0
-      }
+      hsv: this.color.hsv
     };
-    this.components = [IroWheel, IroSlider];
   }
 
   if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
@@ -1004,10 +1008,10 @@ var ColorPicker = (function (Component$$1) {
     }
   };
 
-  ColorPicker.prototype.render = function render$$1 (props, state) {
+  ColorPicker.prototype.render = function render (props, state) {
     var this$1 = this;
 
-    return h("svg", {
+    h("svg", {
       class: "iro__svg",
       width: props.width,
       height: props.height,
@@ -1017,43 +1021,55 @@ var ColorPicker = (function (Component$$1) {
         "touch-action": "none"
       },
       ref: function (el) { return this$1.el = el; }
-    }, h("defs", null), h(IroWheel, _extends({
-      hsv: state.hsv,
-      x: 0,
-      y: 0,
-      radius: 100,
-      rMax: 100,
-      onChange: function () {
-        console.log('aaa');
-      }
-    }, props)));
+    }, h(IroWheel, {
+      hsv: state.hsv
+    }), h(IroSlider, {
+      hsv: state.hsv
+    }));
+  };
+  /**
+    * @desc mount the color picker UI into the DOM
+    * @param {Element | String} el - a DOM element or the CSS selector for a DOM element to use as a container for the UI
+    * @param {Object} opts - options for this instance
+    * @access protected
+  */
+
+
+  ColorPicker.prototype._mount = function _mount (el, opts) {
+    var this$1 = this;
+
+    // If `el` is a string, use it to select an Element, else assume it's an element
+    el = "string" == typeof el ? document.querySelector(el) : el; // Find the width and height for the UI
+    // If not defined in the options, try the HTML width + height attributes of the wrapper, else default to 320
+
+    var width = opts.width || parseInt(el.width) || 320;
+    var height = opts.height || parseInt(el.height) || 320; // Calculate layout variables
+
+    var padding = opts.padding + 2 || 6,
+        borderWidth = opts.borderWidth || 0,
+        markerRadius = opts.markerRadius || 8,
+        sliderMargin = opts.sliderMargin || 24,
+        sliderHeight = opts.sliderHeight || markerRadius * 2 + padding * 2 + borderWidth * 2;
+    var borderStyles = {
+      w: borderWidth,
+      color: opts.borderColor || "#fff"
+    }; // Hacky workaround for a couple of Safari SVG url bugs
+    // See https://github.com/jaames/iro.js/issues/18
+    // TODO: perhaps make this a seperate plugin, it's hacky and takes up more space than I'm happy with
+
+    this.on("history:stateChange", function (base) {
+      this$1.svg.updateUrls(base);
+    });
   };
 
   return ColorPicker;
 }(Component));
-ColorPicker.defaultProps = {
-  width: 300,
-  height: 300,
-  markerRadius: 8,
-  borderColor: "#fff",
-  borderWidth: 0,
-  anticlockwise: false,
-  sliderHeight: 24,
-  sliderMargin: 8
-};
 
-var index = {
+var iro = {
   Color: color,
-  ColorPicker: function (el, props) {
-    return render(h(ColorPicker, null), document.querySelector(el))._component;
-  },
+  ColorPicker: ColorPicker,
   Stylesheet: stylesheet,
-  ui: {
-    Marker: IroMarker,
-    Slider: IroSlider,
-    Wheel: IroWheel
-  },
   version: "4.0.0-alpha"
 };
 
-export default index;
+export default iro;

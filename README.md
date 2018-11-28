@@ -1,4 +1,4 @@
-# [iro.js](https://rakujira.jp/projects/iro)
+# [iro.js](https://iro.js.org)
 
 <img width="100%" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
 
@@ -16,9 +16,9 @@ iro.js aims to support all modern browsers, but it has been successfully tested 
 
 ### Get Started
 
-* [Download](https://rakujira.jp/projects/iro/docs/introduction.html#Download)
-* [Installation](https://rakujira.jp/projects/iro/docs/introduction.html#Installation)
-* [Usage Guide](https://rakujira.jp/projects/iro/docs/guide.html)
+* [Download](https://iro.js.org/introduction.html#download)
+* [Installation](https://iro.js.org/introduction.html#installation)
+* [Usage Guide](https://iro.js.org/guide.html)
 
 ### Demo
 

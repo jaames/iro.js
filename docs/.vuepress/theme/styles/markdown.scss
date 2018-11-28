@@ -1,0 +1,117 @@
+.markdown {
+  // font-size: .9rem;
+  @include breakpoint(small down) {
+    font-size: .9rem;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    .header-anchor {
+      font-size: 0.8em;
+      vertical-align: baseline;
+      margin-left: -.9em;
+      border-bottom: 0;
+      text-decoration: none;
+      opacity: 0;
+    }
+
+    &:hover .header-anchor {
+      opacity: 1;
+    }
+  }
+
+  h1 { font-size: 2.25em; }
+  h2 { font-size: 1.5em; }
+  h3 { font-size: 1.35em; }
+  h4 { font-size: 1.25em; }
+  h5 { font-size: 1em; }
+  h6 { font-size: .875em; }
+
+  h2 {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid $medium-gray;
+  }
+
+  a {
+    border-bottom: 1px solid currentColor;
+  }
+
+  p {
+    line-height: 1.6em;
+    margin: 1.2em 0;
+  }
+
+  ul, ol, dl {
+    line-height: 1.6em;
+    margin: 1.2em 0;
+    padding-left: 2em;
+  }
+
+  li {
+    word-wrap: break-all;
+  }
+
+  li > p {
+    margin-top: 1.2em;
+  }
+
+  li + li {
+    margin-top: .2em;
+  }
+
+  pre, code {
+    border-radius: 4px;
+  }
+
+  pre {
+    word-wrap: normal;
+  }
+
+  pre code {
+    padding: 0;
+  }
+
+  table {
+    margin: 1.2em 0;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  tbody tr:nth-child(even) {
+    pre, code {
+      background-color: darken($light-gray, 3);
+    }
+  }
+
+  // code blocks are wrapped in divs
+  div[class*="language-"] {
+    margin: 1.2em 0;
+    position: relative;
+    border-radius: 6px;
+    // box-shadow: 0 4px 4px -2px rgba(32, 32, 64, 0.1);
+  }
+
+  pre[class*="language-"] {
+    padding: 1.2rem;
+    overflow: auto;
+    // border-radius: 0.3em;
+  }
+
+  pre[class*="language-"]::before {
+    font-family: $body-font-family;
+    color: $dark-gray;
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: right;
+    font-size: 0.75em;
+    padding: 5px 10px 0;
+    line-height: 15px;
+    height: 15px;
+    font-weight: 600;
+  }
+
+  pre.language-bash::before {content: "shell";}
+  pre.language-js::before {content: "js";}
+  pre.language-css::before {content: "css";}
+  pre.language-html::before {content: "html";}
+}
