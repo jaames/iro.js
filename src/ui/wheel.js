@@ -1,7 +1,7 @@
 import { h } from "preact";
 
-import IroComponent from "../ui/component";
-import Handle from "../ui/handle";
+import IroComponent from "ui/component";
+import IroHandle from "ui/handle";
 
 function arcPath(cx, cy, radius, startAngle, endAngle) {
   var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
@@ -64,7 +64,7 @@ export default class IroWheel extends IroComponent {
           stroke={ borderColor }
           stroke-width={ borderWidth }
         />
-        <Handle 
+        <IroHandle 
           r={ handleRadius }
           x={ cX + handleDist * Math.cos(handleAngle) }
           y={ cY + handleDist * Math.sin(handleAngle) }

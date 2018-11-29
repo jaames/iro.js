@@ -1,6 +1,8 @@
+import { h } from "preact";
 
-import IroComponent from "../ui/component";
-import IroColor from "../color";
+import IroComponent from "ui/component";
+import IroHandle from "ui/handle";
+import IroColor from "modules/color";
 
 export default class IroSlider extends IroComponent {
 
@@ -37,7 +39,7 @@ export default class IroSlider extends IroComponent {
           stroke={ borderColor }
           fill={ `url(${urlBase}#iroSlider)` }
         />
-        <Handle
+        <IroHandle
           r={ handleRadius }
           x={ cornerRadius + ((hsv.v / 100) * range) }
           y={ sliderHeight / 2 }
