@@ -11,33 +11,9 @@ title: Introduction
  * Zero dependencies (not even jQuery or extra stylesheets/images)
  * Supports IE9+
 
-## Download
-
-[Development Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js) <br>
-Uncompressed with comments at around 50kB
-
-[Production Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js) <br>
-Minified to 13kB
-
 ## Installation
 
-[Download](#Download) iro.js and add it to the `<head>` of your page with a `<script>` tag:
-
-```html
-<html>
-  <head>
-    <!-- ... -->
-    <script src="./path/to/iro.min.js"></script>
-  </head>
-  <!-- ... -->
-</html>
-```
-
-When using the library this way, it will be available globally as `window.iro`.
-
-----
-
-*Or* install the latest version of iro.js from [npm](https://www.npmjs.com/package/@jaames/iro):
+Install the latest version of iro.js from [npm](https://www.npmjs.com/package/@jaames/iro):
 
 ```bash
 $ npm install @jaames/iro
@@ -52,3 +28,27 @@ import iro from "@jaames/iro";
 // Using CommonJS
 var iro = require("@jaames/iro");
 ```
+
+----
+
+**Or**, [download](#download) iro.js directly and add it to the `<head>` of your page with a `<script>` tag:
+
+```html
+<html>
+  <head>
+    <!-- ... -->
+    <script src="./path/to/iro.min.js"></script>
+  </head>
+  <!-- ... -->
+</html>
+```
+
+When using the library this way, it will be available globally as `window.iro`.
+
+## Download
+
+[Development Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js) <br>
+Uncompressed with comments at around 50kB
+
+[Production Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js) <br>
+Minified to 13kB

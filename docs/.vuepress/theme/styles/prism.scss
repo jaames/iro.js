@@ -1,6 +1,7 @@
 code[class*="language-"],
 pre[class*="language-"] {
   color: map-get($codeSyntax, color);
+  background: map-get($codeSyntax, background);
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -28,8 +29,7 @@ pre[class*="language-"] {
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
-  padding: .1em;
-  border-radius: .3em;
+  border-radius: 4px;
   white-space: normal;
 }
 

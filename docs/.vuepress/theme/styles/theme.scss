@@ -1,20 +1,67 @@
+
+@import url("https://fonts.googleapis.com/css?family=Archivo:400,700");
+@import "~css-reset-and-normalize/scss/reset-and-normalize";
+
 @import "./config";
-
-@include foundation-global-styles;
-@include foundation-forms;
-@include foundation-typography;
-@include foundation-table;
-
 @import "./markdown";
 @import "./prism";
 @import "./icons";
 @import "./buttons";
 @import "./custom-blocks";
 
-@include breakpoint(medium) {
+body {
+  color: $text;
+  background: $background;
+  font-family: $font-family;
+  font-size: 16px;
+  line-height: 1.5;
+  // letter-spacing: .015em;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-font-smoothing: antialiased;
+  -moz-text-rendering: optimizeLegibility;
+
+  @media (max-width: $breakpoint-small) {
+    font-size: 14px;
+  }
+
+  @media (min-width: $breakpoint-extra-large) {
+    font-size: 18px;
+  }
+}
+
+
+a {
+  color: $anchor-color;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: $anchor-color-hover;
+  }
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+  margin-bottom: .5em;
+}
+
+h1 { font-size: 2.25em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.25em; }
+h4 { font-size: 1.142em; }
+
+code {
+  color: $code-color;
+  background: $code-background;
+}
+
+@media (min-width: $breakpoint-medium) {
   .container {
     display: flex;
-    justify-content: center;
+    // justify-content: center;
   }
 }
 

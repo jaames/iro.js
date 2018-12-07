@@ -7,7 +7,6 @@
   "devDependencies": {
     "bili": "^3.0.13",
     "concurrently": "^3.5.1",
-    "foundation-sites": "^6.5.0-rc.2",
     "node-sass": "^4.9.3",
     "node-static": "^0.7.10",
     "sass-loader": "^7.1.0",
@@ -47,5 +46,8 @@
   "bugs": {
     "url": "https://github.com/jaames/iro.js/issues"
   },
-  "homepage": "https://rakujira.jp/projects/iro/"
+  "homepage": "https://rakujira.jp/projects/iro/",
+  "dependencies": {
+    "css-reset-and-normalize": "^1.0.1"
+  }
 }

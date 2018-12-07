@@ -79,10 +79,11 @@ function renderChildren (h, children, path, route, maxDepth, depth = 1) {
 
 a.sidebar-link {
   font-weight: 400;
-  color: $text-invert;
+  color: currentColor;
   display: inline-block;
-  border-left: 4px solid transparent;
-  padding: 0.4rem 1.2rem;
+  border-left: 3px solid transparent;
+  padding: 0 1.2em;
+  margin: .5em 0;
   line-height: 1.4;
   width: 100%;
   box-sizing: border-box;

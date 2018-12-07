@@ -12,7 +12,7 @@
         <div class="hero__body">
           <div class="hero__half intro">
             <Logo class="intro__logo logo"/>
-            <h3 class="intro__sub">A lightweight, SVG-based color picker library.</h3>
+            <h3 class="intro__sub">A lightweight, SVG-based color picker library</h3>
             <div class="intro__buttons">
               <a href="//codepen.io/rakujira/pen/WZOeNq?editors=0010" target="_blank" class="button button--invert">Codepen Demo</a>
               <router-link class="button button--invert" to="/introduction.html">Get Started →</router-link>
@@ -20,7 +20,7 @@
           </div>
           <div class="hero__half demo" ref="demoContainer"></div>
         </div>
-        <div class="hero__foot">Designed & Built by <a href="//rakujira.jp">James Daniel</a></div>
+        <div class="hero__foot">Created by <a href="//github.com/jaames">James Daniel</a></div>
       </div>
     </div>
   </div>
@@ -78,7 +78,7 @@ export default {
   display: flex;
   position: relative;
 
-  @include breakpoint(large) {
+  @media (min-width: $breakpoint-large) {
     padding: $hero-frame-padding;
   }
 }
@@ -106,7 +106,7 @@ export default {
   height: $hero-frame-padding-mobile + $hero-frame-radius;
 }
 
-@include breakpoint(medium) {
+@media (min-width: $breakpoint-medium) {
   .hero__frame--left, .hero__frame--right {
     width: $hero-frame-padding + $hero-frame-radius;
   }
@@ -133,8 +133,8 @@ export default {
 }
 
 .hero__content {
-  background: $background;
   color: $text-invert;
+  background: $background-invert;
   border-radius: $hero-frame-radius;
   box-shadow: 0 10px 15px -5px rgba(32, 32, 64, 0.25);
   flex: 1;
@@ -153,10 +153,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include breakpoint(medium) {
+  @media (min-width: $breakpoint-medium) {
     flex-direction: row-reverse;
   }
-  @include breakpoint(large) {
+  @media (min-width: $breakpoint-large) {
     padding: 6rem;
   }
 }
@@ -167,20 +167,24 @@ export default {
 }
 
 .hero__foot {
-  font-size: .9rem;
-  color: rgba(255, 255, 255, 0.75);
+  // font-size: .9rem;
+  color: rgba($text-invert, 0.75);
   text-align: right;
+
+  a {
+    color: $text-invert;
+  }
 }
 
 .hero__half {
   padding: 2rem;
-  @include breakpoint(medium) {
+  @media (min-width: $breakpoint-medium) {
     flex: 1;
     flex-basis: 50%;
     display: flex;
     flex-direction: column;
   }
-  @include breakpoint(large) {
+  @media (min-width: $breakpoint-large) {
     padding: 0;
   }
 }
@@ -190,16 +194,16 @@ export default {
   align-items: flex-start;
   margin-top: 60px;
   max-width: 320px;
-  @include breakpoint(medium) {
+  @media (min-width: $breakpoint-medium) {
     max-width: none;
   }
-  @include breakpoint(large) {
+  @media (min-width: $breakpoint-large) {
     margin-top: 90px;
   }
 }
 
 .intro__logo {
-  height: 120px;
+  height: 100px;
   // push alignment to left
   margin-right: auto;
 }
@@ -242,7 +246,7 @@ export default {
   transition: transform 0.2s ease;
 
   .octo-arm, .octo-body {
-    fill: $background;
+    fill: $background-invert;
   }
 
   .githubCorner:hover & {

@@ -46,7 +46,7 @@ export default {
 
 .sidebar-group {
   &:not(.first) {
-    margin-top: 1em;
+    margin-top: .5em;
   }
   .sidebar-group {
     padding-left: 0.5em;
@@ -60,7 +60,7 @@ export default {
 }
 
 .sidebar-heading {
-  color: $text-invert;
+  color: inherit;
   cursor: pointer;
   padding: 0 calc(1.2rem + 4px);
   margin-top: 0;
