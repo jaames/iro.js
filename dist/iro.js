@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.3
+ * iro.js v3.5.4
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -936,7 +936,8 @@
   };
 
   svgGradient.prototype.getUrl = function getUrl (base) {
-    var root = IS_SAFARI ? base || location.protocol + "//" + location.host + location.pathname : "";
+    var loc = location;
+    var root = IS_SAFARI ? base || loc.protocol + "//" + loc.host + loc.pathname + loc.search : "";
     return "url(" + root + "#" + this.el.id + ")";
   };
 
@@ -1369,7 +1370,7 @@
     Color: color,
     ColorPicker: colorPicker,
     Stylesheet: stylesheet,
-    version: "3.5.3"
+    version: "3.5.4"
   };
 
   return iro;
