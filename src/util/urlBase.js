@@ -5,11 +5,11 @@
 // More info on the problem: 
 // https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
 // https://github.com/jaames/iro.js/issues/18
-
-// TODO: fix for https://github.com/jaames/iro.js/issues/45
+// https://github.com/jaames/iro.js/issues/45
 
 export default function getUrlBase() {
-  // Sniff useragent string to check if the user is running IE, Edge or Safari
+  // Sniff useragent string to check if the user is running Safari
   const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-  return isSafari ? `${location.protocol}//${location.host}${location.pathname}` : "";
+  const loc = window.location;
+  return isSafari ? `${lox.protocol}//${loc.host}${loc.pathname}${loc.search}` : "";
 }
