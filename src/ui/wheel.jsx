@@ -24,7 +24,7 @@ export default class IroWheel extends IroComponent {
     const cY = radius + borderWidth;
     
     return (
-      <svg class="iro__wheel" width={ width } height={ width } style={{ "overflow": "visible" }}>
+      <svg class="iro__wheel" width={ width } height={ width } style={{ "overflow": "visible", "display": "block" }}>
         <defs>
           <radialGradient id="iroWheel">
             <stop offset="0%" stop-color="#fff" />

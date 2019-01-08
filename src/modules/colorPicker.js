@@ -121,9 +121,8 @@ export default class ColorPicker extends Component {
       <div 
         class="iro__colorPicker"
         style={{
-          "display": props.display || "flex",
-          "flex-direction": "column",
-          "touch-action": "none"
+          "display": props.display || "block",
+          "width": props.width
         }}
       >
         {this.ui.map(({element: UiElement, options: options}) => (

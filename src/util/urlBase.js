@@ -10,6 +10,6 @@
 export default function getUrlBase() {
   // Sniff useragent string to check if the user is running Safari
   const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-  const loc = window.location;
-  return isSafari ? `${lox.protocol}//${loc.host}${loc.pathname}${loc.search}` : "";
+  const location = window.location;
+  return isSafari ? `${location.protocol}//${location.host}${location.pathname}${location.search}` : "";
 }

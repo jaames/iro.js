@@ -31,7 +31,6 @@ export function unlisten(el, eventList, callback) {
 * @param {Function} callback callback function to be called
 */
 export function whenReady(callback) {
-  var _this = this;
   if (document.readyState == READYSTATE_COMPLETE) {
     callback();
   }

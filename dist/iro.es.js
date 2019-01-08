@@ -13,7 +13,7 @@ var stack = [];
 
 var EMPTY_CHILDREN = [];
 
-function h$1(nodeName, attributes) {
+function h(nodeName, attributes) {
 	var arguments$1 = arguments;
 
 	var children = EMPTY_CHILDREN,
@@ -794,10 +794,10 @@ function IroHandle(ref) {
   var r = ref.r;
 
   return (
-    h$1( 'svg', { class: "iro__handle", x: x, y: y, overflow: "visible" },
-      h$1( 'circle', { 
+    h( 'svg', { class: "iro__handle", x: x, y: y, overflow: "visible" },
+      h( 'circle', { 
         class: "iro__handle__inner", r: r, fill: "none", 'stroke-width': 5, stroke: "#000" }),
-      h$1( 'circle', { 
+      h( 'circle', { 
         class: "iro__handle__outer", r: r, fill: "none", 'stroke-width': 2, stroke: "#fff" })
     )
   );
@@ -840,26 +840,26 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
     var cY = radius + borderWidth;
     
     return (
-      h$1( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible" } },
-        h$1( 'defs', null,
-          h$1( 'radialGradient', { id: "iroWheel" },
-            h$1( 'stop', { offset: "0%", 'stop-color': "#fff" }),
-            h$1( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': 0 })
+      h( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible" } },
+        h( 'defs', null,
+          h( 'radialGradient', { id: "iroWheel" },
+            h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
+            h( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': 0 })
           )
         ),
-        h$1( 'g', { class: "iro__wheel__hue", 'stroke-width': radius, fill: "none" },
+        h( 'g', { class: "iro__wheel__hue", 'stroke-width': radius, fill: "none" },
           Array.apply(null, { length: 360 }).map(function (_, hue) { return (
-            h$1( 'path', { 
+            h( 'path', { 
               key: hue, d: arcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (anticlockwise ? 360 - hue : hue) + ", 100%, 50%)") })
           ); })
         ),
-        h$1( 'circle', { 
+        h( 'circle', { 
           class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + urlBase + "#iroWheel)") }),
-        h$1( 'circle', { 
+        h( 'circle', { 
           class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 }),
-        h$1( 'circle', { 
+        h( 'circle', { 
           class: "iro__wheel__border", cx: cX, cy: cY, r: radius, fill: "none", stroke: borderColor, 'stroke-width': borderWidth }),
-        h$1( IroHandle, { 
+        h( IroHandle, { 
           r: handleRadius, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
       )
     );
@@ -1350,7 +1350,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
   IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroSlider.prototype.constructor = IroSlider;
 
-  IroSlider.prototype.render = function render (ref) {
+  IroSlider.prototype.render = function render$$1 (ref) {
     var hsv = ref.hsv;
     var width = ref.width;
     var sliderHeight = ref.sliderHeight;
@@ -1378,7 +1378,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
         ),
         h( 'rect', { 
           class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: ("url(" + urlBase + "#iroSlider)") }),
-        h( Handle, {
+        h( IroHandle, {
           r: handleRadius, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
       )
     );
@@ -1518,13 +1518,13 @@ Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
 // More info on the problem: 
 // https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
 // https://github.com/jaames/iro.js/issues/18
-
-// TODO: fix for https://github.com/jaames/iro.js/issues/45
+// https://github.com/jaames/iro.js/issues/45
 
 function getUrlBase() {
-  // Sniff useragent string to check if the user is running IE, Edge or Safari
+  // Sniff useragent string to check if the user is running Safari
   var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname)) : "";
+  var loc = window.location;
+  return isSafari ? ((lox.protocol) + "//" + (loc.host) + (loc.pathname) + (loc.search)) : "";
 }
 
 var ColorPicker = /*@__PURE__*/(function (Component$$1) {
@@ -1651,7 +1651,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     var urlBase = ref.urlBase;
 
     return (
-      h$1( 'div', { 
+      h( 'div', { 
         class: "iro__colorPicker", style: {
           "display": props.display || "flex",
           "flex-direction": "column",
@@ -1662,7 +1662,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
           var options$$1 = ref.options;
 
           return (
-          h$1( UiElement, Object.assign({}, 
+          h( UiElement, Object.assign({}, 
             { parent: this$1, hsv: hsv, width: props.width, urlBase: urlBase, onInput: function (type, hsv) { return this$1.handleInput(type, hsv); } }, props, options$$1))
         );
     })
@@ -1691,9 +1691,7 @@ var iro = {
   Color: color,
   ColorPicker: function(el, props) {
     var instance;
-    render((
-      h$1( ColorPicker, Object.assign({}, { ref: function (ref) { return instance = ref; } }, props)), document.querySelector(el)
-    ));
+    render(h( ColorPicker, Object.assign({}, { ref: function (ref) { return instance = ref; } }, props)), document.querySelector(el));
     return instance;
   },
   Stylesheet: stylesheet,

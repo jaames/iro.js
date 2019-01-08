@@ -848,7 +848,7 @@
 	    var cY = radius + borderWidth;
 	    
 	    return (
-	      h( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible" } },
+	      h( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible", "display": "block" } },
 	        h( 'defs', null,
 	          h( 'radialGradient', { id: "iroWheel" },
 	            h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
@@ -1376,7 +1376,8 @@
 	      h( 'svg', { 
 	        class: "iro__slider", width: width, height: sliderHeight, style: {
 	          "margin-top": sliderMargin,
-	          "overflow": "visible"
+	          "overflow": "visible",
+	          "display": "block"
 	        } },
 	        h( 'defs', null,
 	          h( 'linearGradient', { id: "iroSlider" },
@@ -1526,13 +1527,13 @@
 	// More info on the problem: 
 	// https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
 	// https://github.com/jaames/iro.js/issues/18
-
-	// TODO: fix for https://github.com/jaames/iro.js/issues/45
+	// https://github.com/jaames/iro.js/issues/45
 
 	function getUrlBase() {
-	  // Sniff useragent string to check if the user is running IE, Edge or Safari
+	  // Sniff useragent string to check if the user is running Safari
 	  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname)) : "";
+	  var location = window.location;
+	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : "";
 	}
 
 	var ColorPicker = /*@__PURE__*/(function (Component$$1) {
@@ -1661,9 +1662,8 @@
 	    return (
 	      h( 'div', { 
 	        class: "iro__colorPicker", style: {
-	          "display": props.display || "flex",
-	          "flex-direction": "column",
-	          "touch-action": "none"
+	          "display": props.display || "block",
+	          "width": props.width
 	        } },
 	        this.ui.map(function (ref) {
 	          var UiElement = ref.element;

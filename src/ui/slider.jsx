@@ -18,7 +18,8 @@ export default class IroSlider extends IroComponent {
         height={ sliderHeight }
         style= {{
           "margin-top": sliderMargin,
-          "overflow": "visible"
+          "overflow": "visible",
+          "display": "block"
         }}
       >
         <defs>
