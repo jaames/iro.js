@@ -708,6 +708,9 @@
 	}
 	//# sourceMappingURL=preact.mjs.map
 
+	var EVENT_READYSTATE_CHANGE = "readystatechange",
+	READYSTATE_COMPLETE = "complete";
+
 	/**
 	  * @desc listen to one or more events on an element
 	  * @param {Element} el target element
@@ -731,6 +734,23 @@
 	function unlisten(el, eventList, callback) {
 	  for (var i = 0; i < eventList.length; i++) {
 	    el.removeEventListener(eventList[i], callback);
+	  }
+	}
+	/**
+	* @desc call fn callback when the page document is ready
+	* @param {Function} callback callback function to be called
+	*/
+	function whenReady(callback) {
+	  if (document.readyState == READYSTATE_COMPLETE) {
+	    callback();
+	  }
+	  else {
+	    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
+	      if (document.readyState == READYSTATE_COMPLETE) {
+	        callback();
+	        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
+	      }
+	    });
 	  }
 	}
 
@@ -1536,6 +1556,31 @@
 	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : "";
 	}
 
+	function createWidget(WidgetComponent) {
+
+	  return function (parent, props) {
+	    var widget = null;
+	    var widgetRoot = document.createElement('div');
+
+	    render(
+	      h(WidgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
+	        props)), 
+	      widgetRoot.parentNode,
+	      widgetRoot
+	    );
+	    // widget is now an instance of the widget component class
+	    // widgetRoot is now the widget's root element
+	    
+	    whenReady(function () {
+	      var container = typeof parent === Element ? parent : document.querySelector(parent);
+	      container.appendChild(widgetRoot);
+	    });
+
+	    return widget;
+	  }
+
+	}
+
 	var ColorPicker = /*@__PURE__*/(function (Component$$1) {
 	  function ColorPicker(props) {
 	    var this$1 = this;
@@ -1695,13 +1740,11 @@
 	  css: {}
 	};
 
+	var ColorPicker$1 = createWidget(ColorPicker);
+
 	var iro = {
 	  Color: color,
-	  ColorPicker: function(el, props) {
-	    var instance;
-	    render(h( ColorPicker, Object.assign({}, { ref: function (ref) { return instance = ref; } }, props)), document.querySelector(el));
-	    return instance;
-	  },
+	  ColorPicker: ColorPicker$1,
 	  Stylesheet: stylesheet,
 	  ui: {
 	    Component: IroComponent,

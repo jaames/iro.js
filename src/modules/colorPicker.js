@@ -5,8 +5,9 @@ import IroSlider from "ui/slider";
 import IroColor from "modules/color";
 import IroStyleSheet from "modules/stylesheet";
 import getUrlBase from "util/urlBase";
+import createWidget from "util/createWidget";
 
-export default class ColorPicker extends Component {
+class ColorPicker extends Component {
   constructor(props) {
     super(props);
     this._events = {};
@@ -154,3 +155,5 @@ ColorPicker.defaultProps = {
   padding: 6,
   css: {}
 }
+
+export default createWidget(ColorPicker);

@@ -700,6 +700,9 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
+var EVENT_READYSTATE_CHANGE = "readystatechange",
+READYSTATE_COMPLETE = "complete";
+
 /**
   * @desc listen to one or more events on an element
   * @param {Element} el target element
@@ -723,6 +726,23 @@ function listen(el, eventList, callback, params) {
 function unlisten(el, eventList, callback) {
   for (var i = 0; i < eventList.length; i++) {
     el.removeEventListener(eventList[i], callback);
+  }
+}
+/**
+* @desc call fn callback when the page document is ready
+* @param {Function} callback callback function to be called
+*/
+function whenReady(callback) {
+  if (document.readyState == READYSTATE_COMPLETE) {
+    callback();
+  }
+  else {
+    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
+      if (document.readyState == READYSTATE_COMPLETE) {
+        callback();
+        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
+      }
+    });
   }
 }
 
@@ -840,7 +860,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
     var cY = radius + borderWidth;
     
     return (
-      h( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible" } },
+      h( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible", "display": "block" } },
         h( 'defs', null,
           h( 'radialGradient', { id: "iroWheel" },
             h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
@@ -1368,7 +1388,8 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
       h( 'svg', { 
         class: "iro__slider", width: width, height: sliderHeight, style: {
           "margin-top": sliderMargin,
-          "overflow": "visible"
+          "overflow": "visible",
+          "display": "block"
         } },
         h( 'defs', null,
           h( 'linearGradient', { id: "iroSlider" },
@@ -1523,8 +1544,33 @@ Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
 function getUrlBase() {
   // Sniff useragent string to check if the user is running Safari
   var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-  var loc = window.location;
-  return isSafari ? ((lox.protocol) + "//" + (loc.host) + (loc.pathname) + (loc.search)) : "";
+  var location = window.location;
+  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : "";
+}
+
+function createWidget(WidgetComponent) {
+
+  return function (parent, props) {
+    var widget = null;
+    var widgetRoot = document.createElement('div');
+
+    render(
+      h(WidgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
+        props)), 
+      widgetRoot.parentElement,
+      widgetRoot
+    );
+    // widget is now an instance of the widget component class
+    // widgetRoot is now the widget's root element
+    
+    whenReady(function () {
+      var container = typeof parent === Element ? parent : document.querySelector(parent);
+      container.appendChild(widgetRoot);
+    });
+
+    return widget;
+  }
+
 }
 
 var ColorPicker = /*@__PURE__*/(function (Component$$1) {
@@ -1653,9 +1699,8 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     return (
       h( 'div', { 
         class: "iro__colorPicker", style: {
-          "display": props.display || "flex",
-          "flex-direction": "column",
-          "touch-action": "none"
+          "display": props.display || "block",
+          "width": props.width
         } },
         this.ui.map(function (ref) {
           var UiElement = ref.element;
@@ -1687,13 +1732,11 @@ ColorPicker.defaultProps = {
   css: {}
 };
 
+var ColorPicker$1 = createWidget(ColorPicker);
+
 var iro = {
   Color: color,
-  ColorPicker: function(el, props) {
-    var instance;
-    render(h( ColorPicker, Object.assign({}, { ref: function (ref) { return instance = ref; } }, props)), document.querySelector(el));
-    return instance;
-  },
+  ColorPicker: ColorPicker$1,
   Stylesheet: stylesheet,
   ui: {
     Component: IroComponent,

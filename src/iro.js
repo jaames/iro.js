@@ -11,11 +11,7 @@ import Wheel from "ui/wheel";
 
 export default {
   Color,
-  ColorPicker: function(el, props) {
-    var instance;
-    render(<ColorPicker ref={ref => instance = ref} {...props}/>, document.querySelector(el));
-    return instance;
-  },
+  ColorPicker,
   Stylesheet,
   ui: {
     Component,
