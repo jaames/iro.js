@@ -1,72 +1,68 @@
-import { h, Component } from "preact";
+import { h, Component } from 'preact';
 
-import IroWheel from "ui/wheel";
-import IroSlider from "ui/slider";
-import IroColor from "modules/color";
-import IroStyleSheet from "modules/stylesheet";
-import getUrlBase from "util/urlBase";
-import createWidget from "util/createWidget";
+import IroWheel from 'ui/wheel';
+import IroSlider from 'ui/slider';
+import IroColor from './color';
+import IroStyleSheet from './stylesheet';
+import getUrlBase from 'util/urlBase';
+import createWidget from 'util/createWidget';
 
 class ColorPicker extends Component {
   constructor(props) {
     super(props);
     this._events = {};
     this._colorChangeActive = false;
-    this.color = new IroColor();
-    this.color.set(props.color);
+    this.color = new IroColor(props.color);
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.update.bind(this);
     this.state = {
-      hsv: this.color.hsv,
+      color: this.color,
       urlBase: getUrlBase()
     };
     this.ui = [
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}},
     ];
+    // deprecated -- use colorPicker.forceUpdate() instead
     // Fix for a gradient rendering but when certain cliet-side routing libraries in Safari
     // See https://github.com/jaames/iro.js/issues/18
-    this.on("history:stateChange", () => {
-      this.setState({ urlBase: getUrlBase() });
-    });
+    // this.on('history:stateChange', () => {
+    //   this.setState({ urlBase: getUrlBase() });
+    // });
   }
 
   componentDidMount() {
     this.el = this.base;
     this.stylesheet = new IroStyleSheet();
     this.updateStylesheet();
-    this.emit("mount", this);
   }
 
-  /**
-    * @desc Update dynamic stylesheet to match the current color
-  */
-  updateStylesheet() {
-    const css = this.props.css;
-    const rgb = this.color.rgbString;
-    for (let selector in css) {
-      let properties = css[selector];
-      for (let property in properties) {
-        this.stylesheet.setRule(selector, property, rgb);
-      }
-    }
+  render(props, { color, urlBase }) {
+    return (
+      <div 
+        class="iro__colorPicker"
+        style={{
+          display: props.display,
+          width: props.width
+        }}
+      >
+        {this.ui.map(({element: UiElement, options: options}) => (
+          <UiElement 
+            {...props}
+            {...options}
+            onInput={ (type, hsv) => this.handleInput(type, hsv) }
+            parent={ this }
+            color={ color }
+            width={ props.width }
+            urlBase = { urlBase }
+          />
+        ))}
+      </div>
+    )
   }
 
-  /**
-    * @desc React to the color updating
-    * @param {IroColor} color current color
-    * @param {Object} changes shows which h,s,v color channels changed
-  */
-  update(color, changes) {
-    this.setState({ hsv: color.hsv });
-    this.updateStylesheet();
-    // Prevent infinite loops if the color is set inside a `color:change` callback
-    if (!this._colorChangeActive) {
-      // While _colorChangeActive = true, this event cannot be fired
-      this._colorChangeActive = true;
-      this.emit("color:change", color, changes);
-      this._colorChangeActive = false;
-    }
+  mounted() {
+    this.emit('mount', this);
   }
 
   /**
@@ -102,6 +98,37 @@ class ColorPicker extends Component {
   }
 
   /**
+    * @desc Update dynamic stylesheet to match the current color
+  */
+  updateStylesheet() {
+    const css = this.props.css;
+    const rgb = this.color.rgbString;
+    for (let selector in css) {
+      let properties = css[selector];
+      for (let property in properties) {
+        this.stylesheet.setRule(selector, property, rgb);
+      }
+    }
+  }
+
+  /**
+    * @desc React to the color updating
+    * @param {IroColor} color current color
+    * @param {Object} changes shows which h,s,v color channels changed
+  */
+  update(color, changes) {
+    this.setState({ color: color });
+    this.updateStylesheet();
+    // Prevent infinite loops if the color is set inside a `color:change` callback
+    if (!this._colorChangeActive) {
+      // While _colorChangeActive = true, this event cannot be fired
+      this._colorChangeActive = true;
+      this.emit('color:change', color, changes);
+      this._colorChangeActive = false;
+    }
+  }
+
+  /**
     * @desc Handle input from a UI control element
     * @param {String} type "START" | "MOVE" | "END"
     * @param {Object} hsv new hsv values for the color
@@ -110,35 +137,11 @@ class ColorPicker extends Component {
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
-    if (type === "START") {
-      this.emit("input:start", this.color);
+    if (type === 'START') {
+      this.emit('input:start', this.color);
     } else if (type === "END") {
-      this.emit("input:end", this.color);
+      this.emit('input:end', this.color);
     }
-  }
-
-  render(props, { hsv, urlBase }) {
-    return (
-      <div 
-        class="iro__colorPicker"
-        style={{
-          "display": props.display || "block",
-          "width": props.width
-        }}
-      >
-        {this.ui.map(({element: UiElement, options: options}) => (
-          <UiElement 
-            parent={ this } 
-            hsv={ hsv }
-            width={ props.width }
-            urlBase = { urlBase }
-            onInput={ (type, hsv) => this.handleInput(type, hsv) } 
-            {...props}
-            {...options}
-          />
-        ))}
-      </div>
-    )
   }
 }
 
@@ -149,6 +152,7 @@ ColorPicker.defaultProps = {
   color: "#fff",
   borderColor: "#fff",
   borderWidth: 0,
+  display: 'block',
   anticlockwise: false,
   sliderHeight: 32,
   sliderMargin: 8,

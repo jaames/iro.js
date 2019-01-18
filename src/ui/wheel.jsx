@@ -1,22 +1,14 @@
-import { h } from "preact";
+import { h } from 'preact';
 
-import IroComponent from "ui/component";
-import IroHandle from "ui/handle";
+import IroComponent from 'ui/component';
+import IroHandle from 'ui/handle';
+import { resolveUrl, createArcPath } from '../util/svg';
 
-function arcPath(cx, cy, radius, startAngle, endAngle) {
-  var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-  startAngle *= Math.PI / 180;
-  endAngle *= Math.PI / 180;
-  var x1 = cx + radius * Math.cos(endAngle);
-  var y1 = cy + radius * Math.sin(endAngle);
-  var x2 = cx + radius * Math.cos(startAngle);
-  var y2 = cy + radius * Math.sin(startAngle);
-  return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${x2} ${y2}`;
-}
 
 export default class IroWheel extends IroComponent {
   
-  render({ hsv, width, padding, borderWidth, borderColor, handleRadius, anticlockwise, urlBase }) {
+  render({ color, width, padding, borderWidth, borderColor, handleRadius, anticlockwise, urlBase }) {
+    const hsv = color.hsv;
     const radius = (width / 2) - borderWidth;
     const handleAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
     const handleDist = (hsv.s / 100) * (radius - padding - handleRadius - borderWidth);
@@ -24,7 +16,15 @@ export default class IroWheel extends IroComponent {
     const cY = radius + borderWidth;
     
     return (
-      <svg class="iro__wheel" width={ width } height={ width } style={{ "overflow": "visible", "display": "block" }}>
+      <svg 
+        class="iro__wheel"
+        width={ width }
+        height={ width }
+        style={{
+          overflow: 'visible',
+          display: 'block'
+        }}
+      >
         <defs>
           <radialGradient id="iroWheel">
             <stop offset="0%" stop-color="#fff" />
@@ -35,7 +35,7 @@ export default class IroWheel extends IroComponent {
           {Array.apply(null, { length: 360 }).map((_, hue) => (
             <path 
               key={ hue }
-              d={ arcPath(cX, cY, radius / 2, hue, hue + 1.5) } 
+              d={ createArcPath(cX, cY, radius / 2, hue, hue + 1.5) } 
               stroke={ `hsl(${ anticlockwise ? 360 - hue : hue }, 100%, 50%)` }
             />
           ))}
@@ -45,7 +45,7 @@ export default class IroWheel extends IroComponent {
           cx={ cX }
           cy={ cY }
           r={ radius }
-          fill={ `url(${urlBase}#iroWheel)` }
+          fill={ resolveUrl('#iroWheel') }
         />
         <circle 
           class="iro__wheel__lightness"

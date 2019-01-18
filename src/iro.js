@@ -1,8 +1,8 @@
 import { render, h } from "preact";
 
-import ColorPicker from "modules/colorPicker";
-import Color from "modules/color";
-import Stylesheet from "modules/stylesheet";
+import ColorPicker from "./colorPicker";
+import Color from "./color";
+import Stylesheet from "./stylesheet";
 
 import Component from "ui/component";
 import Handle from "ui/handle";

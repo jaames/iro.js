@@ -114,7 +114,7 @@ export default class color {
 
   /**
     * @desc convert hsv object to rgb
-    * @param {Object} hsv - hsv object
+    * @param {Object} hsv hsv object
     * @return {Object} rgb object
   */
   static hsv2Rgb(hsv) {
@@ -202,8 +202,8 @@ export default class color {
     * @param {Object} hsl - hsl object
     * @return {Object} hsl string
   */
-  static hsl2Str(hsl) {
-    return "hsl" + (hsl.a ? "a" : "") + "(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%" + (hsl.a ? ", " + hsl.a : "") + ")";
+  static hsl2Str({h, s, l, a}) {
+    return `hsl${a ? 'a' : ''}(${h}, ${s}%, ${l}%${a ? ', ' + a : ''})`;
   }
 
   /**
@@ -211,20 +211,20 @@ export default class color {
     * @param {Object} rgb - rgb object
     * @return {Object} rgb string
   */
-  static rgb2Str(rgb) {
-    return "rgb" + (rgb.a ? "a" : "") + "(" + rgb.r + ", " + rgb.g + ", " + rgb.b + (rgb.a ? ", " + rgb.a : "") + ")";
+  static rgb2Str({r, g, b, a}) {
+    return `rgb${a ? 'a' : ''}(${r}, ${g}, ${b}${a ? ', ' + a : ''})`;
   }
 
   /**
     * @desc convert rgb object to hex string
-    * @param {Object} rgb - rgb object
+    * @param {Object} rgb - rgb object  
     * @return {Object} hex string
   */
-  static rgb2Hex(rgb) {
+  static rgb2Hex({r, g, b, a}) {
     var str = "#";
-    str += rgb.r.toString(16).padStart(2, "0");
-    str += rgb.g.toString(16).padStart(2, "0");
-    str += rgb.b.toString(16).padStart(2, "0");
+    str += r.toString(16).padStart(2, '0');
+    str += g.toString(16).padStart(2, '0');
+    str += b.toString(16).padStart(2, '0');
     return str;
   }
 
@@ -306,11 +306,11 @@ export default class color {
   }
 
   get rgb() {
-    var rgb = color.hsv2Rgb(this._value);
+    const {r, g, b} = color.hsv2Rgb(this._value);
     return {
-      r: round(rgb.r),
-      g: round(rgb.g),
-      b: round(rgb.b),
+      r: round(r),
+      g: round(g),
+      b: round(b),
     };
   }
 
@@ -319,11 +319,11 @@ export default class color {
   }
 
   get hsl() {
-    var hsl = color.hsv2Hsl(this._value);
+    const {h, s, l} = color.hsv2Hsl(this._value);
     return {
-      h: round(hsl.h),
-      s: round(hsl.s),
-      l: round(hsl.l),
+      h: round(h),
+      s: round(s),
+      l: round(l),
     };
   }
 

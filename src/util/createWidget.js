@@ -1,5 +1,5 @@
 import { h, render } from 'preact';
-import { whenReady } from './dom';
+import { onDocumentReady } from './dom';
 
 export default function(WidgetComponent) {
 
@@ -16,11 +16,10 @@ export default function(WidgetComponent) {
       widgetRoot
     );
     // widget is now an instance of the widget component class
-    // widgetRoot is now the widget's root element
-    
-    whenReady(() => {
+    onDocumentReady(() => {
       const container = typeof parent === Element ? parent : document.querySelector(parent);
-      container.appendChild(widgetRoot);
+      container.appendChild(widget.base);
+      widget.mounted();
     });
 
     return widget;

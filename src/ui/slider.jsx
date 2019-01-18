@@ -1,14 +1,16 @@
-import { h } from "preact";
+import { h } from 'preact';
 
-import IroComponent from "ui/component";
-import IroHandle from "ui/handle";
-import IroColor from "modules/color";
+import IroComponent from 'ui/component';
+import IroHandle from 'ui/handle';
+import IroColor from '../color';
+import { resolveUrl } from '../util/svg';
 
 export default class IroSlider extends IroComponent {
 
-  render({ hsv, width, sliderHeight, sliderMargin, borderWidth, borderColor, handleRadius, urlBase }) {
+  render({ color, width, sliderHeight, sliderMargin, borderWidth, borderColor, handleRadius }) {
     const cornerRadius = sliderHeight / 2;
-    const range = width - cornerRadius * 2;
+    const range = width - cornerRadius * 2
+    const hsv = color.hsv;
     const hsl = IroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
@@ -17,9 +19,9 @@ export default class IroSlider extends IroComponent {
         width={ width }
         height={ sliderHeight }
         style= {{
-          "margin-top": sliderMargin,
-          "overflow": "visible",
-          "display": "block"
+          marginTop: sliderMargin,
+          overflow: 'visible',
+          display: 'block'
         }}
       >
         <defs>
@@ -38,7 +40,7 @@ export default class IroSlider extends IroComponent {
           height={ sliderHeight - borderWidth }
           stroke-width={ borderWidth }
           stroke={ borderColor }
-          fill={ `url(${urlBase}#iroSlider)` }
+          fill={ resolveUrl('#iroSlider') }
         />
         <IroHandle
           r={ handleRadius }

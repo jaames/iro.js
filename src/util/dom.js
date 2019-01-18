@@ -1,6 +1,3 @@
-const EVENT_READYSTATE_CHANGE = "readystatechange",
-READYSTATE_COMPLETE = "complete";
-
 /**
   * @desc listen to one or more events on an element
   * @param {Element} el target element
@@ -30,16 +27,11 @@ export function unlisten(el, eventList, callback) {
 * @desc call fn callback when the page document is ready
 * @param {Function} callback callback function to be called
 */
-export function whenReady(callback) {
-  if (document.readyState == READYSTATE_COMPLETE) {
+export function onDocumentReady(callback) {
+  if (document.readyState === 'complete') {
     callback();
   }
   else {
-    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-      if (document.readyState == READYSTATE_COMPLETE) {
-        callback();
-        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
-      }
-    });
+    listen(document, ['DOMContentLoaded'], callback);
   }
 };

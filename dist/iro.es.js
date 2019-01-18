@@ -1,6 +1,6 @@
 /*!
  * iro.js v4.0.0-alpha
- * 2016-2018 James Daniel
+ * 2016-2019 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
  */
@@ -700,9 +700,6 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
-var EVENT_READYSTATE_CHANGE = "readystatechange",
-READYSTATE_COMPLETE = "complete";
-
 /**
   * @desc listen to one or more events on an element
   * @param {Element} el target element
@@ -732,26 +729,21 @@ function unlisten(el, eventList, callback) {
 * @desc call fn callback when the page document is ready
 * @param {Function} callback callback function to be called
 */
-function whenReady(callback) {
-  if (document.readyState == READYSTATE_COMPLETE) {
+function onDocumentReady(callback) {
+  if (document.readyState === 'complete') {
     callback();
   }
   else {
-    listen(document, [EVENT_READYSTATE_CHANGE], function stateChange(e) {
-      if (document.readyState == READYSTATE_COMPLETE) {
-        callback();
-        unlisten(document, [EVENT_READYSTATE_CHANGE], stateChange);
-      }
-    });
+    listen(document, ['DOMContentLoaded'], callback);
   }
 }
 
-var EVENT_MOUSEDOWN = "mousedown",
-      EVENT_MOUSEMOVE = "mousemove",
-      EVENT_MOUSEUP = "mouseup",
-      EVENT_TOUCHSTART = "touchstart",
-      EVENT_TOUCHMOVE = "touchmove",
-      EVENT_TOUCHEND = "touchend";
+var EVENT_MOUSEDOWN = 'mousedown';
+var EVENT_MOUSEMOVE = 'mousemove';
+var EVENT_MOUSEUP = 'mouseup';
+var EVENT_TOUCHSTART = 'touchstart';
+var EVENT_TOUCHMOVE = 'touchmove';
+var EVENT_TOUCHEND = 'touchend';
 
 // Base component class for all UI components
 // This will allow them to react to their own mouse/touch events
@@ -777,29 +769,27 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   IroComponent.prototype.handleEvent = function handleEvent (e) {
     e.preventDefault();
-    var ref = this;
-    var base = ref.base;
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
     var point = e.touches ? e.changedTouches[0] : e;
     var x = point.clientX;
     var y = point.clientY;
     // Get the screen position of the component
-    var rect = base.getBoundingClientRect();
+    var bounds = this.base.getBoundingClientRect();
 
     switch (e.type) {
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:
         listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
-        this.handleInput(x, y, rect, "START");
+        this.handleInput(x, y, bounds, 'START');
         break;
       case EVENT_MOUSEMOVE:
       case EVENT_TOUCHMOVE:
-        this.handleInput(x, y, rect, "MOVE");
+        this.handleInput(x, y, bounds, 'MOVE');
         break;
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
-        this.handleInput(x, y, rect, "END");
+        this.handleInput(x, y, bounds, 'END');
         unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
         break;
     }
@@ -823,7 +813,25 @@ function IroHandle(ref) {
   );
 }
 
-function arcPath(cx, cy, radius, startAngle, endAngle) {
+/**
+ * Fix related to how Safari handles gradient URLS under certain conditions
+ * TL;DR if a page is using a client-side routing library which makes use of the HTML <base> tag, 
+ * Safari won't be able to render SVG gradients properly (as they are referenced by URLs)
+ * More info on the problem: 
+ * https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
+ * https://github.com/jaames/iro.js/issues/18
+ * https://github.com/jaames/iro.js/issues/45
+*/
+
+function resolveUrl(url) {
+  // Sniff useragent string to check if the user is running Safari
+  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+  var location = window.location;
+  var path = isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
+  return ("url(" + path + ")");
+}
+
+function createArcPath(cx, cy, radius, startAngle, endAngle) {
   var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
   startAngle *= Math.PI / 180;
   endAngle *= Math.PI / 180;
@@ -844,7 +852,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   IroWheel.prototype.constructor = IroWheel;
 
   IroWheel.prototype.render = function render$$1 (ref) {
-    var hsv = ref.hsv;
+    var color = ref.color;
     var width = ref.width;
     var padding = ref.padding;
     var borderWidth = ref.borderWidth;
@@ -853,6 +861,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
     var anticlockwise = ref.anticlockwise;
     var urlBase = ref.urlBase;
 
+    var hsv = color.hsv;
     var radius = (width / 2) - borderWidth;
     var handleAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
     var handleDist = (hsv.s / 100) * (radius - padding - handleRadius - borderWidth);
@@ -860,7 +869,11 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
     var cY = radius + borderWidth;
     
     return (
-      h( 'svg', { class: "iro__wheel", width: width, height: width, style: { "overflow": "visible", "display": "block" } },
+      h( 'svg', { 
+        class: "iro__wheel", width: width, height: width, style: {
+          overflow: 'visible',
+          display: 'block'
+        } },
         h( 'defs', null,
           h( 'radialGradient', { id: "iroWheel" },
             h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
@@ -870,11 +883,11 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
         h( 'g', { class: "iro__wheel__hue", 'stroke-width': radius, fill: "none" },
           Array.apply(null, { length: 360 }).map(function (_, hue) { return (
             h( 'path', { 
-              key: hue, d: arcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (anticlockwise ? 360 - hue : hue) + ", 100%, 50%)") })
+              key: hue, d: createArcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (anticlockwise ? 360 - hue : hue) + ", 100%, 50%)") })
           ); })
         ),
         h( 'circle', { 
-          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + urlBase + "#iroWheel)") }),
+          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: resolveUrl('#iroWheel') }),
         h( 'circle', { 
           class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 }),
         h( 'circle', { 
@@ -1036,7 +1049,7 @@ color.darken = function darken (color, amount) {
 
 /**
   * @desc convert hsv object to rgb
-  * @param {Object} hsv - hsv object
+  * @param {Object} hsv hsv object
   * @return {Object} rgb object
 */
 color.hsv2Rgb = function hsv2Rgb (hsv) {
@@ -1124,8 +1137,13 @@ color.hsl2Hsv = function hsl2Hsv (hsl) {
   * @param {Object} hsl - hsl object
   * @return {Object} hsl string
 */
-color.hsl2Str = function hsl2Str (hsl) {
-  return "hsl" + (hsl.a ? "a" : "") + "(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%" + (hsl.a ? ", " + hsl.a : "") + ")";
+color.hsl2Str = function hsl2Str (ref) {
+    var h = ref.h;
+    var s = ref.s;
+    var l = ref.l;
+    var a = ref.a;
+
+  return ("hsl" + (a ? 'a' : '') + "(" + h + ", " + s + "%, " + l + "%" + (a ? ', ' + a : '') + ")");
 };
 
 /**
@@ -1133,20 +1151,30 @@ color.hsl2Str = function hsl2Str (hsl) {
   * @param {Object} rgb - rgb object
   * @return {Object} rgb string
 */
-color.rgb2Str = function rgb2Str (rgb) {
-  return "rgb" + (rgb.a ? "a" : "") + "(" + rgb.r + ", " + rgb.g + ", " + rgb.b + (rgb.a ? ", " + rgb.a : "") + ")";
+color.rgb2Str = function rgb2Str (ref) {
+    var r = ref.r;
+    var g = ref.g;
+    var b = ref.b;
+    var a = ref.a;
+
+  return ("rgb" + (a ? 'a' : '') + "(" + r + ", " + g + ", " + b + (a ? ', ' + a : '') + ")");
 };
 
 /**
   * @desc convert rgb object to hex string
-  * @param {Object} rgb - rgb object
+  * @param {Object} rgb - rgb object  
   * @return {Object} hex string
 */
-color.rgb2Hex = function rgb2Hex (rgb) {
+color.rgb2Hex = function rgb2Hex (ref) {
+    var r = ref.r;
+    var g = ref.g;
+    var b = ref.b;
+    var a = ref.a;
+
   var str = "#";
-  str += rgb.r.toString(16).padStart(2, "0");
-  str += rgb.g.toString(16).padStart(2, "0");
-  str += rgb.b.toString(16).padStart(2, "0");
+  str += r.toString(16).padStart(2, '0');
+  str += g.toString(16).padStart(2, '0');
+  str += b.toString(16).padStart(2, '0');
   return str;
 };
 
@@ -1228,11 +1256,14 @@ prototypeAccessors.hsv.set = function (newValue) {
 };
 
 prototypeAccessors.rgb.get = function () {
-  var rgb = color.hsv2Rgb(this._value);
+  var ref = color.hsv2Rgb(this._value);
+    var r = ref.r;
+    var g = ref.g;
+    var b = ref.b;
   return {
-    r: round(rgb.r),
-    g: round(rgb.g),
-    b: round(rgb.b),
+    r: round(r),
+    g: round(g),
+    b: round(b),
   };
 };
 
@@ -1241,11 +1272,14 @@ prototypeAccessors.rgb.set = function (value) {
 };
 
 prototypeAccessors.hsl.get = function () {
-  var hsl = color.hsv2Hsl(this._value);
+  var ref = color.hsv2Hsl(this._value);
+    var h = ref.h;
+    var s = ref.s;
+    var l = ref.l;
   return {
-    h: round(hsl.h),
-    s: round(hsl.s),
-    l: round(hsl.l),
+    h: round(h),
+    s: round(s),
+    l: round(l),
   };
 };
 
@@ -1371,25 +1405,25 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
   IroSlider.prototype.constructor = IroSlider;
 
   IroSlider.prototype.render = function render$$1 (ref) {
-    var hsv = ref.hsv;
+    var color$$1 = ref.color;
     var width = ref.width;
     var sliderHeight = ref.sliderHeight;
     var sliderMargin = ref.sliderMargin;
     var borderWidth = ref.borderWidth;
     var borderColor = ref.borderColor;
     var handleRadius = ref.handleRadius;
-    var urlBase = ref.urlBase;
 
     var cornerRadius = sliderHeight / 2;
     var range = width - cornerRadius * 2;
+    var hsv = color$$1.hsv;
     var hsl = color.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
       h( 'svg', { 
         class: "iro__slider", width: width, height: sliderHeight, style: {
-          "margin-top": sliderMargin,
-          "overflow": "visible",
-          "display": "block"
+          marginTop: sliderMargin,
+          overflow: 'visible',
+          display: 'block'
         } },
         h( 'defs', null,
           h( 'linearGradient', { id: "iroSlider" },
@@ -1398,7 +1432,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
           )
         ),
         h( 'rect', { 
-          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: ("url(" + urlBase + "#iroSlider)") }),
+          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: resolveUrl('#iroSlider') }),
         h( IroHandle, {
           r: handleRadius, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
       )
@@ -1545,7 +1579,7 @@ function getUrlBase() {
   // Sniff useragent string to check if the user is running Safari
   var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
   var location = window.location;
-  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : "";
+  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : '';
 }
 
 function createWidget(WidgetComponent) {
@@ -1557,15 +1591,14 @@ function createWidget(WidgetComponent) {
     render(
       h(WidgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
         props)), 
-      widgetRoot.parentElement,
+      widgetRoot.parentNode,
       widgetRoot
     );
     // widget is now an instance of the widget component class
-    // widgetRoot is now the widget's root element
-    
-    whenReady(function () {
+    onDocumentReady(function () {
       var container = typeof parent === Element ? parent : document.querySelector(parent);
-      container.appendChild(widgetRoot);
+      container.appendChild(widget.base);
+      widget.mounted();
     });
 
     return widget;
@@ -1575,27 +1608,25 @@ function createWidget(WidgetComponent) {
 
 var ColorPicker = /*@__PURE__*/(function (Component$$1) {
   function ColorPicker(props) {
-    var this$1 = this;
-
     Component$$1.call(this, props);
     this._events = {};
     this._colorChangeActive = false;
-    this.color = new color();
-    this.color.set(props.color);
+    this.color = new color(props.color);
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.update.bind(this);
     this.state = {
-      hsv: this.color.hsv,
+      color: this.color,
       urlBase: getUrlBase()
     };
     this.ui = [
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}} ];
+    // deprecated -- use colorPicker.forceUpdate() instead
     // Fix for a gradient rendering but when certain cliet-side routing libraries in Safari
     // See https://github.com/jaames/iro.js/issues/18
-    this.on("history:stateChange", function () {
-      this$1.setState({ urlBase: getUrlBase() });
-    });
+    // this.on('history:stateChange', () => {
+    //   this.setState({ urlBase: getUrlBase() });
+    // });
   }
 
   if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
@@ -1606,38 +1637,34 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     this.el = this.base;
     this.stylesheet = new stylesheet();
     this.updateStylesheet();
-    this.emit("mount", this);
   };
 
-  /**
-    * @desc Update dynamic stylesheet to match the current color
-  */
-  ColorPicker.prototype.updateStylesheet = function updateStylesheet () {
-    var css = this.props.css;
-    var rgb = this.color.rgbString;
-    for (var selector in css) {
-      var properties = css[selector];
-      for (var property in properties) {
-        this.stylesheet.setRule(selector, property, rgb);
-      }
-    }
+  ColorPicker.prototype.render = function render$$1 (props, ref) {
+    var this$1 = this;
+    var color$$1 = ref.color;
+    var urlBase = ref.urlBase;
+
+    return (
+      h( 'div', { 
+        class: "iro__colorPicker", style: {
+          display: props.display,
+          width: props.width
+        } },
+        this.ui.map(function (ref) {
+          var UiElement = ref.element;
+          var options$$1 = ref.options;
+
+          return (
+          h( UiElement, Object.assign({}, 
+            props, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1, color: color$$1, width: props.width, urlBase: urlBase }))
+        );
+    })
+      )
+    )
   };
 
-  /**
-    * @desc React to the color updating
-    * @param {IroColor} color current color
-    * @param {Object} changes shows which h,s,v color channels changed
-  */
-  ColorPicker.prototype.update = function update (color$$1, changes) {
-    this.setState({ hsv: color$$1.hsv });
-    this.updateStylesheet();
-    // Prevent infinite loops if the color is set inside a `color:change` callback
-    if (!this._colorChangeActive) {
-      // While _colorChangeActive = true, this event cannot be fired
-      this._colorChangeActive = true;
-      this.emit("color:change", color$$1, changes);
-      this._colorChangeActive = false;
-    }
+  ColorPicker.prototype.mounted = function mounted () {
+    this.emit('mount', this);
   };
 
   /**
@@ -1676,6 +1703,37 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
   };
 
   /**
+    * @desc Update dynamic stylesheet to match the current color
+  */
+  ColorPicker.prototype.updateStylesheet = function updateStylesheet () {
+    var css = this.props.css;
+    var rgb = this.color.rgbString;
+    for (var selector in css) {
+      var properties = css[selector];
+      for (var property in properties) {
+        this.stylesheet.setRule(selector, property, rgb);
+      }
+    }
+  };
+
+  /**
+    * @desc React to the color updating
+    * @param {IroColor} color current color
+    * @param {Object} changes shows which h,s,v color channels changed
+  */
+  ColorPicker.prototype.update = function update (color$$1, changes) {
+    this.setState({ color: color$$1 });
+    this.updateStylesheet();
+    // Prevent infinite loops if the color is set inside a `color:change` callback
+    if (!this._colorChangeActive) {
+      // While _colorChangeActive = true, this event cannot be fired
+      this._colorChangeActive = true;
+      this.emit('color:change', color$$1, changes);
+      this._colorChangeActive = false;
+    }
+  };
+
+  /**
     * @desc Handle input from a UI control element
     * @param {String} type "START" | "MOVE" | "END"
     * @param {Object} hsv new hsv values for the color
@@ -1684,35 +1742,11 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
-    if (type === "START") {
-      this.emit("input:start", this.color);
+    if (type === 'START') {
+      this.emit('input:start', this.color);
     } else if (type === "END") {
-      this.emit("input:end", this.color);
+      this.emit('input:end', this.color);
     }
-  };
-
-  ColorPicker.prototype.render = function render$$1 (props, ref) {
-    var this$1 = this;
-    var hsv = ref.hsv;
-    var urlBase = ref.urlBase;
-
-    return (
-      h( 'div', { 
-        class: "iro__colorPicker", style: {
-          "display": props.display || "block",
-          "width": props.width
-        } },
-        this.ui.map(function (ref) {
-          var UiElement = ref.element;
-          var options$$1 = ref.options;
-
-          return (
-          h( UiElement, Object.assign({}, 
-            { parent: this$1, hsv: hsv, width: props.width, urlBase: urlBase, onInput: function (type, hsv) { return this$1.handleInput(type, hsv); } }, props, options$$1))
-        );
-    })
-      )
-    )
   };
 
   return ColorPicker;
@@ -1725,6 +1759,7 @@ ColorPicker.defaultProps = {
   color: "#fff",
   borderColor: "#fff",
   borderWidth: 0,
+  display: 'block',
   anticlockwise: false,
   sliderHeight: 32,
   sliderMargin: 8,
