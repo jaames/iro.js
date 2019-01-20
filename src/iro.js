@@ -8,8 +8,9 @@ import Component from "ui/component";
 import Handle from "ui/handle";
 import Slider from "ui/slider";
 import Wheel from "ui/wheel";
+import { usePlugins } from "./usePlugins";
 
-export default {
+export default usePlugins({
   Color,
   ColorPicker,
   Stylesheet,
@@ -20,4 +21,4 @@ export default {
     Wheel
   },
   version: VERSION,
-};
+});
