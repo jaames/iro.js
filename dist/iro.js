@@ -5,6 +5,7 @@
  * github.com/jaames/iro.js
  */
 
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -705,6 +706,7 @@
 	function render(vnode, parent, merge) {
 	  return diff(merge, vnode, {}, false, parent, false);
 	}
+	//# sourceMappingURL=preact.mjs.map
 
 	/**
 	  * @desc listen to one or more events on an element
@@ -804,21 +806,6 @@
 	  return IroComponent;
 	}(Component));
 
-	function IroHandle(ref) {
-	  var x = ref.x;
-	  var y = ref.y;
-	  var r = ref.r;
-
-	  return (
-	    h( 'svg', { class: "iro__handle", x: x, y: y, overflow: "visible" },
-	      h( 'circle', { 
-	        class: "iro__handle__inner", r: r, fill: "none", 'stroke-width': 5, stroke: "#000" }),
-	      h( 'circle', { 
-	        class: "iro__handle__outer", r: r, fill: "none", 'stroke-width': 2, stroke: "#fff" })
-	    )
-	  );
-	}
-
 	/**
 	 * Fix related to how Safari handles gradient URLS under certain conditions
 	 * TL;DR if a page is using a client-side routing library which makes use of the HTML <base> tag, 
@@ -833,8 +820,7 @@
 	  // Sniff useragent string to check if the user is running Safari
 	  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
 	  var location = window.location;
-	  var path = isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
-	  return ("url(" + path + ")");
+	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
 	}
 
 	function createArcPath(cx, cy, radius, startAngle, endAngle) {
@@ -847,6 +833,38 @@
 	  var y2 = cy + radius * Math.sin(startAngle);
 	  return ("M " + x1 + " " + y1 + " A " + radius + " " + radius + " 0 " + largeArcFlag + " 0 " + x2 + " " + y2);
 	}
+
+	function IroHandle(ref) {
+	  var x = ref.x;
+	  var y = ref.y;
+	  var r = ref.r;
+	  var origin = ref.origin;
+	  var url = ref.url;
+
+	  return (
+	    h( 'svg', { class: "iro__handle", x: x - origin.x, y: y - origin.y, overflow: "visible" },
+	      url && (
+	        h( 'use', { xlinkHref: resolveUrl(url), x: "0", y: "0" })
+	      ),
+	      !url && (
+	        h( 'circle', { 
+	          class: "iro__handle__inner", r: r, fill: "none", 'stroke-width': 2, stroke: "#000" })
+	      ),
+	      !url && (
+	        h( 'circle', { 
+	          class: "iro__handle__outer", r: r - 2, fill: "none", 'stroke-width': 2, stroke: "#fff" })
+	      )
+	    )
+	  );
+	}
+
+	IroHandle.defaultProps = {
+	  x: 0,
+	  y: 0,
+	  r: 8,
+	  url: null,
+	  origin: {x: 0, y: 10}
+	};
 
 	var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
 	  function IroWheel () {
@@ -893,7 +911,7 @@
 	          ); })
 	        ),
 	        h( 'circle', { 
-	          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: resolveUrl('#iroWheel') }),
+	          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + (resolveUrl('#iroWheel')) + ")") }),
 	        h( 'circle', { 
 	          class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 }),
 	        h( 'circle', { 
@@ -1438,7 +1456,7 @@
 	          )
 	        ),
 	        h( 'rect', { 
-	          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: resolveUrl('#iroSlider') }),
+	          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: ("url(" + (resolveUrl('#iroSlider')) + ")") }),
 	        h( IroHandle, {
 	          r: handleRadius, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
 	      )
@@ -1572,22 +1590,6 @@
 
 	Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
 
-	// Fix related to how Safari handles gradient URLS under certain conditions
-
-	// TL;DR if a page is using a client-side routing library which makes use of the HTML <base> tag, 
-	// Safari won't be able to render SVG gradients properly (as they are referenced by URLs)
-	// More info on the problem: 
-	// https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
-	// https://github.com/jaames/iro.js/issues/18
-	// https://github.com/jaames/iro.js/issues/45
-
-	function getUrlBase() {
-	  // Sniff useragent string to check if the user is running Safari
-	  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-	  var location = window.location;
-	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : '';
-	}
-
 	function createWidget(widgetComponent) {
 
 	  var widgetFactory = function (parent, props) {
@@ -1631,8 +1633,7 @@
 	    // Whenever the color changes, update the color wheel
 	    this.color._onChange = this.update.bind(this);
 	    this.state = {
-	      color: this.color,
-	      urlBase: getUrlBase()
+	      color: this.color
 	    };
 	    this.emitHook('init:state');
 	    this.ui = [
@@ -1665,7 +1666,6 @@
 	  ColorPicker.prototype.render = function render$$1 (props, ref) {
 	    var this$1 = this;
 	    var color$$1 = ref.color;
-	    var urlBase = ref.urlBase;
 
 	    return (
 	      h( 'div', { 
@@ -1679,7 +1679,7 @@
 
 	          return (
 	          h( UiElement, Object.assign({}, 
-	            props, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1, color: color$$1, width: props.width, urlBase: urlBase }))
+	            props, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1, color: color$$1, width: props.width }))
 	        );
 	    })
 	      )

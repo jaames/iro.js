@@ -40,7 +40,7 @@ export default class IroSlider extends IroComponent {
           height={ sliderHeight - borderWidth }
           stroke-width={ borderWidth }
           stroke={ borderColor }
-          fill={ resolveUrl('#iroSlider') }
+          fill={ `url(${resolveUrl('#iroSlider')})` }
         />
         <IroHandle
           r={ handleRadius }

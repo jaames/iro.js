@@ -4,8 +4,7 @@ import IroWheel from 'ui/wheel';
 import IroSlider from 'ui/slider';
 import IroColor from './color';
 import IroStyleSheet from './stylesheet';
-import getUrlBase from 'util/urlBase';
-import createWidget from 'util/createWidget';
+import { createWidget } from 'util/createWidget';
 
 class ColorPicker extends Component {
   constructor(props) {
@@ -17,8 +16,7 @@ class ColorPicker extends Component {
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.update.bind(this);
     this.state = {
-      color: this.color,
-      urlBase: getUrlBase()
+      color: this.color
     };
     this.emitHook('init:state');
     this.ui = [
@@ -45,7 +43,7 @@ class ColorPicker extends Component {
     this.emit('mount', this);
   }
 
-  render(props, { color, urlBase }) {
+  render(props, { color }) {
     return (
       <div 
         class="iro__colorPicker"
@@ -62,7 +60,6 @@ class ColorPicker extends Component {
             parent={ this }
             color={ color }
             width={ props.width }
-            urlBase = { urlBase }
           />
         ))}
       </div>

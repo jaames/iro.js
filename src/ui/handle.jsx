@@ -1,22 +1,40 @@
 import { h } from 'preact';
+import { resolveUrl } from '../util/svg';
 
-export default function IroHandle({ x, y, r }) {
+function IroHandle({ x, y, r, origin, url }) {
   return (
-    <svg class="iro__handle" x={ x } y={ y } overflow="visible">
-      <circle 
-        class="iro__handle__inner"
-        r={ r }
-        fill="none"
-        stroke-width={ 5 }
-        stroke="#000"
-      />
-      <circle 
-        class="iro__handle__outer" 
-        r={ r }
-        fill="none"
-        stroke-width={ 2 }
-        stroke="#fff"
-      />
+    <svg class="iro__handle" x={ x - origin.x } y={ y - origin.y } overflow="visible">
+      {url && (
+        <use xlinkHref={resolveUrl(url)} x="0" y="0"/>
+      )}
+      {!url && (
+        <circle 
+          class="iro__handle__inner"
+          r={ r }
+          fill="none"
+          stroke-width={ 2 }
+          stroke="#000"
+        />
+      )}
+      {!url && (
+        <circle 
+          class="iro__handle__outer" 
+          r={ r - 2 }
+          fill="none"
+          stroke-width={ 2 }
+          stroke="#fff"
+        />
+      )}
     </svg>
   );
 }
+
+IroHandle.defaultProps = {
+  x: 0,
+  y: 0,
+  r: 8,
+  url: null,
+  origin: {x: 0, y: 10}
+};
+
+export default IroHandle;

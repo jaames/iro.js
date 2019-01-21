@@ -12,17 +12,16 @@ export function resolveUrl(url) {
   // Sniff useragent string to check if the user is running Safari
   const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
   const location = window.location;
-  const path = isSafari ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
-  return `url(${path})`;
+  return isSafari ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
 }
 
 export function createArcPath(cx, cy, radius, startAngle, endAngle) {
-  var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
   startAngle *= Math.PI / 180;
   endAngle *= Math.PI / 180;
-  var x1 = cx + radius * Math.cos(endAngle);
-  var y1 = cy + radius * Math.sin(endAngle);
-  var x2 = cx + radius * Math.cos(startAngle);
-  var y2 = cy + radius * Math.sin(startAngle);
+  const x1 = cx + radius * Math.cos(endAngle);
+  const y1 = cy + radius * Math.sin(endAngle);
+  const x2 = cx + radius * Math.cos(startAngle);
+  const y2 = cy + radius * Math.sin(startAngle);
   return `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${x2} ${y2}`;
 }

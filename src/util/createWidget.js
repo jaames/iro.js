@@ -1,7 +1,7 @@
 import { h, render } from 'preact';
 import { onDocumentReady } from './dom';
 
-export default function createWidget(widgetComponent) {
+export function createWidget(widgetComponent) {
 
   const widgetFactory = function (parent, props) {
     let widget = null;

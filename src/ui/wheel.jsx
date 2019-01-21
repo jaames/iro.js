@@ -45,7 +45,7 @@ export default class IroWheel extends IroComponent {
           cx={ cX }
           cy={ cY }
           r={ radius }
-          fill={ resolveUrl('#iroWheel') }
+          fill={ `url(${resolveUrl('#iroWheel')})` }
         />
         <circle 
           class="iro__wheel__lightness"
