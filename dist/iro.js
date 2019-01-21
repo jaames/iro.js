@@ -1588,19 +1588,19 @@
 	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : '';
 	}
 
-	function createWidget(WidgetComponent) {
+	function createWidget(widgetComponent) {
 
-	  return function (parent, props) {
+	  var widgetFactory = function (parent, props) {
 	    var widget = null;
 	    var widgetRoot = document.createElement('div');
 
 	    render(
-	      h(WidgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
+	      h(widgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
 	        props)), 
 	      widgetRoot.parentNode,
 	      widgetRoot
 	    );
-	    // widget is now an instance of the widget component class
+	    // Widget is now an instance of the widget component class
 	    onDocumentReady(function () {
 	      var container = typeof parent === Element ? parent : document.querySelector(parent);
 	      container.appendChild(widget.base);
@@ -1608,13 +1608,23 @@
 	    });
 
 	    return widget;
-	  }
+	  };
+
+	  // Allow the widget factory to inherit component prototype + static class methods
+	  // This makes it easier for plugin authors to extend the base widget component
+	  widgetFactory.prototype = widgetComponent.prototype;
+	  Object.assign(widgetFactory, widgetComponent);
+	  // Add reference to base component too
+	  widgetFactory.__component = widgetComponent; 
+
+	  return widgetFactory;
 
 	}
 
 	var ColorPicker = /*@__PURE__*/(function (Component$$1) {
 	  function ColorPicker(props) {
 	    Component$$1.call(this, props);
+	    this.emitHook('init:before');
 	    this._events = {};
 	    this._colorChangeActive = false;
 	    this.color = new color(props.color);
@@ -1624,6 +1634,7 @@
 	      color: this.color,
 	      urlBase: getUrlBase()
 	    };
+	    this.emitHook('init:state');
 	    this.ui = [
 	      {element: IroWheel, options: {}},
 	      {element: IroSlider, options: {}} ];
@@ -1633,6 +1644,7 @@
 	    // this.on('history:stateChange', () => {
 	    //   this.setState({ urlBase: getUrlBase() });
 	    // });
+	    this.emitHook('init:after');
 	  }
 
 	  if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
@@ -1643,6 +1655,11 @@
 	    this.el = this.base;
 	    this.stylesheet = new stylesheet();
 	    this.updateStylesheet();
+	    this.emitHook('init:mount');
+	  };
+
+	  ColorPicker.prototype.mounted = function mounted () {
+	    this.emit('mount', this);
 	  };
 
 	  ColorPicker.prototype.render = function render$$1 (props, ref) {
@@ -1669,10 +1686,6 @@
 	    )
 	  };
 
-	  ColorPicker.prototype.mounted = function mounted () {
-	    this.emit('mount', this);
-	  };
-
 	  /**
 	    * @desc Set a callback function for an event
 	    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
@@ -1680,6 +1693,7 @@
 	  */
 	  ColorPicker.prototype.on = function on (eventType, callback) {
 	    var events = this._events;
+	    this.emitHook('event:on', eventType, callback);
 	    (events[eventType] || (events[eventType] = [])).push(callback);
 	  };
 
@@ -1690,6 +1704,7 @@
 	  */
 	  ColorPicker.prototype.off = function off (eventType, callback) {
 	    var callbackList = this._events[eventType];
+	    this.emitHook('event:off', eventType, callback);
 	    if (callbackList) { callbackList.splice(callbackList.indexOf(callback), 1); }
 	  };
 
@@ -1699,12 +1714,30 @@
 	    * @param {Array} args array of args to pass to callbacks
 	  */
 	  ColorPicker.prototype.emit = function emit (eventType) {
+	    var ref;
+
 	    var args = [], len = arguments.length - 1;
 	    while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
-
+	    // Events are plugin hooks too
+	    (ref = this).emitHook.apply(ref, [ eventType ].concat( args ));
 	    var callbackList = this._events[eventType] || [];
 	    for (var i = 0; i < callbackList.length; i++) {
 	      callbackList[i].apply(null, args); 
+	    }
+	  };
+
+	  ColorPicker.addHook = function addHook (hookType, callback) {
+	    var pluginHooks = ColorPicker.pluginHooks;
+	    (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
+	  };
+
+	  ColorPicker.prototype.emitHook = function emitHook (hookType) {
+	    var args = [], len = arguments.length - 1;
+	    while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
+
+	    var callbackList = ColorPicker.pluginHooks[hookType] || [];
+	    for (var i = 0; i < callbackList.length; i++) {
+	      callbackList[i].apply(this, args); 
 	    }
 	  };
 
@@ -1728,7 +1761,9 @@
 	    * @param {Object} changes shows which h,s,v color channels changed
 	  */
 	  ColorPicker.prototype.update = function update (color$$1, changes) {
+	    this.emitHook('color:beforeUpdate', color$$1, changes);
 	    this.setState({ color: color$$1 });
+	    this.emitHook('color:afterUpdate', color$$1, changes);
 	    this.updateStylesheet();
 	    // Prevent infinite loops if the color is set inside a `color:change` callback
 	    if (!this._colorChangeActive) {
@@ -1748,15 +1783,14 @@
 	    // Setting the color HSV here will automatically update the UI
 	    // Since we bound the color's _onChange callback
 	    this.color.hsv = hsv;
-	    if (type === 'START') {
-	      this.emit('input:start', this.color);
-	    } else if (type === "END") {
-	      this.emit('input:end', this.color);
-	    }
+	    var eventType = { START: 'input:start', MOVE: 'input:move', END: 'input:end' }[type];
+	    this.emit(eventType, this.color);
 	  };
 
 	  return ColorPicker;
 	}(Component));
+
+	ColorPicker.pluginHooks = {};
 
 	ColorPicker.defaultProps = {
 	  width: 300,
@@ -1775,7 +1809,28 @@
 
 	var ColorPicker$1 = createWidget(ColorPicker);
 
-	var iro = {
+	function usePlugins(core) {
+	  var installedPlugins = [];
+	  
+	  core.use = function(plugin, pluginOptions) {
+	    if ( pluginOptions === void 0 ) pluginOptions = {};
+	 
+	    // Check that the plugin hasn't already been registered
+	    if (!installedPlugins.indexOf(plugin) > -1) {
+	      // Init plugin
+	      // TODO: consider collection of plugin utils, which are passed as a thrid param
+	      plugin(core, pluginOptions);
+	      // Register plugin
+	      installedPlugins.push(plugin);
+	    }
+	  };
+
+	  core.installedPlugins = installedPlugins;
+
+	  return core;
+	}
+
+	var iro = usePlugins({
 	  Color: color,
 	  ColorPicker: ColorPicker$1,
 	  Stylesheet: stylesheet,
@@ -1786,7 +1841,7 @@
 	    Wheel: IroWheel
 	  },
 	  version: "4.0.0-alpha",
-	};
+	});
 
 	return iro;
 

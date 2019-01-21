@@ -12,5 +12,7 @@ export function usePlugins(core) {
     }
   }
 
+  core.installedPlugins = installedPlugins;
+
   return core;
 }

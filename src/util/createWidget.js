@@ -1,21 +1,21 @@
 import { h, render } from 'preact';
 import { onDocumentReady } from './dom';
 
-export default function(WidgetComponent) {
+export default function createWidget(widgetComponent) {
 
-  return function (parent, props) {
+  const widgetFactory = function (parent, props) {
     let widget = null;
     let widgetRoot = document.createElement('div');
 
     render(
-      h(WidgetComponent, {
+      h(widgetComponent, {
         ref: ref => widget = ref,
         ...props,
       }), 
       widgetRoot.parentNode,
       widgetRoot
     );
-    // widget is now an instance of the widget component class
+    // Widget is now an instance of the widget component class
     onDocumentReady(() => {
       const container = typeof parent === Element ? parent : document.querySelector(parent);
       container.appendChild(widget.base);
@@ -24,5 +24,14 @@ export default function(WidgetComponent) {
 
     return widget;
   }
+
+  // Allow the widget factory to inherit component prototype + static class methods
+  // This makes it easier for plugin authors to extend the base widget component
+  widgetFactory.prototype = widgetComponent.prototype;
+  Object.assign(widgetFactory, widgetComponent);
+  // Add reference to base component too
+  widgetFactory.__component = widgetComponent; 
+
+  return widgetFactory;
 
 }

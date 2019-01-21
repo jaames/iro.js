@@ -10,6 +10,7 @@ import createWidget from 'util/createWidget';
 class ColorPicker extends Component {
   constructor(props) {
     super(props);
+    this.emitHook('init:before');
     this._events = {};
     this._colorChangeActive = false;
     this.color = new IroColor(props.color);
@@ -19,6 +20,7 @@ class ColorPicker extends Component {
       color: this.color,
       urlBase: getUrlBase()
     };
+    this.emitHook('init:state');
     this.ui = [
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}},
@@ -29,12 +31,18 @@ class ColorPicker extends Component {
     // this.on('history:stateChange', () => {
     //   this.setState({ urlBase: getUrlBase() });
     // });
+    this.emitHook('init:after');
   }
 
   componentDidMount() {
     this.el = this.base;
     this.stylesheet = new IroStyleSheet();
     this.updateStylesheet();
+    this.emitHook('init:mount');
+  }
+
+  mounted() {
+    this.emit('mount', this);
   }
 
   render(props, { color, urlBase }) {
@@ -61,10 +69,6 @@ class ColorPicker extends Component {
     )
   }
 
-  mounted() {
-    this.emit('mount', this);
-  }
-
   /**
     * @desc Set a callback function for an event
     * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
@@ -72,6 +76,7 @@ class ColorPicker extends Component {
   */
   on(eventType, callback) {
     const events = this._events;
+    this.emitHook('event:on', eventType, callback);
     (events[eventType] || (events[eventType] = [])).push(callback);
   }
 
@@ -82,6 +87,7 @@ class ColorPicker extends Component {
   */
   off(eventType, callback) {
     const callbackList = this._events[eventType];
+    this.emitHook('event:off', eventType, callback);
     if (callbackList) callbackList.splice(callbackList.indexOf(callback), 1);
   }
 
@@ -91,9 +97,23 @@ class ColorPicker extends Component {
     * @param {Array} args array of args to pass to callbacks
   */
   emit(eventType, ...args) {
+    // Events are plugin hooks too
+    this.emitHook(eventType, ...args);
     const callbackList = this._events[eventType] || [];
     for (let i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args); 
+    }
+  }
+
+  static addHook(hookType, callback) {
+    const pluginHooks = ColorPicker.pluginHooks;
+    (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
+  }
+
+  emitHook(hookType, ...args) {
+    const callbackList = ColorPicker.pluginHooks[hookType] || [];
+    for (let i = 0; i < callbackList.length; i++) {
+      callbackList[i].apply(this, args); 
     }
   }
 
@@ -117,7 +137,9 @@ class ColorPicker extends Component {
     * @param {Object} changes shows which h,s,v color channels changed
   */
   update(color, changes) {
+    this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: color });
+    this.emitHook('color:afterUpdate', color, changes);
     this.updateStylesheet();
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
@@ -137,13 +159,12 @@ class ColorPicker extends Component {
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
-    if (type === 'START') {
-      this.emit('input:start', this.color);
-    } else if (type === "END") {
-      this.emit('input:end', this.color);
-    }
+    let eventType = { START: 'input:start', MOVE: 'input:move', END: 'input:end' }[type];
+    this.emit(eventType, this.color);
   }
 }
+
+ColorPicker.pluginHooks = {};
 
 ColorPicker.defaultProps = {
   width: 300,
