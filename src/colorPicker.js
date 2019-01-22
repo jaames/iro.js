@@ -13,9 +13,11 @@ class ColorPicker extends Component {
     this._colorChangeActive = false;
     this.color = new IroColor(props.color);
     // Whenever the color changes, update the color wheel
-    this.color._onChange = this.update.bind(this);
+    this.color._onChange = this.updateColor.bind(this);
     this.state = {
-      color: this.color
+      color: this.color,
+      width: props.width,
+      height: props.height
     };
     this.emitHook('init:state');
     this.ui = [
@@ -29,27 +31,34 @@ class ColorPicker extends Component {
     this.emit('mount', this);
   }
 
-  render(props, { color }) {
+  render(props, state) {
     return (
       <div 
         class="iro__colorPicker"
         style={{
           display: props.display,
-          width: props.width
+          width: state.width
         }}
       >
         {this.ui.map(({element: UiElement, options: options}) => (
           <UiElement 
             {...props}
             {...options}
+            {...state}
             onInput={ (type, hsv) => this.handleInput(type, hsv) }
             parent={ this }
-            color={ color }
-            width={ props.width }
           />
         ))}
       </div>
     )
+  }
+
+  reset() {
+    this.color.set(this.props.color);
+  }
+
+  resize(width, height) {
+    this.setState({width, height});
   }
 
   /**
@@ -105,7 +114,7 @@ class ColorPicker extends Component {
     * @param {IroColor} color current color
     * @param {Object} changes shows which h,s,v color channels changed
   */
-  update(color, changes) {
+  updateColor(color, changes) {
     this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: color });
     this.emitHook('color:afterUpdate', color, changes);

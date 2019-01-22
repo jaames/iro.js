@@ -5,6 +5,7 @@
  * github.com/jaames/iro.js
  */
 
+(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -705,6 +706,7 @@
 	function render(vnode, parent, merge) {
 	  return diff(merge, vnode, {}, false, parent, false);
 	}
+	//# sourceMappingURL=preact.mjs.map
 
 	/**
 	  * @desc listen to one or more events on an element
@@ -1433,9 +1435,11 @@
 	    this._colorChangeActive = false;
 	    this.color = new color(props.color);
 	    // Whenever the color changes, update the color wheel
-	    this.color._onChange = this.update.bind(this);
+	    this.color._onChange = this.updateColor.bind(this);
 	    this.state = {
-	      color: this.color
+	      color: this.color,
+	      width: props.width,
+	      height: props.height
 	    };
 	    this.emitHook('init:state');
 	    this.ui = [
@@ -1452,15 +1456,14 @@
 	    this.emit('mount', this);
 	  };
 
-	  ColorPicker.prototype.render = function render$$1 (props, ref) {
+	  ColorPicker.prototype.render = function render$$1 (props, state) {
 	    var this$1 = this;
-	    var color$$1 = ref.color;
 
 	    return (
 	      h( 'div', { 
 	        class: "iro__colorPicker", style: {
 	          display: props.display,
-	          width: props.width
+	          width: state.width
 	        } },
 	        this.ui.map(function (ref) {
 	          var UiElement = ref.element;
@@ -1468,11 +1471,19 @@
 
 	          return (
 	          h( UiElement, Object.assign({}, 
-	            props, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1, color: color$$1, width: props.width }))
+	            props, options$$1, state, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1 }))
 	        );
 	    })
 	      )
 	    )
+	  };
+
+	  ColorPicker.prototype.reset = function reset () {
+	    this.color.set(this.props.color);
+	  };
+
+	  ColorPicker.prototype.resize = function resize (width, height) {
+	    this.setState({width: width, height: height});
 	  };
 
 	  /**
@@ -1535,7 +1546,7 @@
 	    * @param {IroColor} color current color
 	    * @param {Object} changes shows which h,s,v color channels changed
 	  */
-	  ColorPicker.prototype.update = function update (color$$1, changes) {
+	  ColorPicker.prototype.updateColor = function updateColor (color$$1, changes) {
 	    this.emitHook('color:beforeUpdate', color$$1, changes);
 	    this.setState({ color: color$$1 });
 	    this.emitHook('color:afterUpdate', color$$1, changes);
