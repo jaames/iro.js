@@ -22,15 +22,6 @@ function parseColorStr(str, maxValues) {
 };
 
 /**
-  * @desc convert object / string input to color if necessary
-  * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @return {color} color instance
-*/
-function getColor(value) {
-  return value instanceof color ? value : new color(value);
-};
-
-/**
   * @desc clamp value between min and max
   * @param {Number} value
   * @param {Number} min
@@ -64,52 +55,6 @@ export default class color {
     // The default color value
     this._value = {h: undefined, s: undefined, v: undefined};
     if (value) this.set(value);
-  }
-
-  /**
-    * @desc mix two colors
-    * @param {Object | String | color} color1 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-    * @param {Object | String | color} color2 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-    * @param {Number} weight - closer to 0 = more color1, closer to 100 = more color2
-    * @return {color} color instance
-  */
-  static mix(color1, color2, weight) {
-    var rgb1 = getColor(color1).rgb,
-      rgb2 = getColor(color2).rgb;
-    weight = clamp((weight / 100 || 0.5), 0, 1);
-    return new color({
-      r: floor(rgb1.r + (rgb2.r - rgb1.r) * weight),
-      g: floor(rgb1.g + (rgb2.g - rgb1.g) * weight),
-      b: floor(rgb1.b + (rgb2.b - rgb1.b) * weight),
-    });
-  }
-
-  /**
-    * @desc lighten color by amount
-    * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-    * @param {Number} amount
-    * @return {color} color instance
-  */
-  static lighten(color, amount) {
-    var col = getColor(color),
-       hsv = col.hsv;
-    hsv.v = clamp(hsv.v + amount, 0, 100);
-    col.hsv = hsv;
-    return col;
-  }
-
-  /**
-    * @desc darken color by amount
-    * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-    * @param {Number} amount
-    * @return {color} color instance
-  */
-  static darken(color, amount) {
-    var col = getColor(color),
-        hsv = col.hsv;
-    hsv.v = clamp(hsv.v - amount, 0, 100);
-    col.hsv = hsv;
-    return col;
   }
 
   /**
@@ -399,41 +344,5 @@ export default class color {
   */
   clone() {
     return new color(this);
-  }
-
-  /**
-    * @desc compare this color against another, returns a object representing changes with true/false values
-    * @param {Object | String | color} color - color to compare against
-    * @param {String} model - hsv | hsl | rgb
-    * @return {Object}
-  */
-  compare(color, model) {
-    model = model || "hsv";
-    return compareObjs(this[model], getColor(color)[model]);
-  }
-
-  /**
-    * @desc mix a color into this one
-    * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-    * @param {Number} weight - closer to 0 = more current color, closer to 100 = more new color
-  */
-  mix(color, weight) {
-    this.hsv = color.mix(this, color, weight).hsv;
-  }
-
-  /**
-    * @desc lighten color by amount
-    * @param {Number} amount
-  */
-  lighten(amount) {
-    color.lighten(this, amount);
-  }
-
-  /**
-    * @desc darken color by amount
-    * @param {Number} amount
-  */
-  darken(amount) {
-    color.darken(this, amount);
   }
 }

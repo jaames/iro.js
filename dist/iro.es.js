@@ -798,21 +798,6 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
   return IroComponent;
 }(Component));
 
-function IroHandle(ref) {
-  var x = ref.x;
-  var y = ref.y;
-  var r = ref.r;
-
-  return (
-    h( 'svg', { class: "iro__handle", x: x, y: y, overflow: "visible" },
-      h( 'circle', { 
-        class: "iro__handle__inner", r: r, fill: "none", 'stroke-width': 5, stroke: "#000" }),
-      h( 'circle', { 
-        class: "iro__handle__outer", r: r, fill: "none", 'stroke-width': 2, stroke: "#fff" })
-    )
-  );
-}
-
 /**
  * Fix related to how Safari handles gradient URLS under certain conditions
  * TL;DR if a page is using a client-side routing library which makes use of the HTML <base> tag, 
@@ -827,8 +812,7 @@ function resolveUrl(url) {
   // Sniff useragent string to check if the user is running Safari
   var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
   var location = window.location;
-  var path = isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
-  return ("url(" + path + ")");
+  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
 }
 
 function createArcPath(cx, cy, radius, startAngle, endAngle) {
@@ -842,6 +826,38 @@ function createArcPath(cx, cy, radius, startAngle, endAngle) {
   return ("M " + x1 + " " + y1 + " A " + radius + " " + radius + " 0 " + largeArcFlag + " 0 " + x2 + " " + y2);
 }
 
+function IroHandle(ref) {
+  var x = ref.x;
+  var y = ref.y;
+  var r = ref.r;
+  var origin = ref.origin;
+  var url = ref.url;
+
+  return (
+    h( 'svg', { class: "iro__handle", x: x - origin.x, y: y - origin.y, overflow: "visible" },
+      url && (
+        h( 'use', { xlinkHref: resolveUrl(url), x: "0", y: "0" })
+      ),
+      !url && (
+        h( 'circle', { 
+          class: "iro__handle__inner", r: r, fill: "none", 'stroke-width': 2, stroke: "#000" })
+      ),
+      !url && (
+        h( 'circle', { 
+          class: "iro__handle__outer", r: r - 2, fill: "none", 'stroke-width': 2, stroke: "#fff" })
+      )
+    )
+  );
+}
+
+IroHandle.defaultProps = {
+  x: 0,
+  y: 0,
+  r: 8,
+  url: null,
+  origin: {x: 0, y: 0}
+};
+
 var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   function IroWheel () {
     IroComponent$$1.apply(this, arguments);
@@ -851,19 +867,21 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   IroWheel.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroWheel.prototype.constructor = IroWheel;
 
-  IroWheel.prototype.render = function render$$1 (ref) {
-    var color = ref.color;
-    var width = ref.width;
-    var padding = ref.padding;
-    var borderWidth = ref.borderWidth;
-    var borderColor = ref.borderColor;
-    var handleRadius = ref.handleRadius;
-    var anticlockwise = ref.anticlockwise;
-    var urlBase = ref.urlBase;
-
+  IroWheel.prototype.componentWillReceiveProps = function componentWillReceiveProps (props) {
+    console.log(props);
+  };
+  
+  IroWheel.prototype.render = function render$$1 (props) {
+    var color = props.color;
+    var width = props.width;
+    var padding = props.padding;
+    var borderWidth = props.borderWidth;
+    var borderColor = props.borderColor;
+    var handleRadius = props.handleRadius;
+    var wheelLightness = props.wheelLightness;
     var hsv = color.hsv;
     var radius = (width / 2) - borderWidth;
-    var handleAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
+    var handleAngle = (360 - hsv.h) * (Math.PI / 180);
     var handleDist = (hsv.s / 100) * (radius - padding - handleRadius - borderWidth);
     var cX = radius + borderWidth;
     var cY = radius + borderWidth;
@@ -877,23 +895,24 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
         h( 'defs', null,
           h( 'radialGradient', { id: "iroWheel" },
             h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
-            h( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': 0 })
+            h( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': "0" })
           )
         ),
         h( 'g', { class: "iro__wheel__hue", 'stroke-width': radius, fill: "none" },
           Array.apply(null, { length: 360 }).map(function (_, hue) { return (
             h( 'path', { 
-              key: hue, d: createArcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (anticlockwise ? 360 - hue : hue) + ", 100%, 50%)") })
+              key: hue, d: createArcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (360 - hue) + ", 100%, 50%)") })
           ); })
         ),
         h( 'circle', { 
-          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: resolveUrl('#iroWheel') }),
-        h( 'circle', { 
-          class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 }),
+          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + (resolveUrl('#iroWheel')) + ")") }),
+        wheelLightness && (
+          h( 'circle', { 
+            class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 })),
         h( 'circle', { 
           class: "iro__wheel__border", cx: cX, cy: cY, r: radius, fill: "none", stroke: borderColor, 'stroke-width': borderWidth }),
         h( IroHandle, { 
-          r: handleRadius, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
+          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
       )
     );
   };
@@ -914,7 +933,6 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
     var padding = ref$1.padding;
     var handleRadius = ref$1.handleRadius;
     var borderWidth = ref$1.borderWidth;
-    var anticlockwise = ref$1.anticlockwise;
     var onInput = ref$1.onInput;
     var radius = width / 2;
     var handleRange = (radius - padding - handleRadius - borderWidth);
@@ -926,8 +944,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
 
     var handleAngle = Math.atan2(y, x);
     // Calculate the hue by converting the angle to radians
-    var hue = Math.round(handleAngle * (180 / Math.PI)) + 180;
-    hue = (anticlockwise ? 360 - hue : hue);
+    var hue = 360 - (Math.round(handleAngle * (180 / Math.PI)) + 180);
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
     var handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
@@ -963,24 +980,6 @@ function parseColorStr(str, maxValues) {
   ];
 }
 /**
-  * @desc convert object / string input to color if necessary
-  * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @return {color} color instance
-*/
-function getColor(value) {
-  return value instanceof color ? value : new color(value);
-}
-/**
-  * @desc clamp value between min and max
-  * @param {Number} value
-  * @param {Number} min
-  * @param {Number} max
-  * @return {Number}
-*/
-function clamp(value, min, max) {
-  return value <= min ? min : value >= max ? max : value;
-}
-/**
   * @desc compare values between two objects, returns a object representing changes with true/false values
   * @param {Object} a
   * @param {Object} b
@@ -1000,52 +999,6 @@ var color = function color(value) {
 };
 
 var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true },hsl: { configurable: true },rgbString: { configurable: true },hexString: { configurable: true },hslString: { configurable: true } };
-
-/**
-  * @desc mix two colors
-  * @param {Object | String | color} color1 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @param {Object | String | color} color2 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @param {Number} weight - closer to 0 = more color1, closer to 100 = more color2
-  * @return {color} color instance
-*/
-color.mix = function mix (color1, color2, weight) {
-  var rgb1 = getColor(color1).rgb,
-    rgb2 = getColor(color2).rgb;
-  weight = clamp((weight / 100 || 0.5), 0, 1);
-  return new color({
-    r: floor(rgb1.r + (rgb2.r - rgb1.r) * weight),
-    g: floor(rgb1.g + (rgb2.g - rgb1.g) * weight),
-    b: floor(rgb1.b + (rgb2.b - rgb1.b) * weight),
-  });
-};
-
-/**
-  * @desc lighten color by amount
-  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @param {Number} amount
-  * @return {color} color instance
-*/
-color.lighten = function lighten (color, amount) {
-  var col = getColor(color),
-     hsv = col.hsv;
-  hsv.v = clamp(hsv.v + amount, 0, 100);
-  col.hsv = hsv;
-  return col;
-};
-
-/**
-  * @desc darken color by amount
-  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @param {Number} amount
-  * @return {color} color instance
-*/
-color.darken = function darken (color, amount) {
-  var col = getColor(color),
-      hsv = col.hsv;
-  hsv.v = clamp(hsv.v - amount, 0, 100);
-  col.hsv = hsv;
-  return col;
-};
 
 /**
   * @desc convert hsv object to rgb
@@ -1357,42 +1310,6 @@ color.prototype.clone = function clone () {
   return new color(this);
 };
 
-/**
-  * @desc compare this color against another, returns a object representing changes with true/false values
-  * @param {Object | String | color} color - color to compare against
-  * @param {String} model - hsv | hsl | rgb
-  * @return {Object}
-*/
-color.prototype.compare = function compare (color, model) {
-  model = model || "hsv";
-  return compareObjs(this[model], getColor(color)[model]);
-};
-
-/**
-  * @desc mix a color into this one
-  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-  * @param {Number} weight - closer to 0 = more current color, closer to 100 = more new color
-*/
-color.prototype.mix = function mix (color, weight) {
-  this.hsv = color.mix(this, color, weight).hsv;
-};
-
-/**
-  * @desc lighten color by amount
-  * @param {Number} amount
-*/
-color.prototype.lighten = function lighten (amount) {
-  color.lighten(this, amount);
-};
-
-/**
-  * @desc darken color by amount
-  * @param {Number} amount
-*/
-color.prototype.darken = function darken (amount) {
-  color.darken(this, amount);
-};
-
 Object.defineProperties( color.prototype, prototypeAccessors );
 
 var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
@@ -1404,15 +1321,22 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
   IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroSlider.prototype.constructor = IroSlider;
 
-  IroSlider.prototype.render = function render$$1 (ref) {
-    var color$$1 = ref.color;
-    var width = ref.width;
-    var sliderHeight = ref.sliderHeight;
-    var sliderMargin = ref.sliderMargin;
-    var borderWidth = ref.borderWidth;
-    var borderColor = ref.borderColor;
-    var handleRadius = ref.handleRadius;
+  IroSlider.prototype.componentWillReceiveProps = function componentWillReceiveProps (props) {
+    console.log(props);
+  };
 
+  IroSlider.prototype.render = function render$$1 (props) {
+    var color$$1 = props.color;
+    var width = props.width;
+    var sliderHeight = props.sliderHeight;
+    var sliderMargin = props.sliderMargin;
+    var borderWidth = props.borderWidth;
+    var borderColor = props.borderColor;
+    var handleRadius = props.handleRadius;
+    var padding = props.padding;
+    sliderHeight = sliderHeight ? sliderHeight : padding * 2 + handleRadius * 2 + borderWidth * 2;
+    this.width = width;
+    this.height = sliderHeight;
     var cornerRadius = sliderHeight / 2;
     var range = width - cornerRadius * 2;
     var hsv = color$$1.hsv;
@@ -1432,9 +1356,9 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
           )
         ),
         h( 'rect', { 
-          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: resolveUrl('#iroSlider') }),
+          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: ("url(" + (resolveUrl('#iroSlider')) + ")") }),
         h( IroHandle, {
-          r: handleRadius, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
+          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
       )
     );
   };
@@ -1450,137 +1374,17 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
     var left = ref.left;
     var right = ref.right;
 
-    var ref$1 = this.props;
-    var sliderHeight = ref$1.sliderHeight;
-    var width = ref$1.width;
-    var onInput = ref$1.onInput;
-    var cornerRadius = sliderHeight / 2;
-    var handleRange = width - (cornerRadius * 2);
+    var cornerRadius = this.height / 2;
+    var handleRange = this.width - (cornerRadius * 2);
     x = x - (left + cornerRadius);
     var dist = Math.max(Math.min(x, handleRange), 0);
-    onInput(type, {
+    this.props.onInput(type, {
       v: Math.round((100 / handleRange) * dist)
     });
   };
 
   return IroSlider;
 }(IroComponent));
-
-var stylesheet = function stylesheet() {
-  // Create a new style element
-  var style = document.createElement("style");
-  document.head.appendChild(style);
-  // Webkit apparently requires a text node to be inserted into the style element
-  // (according to https://davidwalsh.name/add-rules-stylesheets)
-  style.appendChild(document.createTextNode(""));
-  this.style = style;
-  // Create a reference to the style element's CSSStyleSheet object
-  // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
-  var sheet = style.sheet;
-  this.sheet = sheet;
-  // Get a reference to the sheet's CSSRuleList object
-  // CSSRuleList API: https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList
-  this.rules = sheet.rules || sheet.cssRules;
-  // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
-  // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
-  this.map = {};
-};
-
-var prototypeAccessors$1 = { enabled: { configurable: true },cssText: { configurable: true },css: { configurable: true } };
-
-/**
-  * @desc Set a specific rule for a given selector
-  * @param {String} selector - the CSS selector for this rule (e.g. "body", ".class", "#id")
-  * @param {String} property - the CSS property to set (e.g. "background-color", "font-family", "z-index")
-  * @param {String} value  - the new value for the rule (e.g. "rgb(255, 255, 255)", "Helvetica", "99")
-*/
-stylesheet.prototype.setRule = function setRule (selector, property, value) {
-  var sheet = this.sheet;
-  var rules = sheet.rules || sheet.cssRules;
-  var map = this.map;
-  // Convert property from camelCase to snake-case
-  property = property.replace(/([A-Z])/g, function($1) {
-    return "-" + $1.toLowerCase();
-  });
-  if (!map.hasOwnProperty(selector)) {
-    // If the selector hasn't been used yet we want to insert the rule at the end of the CSSRuleList, so we use its length as the index value
-    var index = rules.length;
-    // Prepare the rule declaration text, since both insertRule and addRule take this format
-    var declaration = property + ": " + value;
-    // Insert the new rule into the stylesheet
-    try {
-      // Some browsers only support insertRule, others only support addRule, so we have to use both
-      sheet.insertRule(selector + " {" + declaration + ";}", index);
-    } catch(e) {
-      sheet.addRule(selector, declaration, index);
-    } finally {
-      // Because safari is perhaps the worst browser in all of history, we have to remind it to keep the sheet rules up-to-date
-      rules = sheet.rules || sheet.cssRules;
-      // Add our newly inserted rule's CSSStyleDeclaration object to the internal map
-      map[selector] = rules[index].style;
-    }
-  }
-  else {
-    map[selector].setProperty(property, value);
-  }
-};
-
-prototypeAccessors$1.enabled.get = function () {
-  return !this.sheet.disabled;
-};
-
-prototypeAccessors$1.enabled.set = function (value) {
-  this.sheet.disabled = !value;
-};
-
-/**
-  * @desc Get the stylesheet text
-  * @return {String} css text
-*/
-prototypeAccessors$1.cssText.get = function () {
-  var map = this.map;
-  var ret = [];
-  for (var selector in map) {
-    ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-  }
-  return ret.join("\n");
-};
-
-/**
-  * @desc Get an object representing the current css styles
-  * @return {Object} css object
-*/
-prototypeAccessors$1.css.get = function () {
-  var map = this.map;
-  var ret = {};
-  for (var selector in map) {
-    var ruleSet = map[selector];
-    ret[selector] = {};
-    for (var i = 0; i < ruleSet.length; i++) {
-      var property = ruleSet[i];
-      ret[selector][property] = ruleSet.getPropertyValue(property);
-    }
-  }
-  return ret;
-};
-
-Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
-
-// Fix related to how Safari handles gradient URLS under certain conditions
-
-// TL;DR if a page is using a client-side routing library which makes use of the HTML <base> tag, 
-// Safari won't be able to render SVG gradients properly (as they are referenced by URLs)
-// More info on the problem: 
-// https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
-// https://github.com/jaames/iro.js/issues/18
-// https://github.com/jaames/iro.js/issues/45
-
-function getUrlBase() {
-  // Sniff useragent string to check if the user is running Safari
-  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-  var location = window.location;
-  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search)) : '';
-}
 
 function createWidget(widgetComponent) {
 
@@ -1625,32 +1429,18 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.update.bind(this);
     this.state = {
-      color: this.color,
-      urlBase: getUrlBase()
+      color: this.color
     };
     this.emitHook('init:state');
     this.ui = [
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}} ];
-    // deprecated -- use colorPicker.forceUpdate() instead
-    // Fix for a gradient rendering but when certain cliet-side routing libraries in Safari
-    // See https://github.com/jaames/iro.js/issues/18
-    // this.on('history:stateChange', () => {
-    //   this.setState({ urlBase: getUrlBase() });
-    // });
     this.emitHook('init:after');
   }
 
   if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
   ColorPicker.prototype = Object.create( Component$$1 && Component$$1.prototype );
   ColorPicker.prototype.constructor = ColorPicker;
-
-  ColorPicker.prototype.componentDidMount = function componentDidMount () {
-    this.el = this.base;
-    this.stylesheet = new stylesheet();
-    this.updateStylesheet();
-    this.emitHook('init:mount');
-  };
 
   ColorPicker.prototype.mounted = function mounted () {
     this.emit('mount', this);
@@ -1659,7 +1449,6 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
   ColorPicker.prototype.render = function render$$1 (props, ref) {
     var this$1 = this;
     var color$$1 = ref.color;
-    var urlBase = ref.urlBase;
 
     return (
       h( 'div', { 
@@ -1673,7 +1462,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
 
           return (
           h( UiElement, Object.assign({}, 
-            props, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1, color: color$$1, width: props.width, urlBase: urlBase }))
+            props, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1, color: color$$1, width: props.width }))
         );
     })
       )
@@ -1736,20 +1525,6 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
   };
 
   /**
-    * @desc Update dynamic stylesheet to match the current color
-  */
-  ColorPicker.prototype.updateStylesheet = function updateStylesheet () {
-    var css = this.props.css;
-    var rgb = this.color.rgbString;
-    for (var selector in css) {
-      var properties = css[selector];
-      for (var property in properties) {
-        this.stylesheet.setRule(selector, property, rgb);
-      }
-    }
-  };
-
-  /**
     * @desc React to the color updating
     * @param {IroColor} color current color
     * @param {Object} changes shows which h,s,v color channels changed
@@ -1758,7 +1533,6 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     this.emitHook('color:beforeUpdate', color$$1, changes);
     this.setState({ color: color$$1 });
     this.emitHook('color:afterUpdate', color$$1, changes);
-    this.updateStylesheet();
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
@@ -1790,15 +1564,16 @@ ColorPicker.defaultProps = {
   width: 300,
   height: 300,
   handleRadius: 8,
+  handleUrl: null,
+  handleOrigin: {x: 0, y: 0},
   color: "#fff",
   borderColor: "#fff",
   borderWidth: 0,
   display: 'block',
-  anticlockwise: false,
-  sliderHeight: 32,
-  sliderMargin: 8,
+  wheelLightness: true,
+  sliderHeight: null,
+  sliderMargin: 12,
   padding: 6,
-  css: {}
 };
 
 var ColorPicker$1 = createWidget(ColorPicker);
@@ -1827,7 +1602,6 @@ function usePlugins(core) {
 var iro = usePlugins({
   Color: color,
   ColorPicker: ColorPicker$1,
-  Stylesheet: stylesheet,
   ui: {
     Component: IroComponent,
     Handle: IroHandle,

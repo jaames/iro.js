@@ -5,7 +5,6 @@
  * github.com/jaames/iro.js
  */
 
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -706,7 +705,6 @@
 	function render(vnode, parent, merge) {
 	  return diff(merge, vnode, {}, false, parent, false);
 	}
-	//# sourceMappingURL=preact.mjs.map
 
 	/**
 	  * @desc listen to one or more events on an element
@@ -988,24 +986,6 @@
 	  ];
 	}
 	/**
-	  * @desc convert object / string input to color if necessary
-	  * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-	  * @return {color} color instance
-	*/
-	function getColor(value) {
-	  return value instanceof color ? value : new color(value);
-	}
-	/**
-	  * @desc clamp value between min and max
-	  * @param {Number} value
-	  * @param {Number} min
-	  * @param {Number} max
-	  * @return {Number}
-	*/
-	function clamp(value, min, max) {
-	  return value <= min ? min : value >= max ? max : value;
-	}
-	/**
 	  * @desc compare values between two objects, returns a object representing changes with true/false values
 	  * @param {Object} a
 	  * @param {Object} b
@@ -1025,52 +1005,6 @@
 	};
 
 	var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true },hsl: { configurable: true },rgbString: { configurable: true },hexString: { configurable: true },hslString: { configurable: true } };
-
-	/**
-	  * @desc mix two colors
-	  * @param {Object | String | color} color1 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-	  * @param {Object | String | color} color2 - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-	  * @param {Number} weight - closer to 0 = more color1, closer to 100 = more color2
-	  * @return {color} color instance
-	*/
-	color.mix = function mix (color1, color2, weight) {
-	  var rgb1 = getColor(color1).rgb,
-	    rgb2 = getColor(color2).rgb;
-	  weight = clamp((weight / 100 || 0.5), 0, 1);
-	  return new color({
-	    r: floor(rgb1.r + (rgb2.r - rgb1.r) * weight),
-	    g: floor(rgb1.g + (rgb2.g - rgb1.g) * weight),
-	    b: floor(rgb1.b + (rgb2.b - rgb1.b) * weight),
-	  });
-	};
-
-	/**
-	  * @desc lighten color by amount
-	  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-	  * @param {Number} amount
-	  * @return {color} color instance
-	*/
-	color.lighten = function lighten (color, amount) {
-	  var col = getColor(color),
-	     hsv = col.hsv;
-	  hsv.v = clamp(hsv.v + amount, 0, 100);
-	  col.hsv = hsv;
-	  return col;
-	};
-
-	/**
-	  * @desc darken color by amount
-	  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-	  * @param {Number} amount
-	  * @return {color} color instance
-	*/
-	color.darken = function darken (color, amount) {
-	  var col = getColor(color),
-	      hsv = col.hsv;
-	  hsv.v = clamp(hsv.v - amount, 0, 100);
-	  col.hsv = hsv;
-	  return col;
-	};
 
 	/**
 	  * @desc convert hsv object to rgb
@@ -1382,42 +1316,6 @@
 	  return new color(this);
 	};
 
-	/**
-	  * @desc compare this color against another, returns a object representing changes with true/false values
-	  * @param {Object | String | color} color - color to compare against
-	  * @param {String} model - hsv | hsl | rgb
-	  * @return {Object}
-	*/
-	color.prototype.compare = function compare (color, model) {
-	  model = model || "hsv";
-	  return compareObjs(this[model], getColor(color)[model]);
-	};
-
-	/**
-	  * @desc mix a color into this one
-	  * @param {Object | String | color} color - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-	  * @param {Number} weight - closer to 0 = more current color, closer to 100 = more new color
-	*/
-	color.prototype.mix = function mix (color, weight) {
-	  this.hsv = color.mix(this, color, weight).hsv;
-	};
-
-	/**
-	  * @desc lighten color by amount
-	  * @param {Number} amount
-	*/
-	color.prototype.lighten = function lighten (amount) {
-	  color.lighten(this, amount);
-	};
-
-	/**
-	  * @desc darken color by amount
-	  * @param {Number} amount
-	*/
-	color.prototype.darken = function darken (amount) {
-	  color.darken(this, amount);
-	};
-
 	Object.defineProperties( color.prototype, prototypeAccessors );
 
 	var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
@@ -1494,106 +1392,6 @@
 	  return IroSlider;
 	}(IroComponent));
 
-	var stylesheet = function stylesheet() {
-	  // Create a new style element
-	  var style = document.createElement("style");
-	  document.head.appendChild(style);
-	  // Webkit apparently requires a text node to be inserted into the style element
-	  // (according to https://davidwalsh.name/add-rules-stylesheets)
-	  style.appendChild(document.createTextNode(""));
-	  this.style = style;
-	  // Create a reference to the style element's CSSStyleSheet object
-	  // CSSStyleSheet API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet
-	  var sheet = style.sheet;
-	  this.sheet = sheet;
-	  // Get a reference to the sheet's CSSRuleList object
-	  // CSSRuleList API: https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList
-	  this.rules = sheet.rules || sheet.cssRules;
-	  // We'll store references to all the CSSStyleDeclaration objects that we change here, keyed by the CSS selector they belong to
-	  // CSSStyleDeclaration API: https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
-	  this.map = {};
-	};
-
-	var prototypeAccessors$1 = { enabled: { configurable: true },cssText: { configurable: true },css: { configurable: true } };
-
-	/**
-	  * @desc Set a specific rule for a given selector
-	  * @param {String} selector - the CSS selector for this rule (e.g. "body", ".class", "#id")
-	  * @param {String} property - the CSS property to set (e.g. "background-color", "font-family", "z-index")
-	  * @param {String} value  - the new value for the rule (e.g. "rgb(255, 255, 255)", "Helvetica", "99")
-	*/
-	stylesheet.prototype.setRule = function setRule (selector, property, value) {
-	  var sheet = this.sheet;
-	  var rules = sheet.rules || sheet.cssRules;
-	  var map = this.map;
-	  // Convert property from camelCase to snake-case
-	  property = property.replace(/([A-Z])/g, function($1) {
-	    return "-" + $1.toLowerCase();
-	  });
-	  if (!map.hasOwnProperty(selector)) {
-	    // If the selector hasn't been used yet we want to insert the rule at the end of the CSSRuleList, so we use its length as the index value
-	    var index = rules.length;
-	    // Prepare the rule declaration text, since both insertRule and addRule take this format
-	    var declaration = property + ": " + value;
-	    // Insert the new rule into the stylesheet
-	    try {
-	      // Some browsers only support insertRule, others only support addRule, so we have to use both
-	      sheet.insertRule(selector + " {" + declaration + ";}", index);
-	    } catch(e) {
-	      sheet.addRule(selector, declaration, index);
-	    } finally {
-	      // Because safari is perhaps the worst browser in all of history, we have to remind it to keep the sheet rules up-to-date
-	      rules = sheet.rules || sheet.cssRules;
-	      // Add our newly inserted rule's CSSStyleDeclaration object to the internal map
-	      map[selector] = rules[index].style;
-	    }
-	  }
-	  else {
-	    map[selector].setProperty(property, value);
-	  }
-	};
-
-	prototypeAccessors$1.enabled.get = function () {
-	  return !this.sheet.disabled;
-	};
-
-	prototypeAccessors$1.enabled.set = function (value) {
-	  this.sheet.disabled = !value;
-	};
-
-	/**
-	  * @desc Get the stylesheet text
-	  * @return {String} css text
-	*/
-	prototypeAccessors$1.cssText.get = function () {
-	  var map = this.map;
-	  var ret = [];
-	  for (var selector in map) {
-	    ret.push(selector.replace(/,\W/g, ",\n") + " {\n\t" + map[selector].cssText.replace(/;\W/g, ";\n\t") + "\n}");
-	  }
-	  return ret.join("\n");
-	};
-
-	/**
-	  * @desc Get an object representing the current css styles
-	  * @return {Object} css object
-	*/
-	prototypeAccessors$1.css.get = function () {
-	  var map = this.map;
-	  var ret = {};
-	  for (var selector in map) {
-	    var ruleSet = map[selector];
-	    ret[selector] = {};
-	    for (var i = 0; i < ruleSet.length; i++) {
-	      var property = ruleSet[i];
-	      ret[selector][property] = ruleSet.getPropertyValue(property);
-	    }
-	  }
-	  return ret;
-	};
-
-	Object.defineProperties( stylesheet.prototype, prototypeAccessors$1 );
-
 	function createWidget(widgetComponent) {
 
 	  var widgetFactory = function (parent, props) {
@@ -1643,25 +1441,12 @@
 	    this.ui = [
 	      {element: IroWheel, options: {}},
 	      {element: IroSlider, options: {}} ];
-	    // deprecated -- use colorPicker.forceUpdate() instead
-	    // Fix for a gradient rendering but when certain cliet-side routing libraries in Safari
-	    // See https://github.com/jaames/iro.js/issues/18
-	    // this.on('history:stateChange', () => {
-	    //   this.setState({ urlBase: getUrlBase() });
-	    // });
 	    this.emitHook('init:after');
 	  }
 
 	  if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
 	  ColorPicker.prototype = Object.create( Component$$1 && Component$$1.prototype );
 	  ColorPicker.prototype.constructor = ColorPicker;
-
-	  ColorPicker.prototype.componentDidMount = function componentDidMount () {
-	    this.el = this.base;
-	    this.stylesheet = new stylesheet();
-	    this.updateStylesheet();
-	    this.emitHook('init:mount');
-	  };
 
 	  ColorPicker.prototype.mounted = function mounted () {
 	    this.emit('mount', this);
@@ -1746,20 +1531,6 @@
 	  };
 
 	  /**
-	    * @desc Update dynamic stylesheet to match the current color
-	  */
-	  ColorPicker.prototype.updateStylesheet = function updateStylesheet () {
-	    var css = this.props.css;
-	    var rgb = this.color.rgbString;
-	    for (var selector in css) {
-	      var properties = css[selector];
-	      for (var property in properties) {
-	        this.stylesheet.setRule(selector, property, rgb);
-	      }
-	    }
-	  };
-
-	  /**
 	    * @desc React to the color updating
 	    * @param {IroColor} color current color
 	    * @param {Object} changes shows which h,s,v color channels changed
@@ -1768,7 +1539,6 @@
 	    this.emitHook('color:beforeUpdate', color$$1, changes);
 	    this.setState({ color: color$$1 });
 	    this.emitHook('color:afterUpdate', color$$1, changes);
-	    this.updateStylesheet();
 	    // Prevent infinite loops if the color is set inside a `color:change` callback
 	    if (!this._colorChangeActive) {
 	      // While _colorChangeActive = true, this event cannot be fired
@@ -1810,7 +1580,6 @@
 	  sliderHeight: null,
 	  sliderMargin: 12,
 	  padding: 6,
-	  css: {}
 	};
 
 	var ColorPicker$1 = createWidget(ColorPicker);
@@ -1839,7 +1608,6 @@
 	var iro = usePlugins({
 	  Color: color,
 	  ColorPicker: ColorPicker$1,
-	  Stylesheet: stylesheet,
 	  ui: {
 	    Component: IroComponent,
 	    Handle: IroHandle,

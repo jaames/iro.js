@@ -3,7 +3,6 @@ import { h, Component } from 'preact';
 import IroWheel from 'ui/wheel';
 import IroSlider from 'ui/slider';
 import IroColor from './color';
-import IroStyleSheet from './stylesheet';
 import { createWidget } from 'util/createWidget';
 
 class ColorPicker extends Component {
@@ -23,20 +22,7 @@ class ColorPicker extends Component {
       {element: IroWheel, options: {}},
       {element: IroSlider, options: {}},
     ];
-    // deprecated -- use colorPicker.forceUpdate() instead
-    // Fix for a gradient rendering but when certain cliet-side routing libraries in Safari
-    // See https://github.com/jaames/iro.js/issues/18
-    // this.on('history:stateChange', () => {
-    //   this.setState({ urlBase: getUrlBase() });
-    // });
     this.emitHook('init:after');
-  }
-
-  componentDidMount() {
-    this.el = this.base;
-    this.stylesheet = new IroStyleSheet();
-    this.updateStylesheet();
-    this.emitHook('init:mount');
   }
 
   mounted() {
@@ -115,20 +101,6 @@ class ColorPicker extends Component {
   }
 
   /**
-    * @desc Update dynamic stylesheet to match the current color
-  */
-  updateStylesheet() {
-    const css = this.props.css;
-    const rgb = this.color.rgbString;
-    for (let selector in css) {
-      let properties = css[selector];
-      for (let property in properties) {
-        this.stylesheet.setRule(selector, property, rgb);
-      }
-    }
-  }
-
-  /**
     * @desc React to the color updating
     * @param {IroColor} color current color
     * @param {Object} changes shows which h,s,v color channels changed
@@ -137,7 +109,6 @@ class ColorPicker extends Component {
     this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: color });
     this.emitHook('color:afterUpdate', color, changes);
-    this.updateStylesheet();
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
@@ -177,7 +148,6 @@ ColorPicker.defaultProps = {
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
-  css: {}
 }
 
 export default createWidget(ColorPicker);
