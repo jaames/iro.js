@@ -167,13 +167,15 @@ ColorPicker.defaultProps = {
   width: 300,
   height: 300,
   handleRadius: 8,
+  handleUrl: null,
+  handleOrigin: {x: 0, y: 0},
   color: "#fff",
   borderColor: "#fff",
   borderWidth: 0,
   display: 'block',
-  anticlockwise: false,
-  sliderHeight: 32,
-  sliderMargin: 8,
+  wheelLightness: true,
+  sliderHeight: null,
+  sliderMargin: 12,
   padding: 6,
   css: {}
 }

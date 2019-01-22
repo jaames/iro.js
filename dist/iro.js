@@ -863,7 +863,7 @@
 	  y: 0,
 	  r: 8,
 	  url: null,
-	  origin: {x: 0, y: 10}
+	  origin: {x: 0, y: 0}
 	};
 
 	var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
@@ -875,19 +875,21 @@
 	  IroWheel.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
 	  IroWheel.prototype.constructor = IroWheel;
 
-	  IroWheel.prototype.render = function render$$1 (ref) {
-	    var color = ref.color;
-	    var width = ref.width;
-	    var padding = ref.padding;
-	    var borderWidth = ref.borderWidth;
-	    var borderColor = ref.borderColor;
-	    var handleRadius = ref.handleRadius;
-	    var anticlockwise = ref.anticlockwise;
-	    var urlBase = ref.urlBase;
-
+	  IroWheel.prototype.componentWillReceiveProps = function componentWillReceiveProps (props) {
+	    console.log(props);
+	  };
+	  
+	  IroWheel.prototype.render = function render$$1 (props) {
+	    var color = props.color;
+	    var width = props.width;
+	    var padding = props.padding;
+	    var borderWidth = props.borderWidth;
+	    var borderColor = props.borderColor;
+	    var handleRadius = props.handleRadius;
+	    var wheelLightness = props.wheelLightness;
 	    var hsv = color.hsv;
 	    var radius = (width / 2) - borderWidth;
-	    var handleAngle = (anticlockwise ? 360 - hsv.h : hsv.h) * (Math.PI / 180);
+	    var handleAngle = (360 - hsv.h) * (Math.PI / 180);
 	    var handleDist = (hsv.s / 100) * (radius - padding - handleRadius - borderWidth);
 	    var cX = radius + borderWidth;
 	    var cY = radius + borderWidth;
@@ -901,23 +903,24 @@
 	        h( 'defs', null,
 	          h( 'radialGradient', { id: "iroWheel" },
 	            h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
-	            h( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': 0 })
+	            h( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': "0" })
 	          )
 	        ),
 	        h( 'g', { class: "iro__wheel__hue", 'stroke-width': radius, fill: "none" },
 	          Array.apply(null, { length: 360 }).map(function (_, hue) { return (
 	            h( 'path', { 
-	              key: hue, d: createArcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (anticlockwise ? 360 - hue : hue) + ", 100%, 50%)") })
+	              key: hue, d: createArcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (360 - hue) + ", 100%, 50%)") })
 	          ); })
 	        ),
 	        h( 'circle', { 
 	          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + (resolveUrl('#iroWheel')) + ")") }),
-	        h( 'circle', { 
-	          class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 }),
+	        wheelLightness && (
+	          h( 'circle', { 
+	            class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 })),
 	        h( 'circle', { 
 	          class: "iro__wheel__border", cx: cX, cy: cY, r: radius, fill: "none", stroke: borderColor, 'stroke-width': borderWidth }),
 	        h( IroHandle, { 
-	          r: handleRadius, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
+	          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
 	      )
 	    );
 	  };
@@ -938,7 +941,6 @@
 	    var padding = ref$1.padding;
 	    var handleRadius = ref$1.handleRadius;
 	    var borderWidth = ref$1.borderWidth;
-	    var anticlockwise = ref$1.anticlockwise;
 	    var onInput = ref$1.onInput;
 	    var radius = width / 2;
 	    var handleRange = (radius - padding - handleRadius - borderWidth);
@@ -950,8 +952,7 @@
 
 	    var handleAngle = Math.atan2(y, x);
 	    // Calculate the hue by converting the angle to radians
-	    var hue = Math.round(handleAngle * (180 / Math.PI)) + 180;
-	    hue = (anticlockwise ? 360 - hue : hue);
+	    var hue = 360 - (Math.round(handleAngle * (180 / Math.PI)) + 180);
 	    // Find the point's distance from the center of the wheel
 	    // This is used to show the saturation level
 	    var handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
@@ -1428,15 +1429,22 @@
 	  IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
 	  IroSlider.prototype.constructor = IroSlider;
 
-	  IroSlider.prototype.render = function render$$1 (ref) {
-	    var color$$1 = ref.color;
-	    var width = ref.width;
-	    var sliderHeight = ref.sliderHeight;
-	    var sliderMargin = ref.sliderMargin;
-	    var borderWidth = ref.borderWidth;
-	    var borderColor = ref.borderColor;
-	    var handleRadius = ref.handleRadius;
+	  IroSlider.prototype.componentWillReceiveProps = function componentWillReceiveProps (props) {
+	    console.log(props);
+	  };
 
+	  IroSlider.prototype.render = function render$$1 (props) {
+	    var color$$1 = props.color;
+	    var width = props.width;
+	    var sliderHeight = props.sliderHeight;
+	    var sliderMargin = props.sliderMargin;
+	    var borderWidth = props.borderWidth;
+	    var borderColor = props.borderColor;
+	    var handleRadius = props.handleRadius;
+	    var padding = props.padding;
+	    sliderHeight = sliderHeight ? sliderHeight : padding * 2 + handleRadius * 2 + borderWidth * 2;
+	    this.width = width;
+	    this.height = sliderHeight;
 	    var cornerRadius = sliderHeight / 2;
 	    var range = width - cornerRadius * 2;
 	    var hsv = color$$1.hsv;
@@ -1458,7 +1466,7 @@
 	        h( 'rect', { 
 	          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: borderColor, fill: ("url(" + (resolveUrl('#iroSlider')) + ")") }),
 	        h( IroHandle, {
-	          r: handleRadius, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
+	          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
 	      )
 	    );
 	  };
@@ -1474,15 +1482,11 @@
 	    var left = ref.left;
 	    var right = ref.right;
 
-	    var ref$1 = this.props;
-	    var sliderHeight = ref$1.sliderHeight;
-	    var width = ref$1.width;
-	    var onInput = ref$1.onInput;
-	    var cornerRadius = sliderHeight / 2;
-	    var handleRange = width - (cornerRadius * 2);
+	    var cornerRadius = this.height / 2;
+	    var handleRange = this.width - (cornerRadius * 2);
 	    x = x - (left + cornerRadius);
 	    var dist = Math.max(Math.min(x, handleRange), 0);
-	    onInput(type, {
+	    this.props.onInput(type, {
 	      v: Math.round((100 / handleRange) * dist)
 	    });
 	  };
@@ -1796,13 +1800,15 @@
 	  width: 300,
 	  height: 300,
 	  handleRadius: 8,
+	  handleUrl: null,
+	  handleOrigin: {x: 0, y: 0},
 	  color: "#fff",
 	  borderColor: "#fff",
 	  borderWidth: 0,
 	  display: 'block',
-	  anticlockwise: false,
-	  sliderHeight: 32,
-	  sliderMargin: 8,
+	  wheelLightness: true,
+	  sliderHeight: null,
+	  sliderMargin: 12,
 	  padding: 6,
 	  css: {}
 	};

@@ -34,7 +34,7 @@ IroHandle.defaultProps = {
   y: 0,
   r: 8,
   url: null,
-  origin: {x: 0, y: 10}
+  origin: {x: 0, y: 0}
 };
 
 export default IroHandle;

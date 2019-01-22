@@ -7,7 +7,15 @@ import { resolveUrl } from '../util/svg';
 
 export default class IroSlider extends IroComponent {
 
-  render({ color, width, sliderHeight, sliderMargin, borderWidth, borderColor, handleRadius }) {
+  componentWillReceiveProps(props) {
+    console.log(props);
+  }
+
+  render(props) {
+    let { color, width, sliderHeight, sliderMargin, borderWidth, borderColor, handleRadius, padding } = props;
+    sliderHeight = sliderHeight ? sliderHeight : padding * 2 + handleRadius * 2 + borderWidth * 2;
+    this.width = width;
+    this.height = sliderHeight;
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2
     const hsv = color.hsv;
@@ -44,6 +52,8 @@ export default class IroSlider extends IroComponent {
         />
         <IroHandle
           r={ handleRadius }
+          url={ props.handleUrl }
+          origin={ props.handleOrigin }
           x={ cornerRadius + ((hsv.v / 100) * range) }
           y={ sliderHeight / 2 }
         />
@@ -59,12 +69,11 @@ export default class IroSlider extends IroComponent {
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
   handleInput(x, y, { left, right }, type) {
-    const { sliderHeight, width, onInput } = this.props;
-    const cornerRadius = sliderHeight / 2;
-    const handleRange = width - (cornerRadius * 2);
+    const cornerRadius = this.height / 2;
+    const handleRange = this.width - (cornerRadius * 2);
     x = x - (left + cornerRadius);
     let dist = Math.max(Math.min(x, handleRange), 0);
-    onInput(type, {
+    this.props.onInput(type, {
       v: Math.round((100 / handleRange) * dist)
     });
   }
