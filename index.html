@@ -12,21 +12,14 @@
       var demo = new iro.ColorPicker("#demoWheel", {
         width: 360,
         height: 360,
-        markerRadius: 8,
+        handleRadius: 8,
+        handleUrl: null,
+        // handleUrl: "#test",
+        handleOrigin: {y: 0, x: 0},
         color: "#f00",
         borderWidth: 2,
-        padding: 4,
-        anticlockwise: true,
-        css: {
-          body: {
-            "background-color": "$color",
-            "color": "$color"
-          },
-          ".test": {
-            "border-color": "$color",
-            "color": "$color"
-          }
-        }
+        padding: 8,
+        wheelLightness: true,
       });
     </script>
   </body>

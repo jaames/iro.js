@@ -1,19 +1,41 @@
-### Todo
+## Core Library
 
- * Add code tests (I really need to learn how to do this tbh, it's super important)
- * Plugin support
- * Add transparency support
+### Install dependencies
 
-### Building
+```bash
+$ npm install
+```
 
-#### Install dependencies:
+### Run dev server
 
-`npm install`
+```bash
+$ npm start
+```
 
-#### Build:
+### Produce final build
 
-`npm run build`
+```bash
+$ npm run build
+```
 
-#### Run dev server:
+## Documentation site
 
-`npm run dev`
+The iro.js documentation site ([iro.js.org](//iro.js.org)) is built with [vuepress](//vuepress.vuejs.org)
+
+### Install dependencies
+
+```bash
+$ npm install
+```
+
+### Run dev server
+
+```bash
+$ npm run docs:dev
+```
+
+### Produce static site assets
+
+```bash
+$ npm run docs:build
+```
