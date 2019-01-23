@@ -1,11 +1,11 @@
 {
   "name": "@jaames/iro",
-  "version": "4.0.0-alpha",
-  "description": "A sleek and lightweight JS color picker - with zero dependencies",
+  "version": "4.0.0",
+  "description": "A sleek, customizable color picker widget with zero dependencies and a small footprint",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "dependencies": {
-    "preact": "^8.3.1"
+    "preact": "^8.4.2"
   },
   "devDependencies": {
     "foundation-sites": "^6.5.0-rc.2",
@@ -34,6 +34,7 @@
     "docs:build": "vuepress build docs"
   },
   "files": [
+    "dist/iro.min.js",
     "dist/iro.js",
     "dist/iro.es.js"
   ],
@@ -41,8 +42,10 @@
     "color",
     "colour",
     "picker",
+    "colorpicker",
     "wheel",
-    "stylesheet",
+    "iro",
+    "widget",
     "svg",
     "ui",
     "rgb",
@@ -54,7 +57,7 @@
     "url": "git+https://github.com/jaames/iro.js.git"
   },
   "author": "James Daniel <james@rakujira.jp>",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/jaames/iro.js/issues"
   },

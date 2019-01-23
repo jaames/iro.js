@@ -15,9 +15,8 @@ class ColorPicker extends Component {
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
     this.state = {
+      ...props,
       color: this.color,
-      width: props.width,
-      height: props.height
     };
     this.emitHook('init:state');
     this.ui = [
@@ -27,45 +26,13 @@ class ColorPicker extends Component {
     this.emitHook('init:after');
   }
 
-  mounted() {
-    this.emit('mount', this);
-  }
-
-  render(props, state) {
-    return (
-      <div 
-        class="iro__colorPicker"
-        style={{
-          display: props.display,
-          width: state.width
-        }}
-      >
-        {this.ui.map(({element: UiElement, options: options}) => (
-          <UiElement 
-            {...props}
-            {...options}
-            {...state}
-            onInput={ (type, hsv) => this.handleInput(type, hsv) }
-            parent={ this }
-          />
-        ))}
-      </div>
-    )
-  }
-
-  reset() {
-    this.color.set(this.props.color);
-  }
-
-  resize(width, height) {
-    this.setState({width, height});
-  }
+  // Public ColorPicker events API
 
   /**
-    * @desc Set a callback function for an event
-    * @param {String} eventType The name of the event to listen to, pass "*" to listen to all events
-    * @param {Function} callback The watch callback
-  */
+   * @desc Set a callback function for an event
+   * @param {String} eventType The name of the event to listen to
+   * @param {Function} callback
+   */
   on(eventType, callback) {
     const events = this._events;
     this.emitHook('event:on', eventType, callback);
@@ -73,10 +40,10 @@ class ColorPicker extends Component {
   }
 
   /**
-    * @desc Remove a callback function for an event added with on()
-    * @param {String} eventType The name of the event
-    * @param {Function} callback The watch callback to remove from the event
-  */
+   * @desc Remove a callback function for an event added with on()
+   * @param {String} eventType The name of the event
+   * @param {Function} callback
+   */
   off(eventType, callback) {
     const callbackList = this._events[eventType];
     this.emitHook('event:off', eventType, callback);
@@ -84,10 +51,10 @@ class ColorPicker extends Component {
   }
 
   /**
-    * @desc Emit an event
-    * @param {String} eventType The name of the event to emit
-    * @param {Array} args array of args to pass to callbacks
-  */
+   * @desc Emit an event
+   * @param {String} eventType The name of the event to emit
+   * @param {Array} args array of args to pass to callbacks
+   */
   emit(eventType, ...args) {
     // Events are plugin hooks too
     this.emitHook(eventType, ...args);
@@ -97,11 +64,40 @@ class ColorPicker extends Component {
     }
   }
 
+  // Public utility methods
+
+  /**
+   * @desc Resize the color picker
+   * @param {Number} width
+   */
+  resize(width) {
+    this.setState({width});
+  }
+
+  /**
+   * @desc Reset the color picker to the initial color provided in the color picker options
+   */
+  reset() {
+    this.color.set(this.props.color);
+  }
+
+  // Plugin hooks API
+
+  /**
+   * @desc Set a callback function for a hook
+   * @param {String} hookType The name of the hook to listen to
+   * @param {Function} callback
+   */
   static addHook(hookType, callback) {
     const pluginHooks = ColorPicker.pluginHooks;
     (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
   }
 
+  /**
+   * @desc Emit a callback hook
+   * @access private
+   * @param {String} hookType The type of hook event to emit
+   */
   emitHook(hookType, ...args) {
     const callbackList = ColorPicker.pluginHooks[hookType] || [];
     for (let i = 0; i < callbackList.length; i++) {
@@ -109,11 +105,24 @@ class ColorPicker extends Component {
     }
   }
 
+  // Internal methods
+
   /**
-    * @desc React to the color updating
-    * @param {IroColor} color current color
-    * @param {Object} changes shows which h,s,v color channels changed
-  */
+   * @desc Called by the createWidget wrapper when the element is mounted into the page
+   * @access private
+   * @param {Element} container the container element for this ColorPicker instance
+   */
+  onMount(container) {
+    this.el = container;
+    this.emit('mount', this);
+  }
+
+  /**
+   * @desc React to a color update
+   * @access private
+   * @param {IroColor} color current color
+   * @param {Object} changes shows which h,s,v color channels changed
+   */
   updateColor(color, changes) {
     this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: color });
@@ -128,16 +137,38 @@ class ColorPicker extends Component {
   }
 
   /**
-    * @desc Handle input from a UI control element
-    * @param {String} type "START" | "MOVE" | "END"
-    * @param {Object} hsv new hsv values for the color
-  */
+   * @desc Handle input from a UI control element
+   * @access private
+   * @param {String} type "START" | "MOVE" | "END"
+   * @param {Object} hsv new hsv values for the color
+   */
   handleInput(type, hsv) {
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
     let eventType = { START: 'input:start', MOVE: 'input:move', END: 'input:end' }[type];
     this.emit(eventType, this.color);
+  }
+
+  render(props, state) {
+    return (
+      <div 
+        class="iro__colorPicker"
+        style={{
+          display: state.display,
+          width: state.width
+        }}
+      >
+        {this.ui.map(({element: UiElement, options: options}) => (
+          <UiElement 
+            {...state}
+            {...options}
+            onInput={ (type, hsv) => this.handleInput(type, hsv) }
+            parent={ this }
+          />
+        ))}
+      </div>
+    )
   }
 }
 

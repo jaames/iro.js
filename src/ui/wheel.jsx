@@ -7,16 +7,12 @@ import { resolveUrl, createArcPath } from '../util/svg';
 
 export default class IroWheel extends IroComponent {
 
-  componentWillReceiveProps(props) {
-    console.log(props);
-  }
-  
   render(props) {
-    let { color, width, padding, borderWidth, borderColor, handleRadius, wheelLightness } = props;
-    const hsv = color.hsv;
+    let { width, borderWidth, handleRadius } = props;
+    const hsv = props.color.hsv;
     const radius = (width / 2) - borderWidth;
     const handleAngle = (360 - hsv.h) * (Math.PI / 180);
-    const handleDist = (hsv.s / 100) * (radius - padding - handleRadius - borderWidth);
+    const handleDist = (hsv.s / 100) * (radius - props.padding - handleRadius - borderWidth);
     const cX = radius + borderWidth;
     const cY = radius + borderWidth;
     
@@ -52,7 +48,7 @@ export default class IroWheel extends IroComponent {
           r={ radius }
           fill={ `url(${resolveUrl('#iroWheel')})` }
         />
-        { wheelLightness && (
+        { props.wheelLightness && (
           <circle 
             class="iro__wheel__lightness"
             cx={ cX }
@@ -60,14 +56,15 @@ export default class IroWheel extends IroComponent {
             r={ radius }
             fill="#000"
             opacity={ 1 - hsv.v / 100 }
-          />)}
+          />
+        )}
         <circle 
           class="iro__wheel__border"
           cx={ cX }
           cy={ cY }
           r={ radius }
           fill="none"
-          stroke={ borderColor }
+          stroke={ props.borderColor }
           stroke-width={ borderWidth }
         />
         <IroHandle 
@@ -89,9 +86,9 @@ export default class IroWheel extends IroComponent {
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
   handleInput(x, y, { left, top }, type) {
-    const { width, padding, handleRadius, borderWidth, onInput } = this.props;
-    const radius = width / 2;
-    const handleRange = (radius - padding - handleRadius - borderWidth);
+    const props = this.props;
+    const radius = props.width / 2;
+    const handleRange = (radius - props.padding - props.handleRadius - props.borderWidth);
     const cX = radius;
     const cY = radius;
 
@@ -104,7 +101,7 @@ export default class IroWheel extends IroComponent {
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
     let handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
-    onInput(type, {
+    props.onInput(type, {
       h: hue,
       s: Math.round((100 / handleRange) * handleDist)
     });

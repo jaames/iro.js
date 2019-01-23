@@ -1,7 +1,16 @@
+/**
+ * iro.js plugins API
+ * This provides the iro.use method, which can be used to register plugins which extend the iro.js core
+ */
 export function usePlugins(core) {
   const installedPlugins = [];
   
-  core.use = function(plugin, pluginOptions = {}) { 
+  /**
+   * @desc Register iro.js plugin
+   * @param {Function} plugin = plugin constructor
+   * @param {Object} pluginOptions = plugin options passed to constructor
+   */
+  core.use = function(plugin, pluginOptions = {}) {
     // Check that the plugin hasn't already been registered
     if (!installedPlugins.indexOf(plugin) > -1) {
       // Init plugin

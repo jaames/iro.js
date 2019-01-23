@@ -8,8 +8,10 @@ const EVENT_TOUCHSTART = 'touchstart';
 const EVENT_TOUCHMOVE = 'touchmove';
 const EVENT_TOUCHEND = 'touchend';
 
-// Base component class for all UI components
-// This will allow them to react to their own mouse/touch events
+/**
+ * Base component class for iro UI components
+ * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
+ */
 export default class IroComponent extends Component {
   
   componentDidMount() {
