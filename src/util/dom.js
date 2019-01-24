@@ -31,7 +31,7 @@ export function unlisten(el, eventList, callback) {
  * @param {Function} callback
  */
 export function onDocumentReady(callback) {
-  if (document.readyState === 'complete') {
+  if (document.readyState !== 'loading') {
     callback();
   } else {
     listen(document, ['DOMContentLoaded'], callback);

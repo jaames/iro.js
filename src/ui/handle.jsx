@@ -7,7 +7,7 @@ function IroHandle(props) {
   const url = props.url;
 
   return (
-    <svg class="iro__handle" x={ props.x } y={ props.y } overflow="visible">
+    <svg class="iro__handle" x={ props.x } y={ props.y } style={{ overflow: 'visible' }}>
       {url && (
         <use xlinkHref={resolveUrl(url)} { ...props.origin }/>
       )}

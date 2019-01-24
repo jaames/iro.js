@@ -737,7 +737,7 @@ function unlisten(el, eventList, callback) {
  * @param {Function} callback
  */
 function onDocumentReady(callback) {
-  if (document.readyState === 'complete') {
+  if (document.readyState !== 'loading') {
     callback();
   } else {
     listen(document, ['DOMContentLoaded'], callback);
@@ -854,7 +854,7 @@ function IroHandle(props) {
   var url = props.url;
 
   return (
-    h( 'svg', { class: "iro__handle", x: props.x, y: props.y, overflow: "visible" },
+    h( 'svg', { class: "iro__handle", x: props.x, y: props.y, style: { overflow: 'visible' } },
       url && (
         h( 'use', Object.assign({}, { xlinkHref: resolveUrl(url) }, props.origin))
       ),
