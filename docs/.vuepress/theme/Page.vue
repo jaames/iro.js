@@ -140,28 +140,24 @@ function find (page, items, offset) {
   .page {
     width: 100%;
     padding: 0 16px;
+    // margin-left:
     padding-top: $mobile-navbar-height;
     max-width: 720px + 16px * 2;
 
-    @include breakpoint(medium) {
+    @media (min-width: $breakpoint-medium) {
       flex: 1;
-      margin-left: 240px;
       padding: 0 24px;
-      max-width: 720px + 24px * 2;
+      margin-left: 4em;
+      // margin-left: 320px;
     }
-    @include breakpoint(large) {
-      margin-left: 320px;
+    @media (min-width: $breakpoint-large) {
+      // margin-left: 320px;
     }
   }
 
   .title {
-    display: inline-block;
-    // color: $primary-color;
-    font-size: 2rem;
-    margin: 2rem 0;
-    @include breakpoint(medium) {
-      margin: 4rem 0 2rem 0;
-    }
+    margin-top: 1.75em;
+    margin-bottom: .5em;
   }
 
   .pageNav {

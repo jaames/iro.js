@@ -29,13 +29,15 @@ Any param with type `{Color}` listed below can be any one of these formats, or a
 
 ### set
 
+Set the color from any [supported color format](#Supported-Color-Formats).
+
 **Arguments:**
 
 * `{Color} color`
 
-**Details:** Set the color from any [supported color format](#Supported-Color-Formats).
+### setChannel 
 
-### setChannel
+Set a specific color channel to a new value. `model` can be either `hsv`, `hsl` or `rgb`, and `channel` should be a single letter representing which channel from the model you wish to set.
 
 **Arguments:**
 
@@ -43,49 +45,45 @@ Any param with type `{Color}` listed below can be any one of these formats, or a
 * `{String} channel`
 * `{Number} value`
 
-**Details:** Set a specific color channel to a new value. `model` can be either `hsv`, `hsl` or `rgb`, and `channel` should be a single letter representing which channel from the model you wish to set.
-
 ### compare
+
+Compare differences between this color and another, returning an object that represents which channels have changed between the two. `model` can be used to specify either `hsv`, `hsl` or `rgb` (default is `hsv`). 
 
 **Arguments:**
 
 * `{Color} color`
 * `{String} model`
 
-**Returns:** `{Object}`
-
-**Details:** Compare differences between this color and another, returning an object that represents which channels have changed between the two. `model` can be used to specify either `hsv`, `hsl` or `rgb` (default is `hsv`). 
-
 ### clone
+
+Copy this color object, returning a new color object with the same value.
 
 **Returns:** `{Color}`
 
-**Details:** Copy this color object, returning a new color object with the same value.
-
 ### mix
+
+Mix a color into the current one.`weight` is a value between 0 and 100 - closer to 0 = more current color, closer to 100 = more new color.
 
 **Arguments:**
 
 * `{Color} color`
 * `{Number} weight`
 
-**Details:** Mix a color into the current one.`weight` is a value between 0 and 100 - closer to 0 = more current color, closer to 100 = more new color.
-
 ### lighten
+
+Lighten color by `amount`.
 
 **Arguments:**
 
 * `{Number} amount`
-
-**Details:** Lighten color by `amount`.
 
 ### darken
 
+Darken color by `amount`.
+
 **Arguments:**
 
 * `{Number} amount`
-
-**Details:** Darken color by `amount`.
 
 ## Properties
 
@@ -93,37 +91,37 @@ All of these color properties are writable as well as readable, which means they
 
 ### hsv
 
-**Details:** The color as a [HSV](https://www.wikiwand.com/en/HSL_and_HSV) object
+The color as a [HSV](https://www.wikiwand.com/en/HSL_and_HSV) object
 
 **Example format:** `{h: 360, s: 100, v: 50}`
 
 ### hsl
 
-**Details:** The color as a [HSL](https://www.wikiwand.com/en/HSL_and_HSV) object
+The color as a [HSL](https://www.wikiwand.com/en/HSL_and_HSV) object
 
 **Example format:** `{h: 360, s: 50, l: 100}`
 
 ### rgb
 
-**Details:** The color as an [RGB](https://www.wikiwand.com/en/RGB_color_model) object
+The color as an [RGB](https://www.wikiwand.com/en/RGB_color_model) object
 
 **Example format:** `{r: 255, g: 0, b: 0}`
 
 ### hslString
 
-**Details:** The color as a HSL string
+The color as a HSL string
 
 **Example format:** `hsl(360, 100%, 50%)`
 
 ### rgbString
 
-**Details:** The color as an RGB string
+The color as an RGB string
 
 **Example format:** `rgb(255, 0, 0)` **or** `rgb(100%, 0%, 0%)`
 
 ### hexString
 
-**Details:** The color as a HEX string (supports shorthand notation)
+The color as a HEX string (supports shorthand notation)
 
 **Example format:** `#ff0000` **or** where applicable, the shorthand format: `#f00`
 
@@ -133,31 +131,31 @@ These functions are provided by `iro.Color` at all times.
 
 ### mix
 
+Mix two colors together, returning a new `iro.Color` instance. `weight` is a value between 0 and 100 - closer to 0 = more color1, closer to 100 = more color2.
+
 **Arguments:**
 
 * `{Color} color1`
 * `{Color} color2`
 * `{Number} weight`
 
-**Details:** Mix two colors together, returning a new `iro.Color` instance. `weight` is a value between 0 and 100 - closer to 0 = more color1, closer to 100 = more color2.
-
 ### lighten
+
+Lighten `color` by `amount`, returning a new `iro.Color` instance.
 
 **Arguments:**
 
 * `{Color} color`
 * `{Number} amount`
-
-**Details:** Lighten `color` by `amount`, returning a new `iro.Color` instance.
 
 ### darken
 
+Darken `color` by `amount`, returning a new `iro.Color` instance.
+
 **Arguments:**
 
 * `{Color} color`
 * `{Number} amount`
-
-**Details:** Darken `color` by `amount`, returning a new `iro.Color` instance.
 
 ### hsv2Rgb
 

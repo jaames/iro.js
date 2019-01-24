@@ -10,6 +10,8 @@ Under the hood, it works with the [StyleSheet API](https://developer.mozilla.org
 
 ### setRule
 
+Set a CSS rule within the stylesheet; either by creating a new rule or overriding an existing one.
+
 **Arguments:**
 
 * `{String} selector`
@@ -17,10 +19,6 @@ Under the hood, it works with the [StyleSheet API](https://developer.mozilla.org
 * `{String} property`
 
 * `{String} value`
-
-**Details:**
-
-Set a CSS rule within the stylesheet; either by creating a new rule or overriding an existing one.
 
 **Example:**
 
@@ -36,13 +34,9 @@ stylesheet.setRule(".example", "border", "1px solid red")
 
 ### enabled
 
-**Details:**
-
 Used to enable/disable a stylesheet; if set to `false`, the styles will not be applied to the page.
 
 ### css
-
-**Details:**
 
 The stylesheet's current CSS rules as an object. For example:
 
@@ -57,8 +51,6 @@ The stylesheet's current CSS rules as an object. For example:
 
 ### cssText
 
-**Details:**
-
 The stylesheet's current CSS as a string. For example:
 
 ```css
@@ -72,12 +64,8 @@ body {
 
 ### sheet
 
-**Details:**
-
 A reference to the stylesheet's [CSSStyleSheet](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet) object.
 
 ### rules
-
-**Details:**
 
 A reference to the stylesheet's [CSSRuleList](https://developer.mozilla.org/en-US/docs/Web/API/CSSRuleList) object.

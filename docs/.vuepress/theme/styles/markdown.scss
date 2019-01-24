@@ -1,7 +1,8 @@
 .markdown {
   // font-size: .9rem;
-  @include breakpoint(small down) {
-    font-size: .9rem;
+
+  h1, h2, h3, h4 {
+    margin-top: 2em;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -19,15 +20,8 @@
     }
   }
 
-  h1 { font-size: 2.25em; }
-  h2 { font-size: 1.5em; }
-  h3 { font-size: 1.35em; }
-  h4 { font-size: 1.25em; }
-  h5 { font-size: 1em; }
-  h6 { font-size: .875em; }
-
   h2 {
-    padding-bottom: 0.5em;
+    padding-bottom: 0.25em;
     border-bottom: 1px solid $medium-gray;
   }
 
@@ -36,14 +30,23 @@
   }
 
   p {
-    line-height: 1.6em;
     margin: 1.2em 0;
   }
 
+  hr {
+    width: 100%;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid $medium-gray;
+  }
+
   ul, ol, dl {
-    line-height: 1.6em;
     margin: 1.2em 0;
     padding-left: 2em;
+  }
+
+  ul {
+    list-style-type: disc;
   }
 
   li {
@@ -59,10 +62,12 @@
   }
 
   pre, code {
+    padding: .125em .25em;
     border-radius: 4px;
   }
 
   pre {
+    border-radius: 6px;
     word-wrap: normal;
   }
 
@@ -71,12 +76,34 @@
   }
 
   table {
+    width: 100%;
     margin: 1.2em 0;
     overflow: hidden;
+    border-collapse: collapse;
     border-radius: 6px;
+    border-spacing: 2px;
+  }
+
+  thead {
+    background-color: $light-gray;
+  }
+
+  thead, tbody, tfoot {
+    border: 1px solid $light-gray;
+  }
+
+  td, th {
+    padding: .5rem .625rem .625rem;
+    text-align: left;
+  }
+
+  th {
+    font-weight: bold;
   }
 
   tbody tr:nth-child(even) {
+    background: $light-gray;
+
     pre, code {
       background-color: darken($light-gray, 3);
     }
@@ -91,20 +118,19 @@
   }
 
   pre[class*="language-"] {
-    padding: 1.2rem;
+    padding: 1.5em;
     overflow: auto;
     // border-radius: 0.3em;
   }
 
   pre[class*="language-"]::before {
-    font-family: $body-font-family;
-    color: $dark-gray;
+    font-family: $font-family;
+    color: $medium-gray;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 1em;
+    right: 1em;
     text-align: right;
     font-size: 0.75em;
-    padding: 5px 10px 0;
     line-height: 15px;
     height: 15px;
     font-weight: 600;

@@ -1,10 +1,10 @@
 <template>
   <div :class="['sidebar', isOpen ? 'sidebar--isOpen' : '']">
     <div class="sidebar__head">
-      <Logo class="logo"/>
       <div class="sidebar__toggle" @click="toggleMenu()">
         <span :class="['menuIcon', isOpen ? 'menuIcon--active' : '']"></span>
       </div>
+      <Logo class="logo"/>
     </div>
     <div class="sidebar__body">
       <ul class="sidebar__inks" v-if="items.length">
@@ -93,26 +93,56 @@ function resolveOpenGroupIndex (route, items) {
 
 .sidebar {
   color: $text-invert;
+  padding-left: 2em;
 
-  @include breakpoint(small down) {
+  @media (min-width: $breakpoint-medium) {
+    background: $background-invert;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding-left: 2em;
+    height: 100vh;
+    width: 280px;
+
+    .sidebar__toggle {
+      display: none;
+    }
+  }
+
+  @media (min-width: $breakpoint-large) {
+    width: 320px;
+  }
+
+  @media (max-width: $breakpoint-medium) {
     .sidebar__head {
-      background: $background;
+      background: $background-invert;
       position: fixed;
       display: flex;
       align-items: center;
       height: $mobile-navbar-height;
       width: 100vw;
-      padding: 0 1.5rem;
+      padding: 0 1em;
       top: 0;
       left: 0;
       z-index: 10;
+
+      &::after {
+        flex: 1;
+        content: '';
+      }
+
+      .sidebar__toggle {
+        flex: 1;
+      }
     }
 
     .sidebar__body {
-      background: $background;
+      background: $background-invert;
       overflow-y: auto;
       position: fixed;
       width: 100vw;
+      padding: 4em 1em;
       height: calc(100vh - #{$mobile-navbar-height});
       transform: translateX(-100vw);
       transition: transform 0.2s ease;
@@ -124,24 +154,6 @@ function resolveOpenGroupIndex (route, items) {
     &.sidebar--isOpen .sidebar__body {
       transform: translateX(0);
     }
-  }
-
-  @include breakpoint(medium) {
-    background: $background;
-    overflow-y: auto;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 220px;
-
-    .sidebar__toggle {
-      display: none;
-    }
-  }
-
-  @include breakpoint(large) {
-    width: 320px;
   }
 
   ul {
@@ -156,14 +168,18 @@ function resolveOpenGroupIndex (route, items) {
   }
 
   .logo {
-    height: 60px;
-    margin: 1.5rem;
-    margin-top: 3rem;
+    height: 48px;
+    margin: 1.5em;
+    margin-top: 4em;
+    margin-bottom: 2.5em;
 
-    @include breakpoint(small down) {
-      height: 36px;
+    path, ellipse {
+      stroke: $text-invert;
+    }
+
+    @media (max-width: $breakpoint-medium) {
+      height: 32px;
       margin: 0;
-      margin-right: auto;
 
       path, ellipse {
         stroke-width: 1px;

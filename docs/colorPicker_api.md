@@ -30,14 +30,12 @@ title: Color Picker API
 
 ### on
 
+Add listeners to color picker events.
+
 **Arguments:**
 
 * `{String} eventType`
 * `{Function} callback`
-
-**Details:**
-
-Add listeners to color picker events.
 
 **`eventType` values:**
 
@@ -65,14 +63,12 @@ example.on("color:change", colorChangeHandler)
 
 ### off
 
+Remove event listeners added with `on`
+
 **Arguments:**
 
 * `{String} eventType`
 * `{Function} callback`
-
-**Details:**
-
-Remove event listeners added with `on`
 
 **Example:**
 
@@ -93,15 +89,11 @@ example.off("color:change", colorChangeHandler);
 
 ### color
 
-**Details:**
-
 An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. It is tied to the color picker, as such updating this color object will also update the color picker.
 
 **See also:** [Using the Selected Color](/guide.html#Using-the-Selected-Color)
 
 ### stylesheet
-
-**Details:**
 
 An [`iro.Stylesheet`](/stylesheet_api.html) object representing the dynamic CSS stylesheet for the color picker.
 
@@ -109,18 +101,12 @@ An [`iro.Stylesheet`](/stylesheet_api.html) object representing the dynamic CSS 
 
 ### el
 
-**Details:**
-
 The DOM object for the HTML element being used as a wrapper for the color picker.
 
 ### ui
 
-**Details:**
-
 An array of "components" used to make up the color picker's UI.
 
 ### css
-
-**Details:**
 
 CSS template for the dynamic CSS feature.
