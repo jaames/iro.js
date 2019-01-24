@@ -29,7 +29,7 @@ export default class IroSlider extends IroComponent {
         }}
       >
         <defs>
-          <linearGradient id="iroSlider">
+          <linearGradient id={ this.uid }>
             <stop offset="0%" stop-color="#000" />
             <stop offset="100%" stop-color={ `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` } />
           </linearGradient>
@@ -44,7 +44,7 @@ export default class IroSlider extends IroComponent {
           height={ sliderHeight - borderWidth }
           stroke-width={ borderWidth }
           stroke={ props.borderColor }
-          fill={ `url(${resolveUrl('#iroSlider')})` }
+          fill={ `url(${resolveUrl('#' + this.uid)})` }
         />
         <IroHandle
           r={ handleRadius }

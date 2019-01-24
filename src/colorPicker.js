@@ -19,10 +19,15 @@ class ColorPicker extends Component {
       color: this.color,
     };
     this.emitHook('init:state');
-    this.ui = [
-      {element: IroWheel, options: {}},
-      {element: IroSlider, options: {}},
-    ];
+
+    if (props.layout) {
+      this.layout = props.layout;
+    } else {
+      this.layout = [
+        {component: IroWheel, options: {}},
+        {component: IroSlider, options: {}},
+      ];
+    }
     this.emitHook('init:after');
   }
 
@@ -159,8 +164,8 @@ class ColorPicker extends Component {
           width: state.width
         }}
       >
-        {this.ui.map(({element: UiElement, options: options}) => (
-          <UiElement 
+        {this.layout.map(({component: UiComponent, options: options}) => (
+          <UiComponent
             {...state}
             {...options}
             onInput={ (type, hsv) => this.handleInput(type, hsv) }
@@ -180,14 +185,15 @@ ColorPicker.defaultProps = {
   handleRadius: 8,
   handleUrl: null,
   handleOrigin: {x: 0, y: 0},
-  color: "#fff",
-  borderColor: "#fff",
+  color: '#fff',
+  borderColor: '#fff',
   borderWidth: 0,
   display: 'block',
   wheelLightness: true,
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
+  layout: null,
 }
 
 export default createWidget(ColorPicker);

@@ -13,6 +13,13 @@ const EVENT_TOUCHEND = 'touchend';
  * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
  */
 export default class IroComponent extends Component {
+
+  constructor(props) {
+    super(props);
+    // Generate unique ID for the component
+    // This can be used to generate unique IDs for gradients, etc
+    this.uid = (Math.random() + 1).toString(36).substring(5);
+  }
   
   componentDidMount() {
     listen(this.base, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive: false });

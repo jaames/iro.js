@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0
+ * iro.js v4.0.0-beta.1
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -756,14 +756,17 @@ var EVENT_TOUCHEND = 'touchend';
  * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
  */
 var IroComponent = /*@__PURE__*/(function (Component$$1) {
-  function IroComponent () {
-    Component$$1.apply(this, arguments);
+  function IroComponent(props) {
+    Component$$1.call(this, props);
+    // Generate unique ID for the component
+    // This can be used to generate unique IDs for gradients, etc
+    this.uid = (Math.random() + 1).toString(36).substring(5);
   }
 
   if ( Component$$1 ) IroComponent.__proto__ = Component$$1;
   IroComponent.prototype = Object.create( Component$$1 && Component$$1.prototype );
   IroComponent.prototype.constructor = IroComponent;
-
+  
   IroComponent.prototype.componentDidMount = function componentDidMount () {
     listen(this.base, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this, { passive: false });
   };
@@ -902,7 +905,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
           display: 'block'
         } },
         h( 'defs', null,
-          h( 'radialGradient', { id: "iroWheel" },
+          h( 'radialGradient', { id: this.uid },
             h( 'stop', { offset: "0%", 'stop-color': "#fff" }),
             h( 'stop', { offset: "100%", 'stop-color': "#fff", 'stop-opacity': "0" })
           )
@@ -914,7 +917,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
           ); })
         ),
         h( 'circle', { 
-          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + (resolveUrl('#iroWheel')) + ")") }),
+          class: "iro__wheel__saturation", cx: cX, cy: cY, r: radius, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
         props.wheelLightness && (
           h( 'circle', { 
             class: "iro__wheel__lightness", cx: cX, cy: cY, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 })
@@ -1347,13 +1350,13 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
           display: 'block'
         } },
         h( 'defs', null,
-          h( 'linearGradient', { id: "iroSlider" },
+          h( 'linearGradient', { id: this.uid },
             h( 'stop', { offset: "0%", 'stop-color': "#000" }),
             h( 'stop', { offset: "100%", 'stop-color': ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)") })
           )
         ),
         h( 'rect', { 
-          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#iroSlider')) + ")") }),
+          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
         h( IroHandle, {
           r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
       )
@@ -1437,9 +1440,14 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     this.state = Object.assign({}, props,
       {color: this.color});
     this.emitHook('init:state');
-    this.ui = [
-      {element: IroWheel, options: {}},
-      {element: IroSlider, options: {}} ];
+
+    if (props.layout) {
+      this.layout = props.layout;
+    } else {
+      this.layout = [
+        {component: IroWheel, options: {}},
+        {component: IroSlider, options: {}} ];
+    }
     this.emitHook('init:after');
   }
 
@@ -1587,12 +1595,12 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
           display: state.display,
           width: state.width
         } },
-        this.ui.map(function (ref) {
-          var UiElement = ref.element;
+        this.layout.map(function (ref) {
+          var UiComponent = ref.component;
           var options$$1 = ref.options;
 
           return (
-          h( UiElement, Object.assign({}, 
+          h( UiComponent, Object.assign({},
             state, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1 }))
         );
     })
@@ -1611,14 +1619,15 @@ ColorPicker.defaultProps = {
   handleRadius: 8,
   handleUrl: null,
   handleOrigin: {x: 0, y: 0},
-  color: "#fff",
-  borderColor: "#fff",
+  color: '#fff',
+  borderColor: '#fff',
   borderWidth: 0,
   display: 'block',
   wheelLightness: true,
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
+  layout: null,
 };
 
 var ColorPicker$1 = createWidget(ColorPicker);
@@ -1663,7 +1672,7 @@ var iro = usePlugins({
     Slider: IroSlider,
     Wheel: IroWheel
   },
-  version: "4.0.0",
+  version: "4.0.0-beta.1",
 });
 
 export default iro;

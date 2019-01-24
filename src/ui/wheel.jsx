@@ -27,8 +27,8 @@ export default class IroWheel extends IroComponent {
         }}
       >
         <defs>
-          <radialGradient id="iroWheel">
-            <stop offset="0%" stop-color="#fff" />
+          <radialGradient id={ this.uid }>
+            <stop offset="0%" stop-color="#fff"/>
             <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
           </radialGradient>
         </defs>
@@ -46,7 +46,7 @@ export default class IroWheel extends IroComponent {
           cx={ cX }
           cy={ cY }
           r={ radius }
-          fill={ `url(${resolveUrl('#iroWheel')})` }
+          fill={ `url(${resolveUrl('#' + this.uid)})` }
         />
         { props.wheelLightness && (
           <circle 
