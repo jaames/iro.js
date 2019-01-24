@@ -1,6 +1,6 @@
 {
   "name": "@jaames/iro",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.2",
   "description": "A sleek, customizable color picker widget with zero dependencies and a small footprint",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
@@ -8,8 +8,7 @@
     "preact": "^8.4.2"
   },
   "devDependencies": {
-    "foundation-sites": "^6.5.0-rc.2",
-    "html-webpack-plugin": "^3.2.0",
+    "css-reset-and-normalize": "^1.2.0",
     "node-sass": "^4.9.3",
     "rollup": "^0.67.3",
     "rollup-plugin-alias": "^1.4.0",
@@ -27,9 +26,10 @@
   "scripts": {
     "start": "rollup -c --watch --environment DEV_SERVER,BUILD:development",
     "dev": "rollup -c --environment BUILD:development",
-    "build": "npm run dev && npm run build:es && npm run build:min",
+    "build": "npm run dev && npm run build:es && npm run build:min && npm run docs:copyscript",
     "build:min": "rollup -c --environment BUILD:production",
     "build:es": "rollup -c --environment ES_MODULE,BUILD:production",
+    "docs:copyscript": "\\cp dist/iro.es.js docs/.vuepress/theme/js/iro.es.js",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   },

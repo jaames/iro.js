@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.1
+ * iro.js v4.0.0-beta.2
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1415,7 +1415,7 @@
 	    );
 	    // Mount it into the DOM when the page document is ready
 	    onDocumentReady(function () {
-	      var container = typeof parent === Element ? parent : document.querySelector(parent);
+	      var container = parent instanceof Element ? parent : document.querySelector(parent);
 	      container.appendChild(widget.base);
 	      widget.onMount(container);
 	    });
@@ -1678,7 +1678,7 @@
 	    Slider: IroSlider,
 	    Wheel: IroWheel
 	  },
-	  version: "4.0.0-beta.1",
+	  version: "4.0.0-beta.2",
 	});
 
 	return iro;

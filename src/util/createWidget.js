@@ -26,7 +26,7 @@ export function createWidget(widgetComponent) {
     );
     // Mount it into the DOM when the page document is ready
     onDocumentReady(() => {
-      const container = typeof parent === Element ? parent : document.querySelector(parent);
+      const container = parent instanceof Element ? parent : document.querySelector(parent);
       container.appendChild(widget.base);
       widget.onMount(container);
     });
