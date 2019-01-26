@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.2
+ * iro.js v4.0.0-beta.4
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1672,7 +1672,7 @@ var iro = usePlugins({
     Slider: IroSlider,
     Wheel: IroWheel
   },
-  version: "4.0.0-beta.2",
+  version: "4.0.0-beta.4",
 });
 
 export default iro;
