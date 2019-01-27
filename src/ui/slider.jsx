@@ -15,7 +15,7 @@ export default class IroSlider extends IroComponent {
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2
     const hsv = props.color.hsv;
-    const hsl = IroColor.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
+    const hsl = IroColor.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
       <svg 
