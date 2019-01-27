@@ -1,6 +1,3 @@
-var round = Math.round;
-var floor = Math.floor;
-
 import { parseUnit, parseHexInt, intToHex } from './util/colorUtils';
 
 // Some regular expressions for rgb() and hsl() Colors are borrowed from tinyColor
@@ -13,10 +10,12 @@ const CSS_NUMBER = `[-\\+]?\\d*\\.\\d+%?`;
 // Allow positive/negative integer/number. Don't capture the either/or, just the entire outcome
 const CSS_UNIT = `(?:${CSS_INTEGER})|(?:${CSS_NUMBER})`;
 
+// Parse function params
 // Parens and commas are optional, and this also allows for whitespace between numbers
-const PERMISSIVE_MATCH_3 = `[\\s|\\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
-const PERMISSIVE_MATCH_4 = `[\\s|\\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
+const PERMISSIVE_MATCH_3 = `[\\s|\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
+const PERMISSIVE_MATCH_4 = `[\\s|\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
 
+// Regex patterns for functional colors
 const REGEX_FUNCTIONAL_RGB = new RegExp(`rgb${PERMISSIVE_MATCH_3}`);
 const REGEX_FUNCTIONAL_RGBA = new RegExp(`rgba${PERMISSIVE_MATCH_4}`);
 const REGEX_FUNCTIONAL_HSL = new RegExp(`hsl${PERMISSIVE_MATCH_3}`);
@@ -50,14 +49,14 @@ export default class Color {
   set(value) {
     const isString = typeof value === 'string';
     const isObject = typeof value === 'object';
-    if ((isString) && (REGEX_FUNCTIONAL_RGB.test(value) || REGEX_FUNCTIONAL_RGBA.test(value))) {
+    if ((isString) && (REGEX_HEX_6.test(value) || REGEX_HEX_3.test(value))) {
+      this.hexString = value;
+    }
+    else if ((isString) && (REGEX_FUNCTIONAL_RGB.test(value) || REGEX_FUNCTIONAL_RGBA.test(value))) {
       this.rgbString = value;
     }
     else if ((isString) && (REGEX_FUNCTIONAL_HSL.test(value) || REGEX_FUNCTIONAL_HSLA.test(value))) {
       this.hslString = value;
-    }
-    else if ((isString) && (REGEX_HEX_6.test(value) || REGEX_HEX_3.test(value))) {
-      this.hexString = value;
     }
     else if ((isObject) && (value instanceof Color)) {
       this.hsv = value.hsv;
@@ -99,7 +98,7 @@ export default class Color {
   static hsvToRgb(hsv) {
     var r, g, b, i, f, p, q, t;
     var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
-    i = floor(h * 6);
+    i =Math.floor(h * 6);
     f = h * 6 - i;
     p = v * (1 - s);
     q = v * (1 - f * s);
@@ -112,7 +111,7 @@ export default class Color {
       case 4: r = t, g = p, b = v; break;
       case 5: r = v, g = p, b = q; break;
     }
-    return {r: round(r * 255), g: round(g * 255), b: round(b * 255)};
+    return {r:Math.round(r * 255), g:Math.round(g * 255), b:Math.round(b * 255)};
   }
 
   /**
@@ -176,112 +175,6 @@ export default class Color {
     };
   }
 
-  /**
-    * @desc convert hsl object to string
-    * @param {Object} hsl - hsl object
-    * @return {Object} hsl string
-  */
-  static hslToStr({h, s, l, a}) {
-    return `hsl${a ? 'a' : ''}(${h}, ${s}%, ${l}%${a ? ', ' + a : ''})`;
-  }
-
-  /**
-    * @desc convert rgb object to string
-    * @param {Object} rgb - rgb object
-    * @return {Object} rgb string
-  */
-  static rgbToStr({r, g, b, a}) {
-    return `rgb${a ? 'a' : ''}(${r}, ${g}, ${b}${a ? ', ' + a : ''})`;
-  }
-
-  /**
-    * @desc convert rgb object to hex string
-    * @param {Object} rgb - rgb object  
-    * @return {Object} hex string
-  */
-  static rgbToHex({r, g, b}) {
-    return `#${ intToHex(r) }${ intToHex(g) }${ intToHex(b) }`;
-  }
-
-  /**
-    * @desc parse hex string
-    * @param {String} hex - Color string
-    * @return {Object} rgb object
-  */
-  static parseHexStr(hex) {
-    let match;
-    let r, g, b, a = 255;
-    if (match = REGEX_HEX_3.exec(hex)) {
-      r = parseHexInt(match[1]) * 17;
-      g = parseHexInt(match[2]) * 17;
-      b = parseHexInt(match[3]) * 17;
-    }
-    else if (match = REGEX_HEX_4.exec(hex)) {
-      r = parseHexInt(match[1]) * 17;
-      g = parseHexInt(match[2]) * 17;
-      b = parseHexInt(match[3]) * 17;
-      a = parseHexInt(match[4]) * 17;
-    }
-    else if (match = REGEX_HEX_6.exec(hex)) {
-      r = parseHexInt(match[1]);
-      g = parseHexInt(match[2]);
-      b = parseHexInt(match[3]);
-    }
-    else if (match = REGEX_HEX_8.exec(hex)) {
-      r = parseHexInt(match[1]);
-      g = parseHexInt(match[2]);
-      b = parseHexInt(match[3]);
-      a = parseHexInt(match[4]);
-    }
-    if (match) {
-      return {r, g, b, a: a / 255};
-    }
-  }
-
-  /**
-    * @desc parse hsl string
-    * @param {String} str - Color string
-    * @return {Object} hsl object
-  */
-  static parseHslStr(str) {
-    let match;
-    let h, s, l, a = 1;
-    if (match = REGEX_FUNCTIONAL_HSL.exec(str)) {
-      h = parseUnit(match[1], 360);
-      s = parseUnit(match[2], 100);
-      l = parseUnit(match[3], 100);
-    }
-    else if (match = REGEX_FUNCTIONAL_HSLA.exec(str)) {
-      h = parseUnit(match[1], 360);
-      s = parseUnit(match[2], 100);
-      l = parseUnit(match[3], 100);
-      a = parseUnit(match[4], 1);
-    }
-    return {r, g, b, a};
-  }
-
-  /**
-    * @desc parse rgb string
-    * @param {String} str - Color string
-    * @return {Object} rgb object
-  */
-  static parseRgbStr(str) {
-    let match;
-    let r, g, b, a = 1;
-    if (match = REGEX_FUNCTIONAL_RGB.exec(str)) {
-      r = parseUnit(match[1], 255);
-      b = parseUnit(match[2], 255);
-      l = parseUnit(match[3], 255);
-    }
-    else if (match = REGEX_FUNCTIONAL_RGBA.exec(str)) {
-      r = parseUnit(match[1], 255);
-      b = parseUnit(match[2], 255);
-      l = parseUnit(match[3], 255);
-      a = parseUnit(match[4], 1);
-    }
-    return {r, g, b, a};
-  }
-
   get hsv() {
     // _value is cloned to allow changes to be made to the values before passing them back
     const value = this._value;
@@ -310,9 +203,9 @@ export default class Color {
   get rgb() {
     const {r, g, b} = Color.hsvToRgb(this._value);
     return {
-      r: round(r),
-      g: round(g),
-      b: round(b),
+      r:Math.round(r),
+      g:Math.round(g),
+      b:Math.round(b),
     };
   }
 
@@ -323,9 +216,9 @@ export default class Color {
   get hsl() {
     const {h, s, l} = Color.hsvToHsl(this._value);
     return {
-      h: round(h),
-      s: round(s),
-      l: round(l),
+      h:Math.round(h),
+      s:Math.round(s),
+      l:Math.round(l),
     };
   }
 
@@ -334,26 +227,94 @@ export default class Color {
   }
 
   get rgbString() {
-    return Color.rgbToStr(this.rgb);
+    const rgb = this.rgb;
+    return `rgb${rgb.a ? 'a' : ''}(${rgb.r}, ${rgb.g}, ${rgb.b}${rgb.a ? ', ' + rgb.a : ''})`;
   }
 
   set rgbString(value) {
-    this.rgb = Color.parseRgbStr(value);
+    let match;
+    let r, g, b, a = 1;
+    if (match = REGEX_FUNCTIONAL_RGB.exec(value)) {
+      r = parseUnit(match[1], 255);
+      g = parseUnit(match[2], 255);
+      b = parseUnit(match[3], 255);
+    }
+    else if (match = REGEX_FUNCTIONAL_RGBA.exec(value)) {
+      r = parseUnit(match[1], 255);
+      g = parseUnit(match[2], 255);
+      b = parseUnit(match[3], 255);
+      a = parseUnit(match[4], 1);
+    }
+    if (match) {
+      this.rgb = {r, g, b, a};
+    } 
+    else {
+      throw new Error('invalid rgb string');
+    }
   }
 
   get hexString() {
-    return Color.rgbToHex(this.rgb);
+    const rgb = this.rgb;
+    return `#${ intToHex(rgb.r) }${ intToHex(rgb.g) }${ intToHex(rgb.b) }`;
   }
 
   set hexString(value) {
-    this.rgb = Color.parseHexStr(value);
+    let match;
+    let r, g, b, a = 255;
+    if (match = REGEX_HEX_3.exec(value)) {
+      r = parseHexInt(match[1]) * 17;
+      g = parseHexInt(match[2]) * 17;
+      b = parseHexInt(match[3]) * 17;
+    }
+    else if (match = REGEX_HEX_4.exec(value)) {
+      r = parseHexInt(match[1]) * 17;
+      g = parseHexInt(match[2]) * 17;
+      b = parseHexInt(match[3]) * 17;
+      a = parseHexInt(match[4]) * 17;
+    }
+    else if (match = REGEX_HEX_6.exec(value)) {
+      r = parseHexInt(match[1]);
+      g = parseHexInt(match[2]);
+      b = parseHexInt(match[3]);
+    }
+    else if (match = REGEX_HEX_8.exec(value)) {
+      r = parseHexInt(match[1]);
+      g = parseHexInt(match[2]);
+      b = parseHexInt(match[3]);
+      a = parseHexInt(match[4]);
+    }
+    if (match) {
+      this.rgb = {r, g, b, a: a / 255};
+    }
+    else {
+      throw new Error('invalid hex string');
+    }
   }
 
   get hslString() {
-    return Color.hslToStr(this.hsl);
+    const hsl = this.hsl;
+    return `hsl${hsl.a ? 'a' : ''}(${hsl.h}, ${hsl.s}%, ${hsl.l}%${hsl.a ? ', ' + hsl.a : ''})`;
   }
 
   set hslString(value) {
-    this.hsl = Color.parseHslStr(value);
+    let match;
+    let h, s, l, a = 1;
+    if (match = REGEX_FUNCTIONAL_HSL.exec(value)) {
+      h = parseUnit(match[1], 360);
+      s = parseUnit(match[2], 100);
+      l = parseUnit(match[3], 100);
+    }
+    else if (match = REGEX_FUNCTIONAL_HSLA.exec(value)) {
+      h = parseUnit(match[1], 360);
+      s = parseUnit(match[2], 100);
+      l = parseUnit(match[3], 100);
+      a = parseUnit(match[4], 1);
+    }
+    if (match) {
+      this.hsl = {h, s, l, a};
+    } 
+    else {
+      throw new Error('invalid hsl string');
+    }
   }
 }

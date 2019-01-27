@@ -1154,126 +1154,6 @@ Color.hslToHsv = function hslToHsv (hsl) {
   };
 };
 
-/**
-  * @desc convert hsl object to string
-  * @param {Object} hsl - hsl object
-  * @return {Object} hsl string
-*/
-Color.hslToStr = function hslToStr (ref) {
-    var h = ref.h;
-    var s = ref.s;
-    var l = ref.l;
-    var a = ref.a;
-
-  return ("hsl" + (a ? 'a' : '') + "(" + h + ", " + s + "%, " + l + "%" + (a ? ', ' + a : '') + ")");
-};
-
-/**
-  * @desc convert rgb object to string
-  * @param {Object} rgb - rgb object
-  * @return {Object} rgb string
-*/
-Color.rgbToStr = function rgbToStr (ref) {
-    var r = ref.r;
-    var g = ref.g;
-    var b = ref.b;
-    var a = ref.a;
-
-  return ("rgb" + (a ? 'a' : '') + "(" + r + ", " + g + ", " + b + (a ? ', ' + a : '') + ")");
-};
-
-/**
-  * @desc convert rgb object to hex string
-  * @param {Object} rgb - rgb object  
-  * @return {Object} hex string
-*/
-Color.rgbToHex = function rgbToHex (ref) {
-    var r = ref.r;
-    var g = ref.g;
-    var b = ref.b;
-
-  return ("#" + (intToHex(r)) + (intToHex(g)) + (intToHex(b)));
-};
-
-/**
-  * @desc parse hex string
-  * @param {String} hex - Color string
-  * @return {Object} rgb object
-*/
-Color.parseHexStr = function parseHexStr (hex) {
-  var match;
-  var r, g, b, a = 255;
-  if (match = REGEX_HEX_3.exec(hex)) {
-    r = parseHexInt(match[1]) * 17;
-    g = parseHexInt(match[2]) * 17;
-    b = parseHexInt(match[3]) * 17;
-  }
-  else if (match = REGEX_HEX_4.exec(hex)) {
-    r = parseHexInt(match[1]) * 17;
-    g = parseHexInt(match[2]) * 17;
-    b = parseHexInt(match[3]) * 17;
-    a = parseHexInt(match[4]) * 17;
-  }
-  else if (match = REGEX_HEX_6.exec(hex)) {
-    r = parseHexInt(match[1]);
-    g = parseHexInt(match[2]);
-    b = parseHexInt(match[3]);
-  }
-  else if (match = REGEX_HEX_8.exec(hex)) {
-    r = parseHexInt(match[1]);
-    g = parseHexInt(match[2]);
-    b = parseHexInt(match[3]);
-    a = parseHexInt(match[4]);
-  }
-  if (match) {
-    return {r: r, g: g, b: b, a: a / 255};
-  }
-};
-
-/**
-  * @desc parse hsl string
-  * @param {String} str - Color string
-  * @return {Object} hsl object
-*/
-Color.parseHslStr = function parseHslStr (str) {
-  var match;
-  var h, s, l, a = 1;
-  if (match = REGEX_FUNCTIONAL_HSL.exec(str)) {
-    h = parseUnit(match[1], 360);
-    s = parseUnit(match[2], 100);
-    l = parseUnit(match[3], 100);
-  }
-  else if (match = REGEX_FUNCTIONAL_HSLA.exec(str)) {
-    h = parseUnit(match[1], 360);
-    s = parseUnit(match[2], 100);
-    l = parseUnit(match[3], 100);
-    a = parseUnit(match[4], 1);
-  }
-  return {r: r, g: g, b: b, a: a};
-};
-
-/**
-  * @desc parse rgb string
-  * @param {String} str - Color string
-  * @return {Object} rgb object
-*/
-Color.parseRgbStr = function parseRgbStr (str) {
-  var match;
-  var r, g, b, a = 1;
-  if (match = REGEX_FUNCTIONAL_RGB.exec(str)) {
-    r = parseUnit(match[1], 255);
-    b = parseUnit(match[2], 255);
-    l = parseUnit(match[3], 255);
-  }
-  else if (match = REGEX_FUNCTIONAL_RGBA.exec(str)) {
-    r = parseUnit(match[1], 255);
-    b = parseUnit(match[2], 255);
-    l = parseUnit(match[3], 255);
-    a = parseUnit(match[4], 1);
-  }
-  return {r: r, g: g, b: b, a: a};
-};
-
 prototypeAccessors.hsv.get = function () {
   // _value is cloned to allow changes to be made to the values before passing them back
   var value = this._value;
@@ -1332,27 +1212,95 @@ prototypeAccessors.hsl.set = function (value) {
 };
 
 prototypeAccessors.rgbString.get = function () {
-  return Color.rgbToStr(this.rgb);
+  var rgb = this.rgb;
+  return ("rgb" + (rgb.a ? 'a' : '') + "(" + (rgb.r) + ", " + (rgb.g) + ", " + (rgb.b) + (rgb.a ? ', ' + rgb.a : '') + ")");
 };
 
 prototypeAccessors.rgbString.set = function (value) {
-  this.rgb = Color.parseRgbStr(value);
+  var match;
+  var r, g, b, a = 1;
+  if (match = REGEX_FUNCTIONAL_RGB.exec(value)) {
+    r = parseUnit(match[1], 255);
+    g = parseUnit(match[2], 255);
+    b = parseUnit(match[3], 255);
+  }
+  else if (match = REGEX_FUNCTIONAL_RGBA.exec(value)) {
+    r = parseUnit(match[1], 255);
+    g = parseUnit(match[2], 255);
+    b = parseUnit(match[3], 255);
+    a = parseUnit(match[4], 1);
+  }
+  if (match) {
+    this.rgb = {r: r, g: g, b: b, a: a};
+  } 
+  else {
+    throw new Error('invalid rgb string');
+  }
 };
 
 prototypeAccessors.hexString.get = function () {
-  return Color.rgbToHex(this.rgb);
+  var rgb = this.rgb;
+  return ("#" + (intToHex(rgb.r)) + (intToHex(rgb.g)) + (intToHex(rgb.b)));
 };
 
 prototypeAccessors.hexString.set = function (value) {
-  this.rgb = Color.parseHexStr(value);
+  var match;
+  var r, g, b, a = 255;
+  if (match = REGEX_HEX_3.exec(value)) {
+    r = parseHexInt(match[1]) * 17;
+    g = parseHexInt(match[2]) * 17;
+    b = parseHexInt(match[3]) * 17;
+  }
+  else if (match = REGEX_HEX_4.exec(value)) {
+    r = parseHexInt(match[1]) * 17;
+    g = parseHexInt(match[2]) * 17;
+    b = parseHexInt(match[3]) * 17;
+    a = parseHexInt(match[4]) * 17;
+  }
+  else if (match = REGEX_HEX_6.exec(value)) {
+    r = parseHexInt(match[1]);
+    g = parseHexInt(match[2]);
+    b = parseHexInt(match[3]);
+  }
+  else if (match = REGEX_HEX_8.exec(value)) {
+    r = parseHexInt(match[1]);
+    g = parseHexInt(match[2]);
+    b = parseHexInt(match[3]);
+    a = parseHexInt(match[4]);
+  }
+  if (match) {
+    this.rgb = {r: r, g: g, b: b, a: a / 255};
+  }
+  else {
+    throw new Error('invalid hex string');
+  }
 };
 
 prototypeAccessors.hslString.get = function () {
-  return Color.hslToStr(this.hsl);
+  var hsl = this.hsl;
+  return ("hsl" + (hsl.a ? 'a' : '') + "(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%" + (hsl.a ? ', ' + hsl.a : '') + ")");
 };
 
 prototypeAccessors.hslString.set = function (value) {
-  this.hsl = Color.parseHslStr(value);
+  var match;
+  var h, s, l, a = 1;
+  if (match = REGEX_FUNCTIONAL_HSL.exec(value)) {
+    h = parseUnit(match[1], 360);
+    s = parseUnit(match[2], 100);
+    l = parseUnit(match[3], 100);
+  }
+  else if (match = REGEX_FUNCTIONAL_HSLA.exec(value)) {
+    h = parseUnit(match[1], 360);
+    s = parseUnit(match[2], 100);
+    l = parseUnit(match[3], 100);
+    a = parseUnit(match[4], 1);
+  }
+  if (match) {
+    this.hsl = {h: h, s: s, l: l, a: a};
+  } 
+  else {
+    throw new Error('invalid hsl string');
+  }
 };
 
 Object.defineProperties( Color.prototype, prototypeAccessors );
