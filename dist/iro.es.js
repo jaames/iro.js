@@ -965,22 +965,35 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   return IroWheel;
 }(IroComponent));
 
+/**
+ * @desc Parse a css unit string - either regular int or a percentage number
+ * @param {String} str input string
+ * @param {String} max max number for converting percentages
+ * @returns {Number} 
+ */
 function parseUnit(str, max) {
   var isPercentage = str.indexOf('%') > -1;
   var num = parseFloat(str);
   return isPercentage ? (max / 100) * num : num;
 }
 
+/**
+ * @desc Parse hex str to an int
+ * @param {String} str input string
+ * @returns {Number} 
+ */
 function parseHexInt(str) {
   return parseInt(str, 16);
 }
 
+/**
+ * @desc Convert into to 2-digit hex
+ * @param {Number} int input number
+ * @returns {String} 
+ */
 function intToHex(int) {
   return int.toString(16).padStart(2, '0');
 }
-
-var round = Math.round;
-var floor = Math.floor;
 
 // Some regular expressions for rgb() and hsl() Colors are borrowed from tinyColor
 // https://github.com/bgrins/TinyColor
@@ -992,10 +1005,12 @@ var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
 // Allow positive/negative integer/number. Don't capture the either/or, just the entire outcome
 var CSS_UNIT = "(?:" + CSS_INTEGER + ")|(?:" + CSS_NUMBER + ")";
 
+// Parse function params
 // Parens and commas are optional, and this also allows for whitespace between numbers
 var PERMISSIVE_MATCH_3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
 var PERMISSIVE_MATCH_4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
 
+// Regex patterns for functional colors
 var REGEX_FUNCTIONAL_RGB = new RegExp(("rgb" + PERMISSIVE_MATCH_3));
 var REGEX_FUNCTIONAL_RGBA = new RegExp(("rgba" + PERMISSIVE_MATCH_4));
 var REGEX_FUNCTIONAL_HSL = new RegExp(("hsl" + PERMISSIVE_MATCH_3));
@@ -1013,7 +1028,7 @@ var Color = function Color(value) {
   // The watch callback function for this Color will be stored here
   this._onChange = false;
   // The default Color value
-  this._value = {h: undefined, s: undefined, v: undefined, a: undefined};
+  this._value = {h: 0, s: 0, v: 0, a: 0};
   if (value) { this.set(value); }
 };
 
@@ -1026,14 +1041,14 @@ var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true
 Color.prototype.set = function set (value) {
   var isString = typeof value === 'string';
   var isObject = typeof value === 'object';
-  if ((isString) && (REGEX_FUNCTIONAL_RGB.test(value) || REGEX_FUNCTIONAL_RGBA.test(value))) {
+  if ((isString) && (/^(?:#?|0x?)[0-6a-fA-F]{3,8}$/.test(value))) {
+    this.hexString = value;
+  }
+  else if ((isString) && (/^rgba?/.test(value))) {
     this.rgbString = value;
   }
-  else if ((isString) && (REGEX_FUNCTIONAL_HSL.test(value) || REGEX_FUNCTIONAL_HSLA.test(value))) {
+  else if ((isString) && (/^hsla?/.test(value))) {
     this.hslString = value;
-  }
-  else if ((isString) && (REGEX_HEX_6.test(value) || REGEX_HEX_3.test(value))) {
-    this.hexString = value;
   }
   else if ((isObject) && (value instanceof Color)) {
     this.hsv = value.hsv;
@@ -1046,6 +1061,9 @@ Color.prototype.set = function set (value) {
   }
   else if ((isObject) && ('h' in value) && ('s' in value) && ('l' in value)) {
     this.hsl = value;
+  }
+  else {
+    throw new Error('invalid color value');
   }
 };
 
@@ -1077,7 +1095,7 @@ Color.prototype.clone = function clone () {
 Color.hsvToRgb = function hsvToRgb (hsv) {
   var r, g, b, i, f, p, q, t;
   var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
-  i = floor(h * 6);
+  i =Math.floor(h * 6);
   f = h * 6 - i;
   p = v * (1 - s);
   q = v * (1 - f * s);
@@ -1090,7 +1108,7 @@ Color.hsvToRgb = function hsvToRgb (hsv) {
     case 4: r = t, g = p, b = v; break;
     case 5: r = v, g = p, b = q; break;
   }
-  return {r: round(r * 255), g: round(g * 255), b: round(b * 255)};
+  return {r:Math.round(r * 255), g:Math.round(g * 255), b:Math.round(b * 255)};
 };
 
 /**
@@ -1165,15 +1183,13 @@ prototypeAccessors.hsv.set = function (newValue) {
   // Otherwise we can just be lazy
   if (this._onChange) {
     var oldValue = this._value;
-    for (var channel in oldValue) {
-      if (!newValue.hasOwnProperty(channel)) { newValue[channel] = oldValue[channel]; }
-    }
+    newValue = Object.assign({}, oldValue, newValue);
     var changes = {};
     for (var key in oldValue) { changes[key] = newValue[key] != oldValue[key]; }
     // Update the old value
     this._value = newValue;
     // If the value has changed, call hook callback
-    if (changes.h || changes.s || changes.v) { this._onChange(this, changes); }
+    if (changes.h || changes.s || changes.v || changes.a) { this._onChange(this, changes); }
   } else {
     this._value = newValue;
   }
@@ -1185,9 +1201,9 @@ prototypeAccessors.rgb.get = function () {
     var g = ref.g;
     var b = ref.b;
   return {
-    r: round(r),
-    g: round(g),
-    b: round(b),
+    r:Math.round(r),
+    g:Math.round(g),
+    b:Math.round(b),
   };
 };
 
@@ -1201,9 +1217,9 @@ prototypeAccessors.hsl.get = function () {
     var s = ref.s;
     var l = ref.l;
   return {
-    h: round(h),
-    s: round(s),
-    l: round(l),
+    h:Math.round(h),
+    s:Math.round(s),
+    l:Math.round(l),
   };
 };
 

@@ -12,8 +12,8 @@ const CSS_UNIT = `(?:${CSS_INTEGER})|(?:${CSS_NUMBER})`;
 
 // Parse function params
 // Parens and commas are optional, and this also allows for whitespace between numbers
-const PERMISSIVE_MATCH_3 = `[\\s|\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
-const PERMISSIVE_MATCH_4 = `[\\s|\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
+const PERMISSIVE_MATCH_3 = `[\\s|\\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
+const PERMISSIVE_MATCH_4 = `[\\s|\\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
 
 // Regex patterns for functional colors
 const REGEX_FUNCTIONAL_RGB = new RegExp(`rgb${PERMISSIVE_MATCH_3}`);
@@ -38,7 +38,7 @@ export default class Color {
     // The watch callback function for this Color will be stored here
     this._onChange = false;
     // The default Color value
-    this._value = {h: undefined, s: undefined, v: undefined, a: undefined};
+    this._value = {h: 0, s: 0, v: 0, a: 0};
     if (value) this.set(value);
   }
 
@@ -49,13 +49,13 @@ export default class Color {
   set(value) {
     const isString = typeof value === 'string';
     const isObject = typeof value === 'object';
-    if ((isString) && (REGEX_HEX_6.test(value) || REGEX_HEX_3.test(value))) {
+    if ((isString) && (/^(?:#?|0x?)[0-6a-fA-F]{3,8}$/.test(value))) {
       this.hexString = value;
     }
-    else if ((isString) && (REGEX_FUNCTIONAL_RGB.test(value) || REGEX_FUNCTIONAL_RGBA.test(value))) {
+    else if ((isString) && (/^rgba?/.test(value))) {
       this.rgbString = value;
     }
-    else if ((isString) && (REGEX_FUNCTIONAL_HSL.test(value) || REGEX_FUNCTIONAL_HSLA.test(value))) {
+    else if ((isString) && (/^hsla?/.test(value))) {
       this.hslString = value;
     }
     else if ((isObject) && (value instanceof Color)) {
@@ -69,6 +69,9 @@ export default class Color {
     }
     else if ((isObject) && ('h' in value) && ('s' in value) && ('l' in value)) {
       this.hsl = value;
+    }
+    else {
+      throw new Error('invalid color value');
     }
   }
 
@@ -185,16 +188,14 @@ export default class Color {
     // If this Color is being watched for changes we need to compare the new and old values to check the difference
     // Otherwise we can just be lazy
     if (this._onChange) {
-      var oldValue = this._value;
-      for (var channel in oldValue) {
-        if (!newValue.hasOwnProperty(channel)) newValue[channel] = oldValue[channel];
-      }
-      var changes = {};
-      for (var key in oldValue) changes[key] = newValue[key] != oldValue[key];
+      const oldValue = this._value;
+      newValue = { ...oldValue, ...newValue };
+      let changes = {};
+      for (let key in oldValue) changes[key] = newValue[key] != oldValue[key];
       // Update the old value
       this._value = newValue;
       // If the value has changed, call hook callback
-      if (changes.h || changes.s || changes.v) this._onChange(this, changes);
+      if (changes.h || changes.s || changes.v || changes.a) this._onChange(this, changes);
     } else {
       this._value = newValue;
     }
