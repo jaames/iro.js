@@ -965,55 +965,116 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   return IroWheel;
 }(IroComponent));
 
+function parseUnit(str, max) {
+  var isPercentage = str.indexOf('%') > -1;
+  var num = parseFloat(str);
+  return isPercentage ? (max / 100) * num : num;
+}
+
+function parseHexInt(str) {
+  return parseInt(str, 16);
+}
+
+function intToHex(int) {
+  return int.toString(16).padStart(2, '0');
+}
+
 var round = Math.round;
 var floor = Math.floor;
 
-/**
-  * @desc generic parser for hsl / rgb / etc string
-  * @param {String} str - color string
-  * @param {Array} maxValues - max values for each channel (used for calculating percent-based values)
-  * @return {Array} type (rgb | rgba | hsl | hsla) values for each channel
-*/
-function parseColorStr(str, maxValues) {
-  var parsed = str.match(/(\S+)\((\d+)(%?)(?:\D+?)(\d+)(%?)(?:\D+?)(\d+)(%?)(?:\D+?)?([0-9\.]+?)?\)/i),
-      val1 = parseInt(parsed[2]),
-      val2 = parseInt(parsed[4]),
-      val3 = parseInt(parsed[6]);
-  return [
-    parsed[1],
-    parsed[3] == "%" ? val1 / 100 * maxValues[0] : val1,
-    parsed[5] == "%" ? val2 / 100 * maxValues[1] : val2,
-    parsed[7] == "%" ? val3 / 100 * maxValues[2] : val3,
-    parseFloat(parsed[8]) || undefined
-  ];
-}
-/**
-  * @desc compare values between two objects, returns a object representing changes with true/false values
-  * @param {Object} a
-  * @param {Object} b
-  * @return {Object}
-*/
-function compareObjs(a, b) {
-  var changes = {};
-  for (var key in a) { changes[key] = b[key] != a[key]; }
-  return changes;
-}
-var color = function color(value) {
-  // The watch callback function for this color will be stored here
+// Some regular expressions for rgb() and hsl() Colors are borrowed from tinyColor
+// https://github.com/bgrins/TinyColor
+
+// https://www.w3.org/TR/css3-values/#integers
+var CSS_INTEGER = "[-\\+]?\\d+%?";
+// http://www.w3.org/TR/css3-values/#number-value
+var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
+// Allow positive/negative integer/number. Don't capture the either/or, just the entire outcome
+var CSS_UNIT = "(?:" + CSS_INTEGER + ")|(?:" + CSS_NUMBER + ")";
+
+// Parens and commas are optional, and this also allows for whitespace between numbers
+var PERMISSIVE_MATCH_3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+var PERMISSIVE_MATCH_4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+
+var REGEX_FUNCTIONAL_RGB = new RegExp(("rgb" + PERMISSIVE_MATCH_3));
+var REGEX_FUNCTIONAL_RGBA = new RegExp(("rgba" + PERMISSIVE_MATCH_4));
+var REGEX_FUNCTIONAL_HSL = new RegExp(("hsl" + PERMISSIVE_MATCH_3));
+var REGEX_FUNCTIONAL_HSLA = new RegExp(("hsla" + PERMISSIVE_MATCH_4));
+
+var HEX_START = "^(?:#?|0x?)";
+var HEX_INT_SINGLE = "([0-9a-fA-F]{1})";
+var HEX_INT_DOUBLE = "([0-9a-fA-F]{2})";
+var REGEX_HEX_3 = new RegExp(("" + HEX_START + HEX_INT_SINGLE + HEX_INT_SINGLE + HEX_INT_SINGLE + "$"));
+var REGEX_HEX_4 = new RegExp(("" + HEX_START + HEX_INT_SINGLE + HEX_INT_SINGLE + HEX_INT_SINGLE + HEX_INT_SINGLE + "$"));
+var REGEX_HEX_6 = new RegExp(("" + HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + "$"));
+var REGEX_HEX_8 = new RegExp(("" + HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + "$"));
+
+var Color = function Color(value) {
+  // The watch callback function for this Color will be stored here
   this._onChange = false;
-  // The default color value
-  this._value = {h: undefined, s: undefined, v: undefined};
+  // The default Color value
+  this._value = {h: undefined, s: undefined, v: undefined, a: undefined};
   if (value) { this.set(value); }
 };
 
 var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true },hsl: { configurable: true },rgbString: { configurable: true },hexString: { configurable: true },hslString: { configurable: true } };
 
 /**
+  * @desc set the Color from any valid value
+  * @param {Object | String | Color} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+*/
+Color.prototype.set = function set (value) {
+  var isString = typeof value === 'string';
+  var isObject = typeof value === 'object';
+  if ((isString) && (REGEX_FUNCTIONAL_RGB.test(value) || REGEX_FUNCTIONAL_RGBA.test(value))) {
+    this.rgbString = value;
+  }
+  else if ((isString) && (REGEX_FUNCTIONAL_HSL.test(value) || REGEX_FUNCTIONAL_HSLA.test(value))) {
+    this.hslString = value;
+  }
+  else if ((isString) && (REGEX_HEX_6.test(value) || REGEX_HEX_3.test(value))) {
+    this.hexString = value;
+  }
+  else if ((isObject) && (value instanceof Color)) {
+    this.hsv = value.hsv;
+  }
+  else if ((isObject) && ('r' in value) && ('g' in value) && ('b' in value)) {
+    this.rgb = value;
+  }
+  else if ((isObject) && ('h' in value) && ('s' in value) && ('v' in value)) {
+    this.hsv = value;
+  }
+  else if ((isObject) && ('h' in value) && ('s' in value) && ('l' in value)) {
+    this.hsl = value;
+  }
+};
+
+/**
+  * @desc shortcut to set a specific channel value
+  * @param {String} format - hsv | hsl | rgb
+  * @param {String} channel - individual channel to set, for example if model = hsl, chanel = h | s | l
+  * @param {Number} value - new value for the channel
+*/
+Color.prototype.setChannel = function setChannel (format, channel, value) {
+    var obj;
+
+  this[format] = Object.assign({}, this[format], ( obj = {}, obj[channel] = value, obj ));
+};
+
+/**
+  * @desc make new Color instance with the same value as this one
+  * @return {Color}
+*/
+Color.prototype.clone = function clone () {
+  return new Color(this);
+};
+
+/**
   * @desc convert hsv object to rgb
   * @param {Object} hsv hsv object
   * @return {Object} rgb object
 */
-color.hsv2Rgb = function hsv2Rgb (hsv) {
+Color.hsvToRgb = function hsvToRgb (hsv) {
   var r, g, b, i, f, p, q, t;
   var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
   i = floor(h * 6);
@@ -1037,7 +1098,7 @@ color.hsv2Rgb = function hsv2Rgb (hsv) {
   * @param {Object} rgb - rgb object
   * @return {Object} hsv object
 */
-color.rgb2Hsv = function rgb2Hsv (rgb) {
+Color.rgbToHsv = function rgbToHsv (rgb) {
   var r = rgb.r / 255,
     g = rgb.g / 255,
     b = rgb.b / 255,
@@ -1064,7 +1125,7 @@ color.rgb2Hsv = function rgb2Hsv (rgb) {
   * @param {Object} hsv - hsv object
   * @return {Object} hsl object
 */
-color.hsv2Hsl = function hsv2Hsl (hsv) {
+Color.hsvToHsl = function hsvToHsl (hsv) {
   var s = hsv.s / 100,
     v = hsv.v / 100;
   var l = 0.5 * v * (2 - s);
@@ -1081,7 +1142,7 @@ color.hsv2Hsl = function hsv2Hsl (hsv) {
   * @param {Object} hsl - hsl object
   * @return {Object} hsv object
 */
-color.hsl2Hsv = function hsl2Hsv (hsl) {
+Color.hslToHsv = function hslToHsv (hsl) {
   var s = hsl.s / 100,
   l = hsl.l / 100;
   l *= 2;
@@ -1098,7 +1159,7 @@ color.hsl2Hsv = function hsl2Hsv (hsl) {
   * @param {Object} hsl - hsl object
   * @return {Object} hsl string
 */
-color.hsl2Str = function hsl2Str (ref) {
+Color.hslToStr = function hslToStr (ref) {
     var h = ref.h;
     var s = ref.s;
     var l = ref.l;
@@ -1112,7 +1173,7 @@ color.hsl2Str = function hsl2Str (ref) {
   * @param {Object} rgb - rgb object
   * @return {Object} rgb string
 */
-color.rgb2Str = function rgb2Str (ref) {
+Color.rgbToStr = function rgbToStr (ref) {
     var r = ref.r;
     var g = ref.g;
     var b = ref.b;
@@ -1126,87 +1187,109 @@ color.rgb2Str = function rgb2Str (ref) {
   * @param {Object} rgb - rgb object  
   * @return {Object} hex string
 */
-color.rgb2Hex = function rgb2Hex (ref) {
+Color.rgbToHex = function rgbToHex (ref) {
     var r = ref.r;
     var g = ref.g;
     var b = ref.b;
-    var a = ref.a;
 
-  var str = "#";
-  str += r.toString(16).padStart(2, '0');
-  str += g.toString(16).padStart(2, '0');
-  str += b.toString(16).padStart(2, '0');
-  return str;
+  return ("#" + (intToHex(r)) + (intToHex(g)) + (intToHex(b)));
 };
 
 /**
   * @desc parse hex string
-  * @param {String} hex - color string
+  * @param {String} hex - Color string
   * @return {Object} rgb object
 */
-color.parseHexStr = function parseHexStr (hex) {
-  // Strip any "#" characters
-  hex = hex.replace("#", "");
-  // Prefix the hex string with "0x" which indicates a number in hex notation, then convert to an integer
-  var int = parseInt("0x" + hex),
-      // If the length of the input is only 3, then it is a shorthand hex color
-      isShorthand = hex.length == 3,
-      // bitMask for isolating each channel
-      bitMask = isShorthand ? 0xF : 0xFF,
-      // bitLength of each channel (for example, F is 4 bits long while FF is 8 bits long)
-      bitLength = isShorthand ? 4 : 8,
-      // If we're using shorthand notation, multiply each channel by 17
-      multiplier = isShorthand ? 17 : 1;
-  return {
-    r: ((int >> (bitLength * 2)) & bitMask) * multiplier,
-    g: ((int >> bitLength) & bitMask) * multiplier,
-    b: (int & bitMask) * multiplier,
-  };
+Color.parseHexStr = function parseHexStr (hex) {
+  var match;
+  var r, g, b, a = 255;
+  if (match = REGEX_HEX_3.exec(hex)) {
+    r = parseHexInt(match[1]) * 17;
+    g = parseHexInt(match[2]) * 17;
+    b = parseHexInt(match[3]) * 17;
+  }
+  else if (match = REGEX_HEX_4.exec(hex)) {
+    r = parseHexInt(match[1]) * 17;
+    g = parseHexInt(match[2]) * 17;
+    b = parseHexInt(match[3]) * 17;
+    a = parseHexInt(match[4]) * 17;
+  }
+  else if (match = REGEX_HEX_6.exec(hex)) {
+    r = parseHexInt(match[1]);
+    g = parseHexInt(match[2]);
+    b = parseHexInt(match[3]);
+  }
+  else if (match = REGEX_HEX_8.exec(hex)) {
+    r = parseHexInt(match[1]);
+    g = parseHexInt(match[2]);
+    b = parseHexInt(match[3]);
+    a = parseHexInt(match[4]);
+  }
+  if (match) {
+    return {r: r, g: g, b: b, a: a / 255};
+  }
 };
 
 /**
   * @desc parse hsl string
-  * @param {String} str - color string
+  * @param {String} str - Color string
   * @return {Object} hsl object
 */
-color.parseHslStr = function parseHslStr (str) {
-  var parsed = parseColorStr(str, [360, 100, 100]);
-  return {
-    h: parsed[2],
-    s: parsed[3],
-    l: parsed[4]
-  };
+Color.parseHslStr = function parseHslStr (str) {
+  var match;
+  var h, s, l, a = 1;
+  if (match = REGEX_FUNCTIONAL_HSL.exec(str)) {
+    h = parseUnit(match[1], 360);
+    s = parseUnit(match[2], 100);
+    l = parseUnit(match[3], 100);
+  }
+  else if (match = REGEX_FUNCTIONAL_HSLA.exec(str)) {
+    h = parseUnit(match[1], 360);
+    s = parseUnit(match[2], 100);
+    l = parseUnit(match[3], 100);
+    a = parseUnit(match[4], 1);
+  }
+  return {r: r, g: g, b: b, a: a};
 };
 
 /**
   * @desc parse rgb string
-  * @param {String} str - color string
+  * @param {String} str - Color string
   * @return {Object} rgb object
 */
-color.parseRgbStr = function parseRgbStr (str) {
-  var parsed = parseColorStr(str, [255, 255, 255]);
-  return {
-    r: parsed[1],
-    g: parsed[2],
-    b: parsed[3]
-  };
+Color.parseRgbStr = function parseRgbStr (str) {
+  var match;
+  var r, g, b, a = 1;
+  if (match = REGEX_FUNCTIONAL_RGB.exec(str)) {
+    r = parseUnit(match[1], 255);
+    b = parseUnit(match[2], 255);
+    l = parseUnit(match[3], 255);
+  }
+  else if (match = REGEX_FUNCTIONAL_RGBA.exec(str)) {
+    r = parseUnit(match[1], 255);
+    b = parseUnit(match[2], 255);
+    l = parseUnit(match[3], 255);
+    a = parseUnit(match[4], 1);
+  }
+  return {r: r, g: g, b: b, a: a};
 };
 
 prototypeAccessors.hsv.get = function () {
   // _value is cloned to allow changes to be made to the values before passing them back
-  var v = this._value;
-  return {h: v.h, s: v.s, v: v.v};
+  var value = this._value;
+  return {h: value.h, s: value.s, v: value.v, a: value.a};
 };
 
 prototypeAccessors.hsv.set = function (newValue) {
-  // If this color is being watched for changes we need to compare the new and old values to check the difference
+  // If this Color is being watched for changes we need to compare the new and old values to check the difference
   // Otherwise we can just be lazy
   if (this._onChange) {
     var oldValue = this._value;
     for (var channel in oldValue) {
       if (!newValue.hasOwnProperty(channel)) { newValue[channel] = oldValue[channel]; }
     }
-    var changes = compareObjs(oldValue, newValue);
+    var changes = {};
+    for (var key in oldValue) { changes[key] = newValue[key] != oldValue[key]; }
     // Update the old value
     this._value = newValue;
     // If the value has changed, call hook callback
@@ -1217,7 +1300,7 @@ prototypeAccessors.hsv.set = function (newValue) {
 };
 
 prototypeAccessors.rgb.get = function () {
-  var ref = color.hsv2Rgb(this._value);
+  var ref = Color.hsvToRgb(this._value);
     var r = ref.r;
     var g = ref.g;
     var b = ref.b;
@@ -1229,11 +1312,11 @@ prototypeAccessors.rgb.get = function () {
 };
 
 prototypeAccessors.rgb.set = function (value) {
-  this.hsv = color.rgb2Hsv(value);
+  this.hsv = Color.rgbToHsv(value);
 };
 
 prototypeAccessors.hsl.get = function () {
-  var ref = color.hsv2Hsl(this._value);
+  var ref = Color.hsvToHsl(this._value);
     var h = ref.h;
     var s = ref.s;
     var l = ref.l;
@@ -1245,80 +1328,34 @@ prototypeAccessors.hsl.get = function () {
 };
 
 prototypeAccessors.hsl.set = function (value) {
-  this.hsv = color.hsl2Hsv(value);
+  this.hsv = Color.hslToHsv(value);
 };
 
 prototypeAccessors.rgbString.get = function () {
-  return color.rgb2Str(this.rgb);
+  return Color.rgbToStr(this.rgb);
 };
 
 prototypeAccessors.rgbString.set = function (value) {
-  this.rgb = color.parseRgbStr(value);
+  this.rgb = Color.parseRgbStr(value);
 };
 
 prototypeAccessors.hexString.get = function () {
-  return color.rgb2Hex(this.rgb);
+  return Color.rgbToHex(this.rgb);
 };
 
 prototypeAccessors.hexString.set = function (value) {
-  this.rgb = color.parseHexStr(value);
+  this.rgb = Color.parseHexStr(value);
 };
 
 prototypeAccessors.hslString.get = function () {
-  return color.hsl2Str(this.hsl);
+  return Color.hslToStr(this.hsl);
 };
 
 prototypeAccessors.hslString.set = function (value) {
-  this.hsl = color.parseHslStr(value);
+  this.hsl = Color.parseHslStr(value);
 };
 
-/**
-  * @desc set the color from any valid value
-  * @param {Object | String | color} value - color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
-*/
-color.prototype.set = function set (value) {
-  if (typeof value == "object") {
-    if (value instanceof color) {
-      this.hsv = color._value;
-    } else if ("r" in value) {
-      this.rgb = value;
-    } else if ("v" in value) {
-      this.hsv = value;
-    } else if ("l" in value) {
-      this.hsl = value;
-    }
-  } else if (typeof value == "string") {
-    if (/^rgb/.test(value)) {
-      this.rgbString = value;
-    } else if (/^hsl/.test(value)) {
-      this.hslString = value;
-    } else if (/^#[0-9A-Fa-f]/.test(value)) {
-      this.hexString = value;
-    }
-  }
-};
-
-/**
-  * @desc shortcut to set a specific channel value
-  * @param {String} model - hsv | hsl | rgb
-  * @param {String} channel - individual channel to set, for example if model = hsl, chanel = h | s | l
-  * @param {Number} value - new value for the channel
-*/
-color.prototype.setChannel = function setChannel (model, channel, value) {
-  var v = this[model];
-  v[channel] = value;
-  this[model] = v;
-};
-
-/**
-  * @desc make new color instance with the same value as this one
-  * @return {color}
-*/
-color.prototype.clone = function clone () {
-  return new color(this);
-};
-
-Object.defineProperties( color.prototype, prototypeAccessors );
+Object.defineProperties( Color.prototype, prototypeAccessors );
 
 var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
   function IroSlider () {
@@ -1340,7 +1377,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
     var cornerRadius = sliderHeight / 2;
     var range = width - cornerRadius * 2;
     var hsv = props.color.hsv;
-    var hsl = color.hsv2Hsl({h: hsv.h, s: hsv.s, v: 100});
+    var hsl = Color.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
 
     return (
       h( 'svg', { 
@@ -1434,7 +1471,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     this.emitHook('init:before');
     this._events = {};
     this._colorChangeActive = false;
-    this.color = new color(props.color);
+    this.color = new Color(props.color);
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
     this.state = Object.assign({}, props,
@@ -1559,15 +1596,15 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
    * @param {IroColor} color current color
    * @param {Object} changes shows which h,s,v color channels changed
    */
-  ColorPicker.prototype.updateColor = function updateColor (color$$1, changes) {
-    this.emitHook('color:beforeUpdate', color$$1, changes);
-    this.setState({ color: color$$1 });
-    this.emitHook('color:afterUpdate', color$$1, changes);
+  ColorPicker.prototype.updateColor = function updateColor (color, changes) {
+    this.emitHook('color:beforeUpdate', color, changes);
+    this.setState({ color: color });
+    this.emitHook('color:afterUpdate', color, changes);
     // Prevent infinite loops if the color is set inside a `color:change` callback
     if (!this._colorChangeActive) {
       // While _colorChangeActive = true, this event cannot be fired
       this._colorChangeActive = true;
-      this.emit('color:change', color$$1, changes);
+      this.emit('color:change', color, changes);
       this._colorChangeActive = false;
     }
   };
@@ -1663,7 +1700,7 @@ function usePlugins(core) {
 }
 
 var iro = usePlugins({
-  Color: color,
+  Color: Color,
   ColorPicker: ColorPicker$1,
   ui: {
     h: h,
