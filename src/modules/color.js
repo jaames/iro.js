@@ -262,9 +262,9 @@ export default class color {
   static parseHslStr(str) {
     var parsed = parseColorStr(str, [360, 100, 100]);
     return {
-      h: parsed[2],
-      s: parsed[3],
-      l: parsed[4]
+      h: parsed[1],
+      s: parsed[2],
+      l: parsed[3]
     };
   }
 

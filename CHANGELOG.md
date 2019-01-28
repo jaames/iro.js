@@ -1,5 +1,17 @@
 ### Changelog
 
+#### 3.5.5
+
+##### Fixes
+
+- Fixes an issue where hsl strings weren't being parsed correctly. See issue thread #50.
+
+#### 3.5.4
+
+##### Fixes
+
+- Fixes another issue seen with Safari gradient URLs (...) Further details are noted in issue thread #45.
+
 #### 3.5.3
 
 ##### Fixes

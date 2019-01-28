@@ -1,6 +1,6 @@
 {
   "name": "@jaames/iro",
-  "version": "3.5.4",
+  "version": "3.5.5",
   "description": "A sleek and lightweight JS color picker - with zero dependencies",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",

@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.4
+ * iro.js v3.5.5
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -469,9 +469,9 @@ color.parseHexStr = function parseHexStr (hex) {
 color.parseHslStr = function parseHslStr (str) {
   var parsed = parseColorStr(str, [360, 100, 100]);
   return {
-    h: parsed[2],
-    s: parsed[3],
-    l: parsed[4]
+    h: parsed[1],
+    s: parsed[2],
+    l: parsed[3]
   };
 };
 /**
@@ -1364,7 +1364,7 @@ var iro = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
-  version: "3.5.4"
+  version: "3.5.5"
 };
 
 export default iro;
