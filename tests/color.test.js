@@ -1,6 +1,8 @@
 import test from 'ava';
 import iro from '../';
 
+// Color API tests. These ensure that colors are converted and parsed properly 
+
 test('iro.Color is a constructor', t => {
   t.truthy(!!iro.Color.prototype && !!iro.Color.prototype.constructor.name);
 });
@@ -43,7 +45,7 @@ test('iro.Color.rgbToHsv accurately converts rgb to hsv', t => {
   t.deepEqual(iro.Color.rgbToHsv({r: 255, g: 0, b: 255}), {h: 300, s: 100, v: 100});
 });
 
-test('iro.Color.hsvTorgb accurately converts hsv to rgb', t => {
+test('iro.Color.hsvToRgb accurately converts hsv to rgb', t => {
   // Pure white
   t.deepEqual(iro.Color.hsvToRgb({h: 0, s: 0, v: 100}), {r: 255, g: 255, b: 255});
   // Pure black
@@ -60,6 +62,26 @@ test('iro.Color.hsvTorgb accurately converts hsv to rgb', t => {
   t.deepEqual(iro.Color.hsvToRgb({h: 240, s: 100, v: 100}), {r: 0, g: 0, b: 255});
   // Pure magenta
   t.deepEqual(iro.Color.hsvToRgb({h: 300, s: 100, v: 100}), {r: 255, g: 0, b: 255});
+});
+
+test('iro.Color.hslToHsv accurately converts hsl to hsv', t => {
+  // Pure white
+  t.deepEqual(iro.Color.hslToHsv({h: 0, s: 0, l: 100}), {h: 0, s: 0, v: 100});
+  // Pure black
+  // t.deepEqual(iro.Color.hslToHsv({h: 0, s: 0, l: 0}), {h: 0, s: 0, v: 0});
+  // 50% s 50% l
+  // t.deepEqual(iro.Color.hslToHsv({h: 0, s: 50, l: 50}), {h: 0, s: 67, v: 75});
+  // 25% s 25% l
+  // t.deepEqual(iro.Color.hslToHsv({h: 0, s: 25, l: 25}), {h: 0, s: 40, v: 31});
+  // 75% s 75% l
+  // t.deepEqual(iro.Color.hslToHsv({h: 0, s: 75, l: 75}), {h: 0, s: 67, v: 75});
+});
+
+test('iro.Color.hsvToHsl accurately converts hsv to hsl', t => {
+  // Pure white
+  t.deepEqual(iro.Color.hsvToHsl({h: 0, s: 0, v: 100}), {h: 0, s: 0, l: 100});
+  // Pure black
+  t.deepEqual(iro.Color.hsvToHsl({h: 0, s: 0, v: 0}), {h: 0, s: 0, l: 0});
 });
 
 test.cb('iro.Color accepts and fires _onChange callback', t => {

@@ -1,6 +1,8 @@
 import test from 'ava';
 import iro from '../';
 
+// Core library tests. These make sure that iro exposes the core APIs properly.
+
 test('Core exposes iro.version', t => {
   t.truthy('version' in iro);
 });
