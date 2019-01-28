@@ -49,7 +49,7 @@ export default class Color {
   set(value) {
     const isString = typeof value === 'string';
     const isObject = typeof value === 'object';
-    if ((isString) && (/^(?:#?|0x?)[0-6a-fA-F]{3,8}$/.test(value))) {
+    if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value))) {
       this.hexString = value;
     }
     else if ((isString) && (/^rgba?/.test(value))) {
