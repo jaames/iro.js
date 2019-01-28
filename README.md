@@ -27,6 +27,12 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="#features">Features</a> | <a href="#installation">Installation</a> | <a href="#demo">Demo</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a>
+</p>
+
+<br/>
+
 ## Features
 
  * **Simple**: Easy-to-use API, with support for hex, rgb, hsl and hsv color formats.
@@ -36,6 +42,8 @@
  * **Licenced under MPL 2.0**: 100% free for personal and commercial use.
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+
+<br/>
 
 ## Installation
 
@@ -75,21 +83,25 @@ Then add it to the `<head>` of your page with a `<script>` tag:
 </html>
 ```
 
-When manually inluding the library like this, it will be globally available as `window.iro`.
+When manually including the library like this, it will be globally available as `window.iro`.
 
-### Using the unpkg CDN
+### Using the jsDelivr CDN
 
 ```html
-<script src="https://unpkg.com/@jaames/iro@beta/dist/iro.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@beta/dist/iro.min.js"></script>
 ```
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+
+<br/>
 
 ## Demo
 
 Coming soon!
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+
+<br/>
 
 ## Usage
 
@@ -107,7 +119,7 @@ Then use JavaScript to create a new `iro.ColorPicker` and provide a CSS selector
 var colorPicker = new iro.ColorPicker('#color-picker-container');
 ```
 
-You can use a DOM object instead of a CSS selector -- this might be more suitable if you're integrating iro.js into an application built with Vue, React, Angular, etc.
+You can also use a DOM object instead of a CSS selector if necessary -- this might be more suitable if you're integrating iro.js into an application built with Vue, React, Angular, etc.
 
 ### Color Picker Options
 
@@ -179,7 +191,7 @@ The following color formats are supported by the color picker's `color` config o
 * **rgb(a) string**: `"rgb(255, 0, 0)"`
 * **percentage rgb(a) string**: `"rgb(100%, 0%, 0%)"`
 * **rgb object**: `{r: 255, g: 0, b: 0}`
-* **hsl(a) string**: `hsl(360, 50%, 100%)`
+* **hsl(a) string**: `"hsl(360, 50%, 100%)"`
 * **hsl object**: `{h: 360, s: 50, l: 100}`
 * **hsv object**: `{h: 360, s: 100, v: 50}`
 
@@ -223,6 +235,8 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
+<br/>
+
 ## Documentation
 
 > :warning: Full v4 documentation is currently being written
@@ -237,11 +251,15 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
+<br/>
+
 ## Plugins
 
 Coming soon!
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+
+<br/>
 
 [Website](//iro.js.org) | [Documentation](//iro.js.org/introduction.html) | [Codepen Demo](//codepen.io/rakujira/pen/WZOeNq?editors=0010) | [Contribution Guide](CONTRIBUTE.md) | [Changelog](CHANGELOG.md) | [License](LICENSE.txt)
 

@@ -25,9 +25,9 @@ module.exports = {
       '/',
       '/introduction.html',
       '/guide.html',
+      '/extensions.html',
       '/colorPicker_api.html',
       '/color_api.html',
-      '/stylesheet_api.html',
       {
         title: 'Links',
         children: [

@@ -2,36 +2,69 @@
 title: Introduction
 ---
 
+<h1 align="center"><a href="//iro.js.org"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/screenshot.png"/><br/>iro.js</a></h1>
+
+<p align="center">
+  <b>A highly customizable svg-based color picker with zero external dependencies | <a href="//iro.js.org">iro.js.org</a></b>
+</p>
+
+<p align="center">
+  <a href="https://github.com/jaames/iro.js/blob/master/LICENSE.txt">
+    <img src="https://badgen.net/github/license/jaames/iro.js?color=BB5FD1" alt="license" />
+  </a>
+  <a href="https://npmjs.org/package/@jaames/iro">
+    <img src="https://badgen.net/npm/v/@jaames/iro?color=6C8FF2" alt="version" />
+  </a>
+  <a href="https://npmjs.org/package/@jaames/iro">
+    <img src="https://badgen.net/npm/dt/@jaames/iro?color=6AD4E0" alt="downloads" />
+  </a>
+  <a href="https://bundlephobia.com/result?p=@jaames/iro@beta">
+    <img src="https://badgen.net/bundlephobia/minzip/@jaames/iro@beta?color=6FDF89" alt="minzip size" />
+  </a>
+  <a href="">
+    <img src="https://badgen.net/badge/dependencies/none/F8AE55" alt="dependencies" />
+  </a>
+  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url">
+    <img src="https://badgen.net/badge/donate/paypal/ED5151" alt="donate" />
+  </a>
+</p>
+
 ## Features
 
- * Customizable SVG-based UI
- * Convert colors between RGB, HSV, HSL and hex RGB
- * Dynamicly update CSS styles when the selected color changes
- * Lightweight, at around 13kB minified (or 5kB minified + gzipped)
- * Zero dependencies (not even jQuery or extra stylesheets/images)
- * Supports IE9+
+ * **Simple**: Low friction API, with robust support for hex, rgb, hsl and hsv color formats.
+ * **Good-looking**: A lot of attention has been spent making the UI look and feel intuitive. It's also all SVG, so it looks great on any screen, at any scale. 
+ * **Small footprint**: Around [~7kb](https://bundlephobia.com/result?p=@jaames/iro@beta) minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.
+ * **Consistent**: Supports all modern browsers and is responsive on touchscreen devices.
+ * **Customizable**: Tweak the library to your requirements with [Plugins](#plugins) and custom UI elements.
+ * **Licenced under MPL 2.0**: 100% free for personal and commercial use.
 
 ## Installation
 
-Install the latest version of iro.js from [npm](https://www.npmjs.com/package/@jaames/iro):
+### Install with NPM
 
 ```bash
-$ npm install @jaames/iro
+$ npm install @jaames/iro@beta --save
 ```
 
-Then using a module bundler like Rollup or Webpack, import it into your code:
+If you are using a module bundler like Webpack or Rollup, import iro.js into your project: 
 
-```js
+```javascript
 // Using ES6 module syntax
-import iro from "@jaames/iro";
+import iro from '@jaames/iro';
 
-// Using CommonJS
-var iro = require("@jaames/iro");
+// Using CommonJS modules
+const iro = require('@jaames/iro');
 ```
 
-----
+### Download and host yourself
 
-**Or**, [download](#download) iro.js directly and add it to the `<head>` of your page with a `<script>` tag:
+**[Development version](https://raw.githubusercontent.com/jaames/iro.js/v4/dist/iro.js)**<br/>
+Uncompressed at around 50kB, with source comments included
+
+**[Production version](https://raw.githubusercontent.com/jaames/iro.js/v4/dist/iro.min.js)**<br/>
+Minified to 19kB
+
+Then add it to the `<head>` of your page with a `<script>` tag:
 
 ```html
 <html>
@@ -43,12 +76,14 @@ var iro = require("@jaames/iro");
 </html>
 ```
 
-When using the library this way, it will be available globally as `window.iro`.
+When manually including the library like this, it will be globally available as `window.iro`.
 
-## Download
+### Using the jsDelivr CDN
 
-[Development Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js) <br>
-Uncompressed with comments at around 50kB
+```html
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@beta/dist/iro.min.js"></script>
+```
 
-[Production Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js) <br>
-Minified to 13kB
+## Demo
+
+Coming soon!

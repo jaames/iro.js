@@ -1,5 +1,5 @@
 ---
-title: Color Picker API
+title: ColorPicker API
 ---
 
 ## Constructor
@@ -26,7 +26,39 @@ title: Color Picker API
 
 **See also:** The [Color Picker Options](/guide.html#Color-Picker-Options) guide.
 
+## Properties
+
+### color
+
+An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. Updating this color object will also update the seclected color in the picker.
+
+**See also:** [Using the Selected Color](/guide.html#Using-the-Selected-Color)
+
+### el
+
+The HTML element being used as the color picker container.
+
+### base
+
+The HTML element being used as the color picker base element.
+
+### props
+
+The initial configetation options passed to the color picker.
+
 ## Methods
+
+### resize
+
+Update the color picker width
+
+### reset
+
+Reset the color picker back to the original color value passed to the color picker config.
+
+### forceUpdate
+
+Force the color picker to rerender
 
 ### on
 
@@ -58,12 +90,12 @@ function colorChangeHandler(color) {
 }
 
 // start listening to the color change event, now colorChangeHandler will be called whenever the color changes
-example.on("color:change", colorChangeHandler)
+example.on('color:change', colorChangeHandler)
 ```
 
 ### off
 
-Remove event listeners added with `on`
+Remove event listeners added with `on`.
 
 **Arguments:**
 
@@ -79,34 +111,67 @@ function colorChangeHandler(color) {
 }
 
 // start listening to the color change event, now colorChangeHandler will be called whenever the color changes
-example.on("color:change", colorChangeHandler);
+example.on('color:change', colorChangeHandler);
 
 // stop listening to the color change event, colorChangeHandler won't be called ehen the color changes
-example.off("color:change", colorChangeHandler);
+example.off('color:change', colorChangeHandler);
 ```
 
-## Properties
+### emit
 
-### color
+Used internally to dispatch an event. 
 
-An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. It is tied to the color picker, as such updating this color object will also update the color picker.
+### emitHook
 
-**See also:** [Using the Selected Color](/guide.html#Using-the-Selected-Color)
+Used internally to dispatch a plugin hook.
 
-### stylesheet
+## Static Methods
 
-An [`iro.Stylesheet`](/stylesheet_api.html) object representing the dynamic CSS stylesheet for the color picker.
+### addHook
 
-**See also:** [Dynamic CSS](/guide.html#Dynamic-CSS)
+Used by plugins to hook into the color picker lifecycle. 
 
-### el
+## Plugin Hooks
 
-The DOM object for the HTML element being used as a wrapper for the color picker.
+### `init:before`
 
-### ui
+Fired as soon as the new color picker is constructed. At this point, the `props` property is available, so this is the ideal point to 
 
-An array of "components" used to make up the color picker's UI.
+### `init:state`
 
-### css
+Fired once the color picker state has been essentially. 
 
-CSS template for the dynamic CSS feature.
+### `init:after`
+
+Fired once the color picker state has been essentially. 
+
+### `mount`
+
+Fired when the color picker has been mounted into the DOM. The `el` property is now accessible. 
+
+### `event:on`
+
+Fired when an event is registered. Callbacks for this hook will be passed the event type and callback function.
+
+### `event:off`
+
+Fired when an event is unregistered. Callbacks for this hook will be passed the event type and callback function.
+
+### `color:beforeUpdate`
+
+Fired after the selected color has changed, but before the color picker UI has updated.
+
+### `color:afterUpdate`
+
+Fired after the 
+
+### `color:change`
+
+### `input:start`
+
+### `input:move`
+
+### `input:end`
+
+### 
+

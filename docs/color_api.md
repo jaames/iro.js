@@ -2,28 +2,59 @@
 title: Color API
 ---
 
-The color API is used by `colorPicker` objects to store the selected color and to handle conversions between different color models.
-
-The API is made accessible via `iro.Color`.
+The Color API is used by color pickers to store the selected color and to handle conversions between different color models. It's also made accessible via `iro.Color` so that it can be used as a general color utility library.
 
 ## Supported Color Formats
 
-### HSV
+* **hex string**: `"#ff0000"`
+* **shorthand hex string**: `"#f00"`
+* **rgb(a) string**: `"rgb(255, 0, 0)"`
+* **percentage rgb(a) string**: `"rgb(100%, 0%, 0%)"`
+* **rgb object**: `{r: 255, g: 0, b: 0}`
+* **hsl(a) string**: `"hsl(360, 50%, 100%)"`
+* **hsl object**: `{h: 360, s: 50, l: 100}`
+* **hsv object**: `{h: 360, s: 100, v: 50}`
 
-* HSV object: `{h: 360, s: 100, v: 50}`.
 
-### RGB
+## Properties
 
-* RGB object: `{r: 255, g: 0, b: 0}`.
-* RGB string: `rgb(255, 0, 0)`, percentage values like `rgb(100%, 0%, 0%)` also work.
-* HEX RGB string: `#FFFFFF`, the shorthand format (`#FFF`) is supported too.
+All of these color properties are writable as well as readable, which means they can be used to both *set* and *get* the color in various formats.
 
-### HSL
+### hsv
 
-* HSL object: `{h: 360, s: 50, l: 100}`.
-* HSL string: `hsl(360, 50%, 100%)`.
+The color as a [hsv](https://www.wikiwand.com/en/HSL_and_HSV) object.
 
-Any param with type `{Color}` listed below can be any one of these formats, or an existing instance of iro.Color.
+**Example format**: `{h: 360, s: 100, v: 50}`
+
+### hsl
+
+The color as a [hsl](https://www.wikiwand.com/en/HSL_and_HSV) object.
+
+**Example format**: `{h: 360, s: 50, l: 100}`
+
+### rgb
+
+The color as an [rgb](https://www.wikiwand.com/en/RGB_color_model) object
+
+**Example format**: `{r: 255, g: 0, b: 0}`
+
+### hslString
+
+The color as a percentage hsl string.
+
+**Example format**: `"hsl(360, 100%, 50%)"`
+
+### rgbString
+
+The color as an rgb string. Percentage-based rgb strings are also accepted as inputs.
+
+**Example format**: `"rgb(255, 0, 0)"` or `"rgb(100%, 0%, 0%)"`
+
+### hexString
+
+The color as a hex rgb string. Shorthand hex input is also accepted.
+
+**Example format**: `"#ff0000"` or `"#f00"`
 
 ## Methods
 
@@ -31,159 +62,102 @@ Any param with type `{Color}` listed below can be any one of these formats, or a
 
 Set the color from any [supported color format](#Supported-Color-Formats).
 
-**Arguments:**
+**Arguments**:
 
 * `{Color} color`
 
 ### setChannel 
 
-Set a specific color channel to a new value. `model` can be either `hsv`, `hsl` or `rgb`, and `channel` should be a single letter representing which channel from the model you wish to set.
+Set a specific color channel to a new value. `format` can be either `hsv`, `hsl` or `rgb`, and `channel` should be a single letter representing which channel from the format you wish to set.
 
-**Arguments:**
+**Arguments**:
 
-* `{String} model`
+* `{String} format`
 * `{String} channel`
 * `{Number} value`
 
-### compare
+**Example**:
 
-Compare differences between this color and another, returning an object that represents which channels have changed between the two. `model` can be used to specify either `hsv`, `hsl` or `rgb` (default is `hsv`). 
-
-**Arguments:**
-
-* `{Color} color`
-* `{String} model`
+```js
+```
 
 ### clone
 
-Copy this color object, returning a new color object with the same value.
+Copy the color and return a new Color object with the same value.
 
-**Returns:** `{Color}`
-
-### mix
-
-Mix a color into the current one.`weight` is a value between 0 and 100 - closer to 0 = more current color, closer to 100 = more new color.
-
-**Arguments:**
-
-* `{Color} color`
-* `{Number} weight`
-
-### lighten
-
-Lighten color by `amount`.
-
-**Arguments:**
-
-* `{Number} amount`
-
-### darken
-
-Darken color by `amount`.
-
-**Arguments:**
-
-* `{Number} amount`
-
-## Properties
-
-All of these color properties are writable as well as readable, which means they can be used to both *set* and *get* the color from various models.
-
-### hsv
-
-The color as a [HSV](https://www.wikiwand.com/en/HSL_and_HSV) object
-
-**Example format:** `{h: 360, s: 100, v: 50}`
-
-### hsl
-
-The color as a [HSL](https://www.wikiwand.com/en/HSL_and_HSV) object
-
-**Example format:** `{h: 360, s: 50, l: 100}`
-
-### rgb
-
-The color as an [RGB](https://www.wikiwand.com/en/RGB_color_model) object
-
-**Example format:** `{r: 255, g: 0, b: 0}`
-
-### hslString
-
-The color as a HSL string
-
-**Example format:** `hsl(360, 100%, 50%)`
-
-### rgbString
-
-The color as an RGB string
-
-**Example format:** `rgb(255, 0, 0)` **or** `rgb(100%, 0%, 0%)`
-
-### hexString
-
-The color as a HEX string (supports shorthand notation)
-
-**Example format:** `#ff0000` **or** where applicable, the shorthand format: `#f00`
+**Returns**: `{Color}`
 
 ## Static Methods
 
-These functions are provided by `iro.Color` at all times.
-
-### mix
-
-Mix two colors together, returning a new `iro.Color` instance. `weight` is a value between 0 and 100 - closer to 0 = more color1, closer to 100 = more color2.
-
-**Arguments:**
-
-* `{Color} color1`
-* `{Color} color2`
-* `{Number} weight`
-
-### lighten
-
-Lighten `color` by `amount`, returning a new `iro.Color` instance.
-
-**Arguments:**
-
-* `{Color} color`
-* `{Number} amount`
-
-### darken
-
-Darken `color` by `amount`, returning a new `iro.Color` instance.
-
-**Arguments:**
-
-* `{Color} color`
-* `{Number} amount`
-
 ### hsv2Rgb
 
-Convert a HSV object `{h: 360, s: 100, v: 50}` to an RGB object `{r: 255, g: 0, b: 0}`.
+Convert a hsv object to rgb.
+
+**Arguments**:
+
+* `{Object}` hsv values, e.g `{h: 360, s: 100, v: 50}`
+
+**Returns**: `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
 
 ### rgb2Hsv
 
-Convert an RGB object `{r: 255, g: 0, b: 0}` to a HSV object `{h: 360, s: 100, v: 50}`.
+Convert an rgb object to hsv.
+
+**Arguments**:
+
+* `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
+
+**Returns**: `{Object}` hsv values, e.g `{h: 360, s: 100, v: 50}`
 
 ### hsv2Hsl
 
-Convert a HSV object `{h: 360, s:50, v:100}` to a HSL object `{h: 360, s: 100, l: 100}`.
+Convert a hsv object to hsl.
+
+**Arguments**:
+
+* `{Object}` hsv values, e.g `{h: 360, s:50, v:100}`
+
+**Returns**: `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
 
 ### hsl2Hsv
 
-Convert a HSL object `{h: 360, s: 100, l: 100}` to a HSV object `{h: 360, s:50, v:100}`.
+Convert a hsl object to hsv.
+
+**Arguments**:
+
+* `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
+
+**Returns**: `{Object}` hsv values, e.g `{h: 360, s:50, v:100}`
 
 ### hsl2Str
 
-Convert a HSL object `{h: 360, s: 100, l: 100}` to a HSL string `hsl(360, 100, 100)`.
+Stringify a hsl object.
+
+**Arguments**:
+
+* `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
+
+**Returns**: `{String}` hsl string, e.g `"hsl(360, 100%, 100%)"`
 
 ### rgb2Str
 
-Convert an RGB object `{r: 255, g: 0, b: 0}` to an RGB string `rgb(255, 0, 0)`.
+Stringify an rgb object.
+
+**Arguments**:
+
+* `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
+
+**Returns**: `{String}` rgb string, e.g `"rgb(255, 0, 0)"`
 
 ### rgb2Hex
 
-Convert a RGB object `{r: 255, g: 0, b: 0}` to a HEX string `#FF0000`.
+Stringify an rgb object as a hex string.
+
+**Arguments**:
+
+* `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
+
+**Returns**: `{String}` hex string, e.g `"#ff0000"`
 
 ### parseHexStr
 

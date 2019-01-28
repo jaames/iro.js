@@ -41,14 +41,13 @@ export default {
     // https://vuepress.vuejs.org/guide/using-vue.html#browser-api-access-restrictions
     import("./js/iro.es.js").then(module => {
       const iro = module.default;
+
       this.wheel = new iro.ColorPicker(this.$refs.demoContainer, {
         sliderMargin: 24,
         markerRadius: 8,
         borderWidth: 2,
         borderColor: "#fff",
-        width: 320,
-        height: 320,
-        anticlockwise: true,
+        width: 260,
         color: "#906bff",
         css: {
           ":root": {
@@ -56,6 +55,29 @@ export default {
           }
         }
       });
+
+      function throttle(callback, wait) {
+        let timeout = null 
+        let callbackArgs = null
+        
+        const later = () => {
+          callback.apply(null, callbackArgs)
+          timeout = null
+        }
+        
+        return function() {
+          if (!timeout) {
+            callbackArgs = arguments
+            timeout = setTimeout(later, wait)
+          }
+        }
+      }
+
+      this.wheel.on('color:change', throttle(function(color) {
+        const rgb = color.rgbString;
+        document.body.style.setProperty('--bgcolor', rgb);
+      }, 50));
+      
       // expose iro globally incase people wanna use devtools to play with it
       window.colorPicker = this.wheel;
       window.iro = iro;
