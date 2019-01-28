@@ -1,13 +1,14 @@
 {
   "name": "@jaames/iro",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.6",
   "description": "A sleek, customizable color picker widget with zero dependencies and a small footprint",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "devDependencies": {
-    "preact": "^8.4.2",
+    "ava": "^1.2.0",
     "css-reset-and-normalize": "^1.2.0",
     "node-sass": "^4.9.3",
+    "preact": "^8.4.2",
     "rollup": "^0.67.3",
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-buble": "^0.19.4",
@@ -22,6 +23,7 @@
     "vuepress": "^0.14.2"
   },
   "scripts": {
+    "test": "ava tests/**/*.test.js --verbose",
     "start": "rollup -c --watch --environment DEV_SERVER,BUILD:development",
     "dev": "rollup -c --environment BUILD:development",
     "build": "npm run dev && npm run build:es && npm run build:min && npm run docs:copyscript",

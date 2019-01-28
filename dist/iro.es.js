@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.4
+ * iro.js v4.0.0-beta.6
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1041,7 +1041,7 @@ var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true
 Color.prototype.set = function set (value) {
   var isString = typeof value === 'string';
   var isObject = typeof value === 'object';
-  if ((isString) && (/^(?:#?|0x?)[0-6a-fA-F]{3,8}$/.test(value))) {
+  if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value))) {
     this.hexString = value;
   }
   else if ((isString) && (/^rgba?/.test(value))) {
@@ -1673,7 +1673,7 @@ var iro = usePlugins({
     Slider: IroSlider,
     Wheel: IroWheel
   },
-  version: "4.0.0-beta.4",
+  version: "4.0.0-beta.6",
 });
 
 export default iro;
