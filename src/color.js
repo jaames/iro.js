@@ -99,22 +99,23 @@ export default class Color {
     * @return {Object} rgb object
   */
   static hsvToRgb(hsv) {
-    var r, g, b, i, f, p, q, t;
-    var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
-    i =Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-      case 0: r = v, g = t, b = p; break;
-      case 1: r = q, g = v, b = p; break;
-      case 2: r = p, g = v, b = t; break;
-      case 3: r = p, g = q, b = v; break;
-      case 4: r = t, g = p, b = v; break;
-      case 5: r = v, g = p, b = q; break;
-    }
-    return {r:Math.round(r * 255), g:Math.round(g * 255), b:Math.round(b * 255)};
+    const h = hsv.h / 60;
+    const s = hsv.s / 100;
+    const v = hsv.v / 100;
+    const i = Math.floor(h);
+    const f = h - i;
+    const p = v * (1 - s);
+    const q = v * (1 - f * s);
+    const t = v * (1 - (1 - f) * s);
+    const mod = i % 6;
+    const r = [v, q, p, p, t, v][mod];
+    const g = [t, v, v, q, p, p][mod];
+    const b = [p, p, t, v, v, q][mod];
+    return {
+      r: r * 255, 
+      g: g * 255, 
+      b: b * 255
+    };
   }
 
   /**
@@ -123,24 +124,33 @@ export default class Color {
     * @return {Object} hsv object
   */
   static rgbToHsv(rgb) {
-    var r = rgb.r / 255,
-      g = rgb.g / 255,
-      b = rgb.b / 255,
-      max = Math.max(r, g, b),
-      min = Math.min(r, g, b),
-      delta = max - min,
-      hue;
+    const r = rgb.r / 255;
+    const g = rgb.g / 255;
+    const b = rgb.b / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+    let hue;
+    let value = max;
+    let saturation = max === 0 ? 0 : delta / max;
     switch (max) {
-      case min: hue = 0; break;
-      case r: hue = (g - b) / delta + (g < b ? 6 : 0); break;
-      case g: hue = (b - r) / delta + 2; break;
-      case b: hue = (r - g) / delta + 4; break;
+      case min: 
+        hue = 0; // achromatic
+        break;
+      case r: 
+        hue = (g - b) / delta + (g < b ? 6 : 0);
+        break;
+      case g: 
+        hue = (b - r) / delta + 2;
+        break;
+      case b:
+        hue = (r - g) / delta + 4;
+        break;
     }
-    hue /= 6;
     return {
-      h: hue * 360,
-      s: max == 0 ? 0 : (delta / max) * 100,
-      v: max * 100
+      h: hue * 60,
+      s: saturation * 100,
+      v: value * 100
     }
   }
 
@@ -150,14 +160,16 @@ export default class Color {
     * @return {Object} hsl object
   */
   static hsvToHsl(hsv) {
-    var s = hsv.s / 100,
-      v = hsv.v / 100;
-    var l = 0.5 * v * (2 - s);
-    s = v * s / (1 - Math.abs(2 * l - 1));
+    const s = hsv.s / 100;
+    const v = hsv.v / 100;
+    const l = (2 - s) * v;
+    const divisor = l <= 1 ? l : (2 - l);
+    // Avoid division by zero when lightness is close to zero
+    const saturation = divisor < 1e-9 ? 0 : (s * v) / divisor;
     return {
       h: hsv.h,
-      s: s * 100 || 0,
-      l: l * 100
+      s: saturation * 100,
+      l: l * 50
     };
   }
 
@@ -167,14 +179,14 @@ export default class Color {
     * @return {Object} hsv object
   */
   static hslToHsv(hsl) {
-    var s = hsl.s / 100,
-    l = hsl.l / 100;
-    l *= 2;
-    s *= (l <= 1) ? l : 2 - l;
+    const l = hsl.l * 2;
+    const s = (hsl.s * ((l <= 100) ? l : 200 - l)) / 100;
+    // Avoid division by zero when l + s is near 0
+    const saturation = (l + s < 1e-9) ? 0 : (2 * s) / (l + s);
     return {
       h: hsl.h,
-      s: ((2 * s) / (l + s)) * 100,
-      v: ((l + s) / 2) * 100
+      s: saturation * 100,
+      v: (l + s) / 2
     };
   }
 
@@ -204,9 +216,9 @@ export default class Color {
   get rgb() {
     const {r, g, b} = Color.hsvToRgb(this._value);
     return {
-      r:Math.round(r),
-      g:Math.round(g),
-      b:Math.round(b),
+      r: Math.round(r),
+      g: Math.round(g),
+      b: Math.round(b),
     };
   }
 
@@ -217,9 +229,9 @@ export default class Color {
   get hsl() {
     const {h, s, l} = Color.hsvToHsl(this._value);
     return {
-      h:Math.round(h),
-      s:Math.round(s),
-      l:Math.round(l),
+      h: Math.round(h),
+      s: Math.round(s),
+      l: Math.round(l),
     };
   }
 
