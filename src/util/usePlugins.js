@@ -12,7 +12,7 @@ export function usePlugins(core) {
    */
   core.use = function(plugin, pluginOptions = {}) {
     // Check that the plugin hasn't already been registered
-    if (!installedPlugins.indexOf(plugin) > -1) {
+    if (!(installedPlugins.indexOf(plugin) > -1)) {
       // Init plugin
       // TODO: consider collection of plugin utils, which are passed as a thrid param
       plugin(core, pluginOptions);
