@@ -1,5 +1,5 @@
 /*!
- * iro.js v3.5.5
+ * iro.js v3.5.6
  * 2016-2018 James Daniel
  * Released under the MIT License
  * github.com/jaames/iro.js
@@ -781,11 +781,12 @@ var SVG_TRANSFORM_SHORTHANDS = {
   translate: "setTranslate",
   scale: "setScale",
   rotate: "setRotate"
-}; // sniff useragent string to check if the user is running IE, Edge or Safari
+}; // sniff useragent string to check if the user is running IE, Edge or iOS Safari / webview
 
 var ua = window.navigator.userAgent.toLowerCase();
 var IS_IE = /msie|trident|edge/.test(ua);
 var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(ua);
+var IS_IOS = /iPhone|iPod|iPad/i.test(ua);
 
 var svgElement = function svgElement(root, parent, type, attrs) {
   var el = document.createElementNS(SVG_NAMESPACE, type);
@@ -931,7 +932,7 @@ var svgGradient = function svgGradient(root, type, stops) {
 
 svgGradient.prototype.getUrl = function getUrl (base) {
   var loc = location;
-  var root = IS_SAFARI ? base || loc.protocol + "//" + loc.host + loc.pathname + loc.search : "";
+  var root = IS_SAFARI || IS_IOS ? base || loc.protocol + "//" + loc.host + loc.pathname + loc.search : "";
   return "url(" + root + "#" + this.el.id + ")";
 };
 
@@ -960,7 +961,7 @@ var svgRoot = (function (svgElement) {
   };
 
   svgRoot.prototype.updateUrls = function updateUrls (base) {
-    if (IS_SAFARI) {
+    if (IS_SAFARI || IS_IOS) {
       var gradients = this._gradients;
 
       for (var i = 0; i < gradients.length; i++) {
@@ -1364,7 +1365,7 @@ var iro = {
   Color: color,
   ColorPicker: colorPicker,
   Stylesheet: stylesheet,
-  version: "3.5.5"
+  version: "3.5.6"
 };
 
 export default iro;

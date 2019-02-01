@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 3.5.6
+
+##### Fixes
+
+- Fixes webview detection for older iOS Safari devices
+
 #### 3.5.5
 
 ##### Fixes

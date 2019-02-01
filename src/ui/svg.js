@@ -17,10 +17,11 @@ var SVG_TRANSFORM_SHORTHANDS = {
   scale: "setScale",
   rotate: "setRotate"
 };
-// sniff useragent string to check if the user is running IE, Edge or Safari
+// sniff useragent string to check if the user is running IE, Edge or iOS Safari / webview
 var ua = window.navigator.userAgent.toLowerCase();
 var IS_IE = /msie|trident|edge/.test(ua);
 var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(ua);
+var IS_IOS = /iPhone|iPod|iPad/i.test(ua);
 
 class svgElement {
   /**
@@ -167,7 +168,7 @@ class svgGradient {
 
   getUrl(base) {
     var loc = location;
-    var root = IS_SAFARI ? (base || loc.protocol + "//" + loc.host + loc.pathname + loc.search) : "";
+    var root = IS_SAFARI || IS_IOS ? (base || loc.protocol + "//" + loc.host + loc.pathname + loc.search) : "";
     return "url(" + root + "#" + this.el.id + ")";
   }
 }
@@ -197,7 +198,7 @@ export default class svgRoot extends svgElement {
   }
 
   updateUrls(base) {
-    if (IS_SAFARI) {
+    if (IS_SAFARI || IS_IOS) {
       var gradients = this._gradients;
       for (var i = 0; i < gradients.length; i++) {
         for (var key in gradients[i]._refs) {
