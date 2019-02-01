@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.8
+ * iro.js v4.0.0-beta.9
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -827,9 +827,11 @@
 	 */
 	function resolveUrl(url) {
 	  // Sniff useragent string to check if the user is running Safari
-	  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+	  var ua = window.navigator.userAgent;
+	  var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+	  var isIos = /iPhone|iPod|iPad/i.test(ua);
 	  var location = window.location;
-	  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
+	  return (isSafari || isIos) ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
 	}
 
 	/**
@@ -1696,7 +1698,7 @@
 	    Slider: IroSlider,
 	    Wheel: IroWheel
 	  },
-	  version: "4.0.0-beta.8",
+	  version: "4.0.0-beta.9",
 	});
 
 	return iro;
