@@ -33,6 +33,36 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 
 ### Available Options
 
+#### width
+
+The total width of the color picker UI, measured in pixels. 
+
+**Default value**: `300`
+
+#### `color`
+
+The default selected color. This option can be any [supported color format](#supported-color-formats).
+
+**Default value**: `"#ffffff"`
+
+#### `wheelLightness`
+
+If set to `false`, the color wheel will not fade to black when the lightness decreases.
+
+**Default value**: `true`
+
+#### `sliderHeight`
+
+Slider height, measued in pixels.
+
+**Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
+
+#### `sliderMargin`
+
+Gap between the wheel and the slider controls, measured in pixels. 
+
+**Default value**: `12`
+
 | Option           | Purpose | Default Value |
 |:-----------------|:--------|:--------------|
 | `width`          | Total width of the control UI. | `300` |

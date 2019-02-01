@@ -129,25 +129,30 @@ Used internally to dispatch a plugin hook.
 
 ### addHook
 
-Used by plugins to hook into the color picker lifecycle. 
+Used by plugins to hook into the color picker lifecycle. Plugin hooks are just like events, except they are added globally to every color picker instance. When a hook callback is called, its `this` context is also bound to the color picker instance. Check the [Plugin Hooks](#plugin-hooks) section for a full list of available hooks.
+
+**Arguments:**
+
+* `{String} hookType`
+* `{Function} callback`
 
 ## Plugin Hooks
 
 ### `init:before`
 
-Fired as soon as the new color picker is constructed. At this point, the `props` property is available, so this is the ideal point to 
+Fired as soon as the new color picker is constructed. At this point, the `props` property is available, so this is the ideal point to parse any color picker config parameters that your plugin uses.
 
 ### `init:state`
 
-Fired once the color picker state has been essentially. 
+Fired once the color picker state has been initiated. You may merge your own values into `this.state` here. The `color` property is also available and events can be registered at this point.
 
 ### `init:after`
 
-Fired once the color picker state has been essentially. 
+Fired once the color picker has done initialising layout. The `layout` param is now available.
 
 ### `mount`
 
-Fired when the color picker has been mounted into the DOM. The `el` property is now accessible. 
+Fired when the color picker has been mounted into the DOM. When this is fired, the `el` and `base` properties are available.
 
 ### `event:on`
 
@@ -163,15 +168,21 @@ Fired after the selected color has changed, but before the color picker UI has u
 
 ### `color:afterUpdate`
 
-Fired after the 
+Fired after the color picker UI has reacted to the selected color changing. The selected color cannot be modified at this stage, otherwise it will cause infinite update loops.
 
 ### `color:change`
 
+Fired at the same time as the `color:change` event. The color can be modified here if necessary.
+
 ### `input:start`
+
+Fired at the same time as the `input:start` event.
 
 ### `input:move`
 
+Fired at the same time as the `input:move` event.
+
 ### `input:end`
 
-### 
+Fired at the same time as the `input:end` event.
 

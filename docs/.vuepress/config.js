@@ -28,9 +28,11 @@ module.exports = {
       '/extensions.html',
       '/colorPicker_api.html',
       '/color_api.html',
+      '/migrating.html',
       {
         title: 'Links',
         children: [
+          ['https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url', 'Donate'],
           ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
           ['https://github.com/jaames/iro.js', 'iro.js on GitHub'],
           ['https://github.com/jaames/iro.js/issues', 'Submit an Issue / Request'],

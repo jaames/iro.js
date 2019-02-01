@@ -8,12 +8,13 @@ As of version 4.0.0, iro.js can be extended with plugins and custom UI elements.
 
 ### Official Plugins
 
-* [**iro-dynamic-css**](): Allows you to dynamically update CSS rules whenever the selected color changes.
-* [**iro-color-extras**](): Adds extra color manipulation methods to `iro.Color`, such as `mix`, `lighten`, `compare`, and more.
+* [**iro-dynamic-css**](https://github.com/jaames/iro-dynamic-css): Allows you to dynamically update CSS rules whenever the selected color changes.
 
 ### Third-party Plugins
 
 ## Using Plugins
+
+Plugins are registered  `iro.use`
 
 `iro.use` automatically prevents you from using the same plugin more than once, so calling it multiple times on the same plugin will install the plugin only once.
 

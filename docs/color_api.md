@@ -7,11 +7,13 @@ The Color API is used by color pickers to store the selected color and to handle
 ## Supported Color Formats
 
 * **hex string**: `"#ff0000"`
+* **hex rgba string**: `"#ff0000ff"`
 * **shorthand hex string**: `"#f00"`
-* **rgb(a) string**: `"rgb(255, 0, 0)"`
-* **percentage rgb(a) string**: `"rgb(100%, 0%, 0%)"`
+* **shorthand hex rgba string**: `"#f00f"`
+* **rgb(a) string**: `"rgb(255, 0, 0)"`, `"rgba(255, 0, 0, 1)"`
+* **percentage rgb(a) string**: `"rgb(100%, 0%, 0%)"`, `"rgba(100%, 0%, 0%, 100%)"`
 * **rgb object**: `{r: 255, g: 0, b: 0}`
-* **hsl(a) string**: `"hsl(360, 50%, 100%)"`
+* **hsl(a) string**: `"hsl(360, 50%, 100%)"`, `"hsla(360, 50%, 100%, 1)"`
 * **hsl object**: `{h: 360, s: 50, l: 100}`
 * **hsv object**: `{h: 360, s: 100, v: 50}`
 
@@ -89,7 +91,7 @@ Copy the color and return a new Color object with the same value.
 
 ## Static Methods
 
-### hsv2Rgb
+### hsvToRgb
 
 Convert a hsv object to rgb.
 
@@ -99,7 +101,7 @@ Convert a hsv object to rgb.
 
 **Returns**: `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
 
-### rgb2Hsv
+### rgbToHsv
 
 Convert an rgb object to hsv.
 
@@ -109,7 +111,7 @@ Convert an rgb object to hsv.
 
 **Returns**: `{Object}` hsv values, e.g `{h: 360, s: 100, v: 50}`
 
-### hsv2Hsl
+### hsvToHsl
 
 Convert a hsv object to hsl.
 
@@ -119,7 +121,7 @@ Convert a hsv object to hsl.
 
 **Returns**: `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
 
-### hsl2Hsv
+### hslToHsv
 
 Convert a hsl object to hsv.
 
@@ -128,45 +130,3 @@ Convert a hsl object to hsv.
 * `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
 
 **Returns**: `{Object}` hsv values, e.g `{h: 360, s:50, v:100}`
-
-### hsl2Str
-
-Stringify a hsl object.
-
-**Arguments**:
-
-* `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
-
-**Returns**: `{String}` hsl string, e.g `"hsl(360, 100%, 100%)"`
-
-### rgb2Str
-
-Stringify an rgb object.
-
-**Arguments**:
-
-* `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
-
-**Returns**: `{String}` rgb string, e.g `"rgb(255, 0, 0)"`
-
-### rgb2Hex
-
-Stringify an rgb object as a hex string.
-
-**Arguments**:
-
-* `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
-
-**Returns**: `{String}` hex string, e.g `"#ff0000"`
-
-### parseHexStr
-
-Convert a HEX string `#FF0000` to an RGB object `{r: 255, g: 0, b: 0}`.
-
-### parseHslStr
-
-Convert a HSL string `hsl(360, 100, 100)` to a HSL object `{h: 360, s: 100, l: 100}`.
-
-### parseRgbStr
-
-Convert an RGB string `rgb(255, 0, 0)` to an RGB object `{r: 255, g: 0, b: 0}`.
