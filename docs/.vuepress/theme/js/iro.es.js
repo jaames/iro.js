@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.7
+ * iro.js v4.0.0-beta.8
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -730,23 +730,15 @@ function unlisten(el, eventList, callback) {
     el.removeEventListener(eventList[i], callback);
   }
 }
-
-
 /**
  * @desc call fn callback when the page document has fully loaded
  * @param {Function} callback
  */
 function onDocumentReady(callback) {
-  if (document.readyState === 'complete') {
+  if (document.readyState !== 'loading') {
     callback();
-  }
-  else {
-    listen(document, ['readystatechange'], function stateChange(e) {
-      if (document.readyState === 'complete') {
-        callback();
-        unlisten(document, ['readystatechange'], stateChange);
-      }
-    });
+  } else {
+    listen(document, ['DOMContentLoaded'], callback);
   }
 }
 
@@ -1452,6 +1444,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     Component$$1.call(this, props);
     this.emitHook('init:before');
     this._events = {};
+    this._mounted = false;
     this._colorChangeActive = false;
     this.color = new Color(props.color);
     // Whenever the color changes, update the color wheel
@@ -1485,6 +1478,10 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     var events = this._events;
     this.emitHook('event:on', eventType, callback);
     (events[eventType] || (events[eventType] = [])).push(callback);
+    // Fire mount event immediately if the color picker has already mounted
+    if (eventType === 'mount' && this._mounted) {
+      this.emit('mount', this);
+    }
   };
 
   /**
@@ -1569,7 +1566,9 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
    */
   ColorPicker.prototype.onMount = function onMount (container) {
     this.el = container;
+    this._mounted = true;
     this.emit('mount', this);
+    this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
   };
 
   /**
@@ -1691,7 +1690,7 @@ var iro = usePlugins({
     Slider: IroSlider,
     Wheel: IroWheel
   },
-  version: "4.0.0-beta.7",
+  version: "4.0.0-beta.8",
 });
 
 export default iro;

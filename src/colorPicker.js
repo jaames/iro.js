@@ -10,6 +10,7 @@ class ColorPicker extends Component {
     super(props);
     this.emitHook('init:before');
     this._events = {};
+    this._mounted = false;
     this._colorChangeActive = false;
     this.color = new IroColor(props.color);
     // Whenever the color changes, update the color wheel
@@ -42,6 +43,10 @@ class ColorPicker extends Component {
     const events = this._events;
     this.emitHook('event:on', eventType, callback);
     (events[eventType] || (events[eventType] = [])).push(callback);
+    // Fire mount event immediately if the color picker has already mounted
+    if (eventType === 'mount' && this._mounted) {
+      this.emit('mount', this);
+    }
   }
 
   /**
@@ -119,7 +124,9 @@ class ColorPicker extends Component {
    */
   onMount(container) {
     this.el = container;
+    this._mounted = true;
     this.emit('mount', this);
+    this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
   }
 
   /**

@@ -5,9 +5,6 @@
     <title></title>
     <base href="/page">
     <script src="dist/iro.js" charset="utf-8"></script>
-  </head>
-  <body>
-    <div id="demoWheel"></div>
     <script type="text/javascript">
       var demo = new iro.ColorPicker("#demoWheel", {
         width: 360,
@@ -21,6 +18,17 @@
         padding: 8,
         wheelLightness: true,
       });
+
+      demo.on('mount', function() {
+        console.log('mount')
+      });
+
+      demo.on('color:change', function() {
+        console.log('color:change');
+      })
     </script>
+  </head>
+  <body>
+    <div id="demoWheel"></div>
   </body>
 </html>
