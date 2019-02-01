@@ -27,13 +27,19 @@ export function unlisten(el, eventList, callback) {
 
 
 /**
- * @desc call fn callback when the page document is ready
+ * @desc call fn callback when the page document has fully loaded
  * @param {Function} callback
  */
 export function onDocumentReady(callback) {
-  if (document.readyState !== 'loading') {
+  if (document.readyState === 'complete') {
     callback();
-  } else {
-    listen(document, ['DOMContentLoaded'], callback);
+  }
+  else {
+    listen(document, ['readystatechange'], function stateChange(e) {
+      if (document.readyState === 'complete') {
+        callback();
+        unlisten(document, ['readystatechange'], stateChange);
+      }
+    });
   }
 };

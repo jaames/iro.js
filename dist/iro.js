@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.6
+ * iro.js v4.0.0-beta.7
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -739,14 +739,20 @@
 
 
 	/**
-	 * @desc call fn callback when the page document is ready
+	 * @desc call fn callback when the page document has fully loaded
 	 * @param {Function} callback
 	 */
 	function onDocumentReady(callback) {
-	  if (document.readyState !== 'loading') {
+	  if (document.readyState === 'complete') {
 	    callback();
-	  } else {
-	    listen(document, ['DOMContentLoaded'], callback);
+	  }
+	  else {
+	    listen(document, ['readystatechange'], function stateChange(e) {
+	      if (document.readyState === 'complete') {
+	        callback();
+	        unlisten(document, ['readystatechange'], stateChange);
+	      }
+	    });
 	  }
 	}
 
@@ -1667,7 +1673,7 @@
 	    if ( pluginOptions === void 0 ) pluginOptions = {};
 
 	    // Check that the plugin hasn't already been registered
-	    if (!installedPlugins.indexOf(plugin) > -1) {
+	    if (!(installedPlugins.indexOf(plugin) > -1)) {
 	      // Init plugin
 	      // TODO: consider collection of plugin utils, which are passed as a thrid param
 	      plugin(core, pluginOptions);
@@ -1691,7 +1697,7 @@
 	    Slider: IroSlider,
 	    Wheel: IroWheel
 	  },
-	  version: "4.0.0-beta.6",
+	  version: "4.0.0-beta.7",
 	});
 
 	return iro;
