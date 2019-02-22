@@ -48,7 +48,7 @@ export default class IroSlider extends IroComponent {
         />
         <IroHandle
           r={ handleRadius }
-          url={ props.handleUrl }
+          url={ props.handleSvg }
           origin={ props.handleOrigin }
           x={ cornerRadius + ((hsv.v / 100) * range) }
           y={ sliderHeight / 2 }

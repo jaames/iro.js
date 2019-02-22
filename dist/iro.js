@@ -1,11 +1,10 @@
 /*!
- * iro.js v4.0.0-beta.9
+ * iro.js v4.0.0
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
  */
 
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -710,7 +709,6 @@
 	function render(vnode, parent, merge) {
 	  return diff(merge, vnode, {}, false, parent, false);
 	}
-	//# sourceMappingURL=preact.mjs.map
 
 	/**
 	 * @desc listen to one or more events on an element
@@ -933,7 +931,7 @@
 	        h( 'circle', { 
 	          class: "iro__wheel__border", cx: cX, cy: cY, r: radius, fill: "none", stroke: props.borderColor, 'stroke-width': borderWidth }),
 	        h( IroHandle, { 
-	          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
+	          r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
 	      )
 	    );
 	  };
@@ -1379,7 +1377,7 @@
 	        h( 'rect', { 
 	          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
 	        h( IroHandle, {
-	          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
+	          r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
 	      )
 	    );
 	  };
@@ -1645,7 +1643,7 @@
 	  width: 300,
 	  height: 300,
 	  handleRadius: 8,
-	  handleUrl: null,
+	  handleSvg: null,
 	  handleOrigin: {x: 0, y: 0},
 	  color: '#fff',
 	  borderColor: '#fff',
@@ -1700,7 +1698,7 @@
 	    Slider: IroSlider,
 	    Wheel: IroWheel
 	  },
-	  version: "4.0.0-beta.9",
+	  version: "4.0.0",
 	});
 
 	return iro;

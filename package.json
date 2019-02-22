@@ -1,11 +1,10 @@
 {
   "name": "@jaames/iro",
-  "version": "4.0.0-beta.9",
+  "version": "4.0.0",
   "description": "A sleek, customizable color picker widget with zero dependencies and a small footprint",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "devDependencies": {
-    "css-reset-and-normalize": "^1.2.0",
     "iro-dynamic-css": "^1.0.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
@@ -60,15 +59,17 @@
     ],
     "plugins": [
       [
-        "module-resolver", {
+        "module-resolver",
+        {
           "alias": {
             "ui": "./src/ui/",
             "util": "./src/util/"
           }
         }
       ],
-      [ 
-        "transform-define", {
+      [
+        "transform-define",
+        {
           "VERSION": "TEST"
         }
       ]

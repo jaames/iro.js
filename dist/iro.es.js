@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.9
+ * iro.js v4.0.0
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -925,7 +925,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
         h( 'circle', { 
           class: "iro__wheel__border", cx: cX, cy: cY, r: radius, fill: "none", stroke: props.borderColor, 'stroke-width': borderWidth }),
         h( IroHandle, { 
-          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
+          r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cX + handleDist * Math.cos(handleAngle), y: cY + handleDist * Math.sin(handleAngle) })
       )
     );
   };
@@ -1371,7 +1371,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
         h( 'rect', { 
           class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
         h( IroHandle, {
-          r: handleRadius, url: props.handleUrl, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
+          r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
       )
     );
   };
@@ -1637,7 +1637,7 @@ ColorPicker.defaultProps = {
   width: 300,
   height: 300,
   handleRadius: 8,
-  handleUrl: null,
+  handleSvg: null,
   handleOrigin: {x: 0, y: 0},
   color: '#fff',
   borderColor: '#fff',
@@ -1692,7 +1692,7 @@ var iro = usePlugins({
     Slider: IroSlider,
     Wheel: IroWheel
   },
-  version: "4.0.0-beta.9",
+  version: "4.0.0",
 });
 
 export default iro;

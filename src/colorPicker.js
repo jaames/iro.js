@@ -190,7 +190,7 @@ ColorPicker.defaultProps = {
   width: 300,
   height: 300,
   handleRadius: 8,
-  handleUrl: null,
+  handleSvg: null,
   handleOrigin: {x: 0, y: 0},
   color: '#fff',
   borderColor: '#fff',

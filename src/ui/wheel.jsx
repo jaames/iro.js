@@ -69,7 +69,7 @@ export default class IroWheel extends IroComponent {
         />
         <IroHandle 
           r={ handleRadius }
-          url={ props.handleUrl }
+          url={ props.handleSvg }
           origin={ props.handleOrigin }
           x={ cX + handleDist * Math.cos(handleAngle) }
           y={ cY + handleDist * Math.sin(handleAngle) }
