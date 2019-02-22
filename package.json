@@ -5,6 +5,8 @@
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "devDependencies": {
+    "css-reset-and-normalize": "^1.2.0",
+    "iro-dynamic-css": "^1.0.3",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
