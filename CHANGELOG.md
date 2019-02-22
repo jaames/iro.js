@@ -1,5 +1,57 @@
 ### Changelog
 
+#### 4.0.0
+
+iro.js version 4.0.0 is a major rewrite of the core library which aims to solve numerous long-standing issues. There are numerous changes and deprecations, so please check the [migration guide](https://iro.js.org/migrating.html) before moving your project over. If needed, version 3.5.1 has been preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3).
+
+##### Additions
+
+* Custom SVG handles
+* Custom layout config options
+* Plugin API
+* Code tests
+* Rewritten codebase, is now *much* cleaner
+* Color picker components are now built using [preact](https://preactjs.com/)
+* Rewritten documentaion and readme, which huge focus on making things easier to follow
+
+##### Breaking Changes
+
+**Color Picker**
+
+* `anticlockwise` option has been removed, and is now hardcoded to `true`
+* `markerRadius` option has been renamed as `handleRadius`
+
+**Safari Bugfix Note**
+
+To resolve an issue where Safari wasn't rendering the color picker properly because of certain client-side routing libraries, it was previously recommended to call `emit('history:statechange')` on the color picker when navigating to new client-side routes. This has been deprecated in favour of the catch-all `forceUpdate()` color picker method.
+
+**Static Color Methods**
+
+* `hsv2Hsl` renamed to `hsvToHsl`
+* `hsl2Hsv` renamed to `hslToHsv`
+* `rgb2Hsv` renamed to `rgbToHsv`
+* `hsv2Rgb` renamed to `hsvToRgb`
+* `parseHexStr` removed
+* `parseRgbStr` removed
+* `parseHslStr` removed
+* `rgb2Hex` removed
+* `rgb2Str` removed
+* `hsl2Str` removed
+* `mix` removed
+* `lighten` removed
+* `darken` removed
+* `compare` removed
+
+**Color Methods**
+
+* `mix` removed
+* `lighten` removed
+* `darken` removed
+
+**Stylesheet API**
+
+* The Dynamic CSS feature and has become a seperate plugin; [iro-dynamic-css](https://github.com/jaames/iro-dynamic-css).
+
 #### 3.5.1
 
 ##### Additions

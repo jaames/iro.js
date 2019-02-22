@@ -14,7 +14,7 @@ echo 'iro.js.org' > CNAME
 
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m 'deploy iro.js.org'
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
 git push -f git@github.com:jaames/iro.js.git master:gh-pages

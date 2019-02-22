@@ -12,6 +12,12 @@ $ npm install
 $ npm start
 ```
 
+### Run tests
+
+```bash
+$ npm test
+```
+
 ### Produce final build
 
 ```bash

@@ -1,4 +1,4 @@
-> :warning: This readme is for the beta release of iro.js v4. Some parts are currently incomplete or lacking detail. Please read [this issue thread](https://github.com/jaames/iro.js/issues/30) for more info!
+> :warning: This readme is for iro.js v4, which is a major rewrite of the library. If you are still using v3 (version 3.5.1 and below) please read the [migration guide](https://iro.js/org/migrating.html). The v3 version of the library and documentation is preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3) if you need it!
 
 <h1 align="center"><a href="//iro.js.org"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/screenshot.png"/><br/>iro.js</a></h1>
 
