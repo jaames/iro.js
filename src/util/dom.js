@@ -24,10 +24,8 @@ export function unlisten(el, eventList, callback) {
   }
 };
 
-
-
 /**
- * @desc call fn callback when the page document is ready
+ * @desc call fn callback when the page document has fully loaded
  * @param {Function} callback
  */
 export function onDocumentReady(callback) {

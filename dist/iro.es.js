@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0-beta.4
+ * iro.js v4.0.0-beta.9
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -730,10 +730,8 @@ function unlisten(el, eventList, callback) {
     el.removeEventListener(eventList[i], callback);
   }
 }
-
-
 /**
- * @desc call fn callback when the page document is ready
+ * @desc call fn callback when the page document has fully loaded
  * @param {Function} callback
  */
 function onDocumentReady(callback) {
@@ -823,9 +821,11 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
  */
 function resolveUrl(url) {
   // Sniff useragent string to check if the user is running Safari
-  var isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+  var ua = window.navigator.userAgent;
+  var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+  var isIos = /iPhone|iPod|iPad/i.test(ua);
   var location = window.location;
-  return isSafari ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
+  return (isSafari || isIos) ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
 }
 
 /**
@@ -1041,7 +1041,7 @@ var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true
 Color.prototype.set = function set (value) {
   var isString = typeof value === 'string';
   var isObject = typeof value === 'object';
-  if ((isString) && (/^(?:#?|0x?)[0-6a-fA-F]{3,8}$/.test(value))) {
+  if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value))) {
     this.hexString = value;
   }
   else if ((isString) && (/^rgba?/.test(value))) {
@@ -1093,22 +1093,23 @@ Color.prototype.clone = function clone () {
   * @return {Object} rgb object
 */
 Color.hsvToRgb = function hsvToRgb (hsv) {
-  var r, g, b, i, f, p, q, t;
-  var h = hsv.h/360, s = hsv.s/100, v = hsv.v/100;
-  i =Math.floor(h * 6);
-  f = h * 6 - i;
-  p = v * (1 - s);
-  q = v * (1 - f * s);
-  t = v * (1 - (1 - f) * s);
-  switch (i % 6) {
-    case 0: r = v, g = t, b = p; break;
-    case 1: r = q, g = v, b = p; break;
-    case 2: r = p, g = v, b = t; break;
-    case 3: r = p, g = q, b = v; break;
-    case 4: r = t, g = p, b = v; break;
-    case 5: r = v, g = p, b = q; break;
-  }
-  return {r:Math.round(r * 255), g:Math.round(g * 255), b:Math.round(b * 255)};
+  var h = hsv.h / 60;
+  var s = hsv.s / 100;
+  var v = hsv.v / 100;
+  var i = Math.floor(h);
+  var f = h - i;
+  var p = v * (1 - s);
+  var q = v * (1 - f * s);
+  var t = v * (1 - (1 - f) * s);
+  var mod = i % 6;
+  var r = [v, q, p, p, t, v][mod];
+  var g = [t, v, v, q, p, p][mod];
+  var b = [p, p, t, v, v, q][mod];
+  return {
+    r: r * 255, 
+    g: g * 255, 
+    b: b * 255
+  };
 };
 
 /**
@@ -1117,24 +1118,33 @@ Color.hsvToRgb = function hsvToRgb (hsv) {
   * @return {Object} hsv object
 */
 Color.rgbToHsv = function rgbToHsv (rgb) {
-  var r = rgb.r / 255,
-    g = rgb.g / 255,
-    b = rgb.b / 255,
-    max = Math.max(r, g, b),
-    min = Math.min(r, g, b),
-    delta = max - min,
-    hue;
+  var r = rgb.r / 255;
+  var g = rgb.g / 255;
+  var b = rgb.b / 255;
+  var max = Math.max(r, g, b);
+  var min = Math.min(r, g, b);
+  var delta = max - min;
+  var hue;
+  var value = max;
+  var saturation = max === 0 ? 0 : delta / max;
   switch (max) {
-    case min: hue = 0; break;
-    case r: hue = (g - b) / delta + (g < b ? 6 : 0); break;
-    case g: hue = (b - r) / delta + 2; break;
-    case b: hue = (r - g) / delta + 4; break;
+    case min: 
+      hue = 0; // achromatic
+      break;
+    case r: 
+      hue = (g - b) / delta + (g < b ? 6 : 0);
+      break;
+    case g: 
+      hue = (b - r) / delta + 2;
+      break;
+    case b:
+      hue = (r - g) / delta + 4;
+      break;
   }
-  hue /= 6;
   return {
-    h: hue * 360,
-    s: max == 0 ? 0 : (delta / max) * 100,
-    v: max * 100
+    h: hue * 60,
+    s: saturation * 100,
+    v: value * 100
   }
 };
 
@@ -1144,14 +1154,16 @@ Color.rgbToHsv = function rgbToHsv (rgb) {
   * @return {Object} hsl object
 */
 Color.hsvToHsl = function hsvToHsl (hsv) {
-  var s = hsv.s / 100,
-    v = hsv.v / 100;
-  var l = 0.5 * v * (2 - s);
-  s = v * s / (1 - Math.abs(2 * l - 1));
+  var s = hsv.s / 100;
+  var v = hsv.v / 100;
+  var l = (2 - s) * v;
+  var divisor = l <= 1 ? l : (2 - l);
+  // Avoid division by zero when lightness is close to zero
+  var saturation = divisor < 1e-9 ? 0 : (s * v) / divisor;
   return {
     h: hsv.h,
-    s: s * 100 || 0,
-    l: l * 100
+    s: saturation * 100,
+    l: l * 50
   };
 };
 
@@ -1161,14 +1173,14 @@ Color.hsvToHsl = function hsvToHsl (hsv) {
   * @return {Object} hsv object
 */
 Color.hslToHsv = function hslToHsv (hsl) {
-  var s = hsl.s / 100,
-  l = hsl.l / 100;
-  l *= 2;
-  s *= (l <= 1) ? l : 2 - l;
+  var l = hsl.l * 2;
+  var s = (hsl.s * ((l <= 100) ? l : 200 - l)) / 100;
+  // Avoid division by zero when l + s is near 0
+  var saturation = (l + s < 1e-9) ? 0 : (2 * s) / (l + s);
   return {
     h: hsl.h,
-    s: ((2 * s) / (l + s)) * 100,
-    v: ((l + s) / 2) * 100
+    s: saturation * 100,
+    v: (l + s) / 2
   };
 };
 
@@ -1201,9 +1213,9 @@ prototypeAccessors.rgb.get = function () {
     var g = ref.g;
     var b = ref.b;
   return {
-    r:Math.round(r),
-    g:Math.round(g),
-    b:Math.round(b),
+    r: Math.round(r),
+    g: Math.round(g),
+    b: Math.round(b),
   };
 };
 
@@ -1217,9 +1229,9 @@ prototypeAccessors.hsl.get = function () {
     var s = ref.s;
     var l = ref.l;
   return {
-    h:Math.round(h),
-    s:Math.round(s),
-    l:Math.round(l),
+    h: Math.round(h),
+    s: Math.round(s),
+    l: Math.round(l),
   };
 };
 
@@ -1434,6 +1446,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     Component$$1.call(this, props);
     this.emitHook('init:before');
     this._events = {};
+    this._mounted = false;
     this._colorChangeActive = false;
     this.color = new Color(props.color);
     // Whenever the color changes, update the color wheel
@@ -1467,6 +1480,10 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     var events = this._events;
     this.emitHook('event:on', eventType, callback);
     (events[eventType] || (events[eventType] = [])).push(callback);
+    // Fire mount event immediately if the color picker has already mounted
+    if (eventType === 'mount' && this._mounted) {
+      this.emit('mount', this);
+    }
   };
 
   /**
@@ -1551,7 +1568,9 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
    */
   ColorPicker.prototype.onMount = function onMount (container) {
     this.el = container;
+    this._mounted = true;
     this.emit('mount', this);
+    this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
   };
 
   /**
@@ -1649,7 +1668,7 @@ function usePlugins(core) {
     if ( pluginOptions === void 0 ) pluginOptions = {};
 
     // Check that the plugin hasn't already been registered
-    if (!installedPlugins.indexOf(plugin) > -1) {
+    if (!(installedPlugins.indexOf(plugin) > -1)) {
       // Init plugin
       // TODO: consider collection of plugin utils, which are passed as a thrid param
       plugin(core, pluginOptions);
@@ -1673,7 +1692,7 @@ var iro = usePlugins({
     Slider: IroSlider,
     Wheel: IroWheel
   },
-  version: "4.0.0-beta.4",
+  version: "4.0.0-beta.9",
 });
 
 export default iro;

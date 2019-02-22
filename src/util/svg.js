@@ -12,9 +12,11 @@
  */
 export function resolveUrl(url) {
   // Sniff useragent string to check if the user is running Safari
-  const isSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+  const ua = window.navigator.userAgent;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+  const isIos = /iPhone|iPod|iPad/i.test(ua);
   const location = window.location;
-  return isSafari ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
+  return (isSafari || isIos) ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
 }
 
 /**

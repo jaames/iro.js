@@ -1,12 +1,20 @@
 {
   "name": "@jaames/iro",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.9",
   "description": "A sleek, customizable color picker widget with zero dependencies and a small footprint",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "devDependencies": {
     "css-reset-and-normalize": "^1.2.0",
     "iro-dynamic-css": "^1.0.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "babel-jest": "^24.0.0",
+    "babel-plugin-module-resolver": "^3.1.3",
+    "babel-plugin-transform-define": "^1.3.1",
+    "css-reset-and-normalize": "^1.2.0",
+    "jest": "^24.0.0",
     "node-sass": "^4.9.3",
     "preact": "^8.4.2",
     "rollup": "^0.67.3",
@@ -23,6 +31,7 @@
     "vuepress": "^0.14.2"
   },
   "scripts": {
+    "test": "jest --verbose",
     "start": "rollup -c --watch --environment DEV_SERVER,BUILD:development",
     "dev": "rollup -c --environment BUILD:development",
     "build": "npm run dev && npm run build:es && npm run build:min && npm run docs:copyscript",
@@ -31,6 +40,39 @@
     "docs:copyscript": "\\cp dist/iro.es.js docs/.vuepress/theme/js/iro.es.js",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      [
+        "@babel/preset-react",
+        {
+          "pragma": "h"
+        }
+      ]
+    ],
+    "plugins": [
+      [
+        "module-resolver", {
+          "alias": {
+            "ui": "./src/ui/",
+            "util": "./src/util/"
+          }
+        }
+      ],
+      [ 
+        "transform-define", {
+          "VERSION": "TEST"
+        }
+      ]
+    ]
   },
   "files": [
     "dist/iro.min.js",
