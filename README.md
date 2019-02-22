@@ -1,37 +1,26 @@
-# [iro.js](https://iro.js.org)
+> :warning: This branch is for the old v3 version of iro.js, which will only be receiving major bugfixes from now on. If you are still using this version, please consider upgrading to the latest version (v4) using the [migration guide](https://iro.js.org/migrating.html). There are very few breaking changes and the new version is a drastic improvement!
 
-<img width="100%" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/animated_logo.gif"/>
+### Documentation
 
-### Main Features
-
- * Customizable SVG-based UI
- * Convert colors between RGB, HSV, HSL and hex RGB
- * Dynamicly update CSS styles when the selected color changes
- * Lightweight, at around 13KB minified (or ~5KB minified + gzipped)
- * Zero dependencies (not even jQuery or extra stylesheets/images)
-
-### Browser Support
-
-iro.js aims to support all modern browsers, but it has been successfully tested as far back as IE 9 +.
-
-### Get Started
-
-* [Download](https://iro.js.org/introduction.html#download)
-* [Installation](https://iro.js.org/introduction.html#installation)
-* [Usage Guide](https://iro.js.org/guide.html)
-
-### Demo
-
-[Codepen Demo](https://codepen.io/rakujira/pen/WZOeNq?editors=0010)
-
-### Contributing
-
-[Read more on contributing](https://github.com/jaames/iro.js/blob/master/CONTRIBUTING.md)
-
-### Changelog
-
-See the [changlelog](https://github.com/jaames/iro.js/blob/master/CHANGELOG.md)
-
-### License
-
-[MIT](https://github.com/jaames/iro.js/blob/master/README.md) © [James Daniel](https://rakujira.jp)
+* [Introduction](docs/introduction.md)
+  * [Features](docs/introduction.md#features)
+  * [Installation](docs/introduction.md#installation)
+  * [Download](docs/introduction.md#download)
+* [Guide](docs/guide.md)
+  * [Getting Started](docs/guide.md#getting-started)
+  * [Color Picker Options](docs/guide.md#color-picker-options)
+  * [Using the Selected Color](docs/guide.md#using-the-selected-color)
+  * [Events](docs/guide.md#events)
+  * [Dynamic CSS](docs/guide.md#dynamic-css)
+* [Color API](docs/color_api.md)
+  * [Supported Color Formats](docs/color_api.md#supported-color-formats)
+  * [Methods](docs/color_api.md#methods)
+  * [Properties](docs/color_api.md#properties)
+  * [Static Methods](docs/color_api.md#static-methods)
+* [Color Picker API](docs/colorPicker_api.md) 
+  * [Constructor](docs/colorPicker_api.md#constructor) 
+  * [Methods](docs/colorPicker_api.md#methods) 
+  * [Properties](docs/colorPicker_api.md#properties)
+* [Stylesheet API](docs/stylesheet_api.md) 
+  * [Methods](docs/stylesheet_api.md#methods) 
+  * [Properties](docs/stylesheet_api.md#properties) 
