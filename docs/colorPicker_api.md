@@ -2,141 +2,236 @@
 title: ColorPicker API
 ---
 
+The color picker API is the main feature of iro.js, and is accessible on `iro.ColorPicker`.
+
 ## Constructor
 
 **Arguments:**
 
-* `{String | DOM Element} element`
+* `{String | DOM Element}` CSS selector or DOM node for the color picker container
+* `{Object}` [color picker options](#options)
 
-* `{Object} [options]`
+## Options
 
-  * `{Number} width`
-  * `{Number} height`
-  * `{String} color`
-  * `{Number} padding`
-  * `{Number} sliderMargin`
-  * `{Number} sliderHeight`
-  * `{Boolean} wheelLightness`
-  * `{Number} markerRadius`
-  * `{Number} borderWidth`
-  * `{String} borderColor`
-  * `{String} display`
-  * `{Boolean} anticlockwise`
-  * `{Object} css`
+### `width`
 
-**See also:** The [Color Picker Options](/guide.html#Color-Picker-Options) guide.
+The total width of the color picker UI, measured in pixels. 
+
+**Default value**: `300`
+
+### `color`
+
+The default selected color. This option can be any [supported color format](/color_api.html#supported-color-formats).
+
+**Default value**: `"#ffffff"`
+
+### `borderWidth`
+
+Width of the border around the controls, measured in pixels. 
+
+**Default value**: `0` (no border)
+
+### `borderColor`
+
+Color of the border. Any valid CSS color is supported.
+
+**Default value**: `"#ffffff"`
+
+### `padding`
+
+Padding around the control handles.
+
+**Default value**: `6`
+
+### `handleRadius`
+
+Radius of the control handles, measued in pixels.
+
+**Default value**: `8`
+
+### `handleSvg`
+
+SVG reference for [Custom Handles](/guide.html#custom-handles). This should be an ID selector that matches your handle SVG.
+
+**Default value**: `null` (default handle is used)
+
+### `handleOrigin`
+
+Origin point for [Custom Handles](/guide.html#custom-handles).
+
+**Default value**: `{ x: 0, y: 0 }`
+
+### `wheelLightness`
+
+If set to `false`, the color wheel will not fade to black when the lightness decreases.
+
+**Default value**: `true`
+
+### `sliderHeight`
+
+Slider height, measued in pixels.
+
+**Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
+
+### `sliderMargin`
+
+Gap between the wheel and the slider controls, measured in pixels. 
+
+**Default value**: `12`
+
+### `display`
+
+CSS display value for the color picker root element.
+
+**Default value**: `"block"`
+
+### `layout`
+
+Component array used for [Custom Layouts](/guide.html#custom-layouts).
+
+**Default value**: `"block"`
 
 ## Properties
 
-### color
+### `color`
 
 An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. Updating this color object will also update the seclected color in the picker.
 
-**See also:** [Using the Selected Color](/guide.html#Using-the-Selected-Color)
+**See also:** [Using the Selected Color](/guide.html#color-picker-options)
 
-### el
+### `el`
 
 The HTML element being used as the color picker container.
 
-### base
+### `base`
 
-The HTML element being used as the color picker base element.
+The HTML element being used as the color picker's base element.
 
-### props
+### `props`
 
 The initial configetation options passed to the color picker.
 
 ## Methods
 
-### resize
-
-Update the color picker width
-
-### reset
+### `reset`
 
 Reset the color picker back to the original color value passed to the color picker config.
 
-### forceUpdate
+### `resize`
 
-Force the color picker to rerender
-
-### on
-
-Add listeners to color picker events.
+Set the color picker to a new size. Note: height is currently ignored.
 
 **Arguments:**
 
-* `{String} eventType`
-* `{Function} callback`
+* `{Number}` width
+* `{Number}` height
 
-**`eventType` values:**
+### `on`
 
-| `eventType`    | usage |
-|----------------|-------|
-| `color:change` | when the color has changed, the callback gets passed the `color` object and an object providing which color channels (out of H, S, V) have changed. |
-| `input:start` | when the user starts interacting with the color picker, the callback gets passed the `color` object |
-| `input:end` | when the user has finished interacting with the color picker, the callback gets passed the `color` object |
-| `mount` | fired once the color picker UI has been mounted into the DOM |
-| `*` | listen to all events |
+Add a listener to a color picker event.
 
-**See also:** The [Events](/guide.html#Events) guide.
+**Arguments:**
+
+* `{String}` [Event Type](#events)
+* `{Function}` callback
 
 **Example:**
 
 ```js
-// make a handler function that will log the color's hex value to the console
-function colorChangeHandler(color) {
-  console.log(color.hexString)
+// make a handler function
+function colorChangeCallback(color) {
+  console.log(color.hexString);
 }
 
-// start listening to the color change event, now colorChangeHandler will be called whenever the color changes
-example.on('color:change', colorChangeHandler)
+// start listening to the color change event
+// colorChangeCallback will be called whenever the color changes
+example.on("color:change", colorChangeCallback);
 ```
 
-### off
+### `off`
 
-Remove event listeners added with `on`.
+Remove event listeners that were registered with `on`.
 
 **Arguments:**
 
-* `{String} eventType`
-* `{Function} callback`
+* `{String}` [Event Type](#events)
+* `{Function}` callback
 
 **Example:**
 
 ```js
-// make a handler function that will log the color's hex value to the console
-function colorChangeHandler(color) {
-  console.log(color.hexString)
+// make a handler function
+function colorChangeCallback(color) {
+  console.log(color.hexString);
 }
 
-// start listening to the color change event, now colorChangeHandler will be called whenever the color changes
-example.on('color:change', colorChangeHandler);
+// start listening to the color change event
+// colorChangeCallback will be called whenever the color changes
+example.on("color:change", colorChangeCallback);
 
-// stop listening to the color change event, colorChangeHandler won't be called ehen the color changes
-example.off('color:change', colorChangeHandler);
+// stop listening to the color change event
+// colorChangeCallback won't be called ehen the color changes
+example.off("color:change", colorChangeCallback);
 ```
 
-### emit
+### `forceUpdate`
 
-Used internally to dispatch an event. 
+Force the color picker to rerender. This can be used to resolve a [known issue](https://github.com/jaames/iro.js/issues/18) where Safari will render the color picker as black when using certain client-side routing libraries, including Angular's default router.
 
-### emitHook
 
-Used internally to dispatch a plugin hook.
+### `emit`
+
+Used internally to dispatch an event. All function parameters after the event type will be passed to the event callback.
+
+**Arguments:**
+
+* `{String}` [Event Type](#events)
+
+### `emitHook`
+
+Used internally to dispatch a plugin hook. All function parameters after the event type will be passed to the hook callback. The callback's `this` value will also be set to reference the color picker instance that fired this hook.
+
+**Arguments:**
+
+* `{String}` [Event Type](#events)
+* `{Function}` callback
 
 ## Static Methods
 
-### addHook
+### `addHook`
 
-Used by plugins to hook into the color picker lifecycle. Plugin hooks are just like events, except they are added globally to every color picker instance. When a hook callback is called, its `this` context is also bound to the color picker instance. Check the [Plugin Hooks](#plugin-hooks) section for a full list of available hooks.
+Used by plugins to register a global [Plugin Hook](#plugin-hooks).
 
 **Arguments:**
 
 * `{String} hookType`
 * `{Function} callback`
 
+## Events
+
+The color picker's [on](#on) method can be used to register callbacks for color picker events, such as when the selected color changes or when the user begins interacting with the picker. These callbacks can also be removed with the [off](#off) method.
+
+### `color:change`
+
+Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. This event's callback function gets passed the currently selected color and an object which reflects which h,s,v channels changed.
+
+### `input:start`
+
+Fired whenever the users starts interacting with the color picker controls. The colorPicker's color object is passed to this event's callback function.
+
+### `input:end`
+
+Fired whenever the user stops interacting with the color picker controls. The colorPicker's color object is passed to this event's callback function.
+
+### `mount`
+
+Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. A reference to the colorPicker object is passed to this event's callback function.
+
 ## Plugin Hooks
+
+Plugin hooks are used by [Plugins](/plugins.html) to add extra behaviour to the color picker -- you shouldn't need these unless you are writing a color picker plugin.
+
+They behave just like events, except they are added globally to every color picker instance with the static [`addHook`](#addhook) method. When a hook callback is called, its `this` context is also bound to the color picker instance that triggered that hook. 
 
 ### `init:before`
 
@@ -168,7 +263,7 @@ Fired after the selected color has changed, but before the color picker UI has u
 
 ### `color:afterUpdate`
 
-Fired after the color picker UI has reacted to the selected color changing. The selected color cannot be modified at this stage, otherwise it will cause infinite update loops.
+Fired after the color picker UI has reacted to the selected color update. The selected color cannot be modified at this stage, otherwise it will cause infinite update loops.
 
 ### `color:change`
 

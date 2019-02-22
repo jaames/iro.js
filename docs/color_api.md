@@ -4,6 +4,12 @@ title: Color API
 
 The Color API is used by color pickers to store the selected color and to handle conversions between different color models. It's also made accessible via `iro.Color` so that it can be used as a general color utility library.
 
+## Constructor
+
+**Arguments:**
+
+* `{String | Object | Color}` Initial color. This can be any [supported color format](#supported-color-formats), or another Color instance.
+
 ## Supported Color Formats
 
 * **hex string**: `"#ff0000"`
@@ -17,42 +23,41 @@ The Color API is used by color pickers to store the selected color and to handle
 * **hsl object**: `{h: 360, s: 50, l: 100}`
 * **hsv object**: `{h: 360, s: 100, v: 50}`
 
-
 ## Properties
 
-All of these color properties are writable as well as readable, which means they can be used to both *set* and *get* the color in various formats.
+Color objects have several "magic" properties that reflect the value of the color in different formats. The magic is that they are readable as well as writable, so they can both **get** and **set** the color from that given format.
 
-### hsv
+### `hsv`
 
 The color as a [hsv](https://www.wikiwand.com/en/HSL_and_HSV) object.
 
 **Example format**: `{h: 360, s: 100, v: 50}`
 
-### hsl
+### `hsl`
 
 The color as a [hsl](https://www.wikiwand.com/en/HSL_and_HSV) object.
 
 **Example format**: `{h: 360, s: 50, l: 100}`
 
-### rgb
+### `rgb`
 
 The color as an [rgb](https://www.wikiwand.com/en/RGB_color_model) object
 
 **Example format**: `{r: 255, g: 0, b: 0}`
 
-### hslString
+### `hslString`
 
 The color as a percentage hsl string.
 
 **Example format**: `"hsl(360, 100%, 50%)"`
 
-### rgbString
+### `rgbString`
 
 The color as an rgb string. Percentage-based rgb strings are also accepted as inputs.
 
 **Example format**: `"rgb(255, 0, 0)"` or `"rgb(100%, 0%, 0%)"`
 
-### hexString
+### `hexString`
 
 The color as a hex rgb string. Shorthand hex input is also accepted.
 
@@ -60,30 +65,35 @@ The color as a hex rgb string. Shorthand hex input is also accepted.
 
 ## Methods
 
-### set
+### `set`
 
-Set the color from any [supported color format](#Supported-Color-Formats).
-
-**Arguments**:
-
-* `{Color} color`
-
-### setChannel 
-
-Set a specific color channel to a new value. `format` can be either `hsv`, `hsl` or `rgb`, and `channel` should be a single letter representing which channel from the format you wish to set.
+Set the color from any [supported color format](#supported-color-formats).
 
 **Arguments**:
 
-* `{String} format`
-* `{String} channel`
-* `{Number} value`
+* `{Color}`
+
+### `setChannel`
+
+Set a specific color channel to a new value. `format` can be either `hsv` or `rgb`, and `channel` should be a single letter representing which channel from the format you wish to set.
+
+**Arguments**:
+
+* `{String}` format
+* `{String}` channel
+* `{Number}` value
 
 **Example**:
 
 ```js
+// set the rgb red channel to 255:
+color.setChannel('rgb', 'r', 255);
+
+// set the hsv hue channel to 180:
+color.setChannel('hsv', 'h', 255);
 ```
 
-### clone
+### `clone`
 
 Copy the color and return a new Color object with the same value.
 
@@ -91,9 +101,9 @@ Copy the color and return a new Color object with the same value.
 
 ## Static Methods
 
-### hsvToRgb
+### `hsvToRgb`
 
-Convert a hsv object to rgb.
+Convert a hsv object to an rgb object.
 
 **Arguments**:
 
@@ -101,9 +111,9 @@ Convert a hsv object to rgb.
 
 **Returns**: `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
 
-### rgbToHsv
+### `rgbToHsv`
 
-Convert an rgb object to hsv.
+Convert an rgb object to a hsv object.
 
 **Arguments**:
 
@@ -111,22 +121,22 @@ Convert an rgb object to hsv.
 
 **Returns**: `{Object}` hsv values, e.g `{h: 360, s: 100, v: 50}`
 
-### hsvToHsl
+### `hsvToHsl`
 
-Convert a hsv object to hsl.
+Convert a hsv object to a hsl object.
 
 **Arguments**:
 
-* `{Object}` hsv values, e.g `{h: 360, s:50, v:100}`
+* `{Object}` hsv values, e.g `{h: 360, s: 50, v: 100}`
 
 **Returns**: `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
 
-### hslToHsv
+### `hslToHsv`
 
-Convert a hsl object to hsv.
+Convert a hsl object to a hsv object.
 
 **Arguments**:
 
 * `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
 
-**Returns**: `{Object}` hsv values, e.g `{h: 360, s:50, v:100}`
+**Returns**: `{Object}` hsv values, e.g `{h: 360, s: 50, v: 100}`

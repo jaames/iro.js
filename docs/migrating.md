@@ -7,7 +7,7 @@ title: Migration Guide
 ### Color Picker Options
 
 * `anticlockwise` option has been removed, and is now hardcoded to `true`
-* `markerRadius` option is now called `handleRadius`
+* `markerRadius` option has been renamed as `handleRadius`
 
 ### Static Color Methods
 

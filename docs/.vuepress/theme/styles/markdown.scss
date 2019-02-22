@@ -42,7 +42,11 @@
 
   ul, ol, dl {
     margin: 1.2em 0;
-    padding-left: 2em;
+    padding-left: 1.2em;
+  }
+
+  ul ul {
+    margin-top: .6em;
   }
 
   ul {
@@ -80,33 +84,22 @@
     margin: 1.2em 0;
     overflow: hidden;
     border-collapse: collapse;
-    border-radius: 6px;
+    // border-radius: 6px;
     border-spacing: 2px;
   }
 
   thead {
-    background-color: $light-gray;
+    color: $dark-gray;
   }
 
   thead, tbody, tfoot {
-    border: 1px solid $light-gray;
+    // border: 1px solid $light-gray;
   }
 
   td, th {
-    padding: .5rem .625rem .625rem;
+    padding: 1rem .6rem;
     text-align: left;
-  }
-
-  th {
-    font-weight: bold;
-  }
-
-  tbody tr:nth-child(even) {
-    background: $light-gray;
-
-    pre, code {
-      background-color: darken($light-gray, 3);
-    }
+    border-bottom: 1px solid $light-gray;
   }
 
   // code blocks are wrapped in divs
@@ -114,7 +107,6 @@
     margin: 1.2em 0;
     position: relative;
     border-radius: 6px;
-    // box-shadow: 0 4px 4px -2px rgba(32, 32, 64, 0.1);
   }
 
   pre[class*="language-"] {
@@ -140,4 +132,5 @@
   pre.language-js::before {content: "js";}
   pre.language-css::before {content: "css";}
   pre.language-html::before {content: "html";}
+  pre.language-svg::before {content: "svg";}
 }

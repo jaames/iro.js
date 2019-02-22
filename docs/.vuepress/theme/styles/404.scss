@@ -1,0 +1,28 @@
+.notfound {
+  color: #fff;
+  background: $background-invert;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+
+  h1 {
+    color: var(--bgcolor, #fff);  
+    font-size: 3em;
+    margin: 0;
+  }
+
+  .subtitle {
+    margin-bottom: 2em;
+  }
+
+  .linkgroup {
+    margin-top: 2rem;
+  }
+
+  .link {
+    margin: 0 .5rem;
+  }
+}

@@ -25,17 +25,18 @@ module.exports = {
       '/',
       '/introduction.html',
       '/guide.html',
-      '/extensions.html',
+      '/plugins.html',
       '/colorPicker_api.html',
       '/color_api.html',
       '/migrating.html',
       {
         title: 'Links',
         children: [
-          ['https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url', 'Donate'],
-          ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
           ['https://github.com/jaames/iro.js', 'iro.js on GitHub'],
+          ['https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url', 'Donate'],
           ['https://github.com/jaames/iro.js/issues', 'Submit an Issue / Request'],
+          // ['mailto:james@rakujira.jp', 'Email Support'],
+          ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
           ['https://twitter.com/rakujira', 'Follow me on Twitter'],
         ]
       }

@@ -1,26 +1,19 @@
 <template>
-  <div class="theme-container">
-    <div class="content">
-      <h1>404</h1>
-      <blockquote>{{ getMsg() }}</blockquote>
-      <router-link to="/">Take me home.</router-link>
+  <div class="notfound"> 
+    <h1>404</h1> 
+    <div class="subtitle">Page not found</div>
+    <color-picker/>
+    <div class="linkgroup">
+      <router-link class="link" to="/">Home</router-link> | <a class="link" href="//github.com/jaames/iro.js">GitHub</a> | <a class="link" href="//github.com/jaames/iro.js/issues">Report Issue</a>
     </div>
   </div>
 </template>
 
 <script>
-const msgs = [
-  `There's nothing here.`,
-  `How did we get here?`,
-  `That's a Four-Oh-Four.`,
-  `Looks like we've got some broken links.`
-]
-
+import ColorPicker from "./ColorPicker";
 export default {
-  methods: {
-    getMsg () {
-      return msgs[Math.floor(Math.random() * msgs.length)]
-    }
+  components: {
+    ColorPicker
   }
 }
 </script>

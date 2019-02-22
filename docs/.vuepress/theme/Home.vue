@@ -7,7 +7,7 @@
       <div class="hero__frame hero__frame--bottom"></div>
       <div class="hero__content">
         <a class="githubCorner" href="//github.com/jaames/iro.js" target="_blank">
-          <GitHubCorner/>
+          <github-corner/>
         </a>
         <div class="hero__body">
           <div class="hero__half intro">
@@ -18,7 +18,9 @@
               <router-link class="button button--invert" to="/introduction.html">Get Started →</router-link>
             </div>
           </div>
-          <div class="hero__half demo" ref="demoContainer"></div>
+          <div class="hero__half demo">
+            <color-picker/>
+          </div>
         </div>
         <div class="hero__foot">Created by <a href="//github.com/jaames">James Daniel</a></div>
       </div>
@@ -28,60 +30,18 @@
 
 <script>
 import Logo from "./icons/logo.svg";
-import GitHubCorner from "./icons/github-corner.svg";
-
+import GithubCorner from "./icons/github-corner.svg";
+import ColorPicker from "./ColorPicker";
 export default {
-  components: { Logo, GitHubCorner },
+  components: {
+    Logo, 
+    GithubCorner,
+    ColorPicker
+  },
   computed: {
     data () {
       return this.$page.frontmatter
     }
-  },
-  mounted() {
-    // https://vuepress.vuejs.org/guide/using-vue.html#browser-api-access-restrictions
-    import("./js/iro.es.js").then(module => {
-      const iro = module.default;
-
-      this.wheel = new iro.ColorPicker(this.$refs.demoContainer, {
-        sliderMargin: 24,
-        markerRadius: 8,
-        borderWidth: 2,
-        borderColor: "#fff",
-        width: 260,
-        color: "#906bff",
-        css: {
-          ":root": {
-            "--bgcolor": "$color",
-          }
-        }
-      });
-
-      function throttle(callback, wait) {
-        let timeout = null 
-        let callbackArgs = null
-        
-        const later = () => {
-          callback.apply(null, callbackArgs)
-          timeout = null
-        }
-        
-        return function() {
-          if (!timeout) {
-            callbackArgs = arguments
-            timeout = setTimeout(later, wait)
-          }
-        }
-      }
-
-      this.wheel.on('color:change', throttle(function(color) {
-        const rgb = color.rgbString;
-        document.body.style.setProperty('--bgcolor', rgb);
-      }, 50));
-      
-      // expose iro globally incase people wanna use devtools to play with it
-      window.colorPicker = this.wheel;
-      window.iro = iro;
-    });
   }
 }
 </script>
