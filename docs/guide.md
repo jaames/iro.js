@@ -95,7 +95,7 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 | `display`        | CSS display value for the color picker root element. | `"block"` |
 | `layout`         | Used for [Custom Layouts](#custom-layouts) | `null` |
 
-More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](/colorPicker_api.html#options).
+More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](/colorPicker_api.html).
 
 ## Selected Color API
 

@@ -16,8 +16,8 @@
   <a href="https://npmjs.org/package/@jaames/iro">
     <img src="https://badgen.net/npm/dt/@jaames/iro?color=6AD4E0" alt="downloads" />
   </a>
-  <a href="https://bundlephobia.com/result?p=@jaames/iro@beta">
-    <img src="https://badgen.net/bundlephobia/minzip/@jaames/iro@beta?color=6FDF89" alt="minzip size" />
+  <a href="https://bundlephobia.com/result?p=@jaames/iro">
+    <img src="https://badgen.net/bundlephobia/minzip/@jaames/iro?color=6FDF89" alt="minzip size" />
   </a>
   <a href="">
     <img src="https://badgen.net/badge/dependencies/none/F8AE55" alt="dependencies" />
@@ -28,7 +28,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> | <a href="#installation">Installation</a> | <a href="#demo">Demo</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a>
+  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a>
 </p>
 
 <br/>
@@ -44,7 +44,11 @@
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
-<br/>
+## Demo
+
+An [interactive demo](https://codepen.io/rakujira/pen/WZOeNq?editors=0010) is available on Codepen.
+
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
 ## Installation
 
@@ -94,16 +98,6 @@ When manually including the library like this, it will be globally available as 
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
-<br/>
-
-## Demo
-
-An [interactive demo](https://codepen.io/rakujira/pen/WZOeNq?editors=0010) is available on Codepen.
-
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
-
-<br/>
-
 ## Usage
 
 ### Getting Started
@@ -135,7 +129,7 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 });
 ```
 
-### Available Options
+#### Available Options
 
 | Option           | Purpose | Default |
 |:-----------------|:--------|:--------|
@@ -153,7 +147,7 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 | `display`        | CSS display value for the color picker root element. | `"block"` |
 | `layout`         | Used for [Custom Layouts](https://iro.js.org/guide.html#custom-layouts) | `null` |
 
-More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](https://iro.js.org/colorPicker_api.html#options).
+More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](https://iro.js.org/colorPicker_api.html).
 
 ### Selected Color API
 
@@ -236,8 +230,6 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
-<br/>
-
 ## Documentation
 
 * [Usage](https://iro.js.org/guide.html)
@@ -271,15 +263,11 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
 
-<br/>
-
 ## Plugins
 
 * [**iro-dynamic-css**](https://github.com/jaames/iro-dynamic-css): Allows you to dynamically update CSS rules whenever the selected color changes.
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
-
-<br/>
 
 [Website](//iro.js.org) | [Codepen Demo](//codepen.io/rakujira/pen/WZOeNq?editors=0010) | [Contribution Guide](CONTRIBUTE.md) | [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url) | [Changelog](CHANGELOG.md) | [License](LICENSE.txt)
 
