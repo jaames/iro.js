@@ -1,6 +1,6 @@
-> :warning: This readme is for iro.js v4, which is a major rewrite of the library. If you are still using v3 (version 3.5.1 and below) please read the [migration guide](https://iro.js/org/migrating.html). The v3 version of the library and documentation is preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3) if you need it!
+> :warning: This readme is for iro.js v4, which is a major rewrite of the library. If you are still using v3 (version 3.5.1 and below) please read the [migration guide](https://iro.js.org/migrating.html). The v3 version of the library and documentation is preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3) if you need it!
 
-<h1 align="center"><a href="//iro.js.org"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/screenshot.png"/><br/>iro.js</a></h1>
+<h1 align="center"><a href="//iro.js.org"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/screenshot.png"/><br/>iro.js</a></h1>
 
 <p align="center">
   <b>A highly customizable svg-based color picker with zero external dependencies | <a href="//iro.js.org">iro.js.org</a></b>
@@ -42,13 +42,13 @@
  * **Small footprint**: [7kb](https://bundlephobia.com/result?p=@jaames/iro) minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.
  * **Licenced under MPL 2.0**: 100% free for personal and commercial use.
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Demo
 
 An [interactive demo](https://codepen.io/rakujira/pen/WZOeNq?editors=0010) is available on Codepen.
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Installation
 
@@ -96,7 +96,7 @@ When manually including the library like this, it will be globally available as 
 <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
 ```
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Usage
 
@@ -228,7 +228,7 @@ Fired whenever the user stops interacting with the color picker controls. The [c
 
 Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. The colorPicker object is passed to this event's callback function.
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Documentation
 
@@ -261,13 +261,13 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
   * [Migrating from v3](https://iro.js.org/migrating.html#migrating-from-v3)
 
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Plugins
 
 * [**iro-dynamic-css**](https://github.com/jaames/iro-dynamic-css): Allows you to dynamically update CSS rules whenever the selected color changes.
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/v4/assets/break.png"/>
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 [Website](//iro.js.org) | [Codepen Demo](//codepen.io/rakujira/pen/WZOeNq?editors=0010) | [Contribution Guide](CONTRIBUTE.md) | [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url) | [Changelog](CHANGELOG.md) | [License](LICENSE.txt)
 
