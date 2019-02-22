@@ -16,7 +16,7 @@ title: Introduction
 Install the latest version of iro.js from [npm](https://www.npmjs.com/package/@jaames/iro):
 
 ```bash
-$ npm install @jaames/iro
+$ npm install @jaames/iro@3.5.1
 ```
 
 Then using a module bundler like Rollup or Webpack, import it into your code:
@@ -47,8 +47,8 @@ When using the library this way, it will be available globally as `window.iro`.
 
 ## Download
 
-[Development Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js) <br>
+[Development Version](https://raw.githubusercontent.com/jaames/iro.js/v3/dist/iro.js) <br>
 Uncompressed with comments at around 50kB
 
-[Production Version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js) <br>
+[Production Version](https://raw.githubusercontent.com/jaames/iro.js/v3/dist/iro.min.js) <br>
 Minified to 13kB
