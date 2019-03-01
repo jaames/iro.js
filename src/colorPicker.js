@@ -47,6 +47,10 @@ class ColorPicker extends Component {
     if (eventType === 'mount' && this._mounted) {
       this.emit('mount', this);
     }
+    // Fire color change immediately if the color picker has already initiated
+    if (eventType === 'color:change' && this._mounted) {
+      this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
+    }
   }
 
   /**

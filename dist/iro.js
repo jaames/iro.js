@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.0
+ * iro.js v4.0.2
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1490,6 +1490,10 @@
 	    if (eventType === 'mount' && this._mounted) {
 	      this.emit('mount', this);
 	    }
+	    // Fire color change immediately if the color picker has already initiated
+	    if (eventType === 'color:change' && this._mounted) {
+	      this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
+	    }
 	  };
 
 	  /**
@@ -1698,7 +1702,7 @@
 	    Slider: IroSlider,
 	    Wheel: IroWheel
 	  },
-	  version: "4.0.0",
+	  version: "4.0.2",
 	});
 
 	return iro;
