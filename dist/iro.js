@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.2
+ * iro.js v4.0.3
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1382,6 +1382,16 @@
 	    );
 	  };
 
+	  IroSlider.prototype.getValueFromPoint = function getValueFromPoint (x, y, ref) {
+	    var left = ref.left;
+
+	    var handleRange = this.width - this.height;
+	    var cornerRadius = this.height / 2;
+	    x = x - (left + cornerRadius);
+	    var dist = Math.max(Math.min(x, handleRange), 0);
+	    return Math.round((100 / handleRange) * dist);
+	  };
+
 	  /**
 	    * @desc handles mouse input for this component
 	    * @param {Number} x - point x coordinate
@@ -1389,16 +1399,9 @@
 	    * @param {DOMRect} rect - bounding client rect for the component's base element
 	    * @param {String} type - input type: "START", "MOVE" or "END"
 	  */
-	  IroSlider.prototype.handleInput = function handleInput (x, y, ref, type) {
-	    var left = ref.left;
-	    var right = ref.right;
-
-	    var handleRange = this.width - this.height;
-	    var cornerRadius = this.height / 2;
-	    x = x - (left + cornerRadius);
-	    var dist = Math.max(Math.min(x, handleRange), 0);
+	  IroSlider.prototype.handleInput = function handleInput (x, y, bounds, type) {
 	    this.props.onInput(type, {
-	      v: Math.round((100 / handleRange) * dist)
+	      v: this.getValueFromPoint(x, y, bounds)
 	    });
 	  };
 
@@ -1702,7 +1705,7 @@
 	    Slider: IroSlider,
 	    Wheel: IroWheel
 	  },
-	  version: "4.0.2",
+	  version: "4.0.3",
 	});
 
 	return iro;
