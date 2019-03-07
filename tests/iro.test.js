@@ -26,19 +26,27 @@ describe('Core API', () => {
     expect('ui' in iro).toBeTruthy();
   });
 
-  test('Core exposes Component base on iro.ui.Component', () => {
-    expect('Component' in iro.ui).toBeTruthy();
+  test('Core exposes util functions', () => {
+    expect('util' in iro).toBeTruthy();
   });
 
-  test('Core exposes Wheel component on iro.ui.Wheel', () => {
-    expect('Wheel' in iro.ui).toBeTruthy();
+  test('Core exposes resolveUrl util on iro.util.resolveUrl', () => {
+    expect('resolveUrl' in iro.util).toBeTruthy();
   });
 
-  test('Core exposes Slider component on iro.ui.Slider', () => {
-    expect('Slider' in iro.ui).toBeTruthy();
+  test('Core exposes createArcPath util on iro.util.createArcPath', () => {
+    expect('createArcPath' in iro.util).toBeTruthy();
   });
 
-  test('Core exposes Handle component on iro.ui.Handle', () => {
-    expect('Handle' in iro.ui).toBeTruthy();
+  test('Core exposes parseUnit util on iro.util.parseUnit', () => {
+    expect('parseUnit' in iro.util).toBeTruthy();
+  });
+
+  test('Core exposes parseHexInt util on iro.util.parseHexInt', () => {
+    expect('parseHexInt' in iro.util).toBeTruthy();
+  });
+
+  test('Core exposes intToHex util on iro.util.intToHex', () => {
+    expect('intToHex' in iro.util).toBeTruthy();
   });
 });

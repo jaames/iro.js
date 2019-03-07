@@ -38,7 +38,7 @@ export default class Color {
     // The watch callback function for this Color will be stored here
     this._onChange = false;
     // The default Color value
-    this._value = {h: 0, s: 0, v: 0, a: 0};
+    this._value = {h: 0, s: 0, v: 0, a: 1};
     if (value) this.set(value);
   }
 
@@ -241,7 +241,7 @@ export default class Color {
 
   get rgbString() {
     const rgb = this.rgb;
-    return `rgb${rgb.a ? 'a' : ''}(${rgb.r}, ${rgb.g}, ${rgb.b}${rgb.a ? ', ' + rgb.a : ''})`;
+    return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
   }
 
   set rgbString(value) {
@@ -306,7 +306,7 @@ export default class Color {
 
   get hslString() {
     const hsl = this.hsl;
-    return `hsl${hsl.a ? 'a' : ''}(${hsl.h}, ${hsl.s}%, ${hsl.l}%${hsl.a ? ', ' + hsl.a : ''})`;
+    return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
   }
 
   set hslString(value) {

@@ -12,13 +12,15 @@ class ColorPicker extends Component {
     this._events = {};
     this._mounted = false;
     this._colorChangeActive = false;
-    this.color = new IroColor(props.color);
+    this.color = new IroColor();
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
     this.state = {
       ...props,
       color: this.color,
     };
+    // set color value
+    this.color.set(props.color);
     this.emitHook('init:state');
 
     if (props.layout) {

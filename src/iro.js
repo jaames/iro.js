@@ -8,6 +8,8 @@ import Handle from 'ui/handle';
 import Slider from 'ui/slider';
 import Wheel from 'ui/wheel';
 import { usePlugins } from 'util/usePlugins';
+import { resolveUrl, createArcPath } from 'util/svg';
+import { parseUnit, parseHexInt, intToHex } from 'util/colorUtils';
 
 export default usePlugins({
   Color,
@@ -17,7 +19,14 @@ export default usePlugins({
     Component,
     Handle,
     Slider,
-    Wheel
+    Wheel,
+  },
+  util: {
+    resolveUrl, 
+    createArcPath,
+    parseUnit,
+    parseHexInt,
+    intToHex
   },
   version: VERSION,
 });

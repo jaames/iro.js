@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.0.3
+ * iro.js v4.1.0
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1028,7 +1028,7 @@ var Color = function Color(value) {
   // The watch callback function for this Color will be stored here
   this._onChange = false;
   // The default Color value
-  this._value = {h: 0, s: 0, v: 0, a: 0};
+  this._value = {h: 0, s: 0, v: 0, a: 1};
   if (value) { this.set(value); }
 };
 
@@ -1241,7 +1241,7 @@ prototypeAccessors.hsl.set = function (value) {
 
 prototypeAccessors.rgbString.get = function () {
   var rgb = this.rgb;
-  return ("rgb" + (rgb.a ? 'a' : '') + "(" + (rgb.r) + ", " + (rgb.g) + ", " + (rgb.b) + (rgb.a ? ', ' + rgb.a : '') + ")");
+  return ("rgb(" + (rgb.r) + ", " + (rgb.g) + ", " + (rgb.b) + ")");
 };
 
 prototypeAccessors.rgbString.set = function (value) {
@@ -1306,7 +1306,7 @@ prototypeAccessors.hexString.set = function (value) {
 
 prototypeAccessors.hslString.get = function () {
   var hsl = this.hsl;
-  return ("hsl" + (hsl.a ? 'a' : '') + "(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%" + (hsl.a ? ', ' + hsl.a : '') + ")");
+  return ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)");
 };
 
 prototypeAccessors.hslString.set = function (value) {
@@ -1451,11 +1451,13 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     this._events = {};
     this._mounted = false;
     this._colorChangeActive = false;
-    this.color = new Color(props.color);
+    this.color = new Color();
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
     this.state = Object.assign({}, props,
       {color: this.color});
+    // set color value
+    this.color.set(props.color);
     this.emitHook('init:state');
 
     if (props.layout) {
@@ -1697,9 +1699,16 @@ var iro = usePlugins({
     Component: IroComponent,
     Handle: IroHandle,
     Slider: IroSlider,
-    Wheel: IroWheel
+    Wheel: IroWheel,
   },
-  version: "4.0.3",
+  util: {
+    resolveUrl: resolveUrl, 
+    createArcPath: createArcPath,
+    parseUnit: parseUnit,
+    parseHexInt: parseHexInt,
+    intToHex: intToHex
+  },
+  version: "4.1.0",
 });
 
 export default iro;
