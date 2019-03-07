@@ -7,6 +7,7 @@ title: Plugins
 ### Official Plugins
 
 * [**iro-dynamic-css**](https://github.com/jaames/iro-dynamic-css): Allows you to dynamically update CSS rules whenever the selected color changes.
+* [**iro-transparency-plugin**](https://github.com/jaames/iro-transparency-plugin): Adds optional transparency slider to the color picker and support for color-with-alpha color formats.
 
 ## Using Plugins
 

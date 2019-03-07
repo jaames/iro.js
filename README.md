@@ -28,7 +28,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a>
+  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="#documentation">Documentation</a>
 </p>
 
 <br/>
@@ -36,10 +36,11 @@
 ## Features
 
  * **Simple**: Low friction API, with robust support for hex, rgb, hsl and hsv color formats.
- * **Extendable**: Tweak the library to your requirements with [Plugins](#plugins) and custom UI elements.
- * **Great design**: The controls are designed to be intuitive and responsive, plus they're built with SVG so they look super crisp at any resolution.
+ * **Extendable**: Tweak the library to your requirements with [Plugins](#plugins) and custom UI elements
  * **Consistent behaviour**: Works across all modern browsers and devices, including touchscreens.
  * **Small footprint**: [7kb](https://bundlephobia.com/result?p=@jaames/iro) minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.
+ * **Great design**: The controls are designed to be intuitive and responsive, plus they're built with SVG so they look super crisp at any resolution.
+ * **Transparency support**: Optional transparency slider with the [transparency plugin](https://github.com/jaames/iro-transparency-plugin).
  * **Licenced under MPL 2.0**: 100% free for personal and commercial use.
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
@@ -230,6 +231,13 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
+## Plugins
+
+* [**iro-dynamic-css**](https://github.com/jaames/iro-dynamic-css): Allows you to dynamically update CSS rules whenever the selected color changes.
+* [**iro-transparency-plugin**](https://github.com/jaames/iro-transparency-plugin): Adds optional transparency slider to the color picker and support for color-with-alpha color formats.
+
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
+
 ## Documentation
 
 * [Usage](https://iro.js.org/guide.html)
@@ -259,13 +267,6 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
   * [Static Methods](https://iro.js.org/color_api.html#static-methods)
 * [Migration Guide](https://iro.js.org/migrating.html)
   * [Migrating from v3](https://iro.js.org/migrating.html#migrating-from-v3)
-
-
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
-
-## Plugins
-
-* [**iro-dynamic-css**](https://github.com/jaames/iro-dynamic-css): Allows you to dynamically update CSS rules whenever the selected color changes.
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
