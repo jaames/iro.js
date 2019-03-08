@@ -1,9 +1,9 @@
 > :warning: This readme is for iro.js v4, which is a major rewrite of the library. If you are still using v3 (version 3.5.1 and below) please read the [migration guide](https://iro.js.org/migrating.html). The v3 version of the library and documentation is preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3) if you need it!
 
-<h1 align="center"><a href="//iro.js.org"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/screenshot.png"/><br/>iro.js</a></h1>
+<h1 align="center"><a href="//iro.js.org" target="blank"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/screenshot.png"/><br/>iro.js</a></h1>
 
 <p align="center">
-  <b>A highly customizable svg-based color picker with zero external dependencies | <a href="//iro.js.org">iro.js.org</a></b>
+  <b>A highly customizable svg-based color picker with zero external dependencies | <a href="//iro.js.org" target="blank">iro.js.org</a></b>
 </p>
 
 <p align="center">
