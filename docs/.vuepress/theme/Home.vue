@@ -12,7 +12,7 @@
         <div class="hero">
           <div class="hero__half intro">
             <Logo class="intro__logo logo"/>
-            <h3 class="intro__sub">A HSV color picker widget for JavaScript, with zero dependencies and a modern SVG-based UI</h3>
+            <h3 class="intro__sub">An HSV color picker widget for JavaScript, with zero dependencies and a modern SVG-based UI</h3>
             <div class="intro__buttons">
               <a href="//codepen.io/rakujira/pen/WZOeNq?editors=0010" target="_blank" class="button button--invert">Codepen Demo</a>
               <router-link class="button button--invert" to="/introduction.html">Documentation →</router-link>
