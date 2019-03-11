@@ -1,28 +1,61 @@
 <template>
   <div class="home">
-    <div class="hero">
-      <div class="hero__frame hero__frame--left"></div>
-      <div class="hero__frame hero__frame--right"></div>
-      <div class="hero__frame hero__frame--top"></div>
-      <div class="hero__frame hero__frame--bottom"></div>
-      <div class="hero__content">
+    <div class="main">
+      <div class="main__frame main__frame--left"></div>
+      <div class="main__frame main__frame--right"></div>
+      <div class="main__frame main__frame--top"></div>
+      <div class="main__frame main__frame--bottom"></div>
+      <div class="main__content">
         <a class="githubCorner" href="//github.com/jaames/iro.js" target="_blank">
           <github-corner/>
         </a>
-        <div class="hero__body">
+        <div class="hero">
           <div class="hero__half intro">
             <Logo class="intro__logo logo"/>
-            <h3 class="intro__sub">A lightweight, SVG-based color picker library</h3>
+            <h3 class="intro__sub">A HSV color picker widget for JavaScript, with zero dependencies and a modern SVG-based UI</h3>
             <div class="intro__buttons">
               <a href="//codepen.io/rakujira/pen/WZOeNq?editors=0010" target="_blank" class="button button--invert">Codepen Demo</a>
-              <router-link class="button button--invert" to="/introduction.html">Get Started →</router-link>
+              <router-link class="button button--invert" to="/introduction.html">Documentation →</router-link>
             </div>
           </div>
           <div class="hero__half demo">
             <color-picker/>
           </div>
         </div>
-        <div class="hero__foot">Created by <a href="//github.com/jaames">James Daniel</a></div>
+        <div class="features">
+          <h3 class="features__title">Features</h3>
+          <ul class="features__list">
+            <li class="features__item">
+              <h4>Simple</h4>
+              <p>Low friction API, with robust support for hex, rgb, hsl and hsv color formats.</p>
+            </li>
+            <li class="features__item">
+              <h4>Extendable</h4>
+              <p>Tweak the library to your requirements with <router-link to="/plugins.html">Plugins</router-link> and custom UI elements.</p>
+            </li>
+            <li class="features__item">
+              <h4>Great design</h4>
+              <p>The controls are designed to be intuitive and responsive, plus they're built with SVG so they look super crisp at any resolution.</p>
+            </li>
+            <li class="features__item">
+              <h4>Small footprint</h4>
+              <p><a href="https://bundlephobia.com/result?p=@jaames/iro" target="blank">7.1kb</a> minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.</p>
+            </li>
+            <li class="features__item">
+              <h4>Consistent behaviour</h4>
+              <p>Works across all modern browsers and devices, including touchscreens.</p>
+            </li>
+            <li class="features__item">
+              <h4>Transparency support</h4>
+              <p>Optional transparency slider with the <a href="https://github.com/jaames/iro-transparency-plugin" target="blank">Transparency Plugin</a>.</p>
+            </li>
+            <li class="features__item">
+              <h4>Licenced under MPL 2.0</h4>
+              <p>100% free for personal and commercial use.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="main__foot">Created by <a href="//jamesdaniel.dev">James Daniel</a></div>
       </div>
     </div>
   </div>
@@ -53,19 +86,19 @@ export default {
   display: none;
 }
 
-.hero {
+.main {
   width: 100vw;
   min-height: 100vh;
-  padding: $hero-frame-padding-mobile;
+  padding: $main-frame-padding-mobile;
   display: flex;
   position: relative;
 
   @media (min-width: $breakpoint-large) {
-    padding: $hero-frame-padding;
+    padding: $main-frame-padding;
   }
 }
 
-.hero__frame {
+.main__frame {
   background-color: var(--bgcolor, $primary-color);
   // neat gradient effect, but causes performance dips :<
   // background-image: linear-gradient(#fff, #c1d5f1);
@@ -76,48 +109,48 @@ export default {
   z-index: 0;
 }
 
-.hero__frame--left, .hero__frame--right {
+.main__frame--left, .main__frame--right {
   top: 0;
   bottom: 0;
-  width: $hero-frame-padding-mobile + $hero-frame-radius;
+  width: $main-frame-padding-mobile + $main-frame-radius;
 }
 
-.hero__frame--top, .hero__frame--bottom {
+.main__frame--top, .main__frame--bottom {
   left: 0;
   right: 0;
-  height: $hero-frame-padding-mobile + $hero-frame-radius;
+  height: $main-frame-padding-mobile + $main-frame-radius;
 }
 
 @media (min-width: $breakpoint-medium) {
-  .hero__frame--left, .hero__frame--right {
-    width: $hero-frame-padding + $hero-frame-radius;
+  .main__frame--left, .main__frame--right {
+    width: $main-frame-padding + $main-frame-radius;
   }
 
-  .hero__frame--top, .hero__frame--bottom {
-    height: $hero-frame-padding + $hero-frame-radius;
+  .main__frame--top, .main__frame--bottom {
+    height: $main-frame-padding + $main-frame-radius;
   }
 }
 
-.hero__frame--left {
+.main__frame--left {
   left: 0;
 }
 
-.hero__frame--right {
+.main__frame--right {
   right: 0;
 }
 
-.hero__frame--top {
+.main__frame--top {
   top: 0;
 }
 
-.hero__frame--bottom {
+.main__frame--bottom {
   bottom: 0;
 }
 
-.hero__content {
+.main__content {
   color: $text-invert;
   background: $background-invert;
-  border-radius: $hero-frame-radius;
+  border-radius: $main-frame-radius;
   box-shadow: 0 10px 15px -5px rgba(32, 32, 64, 0.25);
   flex: 1;
   display: flex;
@@ -129,32 +162,37 @@ export default {
   -webkit-transform: translate3d(0,0,0);
 }
 
-.hero__body {
-  flex: 1;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  @media (min-width: $breakpoint-medium) {
-    flex-direction: row-reverse;
-  }
-  @media (min-width: $breakpoint-large) {
-    padding: 6rem;
-  }
-}
-
-.hero__head, .hero__foot {
+.main__head, .main__foot {
   flex: 0;
   padding: 16px 24px;
 }
 
-.hero__foot {
+.main__foot {
   // font-size: .9rem;
+  background: #1d1c3e;
   color: rgba($text-invert, 0.75);
   text-align: right;
 
   a {
     color: $text-invert;
+  }
+}
+
+.hero {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+
+  @media (min-width: $breakpoint-medium) {
+    flex-direction: row-reverse;
+  }
+  @media (min-width: $breakpoint-large) {
+    padding: 8rem 0;
   }
 }
 
@@ -202,16 +240,46 @@ export default {
 
 .intro__sub {
   font-weight: normal;
-  font-size: 1.25rem;
-  margin: 1em 0;
-  padding-bottom: 0;
+  font-size: 1.1rem;
+  margin: 0;
+  padding-top: 1.6rem;
+  padding-bottom: .6rem;
   border: 0;
 }
 
 .demo {
   padding-top: 1rem;
   justify-content: center;
-  align-items: center;
+}
+
+.features {
+  padding: 4rem 2rem;
+  // justify-content: space-between;
+  background: #1d1d3e;
+}
+
+.features__title {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.features__list {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 32px 48px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+  h4 {
+    font-weight: normal;
+    color: #fff;
+  }
+}
+
+.features__item {
+  // flex: 0;
+  flex-basis: 50%;
 }
 
 .githubCorner {

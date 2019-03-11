@@ -25,7 +25,7 @@ body {
   -moz-text-rendering: optimizeLegibility;
 
   @media (max-width: $breakpoint-small) {
-    font-size: 14px;
+    // font-size: 14px;
   }
 
   @media (min-width: $breakpoint-extra-large) {
