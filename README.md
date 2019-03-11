@@ -3,7 +3,7 @@
 <h1 align="center"><a href="//iro.js.org" target="blank"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/screenshot.png"/><br/>iro.js</a></h1>
 
 <p align="center">
-  <b>A highly customizable svg-based color picker with zero external dependencies | <a href="//iro.js.org" target="blank">iro.js.org</a></b>
+  <b>An HSV color picker widget for JavaScript, with a modern SVG-based user interface | <a href="//iro.js.org" target="blank">iro.js.org</a></b>
 </p>
 
 <p align="center">
@@ -19,9 +19,9 @@
   <a href="https://bundlephobia.com/result?p=@jaames/iro">
     <img src="https://badgen.net/bundlephobia/minzip/@jaames/iro?color=6FDF89" alt="minzip size" />
   </a>
-  <a href="">
+  <!-- <a href="">
     <img src="https://badgen.net/badge/dependencies/none/F8AE55" alt="dependencies" />
-  </a>
+  </a> -->
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url">
     <img src="https://badgen.net/badge/donate/paypal/ED5151" alt="donate" />
   </a>
@@ -38,7 +38,7 @@
  * **Simple**: Low friction API, with robust support for hex, rgb, hsl and hsv color formats.
  * **Extendable**: Tweak the library to your requirements with [Plugins](#plugins) and custom UI elements
  * **Consistent behaviour**: Works across all modern browsers and devices, including touchscreens.
- * **Small footprint**: [7kb](https://bundlephobia.com/result?p=@jaames/iro) minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.
+ * **Small footprint**: [7kb](https://bundlephobia.com/result?p=@jaames/iro) minified and gzipped, with absolutely no jQuery or extra css/images in sight.
  * **Great design**: The controls are designed to be intuitive and responsive, plus they're built with SVG so they look super crisp at any resolution.
  * **Transparency support**: Optional transparency slider with the [transparency plugin](https://github.com/jaames/iro-transparency-plugin).
  * **Licenced under MPL 2.0**: 100% free for personal and commercial use.

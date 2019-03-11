@@ -12,7 +12,7 @@
         <div class="hero">
           <div class="hero__half intro">
             <Logo class="intro__logo logo"/>
-            <h3 class="intro__sub">An HSV color picker widget for JavaScript, with zero dependencies and a modern SVG-based UI</h3>
+            <h3 class="intro__sub">An HSV color picker widget for JavaScript, with a modern SVG-based user interface</h3>
             <div class="intro__buttons">
               <a href="//codepen.io/rakujira/pen/WZOeNq?editors=0010" target="_blank" class="button button--invert">Codepen Demo</a>
               <router-link class="button button--invert" to="/introduction.html">Documentation →</router-link>
@@ -39,7 +39,7 @@
             </li>
             <li class="features__item">
               <h4>Small footprint</h4>
-              <p><a href="https://bundlephobia.com/result?p=@jaames/iro" target="blank">7.1kb</a> minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.</p>
+              <p><a href="https://bundlephobia.com/result?p=@jaames/iro" target="blank">7.1kb</a> minified and gzipped, with absolutely no jQuery or extra css/images in sight.</p>
             </li>
             <li class="features__item">
               <h4>Consistent behaviour</h4>

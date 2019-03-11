@@ -7,7 +7,7 @@ title: Introduction
  * **Simple**: Low friction API, with robust support for hex, rgb, hsl and hsv color formats.
  * **Extendable**: Tweak the library to your requirements with [Plugins](/plugins.html) and custom UI elements
  * **Consistent behaviour**: Works across all modern browsers and devices, including touchscreens.
- * **Small footprint**: [7kb](https://bundlephobia.com/result?p=@jaames/iro) minified and gzipped, with absolutely no external dependencies, extra css/images, or jQuery in sight.
+ * **Small footprint**: [7kb](https://bundlephobia.com/result?p=@jaames/iro) minified and gzipped, with absolutely no jQuery or extra css/images in sight.
  * **Great design**: The controls are designed to be intuitive and responsive, plus they're built with SVG so they look super crisp at any resolution.
  * **Transparency support**: Optional transparency slider with the [transparency plugin](https://github.com/jaames/iro-transparency-plugin).
  * **Licenced under MPL 2.0**: 100% free for personal and commercial use.
