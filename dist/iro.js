@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.1.0
+ * iro.js v4.2.0
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1348,6 +1348,48 @@
 	  IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
 	  IroSlider.prototype.constructor = IroSlider;
 
+	  IroSlider.prototype.renderGradient = function renderGradient (props) {
+	    var hsv = props.color.hsv;
+	    var stops = [];
+
+	    switch (props.sliderType) {
+	      case 'hue':
+	        stops = [
+	          {offset: '0',      color: '#f00'},
+	          {offset: '16.666', color: '#ff0'},
+	          {offset: '33.333', color: '#0f0'},
+	          {offset: '50',     color: '#0ff'},
+	          {offset: '66.666', color: '#00f'},
+	          {offset: '83.333', color: '#f0f'},
+	          {offset: '100',    color: '#f00'} ];
+	        break;
+	      case 'saturation':
+	        var noSat = Color.hsvToHsl({h: hsv.h, s: 0, v: hsv.v});
+	        var fullSat = Color.hsvToHsl({h: hsv.h, s: 100, v: hsv.v});
+	        stops = [
+	          {offset: '0', color: ("hsl(" + (noSat.h) + ", " + (noSat.s) + "%, " + (noSat.l) + "%)")},
+	          {offset: '100', color: ("hsl(" + (fullSat.h) + ", " + (fullSat.s) + "%, " + (fullSat.l) + "%)")}
+	        ];
+	        break;
+	      case 'value':
+	      default:
+	        var hsl = Color.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
+	        stops = [
+	          {offset: '0', color: '#000'},
+	          {offset: '100', color: ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)")}
+	        ];
+	        break;
+	    }
+
+	    return (
+	      h( 'linearGradient', { id: this.uid },
+	        stops.map(function (stop) { return (
+	          h( 'stop', { offset: ((stop.offset) + "%"), 'stop-color': stop.color })
+	        ); })
+	      )
+	    )
+	  };
+
 	  IroSlider.prototype.render = function render$$1 (props) {
 	    var width = props.width;
 	    var sliderHeight = props.sliderHeight;
@@ -1359,7 +1401,20 @@
 	    var cornerRadius = sliderHeight / 2;
 	    var range = width - cornerRadius * 2;
 	    var hsv = props.color.hsv;
-	    var hsl = Color.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
+	    
+	    var sliderValue;
+	    switch (props.sliderType) {
+	      case 'hue':
+	        sliderValue = hsv.h /= 3.6;
+	        break;
+	      case 'saturation':
+	        sliderValue = hsv.s;
+	        break;
+	      case 'value':
+	      default:
+	        sliderValue = hsv.v;
+	        break;
+	    }
 
 	    return (
 	      h( 'svg', { 
@@ -1369,15 +1424,12 @@
 	          display: 'block'
 	        } },
 	        h( 'defs', null,
-	          h( 'linearGradient', { id: this.uid },
-	            h( 'stop', { offset: "0%", 'stop-color': "#000" }),
-	            h( 'stop', { offset: "100%", 'stop-color': ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)") })
-	          )
+	          this.renderGradient(props)
 	        ),
 	        h( 'rect', { 
 	          class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, 'stroke-width': borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
 	        h( IroHandle, {
-	          r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cornerRadius + ((hsv.v / 100) * range), y: sliderHeight / 2 })
+	          r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cornerRadius + (sliderValue / 100) * range, y: sliderHeight / 2 })
 	      )
 	    );
 	  };
@@ -1400,9 +1452,24 @@
 	    * @param {String} type - input type: "START", "MOVE" or "END"
 	  */
 	  IroSlider.prototype.handleInput = function handleInput (x, y, bounds, type) {
-	    this.props.onInput(type, {
-	      v: this.getValueFromPoint(x, y, bounds)
-	    });
+	    var obj;
+
+	    var value = this.getValueFromPoint(x, y, bounds);
+	    var channel;
+	    switch (this.props.sliderType) {
+	      case 'hue':
+	        channel = 'h';
+	        value *= 3.6;
+	        break;
+	      case 'saturation':
+	        channel = 's';
+	        break;
+	      case 'value':
+	      default:
+	        channel = 'v';
+	        break;
+	    }
+	    this.props.onInput(type, ( obj = {}, obj[channel] = value, obj ));
 	  };
 
 	  return IroSlider;
@@ -1714,7 +1781,7 @@
 	    parseHexInt: parseHexInt,
 	    intToHex: intToHex
 	  },
-	  version: "4.1.0",
+	  version: "4.2.0",
 	});
 
 	return iro;

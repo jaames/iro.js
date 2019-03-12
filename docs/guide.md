@@ -235,7 +235,9 @@ var colorPicker = new iro.ColorPicker('#color-picker', {
 
 `component` can be either `iro.ui.Wheel` for a hue/saturation wheel, or `iro.ui.Slider` for a value slider.
 
-`options` provides configuration options for the component. All of the [options](#color-picker-options) available to the color picker are also supported here, and any unspecified options will be inherited from the color picker itself. In this example, the wheel and slider will both have the same border width of `2`, but different border colors:
+`options` provides configuration options for the component. All of the [options](#color-picker-options) available to the color picker are also supported here, and any unspecified options will be inherited from the color picker itself. 
+
+In this example, the wheel and slider will both have the same border width of `2`, but different border colors:
 
 ```js
 var colorPicker = new iro.ColorPicker('#color-picker', {
@@ -266,6 +268,38 @@ var colorPicker = new iro.ColorPicker('#color-picker', {
       component: iro.ui.Wheel,
       options: {}
     }
+  ]
+});
+```
+
+### Extra Slider Types
+
+`iro.ui.Slider` also has an additional `sliderType` property that can be used to create a hue or saturation slider instead:
+
+```js
+var colorPicker = new iro.ColorPicker('#color-picker', {
+  layout: [
+    ...
+    {
+      // regular value slider
+      component: iro.ui.Slider,
+      options: {
+      }
+    },
+    {
+      // hue slider
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'hue'
+      }
+    },
+    {
+      // saturation slider
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'saturation'
+      }
+    },
   ]
 });
 ```

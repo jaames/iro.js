@@ -17,6 +17,30 @@
         borderWidth: 2,
         padding: 8,
         wheelLightness: true,
+        layout: [
+          {
+            component: iro.ui.Wheel,
+            options: {
+            }
+          },
+          {
+            component: iro.ui.Slider,
+            options: {
+            }
+          },
+          {
+            component: iro.ui.Slider,
+            options: {
+              sliderType: 'hue'
+            }
+          },
+          {
+            component: iro.ui.Slider,
+            options: {
+              sliderType: 'saturation'
+            }
+          }
+        ]
       });
 
       demo.on('mount', function() {

@@ -1,5 +1,15 @@
 ### Changelog
 
+#### 4.2.0
+
+<sub>(nice)</sub>
+
+Adds support for hue and saturation sliders, [documented here](https://iro.js.org/guide.html#extra-slider-types)
+
+#### 4.1.0
+
+Internal plugin API changes to allow for plugins to customise the slider type
+
 #### 4.0.0
 
 iro.js version 4.0.0 is a major rewrite of the core library which aims to solve numerous long-standing issues. There are numerous changes and deprecations, so please check the [migration guide](https://iro.js.org/migrating.html) before moving your project over. If needed, version 3.5.1 has been preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3).
