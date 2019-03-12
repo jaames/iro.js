@@ -1352,39 +1352,44 @@
 
 	  IroSlider.prototype.renderGradient = function renderGradient (props) {
 	    var hsv = props.color.hsv;
+	    var stops = [];
 
 	    switch (props.sliderType) {
 	      case 'hue':
-	        return (
-	          h( 'linearGradient', { id: this.uid },
-	            h( 'stop', { offset: "0%", 'stop-color': "#f00" }),
-	            h( 'stop', { offset: "16.666%", 'stop-color': "#ff0" }),
-	            h( 'stop', { offset: "33.333%", 'stop-color': "#0f0" }),
-	            h( 'stop', { offset: "50%", 'stop-color': "#0ff" }),
-	            h( 'stop', { offset: "66.666%", 'stop-color': "#00f" }),
-	            h( 'stop', { offset: "83.333%", 'stop-color': "#f0f" }),
-	            h( 'stop', { offset: "100%", 'stop-color': "#f00" })
-	          )
-	        );
+	        stops = [
+	          {offset: '0',      color: '#f00'},
+	          {offset: '16.666', color: '#ff0'},
+	          {offset: '33.333', color: '#0f0'},
+	          {offset: '50',     color: '#0ff'},
+	          {offset: '66.666', color: '#00f'},
+	          {offset: '83.333', color: '#f0f'},
+	          {offset: '100',    color: '#f00'} ];
+	        break;
 	      case 'saturation':
 	        var noSat = Color.hsvToHsl({h: hsv.h, s: 0, v: hsv.v});
 	        var fullSat = Color.hsvToHsl({h: hsv.h, s: 100, v: hsv.v});
-	        return (
-	          h( 'linearGradient', { id: this.uid },
-	            h( 'stop', { offset: "0%", 'stop-color': ("hsl(" + (noSat.h) + ", " + (noSat.s) + "%, " + (noSat.l) + "%)") }),
-	            h( 'stop', { offset: "100%", 'stop-color': ("hsl(" + (fullSat.h) + ", " + (fullSat.s) + "%, " + (fullSat.l) + "%)") })
-	          )
-	        );
+	        stops = [
+	          {offset: '0', color: ("hsl(" + (noSat.h) + ", " + (noSat.s) + "%, " + (noSat.l) + "%)")},
+	          {offset: '100', color: ("hsl(" + (fullSat.h) + ", " + (fullSat.s) + "%, " + (fullSat.l) + "%)")}
+	        ];
+	        break;
 	      case 'value':
 	      default:
 	        var hsl = Color.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
-	        return (
-	          h( 'linearGradient', { id: this.uid },
-	            h( 'stop', { offset: "0%", 'stop-color': "#000" }),
-	            h( 'stop', { offset: "100%", 'stop-color': ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)") })
-	          )
-	        );
+	        stops = [
+	          {offset: '0', color: '#000'},
+	          {offset: '100', color: ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)")}
+	        ];
+	        break;
 	    }
+
+	    return (
+	      h( 'linearGradient', { id: this.uid },
+	        stops.map(function (stop) { return (
+	          h( 'stop', { offset: ((stop.offset) + "%"), 'stop-color': stop.color })
+	        ); })
+	      )
+	    )
 	  };
 
 	  IroSlider.prototype.render = function render$$1 (props) {

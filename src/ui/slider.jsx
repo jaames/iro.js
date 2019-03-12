@@ -9,39 +9,45 @@ export default class IroSlider extends IroComponent {
 
   renderGradient(props) {
     const hsv = props.color.hsv;
+    let stops = [];
 
     switch (props.sliderType) {
       case 'hue':
-        return (
-          <linearGradient id={ this.uid }>
-            <stop offset="0%"      stop-color="#f00" />
-            <stop offset="16.666%" stop-color="#ff0" />
-            <stop offset="33.333%" stop-color="#0f0" />
-            <stop offset="50%"     stop-color="#0ff" />
-            <stop offset="66.666%" stop-color="#00f" />
-            <stop offset="83.333%" stop-color="#f0f" />
-            <stop offset="100%"    stop-color="#f00" />
-          </linearGradient>
-        );
+        stops = [
+          {offset: '0',      color: '#f00'},
+          {offset: '16.666', color: '#ff0'},
+          {offset: '33.333', color: '#0f0'},
+          {offset: '50',     color: '#0ff'},
+          {offset: '66.666', color: '#00f'},
+          {offset: '83.333', color: '#f0f'},
+          {offset: '100',    color: '#f00'},
+        ];
+        break;
       case 'saturation':
         var noSat = IroColor.hsvToHsl({h: hsv.h, s: 0, v: hsv.v});
         var fullSat = IroColor.hsvToHsl({h: hsv.h, s: 100, v: hsv.v});
-        return (
-          <linearGradient id={ this.uid }>
-            <stop offset="0%" stop-color={ `hsl(${noSat.h}, ${noSat.s}%, ${noSat.l}%)` } />
-            <stop offset="100%" stop-color={ `hsl(${fullSat.h}, ${fullSat.s}%, ${fullSat.l}%)` } />
-          </linearGradient>
-        );
+        stops = [
+          {offset: '0', color: `hsl(${noSat.h}, ${noSat.s}%, ${noSat.l}%)`},
+          {offset: '100', color: `hsl(${fullSat.h}, ${fullSat.s}%, ${fullSat.l}%)`}
+        ];
+        break;
       case 'value':
       default:
         var hsl = IroColor.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
-        return (
-          <linearGradient id={ this.uid }>
-            <stop offset="0%" stop-color="#000" />
-            <stop offset="100%" stop-color={ `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` } />
-          </linearGradient>
-        );
+        stops = [
+          {offset: '0', color: '#000'},
+          {offset: '100', color: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`}
+        ];
+        break;
     }
+
+    return (
+      <linearGradient id={ this.uid }>
+        {stops.map(stop => (
+          <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
+        ))}
+      </linearGradient>
+    )
   }
 
   render(props) {
