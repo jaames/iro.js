@@ -55,7 +55,7 @@ export default class IroComponent extends Component {
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
         this.handleInput(x, y, bounds, 'END');
-        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
         break;
     }
   }

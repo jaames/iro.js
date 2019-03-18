@@ -16,11 +16,11 @@ export function listen(el, eventList, callback, params={}) {
  * @param {Element} el target element
  * @param {Array} eventList the events to remove
  * @param {Function} callback
- * 
+ * @param {Object} params params to pass to removeEventListener
  */
-export function unlisten(el, eventList, callback) {
+export function unlisten(el, eventList, callback, params={}) {
   for (var i = 0; i < eventList.length; i++) {
-    el.removeEventListener(eventList[i], callback);
+    el.removeEventListener(eventList[i], callback, params);
   }
 };
 

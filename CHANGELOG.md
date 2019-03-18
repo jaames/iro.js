@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.2.1
+
+##### Fixes
+
+Fixes color picker DOM event handling in IE11, issue thread [#58](https://github.com/jaames/iro.js/issues/58).
+
 #### 4.2.0
 
 <sub>(nice)</sub>

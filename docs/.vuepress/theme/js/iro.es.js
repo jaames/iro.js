@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.2.0
+ * iro.js v4.2.1
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -723,11 +723,13 @@ function listen(el, eventList, callback, params) {
  * @param {Element} el target element
  * @param {Array} eventList the events to remove
  * @param {Function} callback
- * 
+ * @param {Object} params params to pass to removeEventListener
  */
-function unlisten(el, eventList, callback) {
+function unlisten(el, eventList, callback, params) {
+  if ( params === void 0 ) params={};
+
   for (var i = 0; i < eventList.length; i++) {
-    el.removeEventListener(eventList[i], callback);
+    el.removeEventListener(eventList[i], callback, params);
   }
 }
 /**
@@ -799,7 +801,7 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
         this.handleInput(x, y, bounds, 'END');
-        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this);
+        unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
         break;
     }
   };
@@ -1775,7 +1777,7 @@ var iro = usePlugins({
     parseHexInt: parseHexInt,
     intToHex: intToHex
   },
-  version: "4.2.0",
+  version: "4.2.1",
 });
 
 export default iro;
