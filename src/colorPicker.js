@@ -161,11 +161,14 @@ class ColorPicker extends Component {
    * @param {Object} hsv new hsv values for the color
    */
   handleInput(type, hsv) {
+    // Fire input start and move events before color update
+    if (type === 'START') this.emit('input:start', this.color);
+    if (type === 'MOVE') this.emit('input:mode', this.color);
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
-    let eventType = { START: 'input:start', MOVE: 'input:move', END: 'input:end' }[type];
-    this.emit(eventType, this.color);
+    // Fire input end event after color update
+    if (type === 'END') this.emit('input:end', this.color);
   }
 
   render(props, state) {

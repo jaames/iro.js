@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.2.2
+
+##### Fixes
+
+Makes sure that `input:start` fires before `color:update` and that `input:end` fires after `color:update`. See thread [#59](https://github.com/jaames/iro.js/issues/59).
+
 #### 4.2.1
 
 ##### Fixes
