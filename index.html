@@ -50,6 +50,14 @@
       demo.on('color:change', function() {
         console.log('color:change');
       })
+
+      demo.on('input:change', function(color) {
+        console.log('input:change');
+      })
+
+      demo.on(['color:init', 'color:change'], function() {
+        console.log('color:change or color:init');
+      })
     </script>
   </head>
   <body>
