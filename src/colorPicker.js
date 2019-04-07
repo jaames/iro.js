@@ -10,17 +10,17 @@ class ColorPicker extends Component {
     super(props);
     this.emitHook('init:before');
     this._events = {};
-    this._mounted = false;
-    this._colorChangeActive = false;
-    this.color = new IroColor();
+    this._deferredEvents = {};
+    this._colorUpdateActive = false;
+    this._colorUpdateSrc = null;
+    this.color = new IroColor(props.color);
+    this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
     this.state = {
       ...props,
       color: this.color,
     };
-    // set color value
-    this.color.set(props.color);
     this.emitHook('init:state');
 
     if (props.layout) {
@@ -38,32 +38,41 @@ class ColorPicker extends Component {
 
   /**
    * @desc Set a callback function for an event
-   * @param {String} eventType The name of the event to listen to
+   * @param {String | Array} eventList event(s) to listen to
    * @param {Function} callback
    */
-  on(eventType, callback) {
+  on(eventList, callback) {
     const events = this._events;
-    this.emitHook('event:on', eventType, callback);
-    (events[eventType] || (events[eventType] = [])).push(callback);
-    // Fire mount event immediately if the color picker has already mounted
-    if (eventType === 'mount' && this._mounted) {
-      this.emit('mount', this);
-    }
-    // Fire color change immediately if the color picker has already initiated
-    if (eventType === 'color:change' && this._mounted) {
-      this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
-    }
+    // eventList can be an eventType string or an array of eventType strings
+    (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
+      // Emit plugin hook
+      this.emitHook('event:on', eventType, callback);
+      // Add event callback
+      (events[eventType] || (events[eventType] = [])).push(callback);
+      // Call deferred events
+      // These are events that can be stored until a listener for them is added
+      if (this._deferredEvents[eventType]) {
+        // Deffered events store an array of arguments from when the event was called
+        this._deferredEvents[eventType].forEach(args => {
+          callback.apply(null, args); 
+        });
+        // Clear deferred events
+        this._deferredEvents[eventType] = [];
+      }
+    });
   }
 
   /**
    * @desc Remove a callback function for an event added with on()
-   * @param {String} eventType The name of the event
+   * @param {String | Array} eventList The name of the event
    * @param {Function} callback
    */
-  off(eventType, callback) {
-    const callbackList = this._events[eventType];
-    this.emitHook('event:off', eventType, callback);
-    if (callbackList) callbackList.splice(callbackList.indexOf(callback), 1);
+  off(eventList, callback) {
+    (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
+      const callbackList = this._events[eventType];
+      this.emitHook('event:off', eventType, callback);
+      if (callbackList) callbackList.splice(callbackList.indexOf(callback), 1);
+    });
   }
 
   /**
@@ -78,6 +87,17 @@ class ColorPicker extends Component {
     for (let i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args); 
     }
+  }
+
+  /**
+   * @desc Emit an event now, or save it for when the relevent event listener is added
+   * @param {String} eventType The name of the event to emit
+   * @param {Array} args array of args to pass to callbacks
+   */
+  deferredEmit(eventType, ...args) {
+    const deferredEvents = this._deferredEvents;
+    this.emit(eventType, ...args);
+    (deferredEvents[eventType] || (deferredEvents[eventType] = [])).push(args);
   }
 
   // Public utility methods
@@ -130,9 +150,7 @@ class ColorPicker extends Component {
    */
   onMount(container) {
     this.el = container;
-    this._mounted = true;
-    this.emit('mount', this);
-    this.emit('color:change', this.color, { h: false, s: false, v: false, a: false });
+    this.deferredEmit('mount', this);
   }
 
   /**
@@ -145,12 +163,17 @@ class ColorPicker extends Component {
     this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: color });
     this.emitHook('color:afterUpdate', color, changes);
-    // Prevent infinite loops if the color is set inside a `color:change` callback
-    if (!this._colorChangeActive) {
-      // While _colorChangeActive = true, this event cannot be fired
-      this._colorChangeActive = true;
+    // Prevent infinite loops if the color is set inside a color:change or input:change callback
+    if (!this._colorUpdateActive) {
+      // While _colorUpdateActive == true, branch cannot be entered
+      this._colorUpdateActive = true;
+      // If the color change originates from user input, fire input:change
+      if (this._colorUpdateSrc == 'input') { // colorUpdateSrc is cleared in handeInput()
+        this.emit('input:change', color, changes);
+      } 
+      // Always fire color:change event
       this.emit('color:change', color, changes);
-      this._colorChangeActive = false;
+      this._colorUpdateActive = false;
     }
   }
 
@@ -169,6 +192,9 @@ class ColorPicker extends Component {
     this.color.hsv = hsv;
     // Fire input end event after color update
     if (type === 'END') this.emit('input:end', this.color);
+    // Reset color update source so it doesn't interfere with future color updates
+    // Super important to do this here and not in updateColor()
+    this._colorUpdateSrc = null;
   }
 
   render(props, state) {
