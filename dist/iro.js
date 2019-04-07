@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.2.2
+ * iro.js v4.2.3
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1685,7 +1685,7 @@
 	  ColorPicker.prototype.handleInput = function handleInput (type, hsv) {
 	    // Fire input start and move events before color update
 	    if (type === 'START') { this.emit('input:start', this.color); }
-	    if (type === 'MOVE') { this.emit('input:mode', this.color); }
+	    if (type === 'MOVE') { this.emit('input:move', this.color); }
 	    // Setting the color HSV here will automatically update the UI
 	    // Since we bound the color's _onChange callback
 	    this.color.hsv = hsv;
@@ -1786,7 +1786,7 @@
 	    parseHexInt: parseHexInt,
 	    intToHex: intToHex
 	  },
-	  version: "4.2.2",
+	  version: "4.2.3",
 	});
 
 	return iro;

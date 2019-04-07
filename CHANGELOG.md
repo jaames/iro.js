@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.2.3
+
+##### Fixes
+
+Fixes a typo in the `input:move` event (was previously "input:mode"). Thanks @jbellue for the contribution!
+
 #### 4.2.2
 
 ##### Fixes
