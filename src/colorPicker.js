@@ -11,7 +11,8 @@ class ColorPicker extends Component {
     this.emitHook('init:before');
     this._events = {};
     this._mounted = false;
-    this._colorChangeActive = false;
+    this._colorUpdateActive = false;
+    this._colorUpdateSrc = null;
     this.color = new IroColor();
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
@@ -145,12 +146,18 @@ class ColorPicker extends Component {
     this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: color });
     this.emitHook('color:afterUpdate', color, changes);
-    // Prevent infinite loops if the color is set inside a `color:change` callback
-    if (!this._colorChangeActive) {
-      // While _colorChangeActive = true, this event cannot be fired
-      this._colorChangeActive = true;
+    // Prevent infinite loops if the color is set inside a color:change or input:change callback
+    if (!this._colorUpdateActive) {
+      // While _colorUpdateActive == true, this event cannot be fired
+      this._colorUpdateActive = true;
+      // If the color change originates from user input, fire input:change
+      if (this._colorUpdateSrc == 'input') {
+        this.emit('input:change', color, changes);
+        this._colorUpdateSrc = null;
+      } 
+      // Always fire color:change event
       this.emit('color:change', color, changes);
-      this._colorChangeActive = false;
+      this._colorUpdateActive = false;
     }
   }
 
@@ -163,7 +170,9 @@ class ColorPicker extends Component {
   handleInput(type, hsv) {
     // Fire input start and move events before color update
     if (type === 'START') this.emit('input:start', this.color);
-    if (type === 'MOVE') this.emit('input:mode', this.color);
+    if (type === 'MOVE') this.emit('input:move', this.color);
+    // Set the color update source
+    this._colorUpdateSrc = 'input';
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
