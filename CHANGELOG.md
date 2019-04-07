@@ -1,5 +1,28 @@
 ### Changelog
 
+#### 4.3.0
+
+##### Additions
+
+* New events added:
+  * `input:change` - The same as `color:change`, but only fires when the color has been set with user input
+  * `color:init` - Same as `color:change`, but fired once with the initial color value
+* colorPicker methods:
+  * `on` and `off` methods can now take arrays of eventTypes as well as strings
+  * New `deferredEmit` method (should only be used by plugins)
+
+##### Changes
+
+The `color:change` event no longer fires with the initial color value, as this was catching a few people out.
+
+If you need to reproduce previous behaviour, please make sure to listen for both `color:init` and `color:change` events with the same listener, like so:
+
+```js
+colorPicker.on(['color:init', 'color:change'], function(color, change) {
+  // do whatever
+});
+```
+
 #### 4.2.2
 
 ##### Fixes

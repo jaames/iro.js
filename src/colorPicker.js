@@ -43,14 +43,20 @@ class ColorPicker extends Component {
    */
   on(eventList, callback) {
     const events = this._events;
+    // eventList can be an eventType string or an array of eventType strings
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
+      // Emit plugin hook
       this.emitHook('event:on', eventType, callback);
+      // Add event callback
       (events[eventType] || (events[eventType] = [])).push(callback);
       // Call deferred events
+      // These are events that can be stored until a listener for them is added
       if (this._deferredEvents[eventType]) {
+        // Deffered events store an array of arguments from when the event was called
         this._deferredEvents[eventType].forEach(args => {
           callback.apply(null, args); 
         });
+        // Clear deferred events
         this._deferredEvents[eventType] = [];
       }
     });
@@ -159,10 +165,10 @@ class ColorPicker extends Component {
     this.emitHook('color:afterUpdate', color, changes);
     // Prevent infinite loops if the color is set inside a color:change or input:change callback
     if (!this._colorUpdateActive) {
-      // While _colorUpdateActive == true, this event cannot be fired
+      // While _colorUpdateActive == true, branch cannot be entered
       this._colorUpdateActive = true;
       // If the color change originates from user input, fire input:change
-      if (this._colorUpdateSrc == 'input') {
+      if (this._colorUpdateSrc == 'input') { // colorUpdateSrc is cleared in handeInput()
         this.emit('input:change', color, changes);
       } 
       // Always fire color:change event
