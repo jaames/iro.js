@@ -193,17 +193,20 @@ export default class Color {
   get hsv() {
     // _value is cloned to allow changes to be made to the values before passing them back
     const value = this._value;
-    return {h: value.h, s: value.s, v: value.v, a: value.a};
+    return {h: value.h, s: value.s, v: value.v};
   }
 
   set hsv(newValue) {
+    const oldValue = this._value;
+    newValue = { ...oldValue, ...newValue };
     // If this Color is being watched for changes we need to compare the new and old values to check the difference
     // Otherwise we can just be lazy
     if (this._onChange) {
-      const oldValue = this._value;
-      newValue = { ...oldValue, ...newValue };
+      // Compute changed values
       let changes = {};
-      for (let key in oldValue) changes[key] = newValue[key] != oldValue[key];
+      for (let key in oldValue) {
+        changes[key] = newValue[key] != oldValue[key]
+      };
       // Update the old value
       this._value = newValue;
       // If the value has changed, call hook callback
@@ -223,7 +226,7 @@ export default class Color {
   }
 
   set rgb(value) {
-    this.hsv = Color.rgbToHsv(value);
+    this.hsv = {...Color.rgbToHsv(value), a: (value.a === undefined) ? 1 : value.a};
   }
 
   get hsl() {
@@ -236,7 +239,7 @@ export default class Color {
   }
 
   set hsl(value) {
-    this.hsv = Color.hslToHsv(value);
+    this.hsv = {...Color.hslToHsv(value), a: (value.a === undefined) ? 1 : value.a};
   }
 
   get rgbString() {
