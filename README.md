@@ -19,9 +19,9 @@
   <a href="https://bundlephobia.com/result?p=@jaames/iro">
     <img src="https://badgen.net/bundlephobia/minzip/@jaames/iro?color=6FDF89" alt="minzip size" />
   </a>
-  <!-- <a href="">
-    <img src="https://badgen.net/badge/dependencies/none/F8AE55" alt="dependencies" />
-  </a> -->
+  <a href="">
+    <img src="https://badgen.net/badge/jQuery/none/F8AE55" alt="no jQuery" />
+  </a>
   <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url">
     <img src="https://badgen.net/badge/donate/paypal/ED5151" alt="donate" />
   </a>
@@ -212,14 +212,26 @@ colorPicker.off('color:change', onColorChange);
 
 ##### `color:change`
 
-Fired whenever the selected color changes -- either when the user interacts with the color picker, or when the color is set via code. This event's callback function gets passed two values:
+Fired whenever the selected color changes -- either when the user interacts with the color picker, or when the color is set via code. It is safe to modify the `color` object within callbacks for this event, and callbacks get passed two values:
 
 * `color`: the [currently selected color](#selected-color-api)
 * `changes`: an object showing which HSV channels have changed since the last time the event was fired
 
+### `color:init`
+
+Same as `color:change`, but only fired once with the initial color value provided to the color picker.
+
+### `input:change`
+
+Similar to `color:change`, except this is only fired whenever the color is changed with *direct user input*. Callbacks for this event recieve exactly the same parameters as `color:change`, and it is also safe to modify the `color` object within callbacks for this event.
+
 ##### `input:start`
 
 Fired whenever the users starts interacting with the color picker controls. The [currently selected color](#selected-color-api) is passed to this event's callback function.
+
+### `input:move`
+
+Fired when the user moves their pointer/mouse after beginning interaction. The [currently selected color](#selected-color-api) is passed to this event's callback function.
 
 ##### `input:end`
 

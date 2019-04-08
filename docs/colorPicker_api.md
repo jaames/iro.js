@@ -132,7 +132,7 @@ Add a listener to a color picker event.
 
 **Arguments:**
 
-* `{String}` [Event Type](#events)
+* `{String | Array}` [Event Type(s)](#events)
 * `{Function}` callback
 
 **Example:**
@@ -154,7 +154,7 @@ Remove event listeners that were registered with `on`.
 
 **Arguments:**
 
-* `{String}` [Event Type](#events)
+* `{String | Array}` [Event Type(s)](#events)
 * `{Function}` callback
 
 **Example:**
@@ -187,6 +187,14 @@ Used internally to dispatch an event. All function parameters after the event ty
 
 * `{String}` [Event Type](#events)
 
+### `deferredEmit`
+
+Used internally to dispatch an deferred event. Deferred events are stored until an event listener for them is added with `on`.
+
+**Arguments:**
+
+* `{String}` [Event Type](#events)
+
 ### `emitHook`
 
 Used internally to dispatch a plugin hook. All function parameters after the event type will be passed to the hook callback. The callback's `this` value will also be set to reference the color picker instance that fired this hook.
@@ -213,11 +221,23 @@ The color picker's [on](#on) method can be used to register callbacks for color 
 
 ### `color:change`
 
-Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. This event's callback function gets passed the currently selected color and an object which reflects which h,s,v channels changed.
+Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. This event's callback function gets passed the currently selected color and an object which reflects which h,s,v channels changed. It is safe to modify the `color` object within callbacks for this event.
+
+### `color:init`
+
+Same as `color:change`, but only fired once with the initial color value provided to the color picker.
+
+### `input:change`
+
+Similar to `color:change`, except this is only fired whenever the color is changed with *direct user input*. Callbacks for this event recieve exactly the same parameters as `color:change`. It is also safe to modify the `color` object within callbacks for this event.
 
 ### `input:start`
 
 Fired whenever the users starts interacting with the color picker controls. The colorPicker's color object is passed to this event's callback function.
+
+### `input:move`
+
+Fired when the user moves their pointer/mouse after beginning interaction.
 
 ### `input:end`
 

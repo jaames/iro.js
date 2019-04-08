@@ -156,22 +156,34 @@ colorPicker.off('color:change', onColorChange);
 
 ### Available Events
 
-#### `color:change`
+##### `color:change`
 
-Fired whenever the selected color changes -- either when the user interacts with the color picker, or when the color is set via code. This event's callback function gets passed two values:
+Fired whenever the selected color changes -- either when the user interacts with the color picker, or when the color is set via code. It is safe to modify the `color` object within callbacks for this event, and callbacks get passed two values:
 
 * `color`: the [currently selected color](#selected-color-api)
 * `changes`: an object showing which HSV channels have changed since the last time the event was fired
 
-#### `input:start`
+### `color:init`
+
+Same as `color:change`, but only fired once with the initial color value provided to the color picker.
+
+### `input:change`
+
+Similar to `color:change`, except this is only fired whenever the color is changed with *direct user input*. Callbacks for this event recieve exactly the same parameters as `color:change`, and it is also safe to modify the `color` object within callbacks for this event.
+
+##### `input:start`
 
 Fired whenever the users starts interacting with the color picker controls. The [currently selected color](#selected-color-api) is passed to this event's callback function.
 
-#### `input:end`
+### `input:move`
+
+Fired when the user moves their pointer/mouse after beginning interaction. The [currently selected color](#selected-color-api) is passed to this event's callback function.
+
+##### `input:end`
 
 Fired whenever the user stops interacting with the color picker controls. The [currently selected color](#selected-color-api) is passed to this event's callback function.
 
-#### `mount`
+##### `mount`
 
 Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. The colorPicker object is passed to this event's callback function.
 
