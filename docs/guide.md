@@ -163,11 +163,11 @@ Fired whenever the selected color changes -- either when the user interacts with
 * `color`: the [currently selected color](#selected-color-api)
 * `changes`: an object showing which HSV channels have changed since the last time the event was fired
 
-### `color:init`
+##### `color:init`
 
 Same as `color:change`, but only fired once with the initial color value provided to the color picker.
 
-### `input:change`
+##### `input:change`
 
 Similar to `color:change`, except this is only fired whenever the color is changed with *direct user input*. Callbacks for this event recieve exactly the same parameters as `color:change`, and it is also safe to modify the `color` object within callbacks for this event.
 
@@ -175,7 +175,7 @@ Similar to `color:change`, except this is only fired whenever the color is chang
 
 Fired whenever the users starts interacting with the color picker controls. The [currently selected color](#selected-color-api) is passed to this event's callback function.
 
-### `input:move`
+##### `input:move`
 
 Fired when the user moves their pointer/mouse after beginning interaction. The [currently selected color](#selected-color-api) is passed to this event's callback function.
 
