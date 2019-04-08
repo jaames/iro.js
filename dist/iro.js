@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.3.0
+ * iro.js v4.3.1
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1195,18 +1195,20 @@
 	prototypeAccessors.hsv.get = function () {
 	  // _value is cloned to allow changes to be made to the values before passing them back
 	  var value = this._value;
-	  return {h: value.h, s: value.s, v: value.v, a: value.a};
+	  return {h: value.h, s: value.s, v: value.v};
 	};
 
 	prototypeAccessors.hsv.set = function (newValue) {
+	  var oldValue = this._value;
+	  newValue = Object.assign({}, oldValue, newValue);
 	  // If this Color is being watched for changes we need to compare the new and old values to check the difference
 	  // Otherwise we can just be lazy
 	  if (this._onChange) {
-	    var oldValue = this._value;
-	    newValue = Object.assign({}, oldValue, newValue);
+	    // Compute changed values
 	    var changes = {};
-	    for (var key in oldValue) { changes[key] = newValue[key] != oldValue[key]; }
-	    // Update the old value
+	    for (var key in oldValue) {
+	      changes[key] = newValue[key] != oldValue[key];
+	    }    // Update the old value
 	    this._value = newValue;
 	    // If the value has changed, call hook callback
 	    if (changes.h || changes.s || changes.v || changes.a) { this._onChange(this, changes); }
@@ -1228,7 +1230,7 @@
 	};
 
 	prototypeAccessors.rgb.set = function (value) {
-	  this.hsv = Color.rgbToHsv(value);
+	  this.hsv = Object.assign({}, Color.rgbToHsv(value), {a: (value.a === undefined) ? 1 : value.a});
 	};
 
 	prototypeAccessors.hsl.get = function () {
@@ -1244,7 +1246,7 @@
 	};
 
 	prototypeAccessors.hsl.set = function (value) {
-	  this.hsv = Color.hslToHsv(value);
+	  this.hsv = Object.assign({}, Color.hslToHsv(value), {a: (value.a === undefined) ? 1 : value.a});
 	};
 
 	prototypeAccessors.rgbString.get = function () {
@@ -1820,7 +1822,7 @@
 	    parseHexInt: parseHexInt,
 	    intToHex: intToHex
 	  },
-	  version: "4.3.0",
+	  version: "4.3.1",
 	});
 
 	return iro;

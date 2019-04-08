@@ -240,7 +240,7 @@ describe('Color constructor', () => {
 
 describe('Color properties', () => {
   test('Color hsv property is readable', () => {
-    const hsv = { h: 360, s: 100, v: 50, a: 1 };
+    const hsv = { h: 360, s: 100, v: 50 };
     const color = new Color(hsv);
     expect(color.hsv).toMatchObject(hsv);
   });
@@ -260,7 +260,7 @@ describe('Color properties', () => {
   test('Color rgb property is writable', () => {
     const color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.rgb = {r: 128, g: 0, b: 0};
-    expect(roundObject(color.hsv)).toMatchObject({ h: 0, s: 100, v: 50, a: NaN });
+    expect(roundObject(color.hsv)).toMatchObject({ h: 0, s: 100, v: 50 });
   });
 
   test('Color hsl property is readable', () => {
@@ -271,7 +271,7 @@ describe('Color properties', () => {
   test('Color hsl property is writable', () => {
     const color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.hsl = {h: 360, s: 100, l: 100};
-    expect(roundObject(color.hsv)).toMatchObject({ h: 360, s: 0, v: 100, a: NaN });
+    expect(roundObject(color.hsv)).toMatchObject({ h: 360, s: 0, v: 100 });
   });
 
   test('Color rgbString property is readable', () => {
@@ -282,7 +282,7 @@ describe('Color properties', () => {
   test('Color rgbString property is writable', () => {
     const color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.rgbString = 'rgb(128, 0, 0)';
-    expect(roundObject(color.hsv)).toMatchObject({ h: 0, s: 100, v: 50, a: NaN });
+    expect(roundObject(color.hsv)).toMatchObject({ h: 0, s: 100, v: 50 });
   });
 
   test('Color hslString property is readable', () => {
@@ -293,7 +293,7 @@ describe('Color properties', () => {
   test('Color hslString property is writable', () => {
     const color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.hslString = 'hsl(360, 100%, 25%)';
-    expect(roundObject(color.hsv)).toMatchObject({ h: 360, s: 100, v: 50, a: NaN });
+    expect(roundObject(color.hsv)).toMatchObject({ h: 360, s: 100, v: 50 });
   });
 
   test('Color hexString property is readable', () => {
@@ -320,21 +320,21 @@ describe('Color methods', () => {
   test('Color set method successfully updates the color value', () => {
     const color = new Color({h: 0, s: 100, v: 100, a: 1});
     color.set({h: 360, s: 0, v: 0, a: 0});
-    expect(color.hsv).toMatchObject({h: 360, s: 0, v: 0, a: 0});
+    expect(color.hsv).toMatchObject({h: 360, s: 0, v: 0});
   });
 
   test('Color setChannel method successfully sets hsv channels', () => {
     var color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.setChannel('hsv', 'h', 360);
-    expect(color.hsv).toMatchObject({h: 360, s: 0, v: 0, a: 0});
+    expect(color.hsv).toMatchObject({h: 360, s: 0, v: 0});
 
     var color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.setChannel('hsv', 's', 100);
-    expect(color.hsv).toMatchObject({h: 0, s: 100, v: 0, a: 0});
+    expect(color.hsv).toMatchObject({h: 0, s: 100, v: 0});
 
     var color = new Color({h: 0, s: 0, v: 0, a: 0});
     color.setChannel('hsv', 'v', 100);
-    expect(color.hsv).toMatchObject({h: 0, s: 0, v: 100, a: 0});
+    expect(color.hsv).toMatchObject({h: 0, s: 0, v: 100});
   });
 
   test('Color setChannel method successfully sets rgb channels', () => {
