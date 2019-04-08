@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.3.1
+
+##### Fixes
+
+Fixes a few issues related to how color alpha/transparency was handled internally, which was causing problems with iro-transparency-plugin. Setting a color to a value without an alpha component (e.g `hexString = "#fff"`) will now set the alpha value to 1, and the alpha component will no longer be `undefined` when using `new iro.Color`. For more info, see [issue thread #2](https://github.com/jaames/iro-transparency-plugin/issues/2) on the iro-transparency-plugin repository.
+
 #### 4.3.0
 
 ##### Additions
