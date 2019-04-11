@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.3.2
+
+##### Fixes
+
+Somehow a line of code was missed when the new events API was merged, so the input:change event wasn't actually firing (issue thread #64). This is now fixed.
+
 #### 4.3.1
 
 ##### Fixes
