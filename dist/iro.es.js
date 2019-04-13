@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.3.2
+ * iro.js v4.3.3
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1005,7 +1005,7 @@ var CSS_INTEGER = "[-\\+]?\\d+%?";
 // http://www.w3.org/TR/css3-values/#number-value
 var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
 // Allow positive/negative integer/number. Don't capture the either/or, just the entire outcome
-var CSS_UNIT = "(?:" + CSS_INTEGER + ")|(?:" + CSS_NUMBER + ")";
+var CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
 
 // Parse function params
 // Parens and commas are optional, and this also allows for whitespace between numbers
@@ -1818,7 +1818,7 @@ var iro = usePlugins({
     parseHexInt: parseHexInt,
     intToHex: intToHex
   },
-  version: "4.3.2",
+  version: "4.3.3",
 });
 
 export default iro;

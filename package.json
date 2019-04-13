@@ -1,6 +1,6 @@
 {
   "name": "@jaames/iro",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "description": "An HSV color picker widget for JavaScript, with a modern SVG-based user interface",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",

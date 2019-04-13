@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.3.3
+
+##### Fixes
+
+Fixes an issue where the alpha component wasn't being parsed correctly from rgba and hsla strings. For more info, see [issue thread #2](https://github.com/jaames/iro-transparency-plugin/issues/2) on the iro-transparency-plugin repository.
+
 #### 4.3.2
 
 ##### Fixes

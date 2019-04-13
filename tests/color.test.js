@@ -136,6 +136,25 @@ describe('Color constructor', () => {
     expect(color.rgb).toMatchObject({r: 255, g: 255, b: 255});
   });
 
+  test('Color alpha component can be set with an rgba or rgba percentage string', () => {
+    var color = new Color('rgba(255, 255, 255, 0)');
+    expect(color._value.a).toEqual(0);
+    var color = new Color('rgba(255, 255, 255, 1)');
+    expect(color._value.a).toEqual(1);
+    var color = new Color('rgba(255, 255, 255, .5)');
+    expect(color._value.a).toEqual(0.5);
+    var color = new Color('rgba(255, 255, 255, 0.5)');
+    expect(color._value.a).toEqual(0.5);
+    var color = new Color('rgba(100%, 100%, 100%, 0%)');
+    expect(color._value.a).toEqual(0);
+    var color = new Color('rgba(100%, 100%, 100%, 100%)');
+    expect(color._value.a).toEqual(1);
+    var color = new Color('rgba(100%, 100%, 100%, 50%)');
+    expect(color._value.a).toEqual(0.5);
+    var color = new Color('rgba(100%, 100%, 100%, 50.0%)');
+    expect(color._value.a).toEqual(0.5);
+  });
+
   test('Color can be constructed with an hsl or hsla string', () => {
     var color = new Color('hsl(360, 0%, 100%)');
     expect(color.hsl).toMatchObject({h: 360, s: 0, l: 100});
@@ -149,6 +168,25 @@ describe('Color constructor', () => {
     expect(color.hsl).toMatchObject({h: 360, s: 0, l: 100});
     var color = new Color('hsla 360 100% 100% 1');
     expect(color.hsl).toMatchObject({h: 360, s: 0, l: 100});
+  });
+
+  test('Color alpha component can be set with a hsla string', () => {
+    var color = new Color('hsla(360, 100%, 100%, 0)');
+    expect(color._value.a).toEqual(0);
+    var color = new Color('hsla(360, 100%, 100%, 1)');
+    expect(color._value.a).toEqual(1);
+    var color = new Color('hsla(360, 100%, 100%, .5)');
+    expect(color._value.a).toEqual(0.5);
+    var color = new Color('hsla(360, 100%, 100%, 0.5)');
+    expect(color._value.a).toEqual(0.5);
+    var color = new Color('hsla(100%, 100%, 100%, 0%)');
+    expect(color._value.a).toEqual(0);
+    var color = new Color('hsla(100%, 100%, 100%, 100%)');
+    expect(color._value.a).toEqual(1);
+    var color = new Color('hsla(100%, 100%, 100%, 50%)');
+    expect(color._value.a).toEqual(0.5);
+    var color = new Color('hsla(100%, 100%, 100%, 50.0%)');
+    expect(color._value.a).toEqual(0.5);
   });
 
   test('Color can be constructed with a hex3 value', () => {

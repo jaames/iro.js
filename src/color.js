@@ -8,7 +8,7 @@ const CSS_INTEGER = `[-\\+]?\\d+%?`;
 // http://www.w3.org/TR/css3-values/#number-value
 const CSS_NUMBER = `[-\\+]?\\d*\\.\\d+%?`;
 // Allow positive/negative integer/number. Don't capture the either/or, just the entire outcome
-const CSS_UNIT = `(?:${CSS_INTEGER})|(?:${CSS_NUMBER})`;
+const CSS_UNIT = `(?:${ CSS_NUMBER })|(?:${ CSS_INTEGER })`;
 
 // Parse function params
 // Parens and commas are optional, and this also allows for whitespace between numbers
@@ -16,10 +16,10 @@ const PERMISSIVE_MATCH_3 = `[\\s|\\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\
 const PERMISSIVE_MATCH_4 = `[\\s|\\(]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })[,|\\s]+(${ CSS_UNIT })\\s*\\)?`;
 
 // Regex patterns for functional colors
-const REGEX_FUNCTIONAL_RGB = new RegExp(`rgb${PERMISSIVE_MATCH_3}`);
-const REGEX_FUNCTIONAL_RGBA = new RegExp(`rgba${PERMISSIVE_MATCH_4}`);
-const REGEX_FUNCTIONAL_HSL = new RegExp(`hsl${PERMISSIVE_MATCH_3}`);
-const REGEX_FUNCTIONAL_HSLA = new RegExp(`hsla${PERMISSIVE_MATCH_4}`);
+const REGEX_FUNCTIONAL_RGB = new RegExp(`rgb${ PERMISSIVE_MATCH_3 }`);
+const REGEX_FUNCTIONAL_RGBA = new RegExp(`rgba${ PERMISSIVE_MATCH_4 }`);
+const REGEX_FUNCTIONAL_HSL = new RegExp(`hsl${ PERMISSIVE_MATCH_3 }`);
+const REGEX_FUNCTIONAL_HSLA = new RegExp(`hsla${ PERMISSIVE_MATCH_4 }`);
 
 const HEX_START = `^(?:#?|0x?)`;
 const HEX_INT_SINGLE = `([0-9a-fA-F]{1})`;
