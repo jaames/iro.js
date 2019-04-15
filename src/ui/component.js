@@ -30,7 +30,7 @@ export default class IroComponent extends Component {
   }
 
   // More info on handleEvent:
-  // http://download-cdn.miitomo.com/native/20180125111639/manifests/v2_20180405_3_android/manifest.json
+  // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   handleEvent(e) {
     e.preventDefault();
