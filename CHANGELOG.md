@@ -1,5 +1,16 @@
 ### Changelog
 
+#### 4.4.0
+
+##### Additions
+
+Added two new params for iro.ColorPicker:
+
+* `wheelAngle` - starting angle for the color wheel's hue gradient
+* `wheelDirection` - direction of the color wheel's hue gradient (clockwise/anticlockwise)
+
+See [issue thread #66](https://github.com/jaames/iro.js/issues/66) for more information
+
 #### 4.3.3
 
 ##### Fixes
