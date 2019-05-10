@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.3.3
+ * iro.js v4.4.0
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -776,7 +776,7 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
   };
 
   // More info on handleEvent:
-  // http://download-cdn.miitomo.com/native/20180125111639/manifests/v2_20180405_3_android/manifest.json
+  // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   IroComponent.prototype.handleEvent = function handleEvent (e) {
     e.preventDefault();
@@ -880,6 +880,8 @@ IroHandle.defaultProps = {
   origin: {x: 0, y: 0}
 };
 
+var HUE_STEPS = Array.apply(null, {length: 360}).map(function (_, index) { return index; });
+
 var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   function IroWheel () {
     IroComponent$$1.apply(this, arguments);
@@ -889,13 +891,28 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
   IroWheel.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
   IroWheel.prototype.constructor = IroWheel;
 
+  IroWheel.prototype._transformAngle = function _transformAngle (angle, handleFix) {
+    var wheelAngle = this.props.wheelAngle;
+    if (this.props.wheelDirection === 'anticlockwise') {
+      // im sure this math could be simplified...
+      angle = (-360 + angle - (handleFix ? -wheelAngle : wheelAngle));
+    } else {
+      angle = wheelAngle - angle;
+    }
+    // javascript's modulo operator doesn't produce positive numbers with negative input
+    // https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
+    return (angle% 360 + 360) % 360;
+  };
+
   IroWheel.prototype.render = function render$$1 (props) {
+    var this$1 = this;
+
     var width = props.width;
     var borderWidth = props.borderWidth;
     var handleRadius = props.handleRadius;
     var hsv = props.color.hsv;
     var radius = (width / 2) - borderWidth;
-    var handleAngle = (360 - hsv.h) * (Math.PI / 180);
+    var handleAngle = this._transformAngle(hsv.h, true) * (Math.PI / 180);
     var handleDist = (hsv.s / 100) * (radius - props.padding - handleRadius - borderWidth);
     var cX = radius + borderWidth;
     var cY = radius + borderWidth;
@@ -913,9 +930,9 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
           )
         ),
         h( 'g', { class: "iro__wheel__hue", 'stroke-width': radius, fill: "none" },
-          Array.apply(null, { length: 360 }).map(function (_, hue) { return (
+          HUE_STEPS.map(function (angle) { return (
             h( 'path', { 
-              key: hue, d: createArcPath(cX, cY, radius / 2, hue, hue + 1.5), stroke: ("hsl(" + (360 - hue) + ", 100%, 50%)") })
+              key: angle, d: createArcPath(cX, cY, radius / 2, angle, angle + 1.5), stroke: ("hsl(" + (this$1._transformAngle(angle)) + ", 100%, 50%)") })
           ); })
         ),
         h( 'circle', { 
@@ -954,7 +971,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
 
     var handleAngle = Math.atan2(y, x);
     // Calculate the hue by converting the angle to radians
-    var hue = 360 - (Math.round(handleAngle * (180 / Math.PI)) + 180);
+    var hue = this._transformAngle(Math.round(handleAngle * (180 / Math.PI)) + 180);
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
     var handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
@@ -1763,6 +1780,8 @@ ColorPicker.defaultProps = {
   borderWidth: 0,
   display: 'block',
   wheelLightness: true,
+  wheelAngle: 0,
+  wheelDirection: 'anticlockwise',
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
@@ -1818,7 +1837,7 @@ var iro = usePlugins({
     parseHexInt: parseHexInt,
     intToHex: intToHex
   },
-  version: "4.3.3",
+  version: "4.4.0",
 });
 
 export default iro;

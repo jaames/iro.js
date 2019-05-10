@@ -4,14 +4,28 @@ import IroComponent from 'ui/component';
 import IroHandle from 'ui/handle';
 import { resolveUrl, createArcPath } from '../util/svg';
 
+const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 
 export default class IroWheel extends IroComponent {
+
+  _transformAngle(angle, handleFix) {
+    const wheelAngle = this.props.wheelAngle;
+    if (this.props.wheelDirection === 'anticlockwise') {
+      // im sure this math could be simplified...
+      angle = (-360 + angle - (handleFix ? -wheelAngle : wheelAngle));
+    } else {
+      angle = wheelAngle - angle
+    }
+    // javascript's modulo operator doesn't produce positive numbers with negative input
+    // https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
+    return (angle% 360 + 360) % 360;
+  }
 
   render(props) {
     let { width, borderWidth, handleRadius } = props;
     const hsv = props.color.hsv;
     const radius = (width / 2) - borderWidth;
-    const handleAngle = (360 - hsv.h) * (Math.PI / 180);
+    const handleAngle = this._transformAngle(hsv.h, true) * (Math.PI / 180);
     const handleDist = (hsv.s / 100) * (radius - props.padding - handleRadius - borderWidth);
     const cX = radius + borderWidth;
     const cY = radius + borderWidth;
@@ -33,11 +47,11 @@ export default class IroWheel extends IroComponent {
           </radialGradient>
         </defs>
         <g class="iro__wheel__hue" stroke-width={ radius } fill="none">
-          {Array.apply(null, { length: 360 }).map((_, hue) => (
+          { HUE_STEPS.map(angle => (
             <path 
-              key={ hue }
-              d={ createArcPath(cX, cY, radius / 2, hue, hue + 1.5) } 
-              stroke={ `hsl(${360 - hue}, 100%, 50%)` }
+              key={ angle }
+              d={ createArcPath(cX, cY, radius / 2, angle, angle + 1.5) } 
+              stroke={ `hsl(${this._transformAngle(angle)}, 100%, 50%)` }
             />
           ))}
         </g>
@@ -97,7 +111,7 @@ export default class IroWheel extends IroComponent {
 
     let handleAngle = Math.atan2(y, x);
     // Calculate the hue by converting the angle to radians
-    let hue = 360 - (Math.round(handleAngle * (180 / Math.PI)) + 180);
+    let hue = this._transformAngle(Math.round(handleAngle * (180 / Math.PI)) + 180);
     // Find the point's distance from the center of the wheel
     // This is used to show the saturation level
     let handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);

@@ -234,6 +234,8 @@ ColorPicker.defaultProps = {
   borderWidth: 0,
   display: 'block',
   wheelLightness: true,
+  wheelAngle: 0,
+  wheelDirection: 'anticlockwise',
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
