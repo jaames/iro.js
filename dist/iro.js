@@ -899,7 +899,7 @@
 
 	  IroWheel.prototype._transformAngle = function _transformAngle (angle, handleFix) {
 	    var wheelAngle = this.props.wheelAngle;
-	    if (this.props.wheelDirection === 'anticlockwise') {
+	    if (this.props.wheelDirection === 'clockwise') {
 	      // im sure this math could be simplified...
 	      angle = (-360 + angle - (handleFix ? -wheelAngle : wheelAngle));
 	    } else {
@@ -907,7 +907,7 @@
 	    }
 	    // javascript's modulo operator doesn't produce positive numbers with negative input
 	    // https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
-	    return (angle% 360 + 360) % 360;
+	    return (angle % 360 + 360) % 360;
 	  };
 
 	  IroWheel.prototype.render = function render$$1 (props) {
