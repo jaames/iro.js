@@ -20,6 +20,8 @@ export default {
         markerRadius: 8,
         borderWidth: 2,
         borderColor: "#fff",
+        wheelAngle: 120,
+        wheelDirection: "clockwise",
         width: 260,
         color: "#906bff",
         css: {
