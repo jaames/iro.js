@@ -67,6 +67,18 @@ If set to `false`, the color wheel will not fade to black when the lightness dec
 
 **Default value**: `true`
 
+### `wheelAngle`
+
+Starting angle of the color wheel's hue gradient, measured in degrees.
+
+**Default value**: `0`
+
+### `wheelDirection`
+
+Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlockwise"`.
+
+**Default value**: `"anticlockwise"`
+
 ### `sliderHeight`
 
 Slider height, measued in pixels.
