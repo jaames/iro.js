@@ -5,19 +5,27 @@ import IroSlider from './ui/slider';
 import IroColor from './color';
 import { createWidget } from './util/createWidget';
 
-interface Layout {
-  component: object,
-  options: object
+export interface Props {
+  value: string,
+  color: any,
+  optionalValue?: string
 }
 
-class ColorPicker extends Component {
+export interface State {
+  width: any,
+  color: any
+}
+
+class ColorPicker extends Component<Props, State> {
   private events: object;
   private deferredEvents: object;
   private colorUpdateActive: boolean;
   private colorUpdateSrc: string;
-  public color: IroColor;
-  public layout: Array<Layout>;
-  public pluginHooks: any;
+  public color: any;
+  public layout: Array<any>;
+  public static pluginHooks: any;
+  public defaultProps: object;
+  public el: any;
 
   constructor(props: any) {
     super(props, {});
@@ -54,7 +62,7 @@ class ColorPicker extends Component {
    * @param {String | Array} eventList event(s) to listen to
    * @param {Function} callback
    */
-  public on(eventList, callback) {
+  public on(eventList: any, callback: any) {
     const events = this.events;
     // eventList can be an eventType string or an array of eventType strings
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
@@ -93,7 +101,7 @@ class ColorPicker extends Component {
    * @param {String} eventType The name of the event to emit
    * @param {Array} args array of args to pass to callbacks
    */
-  public emit(eventType: string, ...args: Array<string>) {
+  public emit(eventType: string, ...args: Array<any>) {
     // Events are plugin hooks too
     this.emitHook(eventType, ...args);
     const callbackList = this.events[eventType] || [];
@@ -107,7 +115,7 @@ class ColorPicker extends Component {
    * @param {String} eventType The name of the event to emit
    * @param {Array} args array of args to pass to callbacks
    */
-  deferredEmit(eventType: string, ...args: Array<string>) {
+  deferredEmit(eventType: string, ...args: Array<any>) {
     const deferredEvents = this.deferredEvents;
     this.emit(eventType, ...args);
     (deferredEvents[eventType] || (deferredEvents[eventType] = [])).push(args);
@@ -119,7 +127,7 @@ class ColorPicker extends Component {
    * @desc Resize the color picker
    * @param {Number} width
    */
-  public resize(width) {
+  public resize(width: any) {
     this.setState({width}, ()=>{});
   }
 
@@ -147,7 +155,7 @@ class ColorPicker extends Component {
    * @access private
    * @param {String} hookType The type of hook event to emit
    */
-  emitHook(hookType, ...args) {
+  private emitHook(hookType: string, ...args: any) {
     const callbackList = ColorPicker.pluginHooks[hookType] || [];
     for (let i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(this, args); 
@@ -161,7 +169,7 @@ class ColorPicker extends Component {
    * @access private
    * @param {Element} container the container element for this ColorPicker instance
    */
-  onMount(container) {
+  private onMount(container: any) {
     this.el = container;
     this.deferredEmit('mount', this);
   }
@@ -172,21 +180,21 @@ class ColorPicker extends Component {
    * @param {IroColor} color current color
    * @param {Object} changes shows which h,s,v color channels changed
    */
-  updateColor(color, changes) {
+  private updateColor(color: any, changes: any) {
     this.emitHook('color:beforeUpdate', color, changes);
-    this.setState({ color: color });
+    this.setState({ "color": color });
     this.emitHook('color:afterUpdate', color, changes);
     // Prevent infinite loops if the color is set inside a color:change or input:change callback
-    if (!this._colorUpdateActive) {
+    if (!this.colorUpdateActive) {
       // While _colorUpdateActive == true, branch cannot be entered
-      this._colorUpdateActive = true;
+      this.colorUpdateActive = true;
       // If the color change originates from user input, fire input:change
-      if (this._colorUpdateSrc == 'input') { // colorUpdateSrc is cleared in handeInput()
+      if (this.colorUpdateSrc == 'input') { // colorUpdateSrc is cleared in handeInput()
         this.emit('input:change', color, changes);
       } 
       // Always fire color:change event
       this.emit('color:change', color, changes);
-      this._colorUpdateActive = false;
+      this.colorUpdateActive = false;
     }
   }
 
@@ -196,12 +204,12 @@ class ColorPicker extends Component {
    * @param {String} type "START" | "MOVE" | "END"
    * @param {Object} hsv new hsv values for the color
    */
-  handleInput(type, hsv) {
+  handleInput(type: any, hsv: any) {
     // Fire input start and move events before color update
-    if (type === 'START') this.emit('input:start', this.color);
+    if (type === 'START') this.emit('input:start', [this.color]);
     if (type === 'MOVE') this.emit('input:move', this.color);
     // Set the color update source
-    this._colorUpdateSrc = 'input';
+    this.colorUpdateSrc = 'input';
     // Setting the color HSV here will automatically update the UI
     // Since we bound the color's _onChange callback
     this.color.hsv = hsv;
@@ -209,10 +217,10 @@ class ColorPicker extends Component {
     if (type === 'END') this.emit('input:end', this.color);
     // Reset color update source so it doesn't interfere with future color updates
     // Super important to do this here and not in updateColor()
-    this._colorUpdateSrc = null;
+    this.colorUpdateSrc = null;
   }
 
-  render(props, state) {
+  public render(props: any, state: any) {
     return (
       <div 
         class="iro__colorPicker"
@@ -234,9 +242,7 @@ class ColorPicker extends Component {
   }
 }
 
-ColorPicker.pluginHooks = {};
-
-ColorPicker.defaultProps = {
+ColorPicker.pluginHooks = {
   width: 300,
   height: 300,
   handleRadius: 8,
@@ -252,7 +258,7 @@ ColorPicker.defaultProps = {
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
-  layout: null,
+  layout: null
 }
 
 export default createWidget(ColorPicker);

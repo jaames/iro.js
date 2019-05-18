@@ -6,9 +6,9 @@ import { resolveUrl, createArcPath } from '../util/svg';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 
-export default class IroWheel extends IroComponent {
+export default abstract class IroWheel extends IroComponent {
 
-  private transformAngle(angle: number, handleFix?: number) {
+  private transformAngle(angle: number, handleFix?: boolean) {
     const wheelAngle = this.props.wheelAngle;
     if (this.props.wheelDirection === 'clockwise') {
       // im sure this math could be simplified...
@@ -21,7 +21,37 @@ export default class IroWheel extends IroComponent {
     return (angle % 360 + 360) % 360;
   }
 
-  public lol(props: any) {
+  /**
+    * @desc handles mouse input for this component
+    * @param {Number} x - point x coordinate
+    * @param {Number} y - point y coordinate
+    * @param {DOMRect} rect - bounding client rect for the component's base element
+    * @param {String} type - input type: "START", "MOVE" or "END"
+  */
+  public handleInput(x: number, y: number, { left, top }, type: string) {
+    const props = this.props;
+    const radius = props.width / 2;
+    const handleRange = (radius - props.padding - props.handleRadius - props.borderWidth);
+    const cX = radius;
+    const cY = radius;
+
+    x = cX - (x - left);
+    y = cY - (y - top);
+
+    let handleAngle = Math.atan2(y, x);
+    // Calculate the hue by converting the angle to radians
+    let hue = this.transformAngle(Math.round(handleAngle * (180 / Math.PI)) + 180);
+
+    // Find the point's distance from the center of the wheel
+    // This is used to show the saturation level
+    let handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
+    props.onInput(type, {
+      h: hue,
+      s: Math.round((100 / handleRange) * handleDist)
+    });
+  }
+
+  public render(props: any) {
     let { width, borderWidth, handleRadius } = props;
     const hsv = props.color.hsv;
     const radius = (width / 2) - borderWidth;
@@ -51,7 +81,7 @@ export default class IroWheel extends IroComponent {
             <path 
               key={ angle }
               d={ createArcPath(cX, cY, radius / 2, angle, angle + 1.5) } 
-              stroke={ `hsl(${this._transformAngle(angle)}, 100%, 50%)` }
+              stroke={ `hsl(${this.transformAngle(angle)}, 100%, 50%)` }
             />
           ))}
         </g>
@@ -90,34 +120,5 @@ export default class IroWheel extends IroComponent {
         />
       </svg>
     );
-  }
-
-  /**
-    * @desc handles mouse input for this component
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @param {DOMRect} rect - bounding client rect for the component's base element
-    * @param {String} type - input type: "START", "MOVE" or "END"
-  */
-  public handleInput(x: number, y: number, { left, top }, type: string) {
-    const props = this.props;
-    const radius = props.width / 2;
-    const handleRange = (radius - props.padding - props.handleRadius - props.borderWidth);
-    const cX = radius;
-    const cY = radius;
-
-    x = cX - (x - left);
-    y = cY - (y - top);
-
-    let handleAngle = Math.atan2(y, x);
-    // Calculate the hue by converting the angle to radians
-    let hue = this.transformAngle(Math.round(handleAngle * (180 / Math.PI)) + 180);
-    // Find the point's distance from the center of the wheel
-    // This is used to show the saturation level
-    let handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
-    props.onInput(type, {
-      h: hue,
-      s: Math.round((100 / handleRange) * handleDist)
-    });
   }
 }

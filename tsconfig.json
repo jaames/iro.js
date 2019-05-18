@@ -1,11 +1,14 @@
 {
     "compilerOptions": {
-      "baseUrl": ".",
-      "paths": { "*": ["types/*"] },
+        "baseUrl": ".",
+        "paths": { "*": ["types/*"] },
         "outDir": "./built",
-        "target": "es5",
+        "target": "es6",
         "jsx": "react",
-        "declaration": true
+        "jsxFactory": "h",
+        "declaration": true,
+        "sourceMap": true,
+        "module": "commonjs",
     },
     "include": [
         "./src/**/*.ts",

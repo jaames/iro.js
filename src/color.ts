@@ -29,8 +29,32 @@ const REGEX_HEX_4 = new RegExp(`${ HEX_START }${ HEX_INT_SINGLE }${ HEX_INT_SING
 const REGEX_HEX_6 = new RegExp(`${ HEX_START }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }$`);
 const REGEX_HEX_8 = new RegExp(`${ HEX_START }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }$`);
 
+interface HSV {
+  h: number,
+  s: number,
+  v: number,
+  a?: number
+}
+
+
+interface RGB {
+  r: number,
+  g: number,
+  b: number,
+  a?: number
+}
+
+
+interface HSL {
+  h: number,
+  s: number,
+  l: number,
+  a?: number
+}
+
 export default class Color {
   public _onChange: any;
+  private value: any;
   /**
     * @constructor Color object
     * @param {Object | String | Color} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
@@ -39,7 +63,7 @@ export default class Color {
     // The watch callback function for this Color will be stored here
     this._onChange = false;
     // The default Color value
-    this._value = {h: 0, s: 0, v: 0, a: 1};
+    this.value = {h: 0, s: 0, v: 0, a: 1};
     if (value) this.set(value);
   }
 
@@ -47,7 +71,7 @@ export default class Color {
     * @desc set the Color from any valid value
     * @param {Object | String | Color} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
   */
-  set(value) {
+  public set(value: any) {
     const isString = typeof value === 'string';
     const isObject = typeof value === 'object';
     if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value))) {
@@ -82,7 +106,7 @@ export default class Color {
     * @param {String} channel - individual channel to set, for example if model = hsl, chanel = h | s | l
     * @param {Number} value - new value for the channel
   */
-  setChannel(format, channel, value) {
+  public setChannel(format: string, channel: string, value: number) {
     this[format] = {...this[format], [channel]: value};
   }
 
@@ -90,7 +114,7 @@ export default class Color {
     * @desc make new Color instance with the same value as this one
     * @return {Color}
   */
-  clone() {
+  public clone() {
     return new Color(this);
   }
 
@@ -99,7 +123,7 @@ export default class Color {
     * @param {Object} hsv hsv object
     * @return {Object} rgb object
   */
-  static hsvToRgb(hsv) {
+  public static hsvToRgb(hsv: HSV) {
     const h = hsv.h / 60;
     const s = hsv.s / 100;
     const v = hsv.v / 100;
@@ -124,7 +148,7 @@ export default class Color {
     * @param {Object} rgb - rgb object
     * @return {Object} hsv object
   */
-  static rgbToHsv(rgb) {
+  public static rgbToHsv(rgb: RGB) {
     const r = rgb.r / 255;
     const g = rgb.g / 255;
     const b = rgb.b / 255;
@@ -160,7 +184,7 @@ export default class Color {
     * @param {Object} hsv - hsv object
     * @return {Object} hsl object
   */
-  static hsvToHsl(hsv) {
+  public static hsvToHsl(hsv: HSV) {
     const s = hsv.s / 100;
     const v = hsv.v / 100;
     const l = (2 - s) * v;
@@ -179,7 +203,7 @@ export default class Color {
     * @param {Object} hsl - hsl object
     * @return {Object} hsv object
   */
-  static hslToHsv(hsl) {
+  public static hslToHsv(hsl: HSL) {
     const l = hsl.l * 2;
     const s = (hsl.s * ((l <= 100) ? l : 200 - l)) / 100;
     // Avoid division by zero when l + s is near 0
@@ -191,34 +215,40 @@ export default class Color {
     };
   }
 
-  get hsv() {
+  public get hsv() {
     // _value is cloned to allow changes to be made to the values before passing them back
-    const value = this._value;
+    const value = this.value;
     return {h: value.h, s: value.s, v: value.v};
   }
 
-  set hsv(newValue) {
-    const oldValue = this._value;
+  public set hsv(newValue) {
+    const oldValue = this.value;
+
     newValue = { ...oldValue, ...newValue };
     // If this Color is being watched for changes we need to compare the new and old values to check the difference
     // Otherwise we can just be lazy
     if (this._onChange) {
       // Compute changed values
-      let changes = {};
+      let changes: HSV = {
+        h: 0,
+        v: 0,
+        s: 0
+      };
+
       for (let key in oldValue) {
         changes[key] = newValue[key] != oldValue[key]
       };
       // Update the old value
-      this._value = newValue;
+      this.value = newValue;
       // If the value has changed, call hook callback
       if (changes.h || changes.s || changes.v || changes.a) this._onChange(this, changes);
     } else {
-      this._value = newValue;
+      this.value = newValue;
     }
   }
 
-  get rgb() {
-    const {r, g, b} = Color.hsvToRgb(this._value);
+  public get rgb() {
+    const {r, g, b} = Color.hsvToRgb(this.value);
     return {
       r: Math.round(r),
       g: Math.round(g),
@@ -226,12 +256,15 @@ export default class Color {
     };
   }
 
-  set rgb(value) {
-    this.hsv = {...Color.rgbToHsv(value), a: (value.a === undefined) ? 1 : value.a};
+  public set rgb(value: any) {
+    this.hsv = {
+      ...Color.rgbToHsv(value), 
+      // a: (value.a === undefined) ? 1 : value.a
+    };
   }
 
-  get hsl() {
-    const {h, s, l} = Color.hsvToHsl(this._value);
+  public get hsl() {
+    const {h, s, l} = Color.hsvToHsl(this.value);
     return {
       h: Math.round(h),
       s: Math.round(s),
@@ -239,16 +272,19 @@ export default class Color {
     };
   }
 
-  set hsl(value) {
-    this.hsv = {...Color.hslToHsv(value), a: (value.a === undefined) ? 1 : value.a};
+  public set hsl(value: any) {
+    this.hsv = {
+      ...Color.hslToHsv(value), 
+      // a: (value.a === undefined) ? 1 : value.a
+    };
   }
 
-  get rgbString() {
+  public get rgbString() {
     const rgb = this.rgb;
     return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
   }
 
-  set rgbString(value) {
+  public set rgbString(value: any) {
     let match;
     let r, g, b, a = 1;
     if (match = REGEX_FUNCTIONAL_RGB.exec(value)) {
@@ -270,12 +306,12 @@ export default class Color {
     }
   }
 
-  get hexString() {
+  public get hexString() {
     const rgb = this.rgb;
     return `#${ intToHex(rgb.r) }${ intToHex(rgb.g) }${ intToHex(rgb.b) }`;
   }
 
-  set hexString(value) {
+  public set hexString(value) {
     let match;
     let r, g, b, a = 255;
     if (match = REGEX_HEX_3.exec(value)) {
@@ -308,12 +344,12 @@ export default class Color {
     }
   }
 
-  get hslString() {
+  public get hslString() {
     const hsl = this.hsl;
     return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
   }
 
-  set hslString(value) {
+  public set hslString(value: any) {
     let match;
     let h, s, l, a = 1;
     if (match = REGEX_FUNCTIONAL_HSL.exec(value)) {

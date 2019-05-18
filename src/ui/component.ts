@@ -8,11 +8,26 @@ const EVENT_TOUCHSTART = 'touchstart';
 const EVENT_TOUCHMOVE = 'touchmove';
 const EVENT_TOUCHEND = 'touchend';
 
+
+interface Props {
+  sliderType: any,
+  onInput: any,
+  wheelAngle: any,
+  wheelDirection: any,
+  width: any,
+  padding: any,
+  handleRadius: any,
+  borderWidth: any
+}
+interface State {
+
+}
+
 /**
  * Base component class for iro UI components
  * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
  */
-export default class IroComponent extends Component {
+export default abstract class IroComponent extends Component<Props, State> {
   public uid: string;
   public base: any; //couldnt find it, put this to fix the compile errors #FIX
 
@@ -33,6 +48,8 @@ export default class IroComponent extends Component {
     unlisten(this.base, [EVENT_MOUSEDOWN, EVENT_TOUCHSTART], this);
   }
 
+  abstract handleInput(x: any, y: any, bounds: any, type: any);
+
   // More info on handleEvent:
   // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
@@ -50,17 +67,19 @@ export default class IroComponent extends Component {
       case EVENT_MOUSEDOWN:
       case EVENT_TOUCHSTART:
         listen(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
-        // this.handleInput(x, y, bounds, 'START'); //seriously, where are these functions comming from?
+        this.handleInput(x, y, bounds, 'START');
         break;
       case EVENT_MOUSEMOVE:
       case EVENT_TOUCHMOVE:
-        // this.handleInput(x, y, bounds, 'MOVE');
+        this.handleInput(x, y, bounds, 'MOVE');
         break;
       case EVENT_MOUSEUP:
       case EVENT_TOUCHEND:
-        // this.handleInput(x, y, bounds, 'END');
+        this.handleInput(x, y, bounds, 'END');
         unlisten(document, [EVENT_MOUSEMOVE, EVENT_TOUCHMOVE, EVENT_MOUSEUP, EVENT_TOUCHEND], this, { passive: false });
         break;
     }
   }
+
+
 }
