@@ -1,18 +1,31 @@
 import { h, Component } from 'preact';
 
-import IroWheel from 'ui/wheel';
-import IroSlider from 'ui/slider';
+import IroWheel from './ui/wheel';
+import IroSlider from './ui/slider';
 import IroColor from './color';
-import { createWidget } from 'util/createWidget';
+import { createWidget } from './util/createWidget';
+
+interface Layout {
+  component: object,
+  options: object
+}
 
 class ColorPicker extends Component {
-  constructor(props) {
-    super(props);
+  private events: object;
+  private deferredEvents: object;
+  private colorUpdateActive: boolean;
+  private colorUpdateSrc: string;
+  public color: IroColor;
+  public layout: Array<Layout>;
+  public pluginHooks: any;
+
+  constructor(props: any) {
+    super(props, {});
     this.emitHook('init:before');
-    this._events = {};
-    this._deferredEvents = {};
-    this._colorUpdateActive = false;
-    this._colorUpdateSrc = null;
+    this.events = {};
+    this.deferredEvents = {};
+    this.colorUpdateActive = false;
+    this.colorUpdateSrc = null;
     this.color = new IroColor(props.color);
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Whenever the color changes, update the color wheel
@@ -41,8 +54,8 @@ class ColorPicker extends Component {
    * @param {String | Array} eventList event(s) to listen to
    * @param {Function} callback
    */
-  on(eventList, callback) {
-    const events = this._events;
+  public on(eventList, callback) {
+    const events = this.events;
     // eventList can be an eventType string or an array of eventType strings
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
       // Emit plugin hook
@@ -51,13 +64,13 @@ class ColorPicker extends Component {
       (events[eventType] || (events[eventType] = [])).push(callback);
       // Call deferred events
       // These are events that can be stored until a listener for them is added
-      if (this._deferredEvents[eventType]) {
+      if (this.deferredEvents[eventType]) {
         // Deffered events store an array of arguments from when the event was called
-        this._deferredEvents[eventType].forEach(args => {
+        this.deferredEvents[eventType].forEach(args => {
           callback.apply(null, args); 
         });
         // Clear deferred events
-        this._deferredEvents[eventType] = [];
+        this.deferredEvents[eventType] = [];
       }
     });
   }
@@ -67,9 +80,9 @@ class ColorPicker extends Component {
    * @param {String | Array} eventList The name of the event
    * @param {Function} callback
    */
-  off(eventList, callback) {
+  public off(eventList: Array<string>|string, callback: () => void) {
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
-      const callbackList = this._events[eventType];
+      const callbackList = this.events[eventType];
       this.emitHook('event:off', eventType, callback);
       if (callbackList) callbackList.splice(callbackList.indexOf(callback), 1);
     });
@@ -80,10 +93,10 @@ class ColorPicker extends Component {
    * @param {String} eventType The name of the event to emit
    * @param {Array} args array of args to pass to callbacks
    */
-  emit(eventType, ...args) {
+  public emit(eventType: string, ...args: Array<string>) {
     // Events are plugin hooks too
     this.emitHook(eventType, ...args);
-    const callbackList = this._events[eventType] || [];
+    const callbackList = this.events[eventType] || [];
     for (let i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(null, args); 
     }
@@ -94,8 +107,8 @@ class ColorPicker extends Component {
    * @param {String} eventType The name of the event to emit
    * @param {Array} args array of args to pass to callbacks
    */
-  deferredEmit(eventType, ...args) {
-    const deferredEvents = this._deferredEvents;
+  deferredEmit(eventType: string, ...args: Array<string>) {
+    const deferredEvents = this.deferredEvents;
     this.emit(eventType, ...args);
     (deferredEvents[eventType] || (deferredEvents[eventType] = [])).push(args);
   }
@@ -106,8 +119,8 @@ class ColorPicker extends Component {
    * @desc Resize the color picker
    * @param {Number} width
    */
-  resize(width) {
-    this.setState({width});
+  public resize(width) {
+    this.setState({width}, ()=>{});
   }
 
   /**
@@ -124,7 +137,7 @@ class ColorPicker extends Component {
    * @param {String} hookType The name of the hook to listen to
    * @param {Function} callback
    */
-  static addHook(hookType, callback) {
+  public static addHook(hookType: string, callback: () => void) {
     const pluginHooks = ColorPicker.pluginHooks;
     (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
   }
