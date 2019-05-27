@@ -97,6 +97,12 @@ CSS display value for the color picker root element.
 
 **Default value**: `"block"`
 
+### `id`
+
+HTML ID for the color picker root element.
+
+**Default value**: `null`
+
 ### `layout`
 
 Component array used for [Custom Layouts](/guide.html#custom-layouts).
@@ -121,7 +127,11 @@ The HTML element being used as the color picker's base element.
 
 ### `props`
 
-The initial configetation options passed to the color picker.
+The initial configeration options passed to the color picker.
+
+### `is`
+
+The ID value passed to the color picker config.
 
 ## Methods
 

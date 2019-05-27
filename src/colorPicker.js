@@ -13,6 +13,7 @@ class ColorPicker extends Component {
     this._deferredEvents = {};
     this._colorUpdateActive = false;
     this._colorUpdateSrc = null;
+    this.id = props.id;
     this.color = new IroColor(props.color);
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Whenever the color changes, update the color wheel
@@ -85,7 +86,7 @@ class ColorPicker extends Component {
     this.emitHook(eventType, ...args);
     const callbackList = this._events[eventType] || [];
     for (let i = 0; i < callbackList.length; i++) {
-      callbackList[i].apply(null, args); 
+      callbackList[i].apply(this, args); 
     }
   }
 
@@ -203,6 +204,7 @@ class ColorPicker extends Component {
     return (
       <div 
         class="iro__colorPicker"
+        id={ props.id }
         style={{
           display: state.display,
           width: state.width
@@ -233,6 +235,7 @@ ColorPicker.defaultProps = {
   borderColor: '#fff',
   borderWidth: 0,
   display: 'block',
+  id: null,
   wheelLightness: true,
   wheelAngle: 0,
   wheelDirection: 'anticlockwise',

@@ -148,6 +148,7 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 | `sliderHeight`   | Slider control height. By default this will be calculated automatically | `undefined` |
 | `sliderMargin`   | Distance between the wheel and the slider controls. | `12` |
 | `display`        | CSS display value for the color picker root element. | `"block"` |
+| `id`             | HTML ID for the color picker root element. | `null` |
 | `layout`         | Used for [Custom Layouts](https://iro.js.org/guide.html#custom-layouts) | `null` |
 
 More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](https://iro.js.org/colorPicker_api.html).

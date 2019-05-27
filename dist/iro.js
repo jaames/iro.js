@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.4.0
+ * iro.js v4.5.0
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1546,6 +1546,7 @@
 	    this._deferredEvents = {};
 	    this._colorUpdateActive = false;
 	    this._colorUpdateSrc = null;
+	    this.id = props.id;
 	    this.color = new Color(props.color);
 	    this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
 	    // Whenever the color changes, update the color wheel
@@ -1627,7 +1628,7 @@
 	    (ref = this).emitHook.apply(ref, [ eventType ].concat( args ));
 	    var callbackList = this._events[eventType] || [];
 	    for (var i = 0; i < callbackList.length; i++) {
-	      callbackList[i].apply(null, args); 
+	      callbackList[i].apply(this, args); 
 	    }
 	  };
 
@@ -1753,7 +1754,7 @@
 
 	    return (
 	      h( 'div', { 
-	        class: "iro__colorPicker", style: {
+	        class: "iro__colorPicker", id: props.id, style: {
 	          display: state.display,
 	          width: state.width
 	        } },
@@ -1785,6 +1786,7 @@
 	  borderColor: '#fff',
 	  borderWidth: 0,
 	  display: 'block',
+	  id: null,
 	  wheelLightness: true,
 	  wheelAngle: 0,
 	  wheelDirection: 'anticlockwise',
@@ -1843,7 +1845,7 @@
 	    parseHexInt: parseHexInt,
 	    intToHex: intToHex
 	  },
-	  version: "4.4.0",
+	  version: "4.5.0",
 	});
 
 	return iro;

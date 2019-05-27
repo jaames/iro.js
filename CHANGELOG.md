@@ -1,5 +1,17 @@
 ### Changelog
 
+#### 4.5.0
+
+##### Additions
+
+Added a new param for iro.ColorPicker:
+
+* `id` - HTML ID for the color picker root element, also available as a prop on the color picker instance
+
+Color picker event callbacks `this` context is now set to the active color picker instance
+
+See [issue thread #71](https://github.com/jaames/iro.js/issues/71) for more information
+
 #### 4.4.0
 
 ##### Additions
