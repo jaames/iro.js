@@ -129,7 +129,7 @@ The HTML element being used as the color picker's base element.
 
 The initial configeration options passed to the color picker.
 
-### `is`
+### `id`
 
 The ID value passed to the color picker config.
 
