@@ -53,7 +53,3 @@ colorPicker.on('input:change', function(color) {
 colorPicker.on(['color:init', 'color:change'], function() {
   console.log('color:change or color:init');
 })
-
-colorPicker.on('color:change', function(color) {
-  color.set('#fff')
-})

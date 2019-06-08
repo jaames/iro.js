@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.5.0
+ * iro.js v4.5.1
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1545,8 +1545,11 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
+    // Pass all the props into the component's state,
+    // Except we want to add the color object and make sure that refs aren't passed down to children
     this.state = Object.assign({}, props,
-      {color: this.color});
+      {color: this.color,
+      ref: undefined});
     this.emitHook('init:state');
 
     if (props.layout) {
@@ -1839,7 +1842,7 @@ var iro = usePlugins({
     parseHexInt: parseHexInt,
     intToHex: intToHex
   },
-  version: "4.5.0",
+  version: "4.5.1",
 });
 
 export default iro;

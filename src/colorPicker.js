@@ -18,9 +18,12 @@ class ColorPicker extends Component {
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Whenever the color changes, update the color wheel
     this.color._onChange = this.updateColor.bind(this);
+    // Pass all the props into the component's state,
+    // Except we want to add the color object and make sure that refs aren't passed down to children
     this.state = {
       ...props,
       color: this.color,
+      ref: undefined,
     };
     this.emitHook('init:state');
 
