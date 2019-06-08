@@ -61,7 +61,9 @@ module.exports = {
     }),
     nodeResolve(),
     commonjs(),
-    devserver ? serve() : false,
+    devserver ? serve({
+      contentBase: ['dist', 'demo']
+    }) : false,
     devserver ? livereload() : false,
     // only minify if we're producing a non-es production build
     prod && !esmodule ? uglify({
