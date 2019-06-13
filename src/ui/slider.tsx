@@ -1,13 +1,16 @@
-import { h } from 'preact';
+import { h } from 'preact'; //Why is this here?
 
-import IroComponent from 'ui/component';
-import IroHandle from 'ui/handle';
+import IroComponent from './component';
+import IroHandle from './handle';
 import IroColor from '../color';
 import { resolveUrl } from '../util/svg';
 
 export default class IroSlider extends IroComponent {
+  public height: number;
+  public width: number;
 
-  renderGradient(props) {
+
+  renderGradient(props: any) {
     const hsv = props.color.hsv;
     let stops = [];
 
@@ -50,7 +53,7 @@ export default class IroSlider extends IroComponent {
     )
   }
 
-  render(props) {
+  render(props: any) {
     let { width, sliderHeight, borderWidth, handleRadius } = props;
     sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
     this.width = width;
@@ -110,7 +113,7 @@ export default class IroSlider extends IroComponent {
     );
   }
 
-  getValueFromPoint(x, y, { left }) {
+  getValueFromPoint(x: number, y: number, { left }) {
     const handleRange = this.width - this.height;
     const cornerRadius = this.height / 2;
     x = x - (left + cornerRadius);
@@ -125,7 +128,7 @@ export default class IroSlider extends IroComponent {
     * @param {DOMRect} rect - bounding client rect for the component's base element
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
-  handleInput(x, y, bounds, type) {
+  handleInput(x: number, y: number, bounds: DOMRect, type: string) {
     let value = this.getValueFromPoint(x, y, bounds);
     let channel;
     switch (this.props.sliderType) {

@@ -1,8 +1,7 @@
 import { h } from 'preact';
 import { resolveUrl } from '../util/svg';
 
-function IroHandle(props) {
-  
+function IroHandle(props: any) {
   const radius = props.r;
   const url = props.url;
 
