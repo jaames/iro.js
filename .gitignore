@@ -4,3 +4,4 @@ node_modules
 .tmp
 docs/.vuepress/dist
 built/*
+.rpt2_cache/*

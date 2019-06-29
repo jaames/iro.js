@@ -1,6 +1,6 @@
 import { h } from 'preact'; //Why is this here?
 
-import IroComponent from './component';
+import IroComponent, { EventResult } from './component';
 import IroHandle from './handle';
 import IroColor from '../color';
 import { resolveUrl } from '../util/svg';
@@ -128,7 +128,7 @@ export default class IroSlider extends IroComponent {
     * @param {DOMRect} rect - bounding client rect for the component's base element
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
-  handleInput(x: number, y: number, bounds: DOMRect, type: string) {
+  handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
     let value = this.getValueFromPoint(x, y, bounds);
     let channel;
     switch (this.props.sliderType) {

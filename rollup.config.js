@@ -5,6 +5,7 @@ import alias from 'rollup-plugin-alias';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
+import typescript from 'rollup-plugin-typescript2';
 import { uglify } from 'rollup-plugin-uglify';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
@@ -23,7 +24,7 @@ const banner = `/*!
 `
 
 module.exports = {
-  input: 'src/iro.js',
+  input: 'src/index.ts',
   output: [
     esmodule ? {
       file: 'dist/iro.es.js',
@@ -53,6 +54,15 @@ module.exports = {
       PROD: prod ? 'true' : 'false',
       DEV_SERVER: devserver ? 'true' : 'false'
     }),
+    typescript({
+      typescript: require('typescript'),
+      tsconfigOverride: {
+        compilerOptions: {
+          module: 'esnext',
+          target: 'esnext',
+        },
+      },
+    }),
     buble({
       jsx: 'h',
       objectAssign: 'Object.assign',
@@ -64,7 +74,9 @@ module.exports = {
     devserver ? serve({
       contentBase: ['dist', 'demo']
     }) : false,
-    devserver ? livereload() : false,
+    devserver ? livereload({
+      watch: 'dist'
+    }) : false,
     // only minify if we're producing a non-es production build
     prod && !esmodule ? uglify({
       output: {

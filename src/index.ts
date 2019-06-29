@@ -11,8 +11,6 @@ import { usePlugins } from './util/usePlugins';
 import { resolveUrl, createArcPath } from './util/svg';
 import { parseUnit, parseHexInt, intToHex } from './util/colorUtils';
 
-const VERSION = 5;
-
 export default usePlugins({
   Color,
   ColorPicker,
