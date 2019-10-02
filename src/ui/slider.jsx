@@ -41,24 +41,34 @@ export default class IroSlider extends IroComponent {
         break;
     }
 
-    return (
-      <linearGradient id={ this.uid }>
-        {stops.map(stop => (
-          <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
-        ))}
-      </linearGradient>
-    )
+    if (props.vertical) {
+      return (
+        <linearGradient id={ this.uid } x1="0%" x2="0%" y1="100%" y2="0%">
+          {stops.map(stop => (
+            <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
+          ))}
+        </linearGradient>
+      );
+    } else {
+      return (
+        <linearGradient id={ this.uid }>
+          {stops.map(stop => (
+            <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
+          ))}
+        </linearGradient>
+      );
+    }
   }
 
   render(props) {
-    let { width, sliderHeight, borderWidth, handleRadius } = props;
+    let { width, sliderHeight, borderWidth, handleRadius, vertical } = props;
     sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
     this.width = width;
     this.height = sliderHeight;
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2
     const hsv = props.color.hsv;
-    
+
     let sliderValue;
     switch (props.sliderType) {
       case 'hue':
@@ -73,49 +83,97 @@ export default class IroSlider extends IroComponent {
         break;
     }
 
-    return (
-      <svg 
-        class="iro__slider"
-        width={ width }
-        height={ sliderHeight }
-        style= {{
-          marginTop: props.sliderMargin,
-          overflow: 'visible',
-          display: 'block'
-        }}
-      >
-        <defs>
-          { this.renderGradient(props) }
-        </defs>
-        <rect 
-          class="iro__slider__value"
-          rx={ cornerRadius } 
-          ry={ cornerRadius } 
-          x={ borderWidth / 2 } 
-          y={ borderWidth / 2 } 
-          width={ width - borderWidth } 
-          height={ sliderHeight - borderWidth }
-          stroke-width={ borderWidth }
-          stroke={ props.borderColor }
-          fill={ `url(${resolveUrl('#' + this.uid)})` }
-        />
-        <IroHandle
-          r={ handleRadius }
-          url={ props.handleSvg }
-          origin={ props.handleOrigin }
-          x={ cornerRadius + (sliderValue / 100) * range }
-          y={ sliderHeight / 2 }
-        />
-      </svg>
-    );
+    if (vertical) {
+      return (
+        <svg
+          class="iro__slider"
+          width={ sliderHeight }
+          height={ width }
+          style= {{
+            marginTop: props.sliderMargin,
+            overflow: 'visible',
+            display: 'block'
+          }}
+        >
+          <defs>
+            { this.renderGradient(props) }
+          </defs>
+          <rect
+            class="iro__slider__value"
+            rx={ cornerRadius }
+            ry={ cornerRadius }
+            x={ borderWidth / 2 }
+            y={ borderWidth / 2 }
+            width={ sliderHeight - borderWidth }
+            height={ width - borderWidth }
+            stroke-width={ borderWidth }
+            stroke={ props.borderColor }
+            fill={ `url(${resolveUrl('#' + this.uid)})` }
+          />
+          <IroHandle
+            r={ handleRadius }
+            url={ props.handleSvg }
+            origin={ props.handleOrigin }
+            x={ sliderHeight / 2 }
+            y={ -1 * (sliderValue / 100) * range + range + cornerRadius }
+          />
+        </svg>
+      );
+    } else {
+      return (
+        <svg
+          class="iro__slider"
+          width={ width }
+          height={ sliderHeight }
+          style= {{
+            marginTop: props.sliderMargin,
+            overflow: 'visible',
+            display: 'block'
+          }}
+        >
+          <defs>
+            { this.renderGradient(props) }
+          </defs>
+          <rect
+            class="iro__slider__value"
+            rx={ cornerRadius }
+            ry={ cornerRadius }
+            x={ borderWidth / 2 }
+            y={ borderWidth / 2 }
+            width={ width - borderWidth }
+            height={ sliderHeight - borderWidth }
+            stroke-width={ borderWidth }
+            stroke={ props.borderColor }
+            fill={ `url(${resolveUrl('#' + this.uid)})` }
+          />
+          <IroHandle
+            r={ handleRadius }
+            url={ props.handleSvg }
+            origin={ props.handleOrigin }
+            x={ cornerRadius + (sliderValue / 100) * range }
+            y={ sliderHeight / 2 }
+          />
+        </svg>
+      );
+    }
   }
 
-  getValueFromPoint(x, y, { left }) {
-    const handleRange = this.width - this.height;
-    const cornerRadius = this.height / 2;
-    x = x - (left + cornerRadius);
-    let dist = Math.max(Math.min(x, handleRange), 0);
-    return Math.round((100 / handleRange) * dist);
+  getValueFromPoint(x, y, bounds) {
+    if (this.props.vertical) {
+      console.log("y");
+      console.log(y);
+      const handleRange = this.width - this.height;
+      const cornerRadius = this.height / 2;
+      y = -1 * (y - bounds.top) + this.width - cornerRadius;
+      let dist = Math.max(Math.min(y, handleRange), 0);
+      return Math.round((100 / handleRange) * dist);
+    } else {
+      const handleRange = this.width - this.height;
+      const cornerRadius = this.height / 2;
+      x = x - (bounds.left + cornerRadius);
+      let dist = Math.max(Math.min(x, handleRange), 0);
+      return Math.round((100 / handleRange) * dist);
+    }
   }
 
   /**
