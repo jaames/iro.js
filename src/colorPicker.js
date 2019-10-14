@@ -229,6 +229,8 @@ class ColorPicker extends Component {
 ColorPicker.pluginHooks = {};
 
 ColorPicker.defaultProps = {
+  layout: null,
+  layoutDirection: 'horizontal',
   width: 300,
   height: 300,
   handleRadius: 8,
@@ -245,7 +247,6 @@ ColorPicker.defaultProps = {
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
-  layout: null,
 }
 
 export default createWidget(ColorPicker);

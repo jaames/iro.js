@@ -12,6 +12,7 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   wheelLightness: true,
   wheelAngle: 270,
   wheelDirection: 'anticlockwise',
+  layoutDirection: 'vertical',
   layout: [
     {
       component: iro.ui.Wheel,

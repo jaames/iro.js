@@ -9,6 +9,7 @@ export default class IroSlider extends IroComponent {
 
   renderGradient(props) {
     const hsv = props.color.hsv;
+    const isVertical = props.layoutDirection === 'vertical';
     let stops = [];
 
     switch (props.sliderType) {
@@ -41,27 +42,17 @@ export default class IroSlider extends IroComponent {
         break;
     }
 
-    if (props.vertical) {
-      return (
-        <linearGradient id={ this.uid } x1="0%" x2="0%" y1="100%" y2="0%">
-          {stops.map(stop => (
-            <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
-          ))}
-        </linearGradient>
-      );
-    } else {
-      return (
-        <linearGradient id={ this.uid }>
-          {stops.map(stop => (
-            <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
-          ))}
-        </linearGradient>
-      );
-    }
+    return (
+      <linearGradient id={ this.uid } x1="0%" y1={ isVertical ? '100%' : '0%' } x2={ isVertical ? '0%' : '100%' } y2="0%">
+        {stops.map(stop => (
+          <stop offset={`${ stop.offset }%`} stop-color={ stop.color } />
+        ))}
+      </linearGradient>
+    );
   }
 
   render(props) {
-    let { width, sliderHeight, borderWidth, handleRadius, vertical } = props;
+    let { width, sliderHeight, borderWidth, handleRadius, layoutDirection } = props;
     sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
     this.width = width;
     this.height = sliderHeight;
@@ -83,7 +74,7 @@ export default class IroSlider extends IroComponent {
         break;
     }
 
-    if (vertical) {
+    if (layoutDirection === 'vertical') {
       return (
         <svg
           class="iro__slider"
@@ -159,7 +150,7 @@ export default class IroSlider extends IroComponent {
   }
 
   getValueFromPoint(x, y, bounds) {
-    if (this.props.vertical) {
+    if (this.props.layoutDirection === 'vertical') {
       console.log("y");
       console.log(y);
       const handleRange = this.width - this.height;
