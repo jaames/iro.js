@@ -59,6 +59,7 @@ export default class IroSlider extends IroComponent {
     const cornerRadius = sliderHeight / 2;
     const range = width - cornerRadius * 2
     const hsv = props.color.hsv;
+    const isVertical = props.layoutDirection === 'vertical';
 
     let sliderValue;
     switch (props.sliderType) {
@@ -78,8 +79,8 @@ export default class IroSlider extends IroComponent {
       return (
         <svg
           class="iro__slider"
-          width={ sliderHeight }
-          height={ width }
+          width={ isVertical ? sliderHeight : width }
+          height={ isVertical ? width : sliderHeight }
           style= {{
             marginTop: props.sliderMargin,
             overflow: 'visible',
@@ -150,21 +151,16 @@ export default class IroSlider extends IroComponent {
   }
 
   getValueFromPoint(x, y, bounds) {
+    const handleRange = this.width - this.height;
+    const cornerRadius = this.height / 2;
+    let handlePos;
     if (this.props.layoutDirection === 'vertical') {
-      console.log("y");
-      console.log(y);
-      const handleRange = this.width - this.height;
-      const cornerRadius = this.height / 2;
-      y = -1 * (y - bounds.top) + this.width - cornerRadius;
-      let dist = Math.max(Math.min(y, handleRange), 0);
-      return Math.round((100 / handleRange) * dist);
+      handlePos = -1 * (y - bounds.top) + this.width - cornerRadius;
     } else {
-      const handleRange = this.width - this.height;
-      const cornerRadius = this.height / 2;
-      x = x - (bounds.left + cornerRadius);
-      let dist = Math.max(Math.min(x, handleRange), 0);
-      return Math.round((100 / handleRange) * dist);
+      handlePos - (bounds.left + cornerRadius);
     }
+    handlePos = Math.max(Math.min(handlePos, handleRange), 0);
+    return Math.round((100 / handleRange) * handlePos);
   }
 
   /**

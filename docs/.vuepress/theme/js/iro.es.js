@@ -1365,6 +1365,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
 
   IroSlider.prototype.renderGradient = function renderGradient (props) {
     var hsv = props.color.hsv;
+    var isVertical = props.layoutDirection === 'vertical';
     var stops = [];
 
     switch (props.sliderType) {
@@ -1396,23 +1397,13 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
         break;
     }
 
-    if (props.vertical) {
-      return (
-        h( 'linearGradient', { id: this.uid, x1: "0%", x2: "0%", y1: "100%", y2: "0%" },
-          stops.map(function (stop) { return (
-            h( 'stop', { offset: ((stop.offset) + "%"), 'stop-color': stop.color })
-          ); })
-        )
-      );
-    } else {
-      return (
-        h( 'linearGradient', { id: this.uid },
-          stops.map(function (stop) { return (
-            h( 'stop', { offset: ((stop.offset) + "%"), 'stop-color': stop.color })
-          ); })
-        )
-      );
-    }
+    return (
+      h( 'linearGradient', { id: this.uid, x1: "0%", y1: isVertical ? '100%' : '0%', x2: isVertical ? '0%' : '100%', y2: "0%" },
+        stops.map(function (stop) { return (
+          h( 'stop', { offset: ((stop.offset) + "%"), 'stop-color': stop.color })
+        ); })
+      )
+    );
   };
 
   IroSlider.prototype.render = function render$$1 (props) {
@@ -1420,13 +1411,14 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
     var sliderHeight = props.sliderHeight;
     var borderWidth = props.borderWidth;
     var handleRadius = props.handleRadius;
-    var vertical = props.vertical;
+    var layoutDirection = props.layoutDirection;
     sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
     this.width = width;
     this.height = sliderHeight;
     var cornerRadius = sliderHeight / 2;
     var range = width - cornerRadius * 2;
     var hsv = props.color.hsv;
+    var isVertical = props.layoutDirection === 'vertical';
 
     var sliderValue;
     switch (props.sliderType) {
@@ -1442,10 +1434,10 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
         break;
     }
 
-    if (vertical) {
+    if (layoutDirection === 'vertical') {
       return (
         h( 'svg', {
-          class: "iro__slider", width: sliderHeight, height: width, style: {
+          class: "iro__slider", width: isVertical ? sliderHeight : width, height: isVertical ? width : sliderHeight, style: {
             marginTop: props.sliderMargin,
             overflow: 'visible',
             display: 'block'
@@ -1480,21 +1472,16 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
   };
 
   IroSlider.prototype.getValueFromPoint = function getValueFromPoint (x, y, bounds) {
-    if (this.props.vertical) {
-      console.log("y");
-      console.log(y);
-      var handleRange = this.width - this.height;
-      var cornerRadius = this.height / 2;
-      y = -1 * (y - bounds.top) + this.width - cornerRadius;
-      var dist = Math.max(Math.min(y, handleRange), 0);
-      return Math.round((100 / handleRange) * dist);
+    var handleRange = this.width - this.height;
+    var cornerRadius = this.height / 2;
+    var handlePos;
+    if (this.props.layoutDirection === 'vertical') {
+      handlePos = -1 * (y - bounds.top) + this.width - cornerRadius;
     } else {
-      var handleRange$1 = this.width - this.height;
-      var cornerRadius$1 = this.height / 2;
-      x = x - (bounds.left + cornerRadius$1);
-      var dist$1 = Math.max(Math.min(x, handleRange$1), 0);
-      return Math.round((100 / handleRange$1) * dist$1);
+      handlePos - (bounds.left + cornerRadius);
     }
+    handlePos = Math.max(Math.min(handlePos, handleRange), 0);
+    return Math.round((100 / handleRange) * handlePos);
   };
 
   /**
@@ -1812,6 +1799,8 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
 ColorPicker.pluginHooks = {};
 
 ColorPicker.defaultProps = {
+  layout: null,
+  layoutDirection: 'horizontal',
   width: 300,
   height: 300,
   handleRadius: 8,
@@ -1828,7 +1817,6 @@ ColorPicker.defaultProps = {
   sliderHeight: null,
   sliderMargin: 12,
   padding: 6,
-  layout: null,
 };
 
 var ColorPicker$1 = createWidget(ColorPicker);

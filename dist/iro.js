@@ -5,7 +5,6 @@
  * github.com/jaames/iro.js
  */
 
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -710,7 +709,6 @@
 	function render(vnode, parent, merge) {
 	  return diff(merge, vnode, {}, false, parent, false);
 	}
-	//# sourceMappingURL=preact.mjs.map
 
 	/**
 	 * @desc listen to one or more events on an element
@@ -1426,6 +1424,7 @@
 	    var cornerRadius = sliderHeight / 2;
 	    var range = width - cornerRadius * 2;
 	    var hsv = props.color.hsv;
+	    var isVertical = props.layoutDirection === 'vertical';
 
 	    var sliderValue;
 	    switch (props.sliderType) {
@@ -1444,7 +1443,7 @@
 	    if (layoutDirection === 'vertical') {
 	      return (
 	        h( 'svg', {
-	          class: "iro__slider", width: sliderHeight, height: width, style: {
+	          class: "iro__slider", width: isVertical ? sliderHeight : width, height: isVertical ? width : sliderHeight, style: {
 	            marginTop: props.sliderMargin,
 	            overflow: 'visible',
 	            display: 'block'
@@ -1479,21 +1478,16 @@
 	  };
 
 	  IroSlider.prototype.getValueFromPoint = function getValueFromPoint (x, y, bounds) {
+	    var handleRange = this.width - this.height;
+	    var cornerRadius = this.height / 2;
+	    var handlePos;
 	    if (this.props.layoutDirection === 'vertical') {
-	      console.log("y");
-	      console.log(y);
-	      var handleRange = this.width - this.height;
-	      var cornerRadius = this.height / 2;
-	      y = -1 * (y - bounds.top) + this.width - cornerRadius;
-	      var dist = Math.max(Math.min(y, handleRange), 0);
-	      return Math.round((100 / handleRange) * dist);
+	      handlePos = -1 * (y - bounds.top) + this.width - cornerRadius;
 	    } else {
-	      var handleRange$1 = this.width - this.height;
-	      var cornerRadius$1 = this.height / 2;
-	      x = x - (bounds.left + cornerRadius$1);
-	      var dist$1 = Math.max(Math.min(x, handleRange$1), 0);
-	      return Math.round((100 / handleRange$1) * dist$1);
+	      handlePos - (bounds.left + cornerRadius);
 	    }
+	    handlePos = Math.max(Math.min(handlePos, handleRange), 0);
+	    return Math.round((100 / handleRange) * handlePos);
 	  };
 
 	  /**
