@@ -789,17 +789,17 @@
 	        switch (e.type) {
 	            case EventType.MouseDown:
 	            case EventType.TouchStart:
-	                listen(document, [EventType.MouseMove, EventType.MouseMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
+	                listen(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
 	                this.handleInput(x, y, bounds, EventResult.start);
 	                break;
 	            case EventType.MouseMove:
 	            case EventType.TouchMove:
 	                this.handleInput(x, y, bounds, EventResult.move);
 	                break;
-	            case EventType.MouseMove:
+	            case EventType.MouseUp:
 	            case EventType.TouchEnd:
 	                this.handleInput(x, y, bounds, EventResult.end);
-	                unlisten(document, [EventType.MouseMove, EventType.MouseMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
+	                unlisten(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
 	                break;
 	        }
 	    };
