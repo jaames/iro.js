@@ -1,5 +1,9 @@
-import IroComponent, { EventResult } from './component';
-export default abstract class IroWheel extends IroComponent {
+import { IroComponent, IroComponentProps, EventResult } from './component';
+interface IroWheelProps extends IroComponentProps {
+}
+interface IroWheelState {
+}
+export declare class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
     private transformAngle;
     /**
       * @desc handles mouse input for this component
@@ -11,3 +15,4 @@ export default abstract class IroWheel extends IroComponent {
     handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult): void;
     render(props: any): JSX.Element;
 }
+export {};

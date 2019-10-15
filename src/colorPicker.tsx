@@ -1,34 +1,87 @@
 import { h, Component } from 'preact';
 
-import IroWheel from './ui/wheel';
-import IroSlider from './ui/slider';
-import IroColor from './color';
+import { IroWheel } from './ui/wheel';
+import { IroSlider } from './ui/slider';
+import { IroColor, IroColorValue } from './color';
 import { createWidget } from './util/createWidget';
 
-export interface Props {
-  value: string,
-  color: any,
-  optionalValue?: string
+interface HandleOrigin {
+  x: number;
+  y: number;
 }
 
-export interface State {
-  width: any,
-  color: any
+interface ColorPickerEvents {
+  [key: string]: Function[];
 }
 
-class ColorPicker extends Component<Props, State> {
-  private events: object;
-  private deferredEvents: object;
-  private colorUpdateActive: boolean;
-  private colorUpdateSrc: string;
-  public color: any;
-  public layout: Array<any>;
-  public static pluginHooks: any;
-  public defaultProps: object;
+interface ColorDeferredEvents {
+  [key: string]: Array<any>;
+}
+
+interface ColorPickerLayoutDefinition {
+  component: Component;
+}
+
+
+export interface ColorPickerProps {
+  width: number,
+  height: number,
+  handleRadius: number,
+  handleSvg: string,
+  handleOrigin: HandleOrigin;
+  color: IroColorValue
+  borderColor: string,
+  borderWidth: number,
+  display: string,
+  id: null,
+  wheelLightness: boolean,
+  wheelAngle: number,
+  wheelDirection: string,
+  sliderHeight: number,
+  sliderMargin: number,
+  padding: number,
+  layout: any
+}
+
+export interface ColorPickerState extends ColorPickerProps {
+  color: IroColor
+}
+
+class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
+
+
+  public static pluginHooks = {};
+  public static defaultProps = {
+    width: 300,
+    height: 300,
+    handleRadius: 8,
+    handleSvg: null,
+    handleOrigin: {x: 0, y: 0},
+    color: '#fff',
+    borderColor: '#fff',
+    borderWidth: 0,
+    display: 'block',
+    id: null,
+    wheelLightness: true,
+    wheelAngle: 0,
+    wheelDirection: 'anticlockwise',
+    sliderHeight: null,
+    sliderMargin: 12,
+    padding: 6,
+    layout: null
+  }
+
   public el: any;
   public id: string;
+  public color: IroColor;
+  public layout: Array<any>;
 
-  constructor(props: any) {
+  private events: ColorPickerEvents;
+  private deferredEvents: ColorDeferredEvents;
+  private colorUpdateActive: boolean;
+  private colorUpdateSrc: string;
+
+  constructor(props: ColorPickerProps) {
     super(props, {});
     this.emitHook('init:before');
     this.events = {};
@@ -39,14 +92,14 @@ class ColorPicker extends Component<Props, State> {
     this.color = new IroColor(props.color);
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Whenever the color changes, update the color wheel
-    this.color._onChange = this.updateColor.bind(this);
+    this.color.onChange = this.updateColor.bind(this);
     // Pass all the props into the component's state,
     // Except we want to add the color object and make sure that refs aren't passed down to children
-    this.state = {
+    this.state = ({
       ...props,
       color: this.color,
       ref: undefined,
-    };
+    } as ColorPickerState);
     this.emitHook('init:state');
 
     if (props.layout) {
@@ -132,7 +185,7 @@ class ColorPicker extends Component<Props, State> {
    * @desc Resize the color picker
    * @param {Number} width
    */
-  public resize(width: any) {
+  public resize(width: number) {
     this.setState({width}, ()=>{});
   }
 
@@ -151,7 +204,7 @@ class ColorPicker extends Component<Props, State> {
    * @param {Function} callback
    */
   public static addHook(hookType: string, callback: () => void) {
-    const pluginHooks = ColorPicker.pluginHooks;
+    const pluginHooks = IroColorPicker.pluginHooks;
     (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
   }
 
@@ -161,7 +214,7 @@ class ColorPicker extends Component<Props, State> {
    * @param {String} hookType The type of hook event to emit
    */
   private emitHook(hookType: string, ...args: any) {
-    const callbackList = ColorPicker.pluginHooks[hookType] || [];
+    const callbackList = IroColorPicker.pluginHooks[hookType] || [];
     for (let i = 0; i < callbackList.length; i++) {
       callbackList[i].apply(this, args); 
     }
@@ -248,24 +301,4 @@ class ColorPicker extends Component<Props, State> {
   }
 }
 
-ColorPicker.pluginHooks = {
-  width: 300,
-  height: 300,
-  handleRadius: 8,
-  handleSvg: null,
-  handleOrigin: {x: 0, y: 0},
-  color: '#fff',
-  borderColor: '#fff',
-  borderWidth: 0,
-  display: 'block',
-  id: null,
-  wheelLightness: true,
-  wheelAngle: 0,
-  wheelDirection: 'anticlockwise',
-  sliderHeight: null,
-  sliderMargin: 12,
-  padding: 6,
-  layout: null
-}
-
-export default createWidget(ColorPicker);
+export const IroColorPickerWidget = createWidget(IroColorPicker);

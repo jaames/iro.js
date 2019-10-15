@@ -1,18 +1,18 @@
 import { h } from 'preact';
 import { resolveUrl } from '../util/svg';
 
-function IroHandle(props: any) {
+export function IroHandle(props: any) {
   const radius = props.r;
   const url = props.url;
 
   return (
-    <svg class="iro__handle" x={ props.x } y={ props.y } style={{ overflow: 'visible' }}>
+    <svg className="iro__handle" x={ props.x } y={ props.y } style={{ overflow: 'visible' }}>
       {url && (
         <use xlinkHref={resolveUrl(url)} { ...props.origin }/>
       )}
       {!url && (
         <circle 
-          class="iro__handle__inner"
+          className="iro__handle__inner"
           r={ radius }
           fill="none"
           stroke-width={ 2 }
@@ -21,7 +21,7 @@ function IroHandle(props: any) {
       )}
       {!url && (
         <circle 
-          class="iro__handle__outer" 
+          className="iro__handle__outer" 
           r={ radius - 2 }
           fill="none"
           stroke-width={ 2 }
@@ -39,5 +39,3 @@ IroHandle.defaultProps = {
   url: null,
   origin: {x: 0, y: 0}
 };
-
-export default IroHandle;

@@ -705,36 +705,23 @@ function render(vnode, parent, merge) {
 }
 
 /**
- * @desc listen to one or more events on an element
- * @param {Element} el target element
- * @param {Array} eventList the events to listen to
- * @param {Function} callback
- * @param {Object} params params to pass to addEventListener
+ * Listen to one or more events on an element
  */
 function listen(el, eventList, callback, params) {
-    if ( params === void 0 ) params = {};
-
     for (var i = 0; i < eventList.length; i++) {
         el.addEventListener(eventList[i], callback, params);
     }
 }
 /**
- * @desc remove an event listener on an element
- * @param {Element} el target element
- * @param {Array} eventList the events to remove
- * @param {Function} callback
- * @param {Object} params params to pass to removeEventListener
+ * Remove an event listener on an element
  */
 function unlisten(el, eventList, callback, params) {
-    if ( params === void 0 ) params = {};
-
     for (var i = 0; i < eventList.length; i++) {
         el.removeEventListener(eventList[i], callback, params);
     }
 }
 /**
- * @desc call fn callback when the page document has fully loaded
- * @param {Function} callback
+ * Call fn callback when the page document has fully loaded
  */
 function onDocumentReady(callback) {
     if (document.readyState !== 'loading') {
@@ -745,15 +732,15 @@ function onDocumentReady(callback) {
     }
 }
 
-var Event;
-(function (Event) {
-    Event["mouseDown"] = "mousedown";
-    Event["mouseMove"] = "mousemove";
-    Event["mouseUp"] = "mouseup";
-    Event["touchStart"] = "touchstart";
-    Event["touchMove"] = "touchstart";
-    Event["TouchEnd"] = "touchend";
-})(Event || (Event = {}));
+var EventType;
+(function (EventType) {
+    EventType["MouseDown"] = "mousedown";
+    EventType["MouseMove"] = "mousemove";
+    EventType["MouseUp"] = "mouseup";
+    EventType["TouchStart"] = "touchstart";
+    EventType["TouchMove"] = "touchstart";
+    EventType["TouchEnd"] = "touchend";
+})(EventType || (EventType = {}));
 var EventResult;
 (function (EventResult) {
     EventResult[EventResult["start"] = 0] = "start";
@@ -766,7 +753,7 @@ var EventResult;
  */
 var IroComponent = /*@__PURE__*/(function (Component$$1) {
     function IroComponent(props) {
-        Component$$1.call(this, props, {});
+        Component$$1.call(this, props);
         // Generate unique ID for the component
         // This can be used to generate unique IDs for gradients, etc
         this.uid = (Math.random() + 1).toString(36).substring(5);
@@ -776,10 +763,10 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
     IroComponent.prototype = Object.create( Component$$1 && Component$$1.prototype );
     IroComponent.prototype.constructor = IroComponent;
     IroComponent.prototype.componentDidMount = function componentDidMount () {
-        listen(this.base, [Event.mouseDown, Event.touchStart], this, { passive: false });
+        listen(this.base, [EventType.MouseDown, EventType.TouchStart], this, { passive: false });
     };
     IroComponent.prototype.componentWillUnmount = function componentWillUnmount () {
-        unlisten(this.base, [Event.mouseDown, Event.touchStart], this);
+        unlisten(this.base, [EventType.MouseDown, EventType.TouchStart], this);
     };
     // More info on handleEvent:
     // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
@@ -788,25 +775,25 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
         e.preventDefault();
         // Detect if the event is a touch event by checking if it has the `touches` property
         // If it is a touch event, use the first touch input
-        var point = e instanceof TouchEvent ? e.changedTouches[0] : e;
+        var point = e.touches ? e.changedTouches[0] : e;
         var x = point.clientX;
         var y = point.clientY;
         // Get the screen position of the component
         var bounds = this.base.getBoundingClientRect();
         switch (e.type) {
-            case Event.mouseDown:
-            case Event.touchStart:
-                listen(document, [Event.mouseMove, Event.mouseMove, Event.mouseUp, Event.TouchEnd], this, { passive: false });
+            case EventType.MouseDown:
+            case EventType.TouchStart:
+                listen(document, [EventType.MouseMove, EventType.MouseMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
                 this.handleInput(x, y, bounds, EventResult.start);
                 break;
-            case Event.mouseMove:
-            case Event.touchMove:
+            case EventType.MouseMove:
+            case EventType.TouchMove:
                 this.handleInput(x, y, bounds, EventResult.move);
                 break;
-            case Event.mouseMove:
-            case Event.TouchEnd:
+            case EventType.MouseMove:
+            case EventType.TouchEnd:
                 this.handleInput(x, y, bounds, EventResult.end);
-                unlisten(document, [Event.mouseMove, Event.mouseMove, Event.mouseUp, Event.TouchEnd], this, { passive: false });
+                unlisten(document, [EventType.MouseMove, EventType.MouseMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
                 break;
         }
     };
@@ -857,10 +844,10 @@ function createArcPath(cx, cy, radius, startAngle, endAngle) {
 function IroHandle(props) {
     var radius = props.r;
     var url = props.url;
-    return (h("svg", { class: "iro__handle", x: props.x, y: props.y, style: { overflow: 'visible' } },
+    return (h("svg", { className: "iro__handle", x: props.x, y: props.y, style: { overflow: 'visible' } },
         url && (h("use", Object.assign({ xlinkHref: resolveUrl(url) }, props.origin))),
-        !url && (h("circle", { class: "iro__handle__inner", r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
-        !url && (h("circle", { class: "iro__handle__outer", r: radius - 2, fill: "none", "stroke-width": 2, stroke: "#fff" }))));
+        !url && (h("circle", { className: "iro__handle__inner", r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
+        !url && (h("circle", { className: "iro__handle__outer", r: radius - 2, fill: "none", "stroke-width": 2, stroke: "#fff" }))));
 }
 IroHandle.defaultProps = {
     x: 0,
@@ -952,10 +939,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
 }(IroComponent));
 
 /**
- * @desc Parse a css unit string - either regular int or a percentage number
- * @param {String} str input string
- * @param {String} max max number for converting percentages
- * @returns {Number}
+ * Parse a css unit string - either regular int or a percentage number
  */
 function parseUnit(str, max) {
     var isPercentage = str.indexOf('%') > -1;
@@ -963,17 +947,13 @@ function parseUnit(str, max) {
     return isPercentage ? (max / 100) * num : num;
 }
 /**
- * @desc Parse hex str to an int
- * @param {String} str input string
- * @returns {Number}
+ * Parse hex str to an int
  */
 function parseHexInt(str) {
     return parseInt(str, 16);
 }
 /**
- * @desc Convert into to 2-digit hex
- * @param {Number} int input number
- * @returns {String}
+ * Convert into to 2-digit hex
  */
 function intToHex(int) {
     return int.toString(16).padStart(2, '0');
@@ -1003,9 +983,18 @@ var REGEX_HEX_3 = new RegExp(("" + HEX_START + HEX_INT_SINGLE + HEX_INT_SINGLE +
 var REGEX_HEX_4 = new RegExp(("" + HEX_START + HEX_INT_SINGLE + HEX_INT_SINGLE + HEX_INT_SINGLE + HEX_INT_SINGLE + "$"));
 var REGEX_HEX_6 = new RegExp(("" + HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + "$"));
 var REGEX_HEX_8 = new RegExp(("" + HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + "$"));
-var Color = function Color(value) {
+function instanceOfHsv(value) {
+    return ('h' in value) && ('s' in value) && ('v' in value);
+}
+function instanceOfRgb(value) {
+    return ('r' in value) && ('g' in value) && ('b' in value);
+}
+function instanceOfHsl(value) {
+    return ('h' in value) && ('s' in value) && ('l' in value);
+}
+var IroColor = function IroColor(value, onChange) {
     // The watch callback function for this Color will be stored here
-    this._onChange = false;
+    this.onChange = onChange;
     // The default Color value
     this.value = { h: 0, s: 0, v: 0, a: 1 };
     if (value)
@@ -1015,9 +1004,9 @@ var Color = function Color(value) {
 var prototypeAccessors = { hsv: { configurable: true },rgb: { configurable: true },hsl: { configurable: true },rgbString: { configurable: true },hexString: { configurable: true },hslString: { configurable: true } };
 /**
   * @desc set the Color from any valid value
-  * @param {Object | String | Color} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+  * @param {Object | String | IroColor} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
 */
-Color.prototype.set = function set (value) {
+IroColor.prototype.set = function set (value) {
     var isString = typeof value === 'string';
     var isObject = typeof value === 'object';
     if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value))) {
@@ -1029,16 +1018,16 @@ Color.prototype.set = function set (value) {
     else if ((isString) && (/^hsla?/.test(value))) {
         this.hslString = value;
     }
-    else if ((isObject) && (value instanceof Color)) {
+    else if ((isObject) && (value instanceof IroColor)) {
         this.hsv = value.hsv;
     }
-    else if ((isObject) && ('r' in value) && ('g' in value) && ('b' in value)) {
+    else if ((isObject) && instanceOfRgb(value)) {
         this.rgb = value;
     }
-    else if ((isObject) && ('h' in value) && ('s' in value) && ('v' in value)) {
+    else if ((isObject) && instanceOfHsv(value)) {
         this.hsv = value;
     }
-    else if ((isObject) && ('h' in value) && ('s' in value) && ('l' in value)) {
+    else if ((isObject) && instanceOfHsl(value)) {
         this.hsl = value;
     }
     else {
@@ -1051,24 +1040,24 @@ Color.prototype.set = function set (value) {
   * @param {String} channel - individual channel to set, for example if model = hsl, chanel = h | s | l
   * @param {Number} value - new value for the channel
 */
-Color.prototype.setChannel = function setChannel (format, channel, value) {
+IroColor.prototype.setChannel = function setChannel (format, channel, value) {
         var obj;
 
     this[format] = Object.assign({}, this[format], ( obj = {}, obj[channel] = value, obj ));
 };
 /**
   * @desc make new Color instance with the same value as this one
-  * @return {Color}
+  * @return {IroColor}
 */
-Color.prototype.clone = function clone () {
-    return new Color(this);
+IroColor.prototype.clone = function clone () {
+    return new IroColor(this);
 };
 /**
   * @desc convert hsv object to rgb
   * @param {Object} hsv hsv object
   * @return {Object} rgb object
 */
-Color.hsvToRgb = function hsvToRgb (hsv) {
+IroColor.hsvToRgb = function hsvToRgb (hsv) {
     var h = hsv.h / 60;
     var s = hsv.s / 100;
     var v = hsv.v / 100;
@@ -1092,7 +1081,7 @@ Color.hsvToRgb = function hsvToRgb (hsv) {
   * @param {Object} rgb - rgb object
   * @return {Object} hsv object
 */
-Color.rgbToHsv = function rgbToHsv (rgb) {
+IroColor.rgbToHsv = function rgbToHsv (rgb) {
     var r = rgb.r / 255;
     var g = rgb.g / 255;
     var b = rgb.b / 255;
@@ -1127,7 +1116,7 @@ Color.rgbToHsv = function rgbToHsv (rgb) {
   * @param {Object} hsv - hsv object
   * @return {Object} hsl object
 */
-Color.hsvToHsl = function hsvToHsl (hsv) {
+IroColor.hsvToHsl = function hsvToHsl (hsv) {
     var s = hsv.s / 100;
     var v = hsv.v / 100;
     var l = (2 - s) * v;
@@ -1145,7 +1134,7 @@ Color.hsvToHsl = function hsvToHsl (hsv) {
   * @param {Object} hsl - hsl object
   * @return {Object} hsv object
 */
-Color.hslToHsv = function hslToHsv (hsl) {
+IroColor.hslToHsv = function hslToHsv (hsl) {
     var l = hsl.l * 2;
     var s = (hsl.s * ((l <= 100) ? l : 200 - l)) / 100;
     // Avoid division by zero when l + s is near 0
@@ -1166,12 +1155,12 @@ prototypeAccessors.hsv.set = function (newValue) {
     newValue = Object.assign({}, oldValue, newValue);
     // If this Color is being watched for changes we need to compare the new and old values to check the difference
     // Otherwise we can just be lazy
-    if (this._onChange) {
+    if (this.onChange) {
         // Compute changed values
         var changes = {
-            h: 0,
-            v: 0,
-            s: 0
+            h: false,
+            v: false,
+            s: false
         };
         for (var key in oldValue) {
             changes[key] = newValue[key] != oldValue[key];
@@ -1180,14 +1169,14 @@ prototypeAccessors.hsv.set = function (newValue) {
         this.value = newValue;
         // If the value has changed, call hook callback
         if (changes.h || changes.s || changes.v || changes.a)
-            { this._onChange(this, changes); }
+            { this.onChange(this, changes); }
     }
     else {
         this.value = newValue;
     }
 };
 prototypeAccessors.rgb.get = function () {
-    var ref = Color.hsvToRgb(this.value);
+    var ref = IroColor.hsvToRgb(this.value);
         var r = ref.r;
         var g = ref.g;
         var b = ref.b;
@@ -1198,10 +1187,10 @@ prototypeAccessors.rgb.get = function () {
     };
 };
 prototypeAccessors.rgb.set = function (value) {
-    this.hsv = Object.assign({}, Color.rgbToHsv(value));
+    this.hsv = Object.assign({}, IroColor.rgbToHsv(value));
 };
 prototypeAccessors.hsl.get = function () {
-    var ref = Color.hsvToHsl(this.value);
+    var ref = IroColor.hsvToHsl(this.value);
         var h = ref.h;
         var s = ref.s;
         var l = ref.l;
@@ -1212,7 +1201,7 @@ prototypeAccessors.hsl.get = function () {
     };
 };
 prototypeAccessors.hsl.set = function (value) {
-    this.hsv = Object.assign({}, Color.hslToHsv(value));
+    this.hsv = Object.assign({}, IroColor.hslToHsv(value));
 };
 prototypeAccessors.rgbString.get = function () {
     var rgb = this.rgb;
@@ -1301,7 +1290,7 @@ prototypeAccessors.hslString.set = function (value) {
     }
 };
 
-Object.defineProperties( Color.prototype, prototypeAccessors );
+Object.defineProperties( IroColor.prototype, prototypeAccessors );
 
 var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
     function IroSlider () {
@@ -1327,8 +1316,8 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
                     { offset: '100', color: '#f00' } ];
                 break;
             case 'saturation':
-                var noSat = Color.hsvToHsl({ h: hsv.h, s: 0, v: hsv.v });
-                var fullSat = Color.hsvToHsl({ h: hsv.h, s: 100, v: hsv.v });
+                var noSat = IroColor.hsvToHsl({ h: hsv.h, s: 0, v: hsv.v });
+                var fullSat = IroColor.hsvToHsl({ h: hsv.h, s: 100, v: hsv.v });
                 stops = [
                     { offset: '0', color: ("hsl(" + (noSat.h) + ", " + (noSat.s) + "%, " + (noSat.l) + "%)") },
                     { offset: '100', color: ("hsl(" + (fullSat.h) + ", " + (fullSat.s) + "%, " + (fullSat.l) + "%)") }
@@ -1336,7 +1325,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
                 break;
             case 'value':
             default:
-                var hsl = Color.hsvToHsl({ h: hsv.h, s: hsv.s, v: 100 });
+                var hsl = IroColor.hsvToHsl({ h: hsv.h, s: hsv.s, v: 100 });
                 stops = [
                     { offset: '0', color: '#000' },
                     { offset: '100', color: ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)") }
@@ -1375,7 +1364,7 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
                 display: 'block'
             } },
             h("defs", null, this.renderGradient(props)),
-            h("rect", { class: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, "stroke-width": borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
+            h("rect", { className: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, "stroke-width": borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
             h(IroHandle, { r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cornerRadius + (sliderValue / 100) * range, y: sliderHeight / 2 })));
     };
     IroSlider.prototype.getValueFromPoint = function getValueFromPoint (x, y, ref) {
@@ -1451,8 +1440,8 @@ function createWidget(widgetComponent) {
     return widgetFactory;
 }
 
-var ColorPicker = /*@__PURE__*/(function (Component$$1) {
-    function ColorPicker(props) {
+var IroColorPicker = /*@__PURE__*/(function (Component$$1) {
+    function IroColorPicker(props) {
         Component$$1.call(this, props, {});
         this.emitHook('init:before');
         this.events = {};
@@ -1460,10 +1449,10 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
         this.colorUpdateActive = false;
         this.colorUpdateSrc = null;
         this.id = props.id;
-        this.color = new Color(props.color);
+        this.color = new IroColor(props.color);
         this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
         // Whenever the color changes, update the color wheel
-        this.color._onChange = this.updateColor.bind(this);
+        this.color.onChange = this.updateColor.bind(this);
         // Pass all the props into the component's state,
         // Except we want to add the color object and make sure that refs aren't passed down to children
         this.state = Object.assign({}, props,
@@ -1481,16 +1470,16 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
         this.emitHook('init:after');
     }
 
-    if ( Component$$1 ) ColorPicker.__proto__ = Component$$1;
-    ColorPicker.prototype = Object.create( Component$$1 && Component$$1.prototype );
-    ColorPicker.prototype.constructor = ColorPicker;
+    if ( Component$$1 ) IroColorPicker.__proto__ = Component$$1;
+    IroColorPicker.prototype = Object.create( Component$$1 && Component$$1.prototype );
+    IroColorPicker.prototype.constructor = IroColorPicker;
     // Public ColorPicker events API
     /**
      * @desc Set a callback function for an event
      * @param {String | Array} eventList event(s) to listen to
      * @param {Function} callback
      */
-    ColorPicker.prototype.on = function on (eventList, callback) {
+    IroColorPicker.prototype.on = function on (eventList, callback) {
         var this$1 = this;
 
         var events = this.events;
@@ -1517,7 +1506,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @param {String | Array} eventList The name of the event
      * @param {Function} callback
      */
-    ColorPicker.prototype.off = function off (eventList, callback) {
+    IroColorPicker.prototype.off = function off (eventList, callback) {
         var this$1 = this;
 
         (!Array.isArray(eventList) ? [eventList] : eventList).forEach(function (eventType) {
@@ -1532,7 +1521,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @param {String} eventType The name of the event to emit
      * @param {Array} args array of args to pass to callbacks
      */
-    ColorPicker.prototype.emit = function emit (eventType) {
+    IroColorPicker.prototype.emit = function emit (eventType) {
         var ref;
 
         var args = [], len = arguments.length - 1;
@@ -1549,7 +1538,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @param {String} eventType The name of the event to emit
      * @param {Array} args array of args to pass to callbacks
      */
-    ColorPicker.prototype.deferredEmit = function deferredEmit (eventType) {
+    IroColorPicker.prototype.deferredEmit = function deferredEmit (eventType) {
         var ref;
 
         var args = [], len = arguments.length - 1;
@@ -1563,13 +1552,13 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @desc Resize the color picker
      * @param {Number} width
      */
-    ColorPicker.prototype.resize = function resize (width) {
+    IroColorPicker.prototype.resize = function resize (width) {
         this.setState({ width: width }, function () { });
     };
     /**
      * @desc Reset the color picker to the initial color provided in the color picker options
      */
-    ColorPicker.prototype.reset = function reset () {
+    IroColorPicker.prototype.reset = function reset () {
         this.color.set(this.props.color);
     };
     // Plugin hooks API
@@ -1578,8 +1567,8 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @param {String} hookType The name of the hook to listen to
      * @param {Function} callback
      */
-    ColorPicker.addHook = function addHook (hookType, callback) {
-        var pluginHooks = ColorPicker.pluginHooks;
+    IroColorPicker.addHook = function addHook (hookType, callback) {
+        var pluginHooks = IroColorPicker.pluginHooks;
         (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
     };
     /**
@@ -1587,11 +1576,11 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @access private
      * @param {String} hookType The type of hook event to emit
      */
-    ColorPicker.prototype.emitHook = function emitHook (hookType) {
+    IroColorPicker.prototype.emitHook = function emitHook (hookType) {
         var args = [], len = arguments.length - 1;
         while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
 
-        var callbackList = ColorPicker.pluginHooks[hookType] || [];
+        var callbackList = IroColorPicker.pluginHooks[hookType] || [];
         for (var i = 0; i < callbackList.length; i++) {
             callbackList[i].apply(this, args);
         }
@@ -1602,7 +1591,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @access private
      * @param {Element} container the container element for this ColorPicker instance
      */
-    ColorPicker.prototype.onMount = function onMount (container) {
+    IroColorPicker.prototype.onMount = function onMount (container) {
         this.el = container;
         this.deferredEmit('mount', this);
     };
@@ -1612,7 +1601,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @param {IroColor} color current color
      * @param {Object} changes shows which h,s,v color channels changed
      */
-    ColorPicker.prototype.updateColor = function updateColor (color, changes) {
+    IroColorPicker.prototype.updateColor = function updateColor (color, changes) {
         this.emitHook('color:beforeUpdate', color, changes);
         this.setState({ "color": color });
         this.emitHook('color:afterUpdate', color, changes);
@@ -1635,7 +1624,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
      * @param {String} type "START" | "MOVE" | "END"
      * @param {Object} hsv new hsv values for the color
      */
-    ColorPicker.prototype.handleInput = function handleInput (type, hsv) {
+    IroColorPicker.prototype.handleInput = function handleInput (type, hsv) {
         // Fire input start and move events before color update
         if (type === 'START')
             { this.emit('input:start', [this.color]); }
@@ -1653,7 +1642,7 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
         // Super important to do this here and not in updateColor()
         this.colorUpdateSrc = null;
     };
-    ColorPicker.prototype.render = function render$$1 (props, state) {
+    IroColorPicker.prototype.render = function render$$1 (props, state) {
         var this$1 = this;
 
         return (h("div", { class: "iro__colorPicker", id: props.id, style: {
@@ -1667,9 +1656,10 @@ var ColorPicker = /*@__PURE__*/(function (Component$$1) {
         })));
     };
 
-    return ColorPicker;
+    return IroColorPicker;
 }(Component));
-ColorPicker.pluginHooks = {
+IroColorPicker.pluginHooks = {};
+IroColorPicker.defaultProps = {
     width: 300,
     height: 300,
     handleRadius: 8,
@@ -1688,7 +1678,7 @@ ColorPicker.pluginHooks = {
     padding: 6,
     layout: null
 };
-var ColorPicker$1 = createWidget(ColorPicker);
+var IroColorPickerWidget = createWidget(IroColorPicker);
 
 /**
  * iro.js plugins API
@@ -1718,8 +1708,8 @@ function usePlugins(core) {
 }
 
 var index = usePlugins({
-    Color: Color,
-    ColorPicker: ColorPicker$1,
+    Color: IroColor,
+    ColorPicker: IroColorPickerWidget,
     ui: {
         h: h,
         Component: IroComponent,

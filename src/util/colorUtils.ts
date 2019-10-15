@@ -1,29 +1,22 @@
 /**
- * @desc Parse a css unit string - either regular int or a percentage number
- * @param {String} str input string
- * @param {String} max max number for converting percentages
- * @returns {Number} 
+ * Parse a css unit string - either regular int or a percentage number
  */
-export function parseUnit(str, max) {
+export function parseUnit(str: string, max: number): number {
   const isPercentage = str.indexOf('%') > -1;
   const num = parseFloat(str);
   return isPercentage ? (max / 100) * num : num;
 }
 
 /**
- * @desc Parse hex str to an int
- * @param {String} str input string
- * @returns {Number} 
+ * Parse hex str to an int
  */
-export function parseHexInt(str) {
+export function parseHexInt(str: string): number {
   return parseInt(str, 16);
 }
 
 /**
- * @desc Convert into to 2-digit hex
- * @param {Number} int input number
- * @returns {String} 
+ * Convert into to 2-digit hex
  */
-export function intToHex(int) {
+export function intToHex(int: number): string {
   return int.toString(16).padStart(2, '0');
 }

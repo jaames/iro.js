@@ -43,6 +43,7 @@ module.exports = {
     }
   ].filter(Boolean),
   plugins: [
+    nodeResolve(),
     alias({
       resolve: ['.jsx', '.js'],
       'ui': path.resolve(__dirname, 'src/ui/'),
@@ -55,6 +56,7 @@ module.exports = {
       DEV_SERVER: devserver ? 'true' : 'false'
     }),
     typescript({
+      abortOnError: false,
       typescript: require('typescript'),
       tsconfigOverride: {
         compilerOptions: {
@@ -64,12 +66,17 @@ module.exports = {
       },
     }),
     buble({
+      extensions: [
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx'
+      ],
       jsx: 'h',
       objectAssign: 'Object.assign',
       transforms: {
       }
     }),
-    nodeResolve(),
     commonjs(),
     devserver ? serve({
       contentBase: ['dist', 'demo']

@@ -1,34 +1,25 @@
 /**
- * @desc listen to one or more events on an element
- * @param {Element} el target element
- * @param {Array} eventList the events to listen to
- * @param {Function} callback
- * @param {Object} params params to pass to addEventListener
+ * Listen to one or more events on an element
  */
-export function listen(el, eventList, callback, params={}) {
+export function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
   for (var i = 0; i < eventList.length; i++) {
     el.addEventListener(eventList[i], callback, params);
   }
 };
 
 /**
- * @desc remove an event listener on an element
- * @param {Element} el target element
- * @param {Array} eventList the events to remove
- * @param {Function} callback
- * @param {Object} params params to pass to removeEventListener
+ * Remove an event listener on an element
  */
-export function unlisten(el, eventList, callback, params={}) {
+export function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
   for (var i = 0; i < eventList.length; i++) {
     el.removeEventListener(eventList[i], callback, params);
   }
 };
 
 /**
- * @desc call fn callback when the page document has fully loaded
- * @param {Function} callback
+ * Call fn callback when the page document has fully loaded
  */
-export function onDocumentReady(callback) {
+export function onDocumentReady(callback: Function) {
   if (document.readyState !== 'loading') {
     callback();
   } else {

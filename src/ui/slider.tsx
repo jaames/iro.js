@@ -1,11 +1,17 @@
 import { h } from 'preact'; //Why is this here?
 
-import IroComponent, { EventResult } from './component';
-import IroHandle from './handle';
-import IroColor from '../color';
+import { IroComponent, IroComponentProps, EventResult } from './component';
+import { IroHandle } from './handle';
+import { IroColor } from '../color';
 import { resolveUrl } from '../util/svg';
 
-export default class IroSlider extends IroComponent {
+interface IroSliderProps extends IroComponentProps {
+  sliderType: string;
+}
+
+interface IroSliderState {}
+
+export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
   public height: number;
   public width: number;
 
@@ -91,7 +97,7 @@ export default class IroSlider extends IroComponent {
           { this.renderGradient(props) }
         </defs>
         <rect 
-          class="iro__slider__value"
+          className="iro__slider__value"
           rx={ cornerRadius } 
           ry={ cornerRadius } 
           x={ borderWidth / 2 } 

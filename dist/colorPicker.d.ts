@@ -1,15 +1,33 @@
-export interface Props {
-    value: string;
-    color: any;
-    optionalValue?: string;
+import { IroColor, IroColorValue } from './color';
+interface HandleOrigin {
+    x: number;
+    y: number;
 }
-export interface State {
-    width: any;
-    color: any;
+export interface ColorPickerProps {
+    width: number;
+    height: number;
+    handleRadius: number;
+    handleSvg: string;
+    handleOrigin: HandleOrigin;
+    color: IroColorValue;
+    borderColor: string;
+    borderWidth: number;
+    display: string;
+    id: null;
+    wheelLightness: boolean;
+    wheelAngle: number;
+    wheelDirection: string;
+    sliderHeight: number;
+    sliderMargin: number;
+    padding: number;
+    layout: any;
 }
-declare const _default: {
+export interface ColorPickerState extends ColorPickerProps {
+    color: IroColor;
+}
+export declare const IroColorPickerWidget: {
     (parent: any, props: any): any;
     prototype: any;
     __component: any;
 };
-export default _default;
+export {};

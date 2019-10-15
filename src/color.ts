@@ -29,39 +29,58 @@ const REGEX_HEX_4 = new RegExp(`${ HEX_START }${ HEX_INT_SINGLE }${ HEX_INT_SING
 const REGEX_HEX_6 = new RegExp(`${ HEX_START }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }$`);
 const REGEX_HEX_8 = new RegExp(`${ HEX_START }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }${ HEX_INT_DOUBLE }$`);
 
-interface HSV {
-  h: number,
-  s: number,
-  v: number,
-  a?: number
+interface ColorChanges {
+  h: boolean;
+  s: boolean;
+  v: boolean;
+  a?: boolean;
 }
 
-
-interface RGB {
-  r: number,
-  g: number,
-  b: number,
-  a?: number
+interface HsvColor {
+  h: number;
+  s: number;
+  v: number;
+  a?: number;
 }
 
-
-interface HSL {
-  h: number,
-  s: number,
-  l: number,
-  a?: number
+interface RgbColor {
+  r: number;
+  g: number;
+  b: number;
+  a?: number;
 }
 
-export default class Color {
-  public _onChange: any;
-  private value: any;
+interface HslColor {
+  h: number;
+  s: number;
+  l: number;
+  a?: number;
+}
+
+function instanceOfHsv(value: any): value is HsvColor {
+  return ('h' in value) && ('s' in value) && ('v' in value);
+}
+
+function instanceOfRgb(value: any): value is RgbColor {
+  return ('r' in value) && ('g' in value) && ('b' in value);
+}
+
+function instanceOfHsl(value: any): value is HslColor {
+  return ('h' in value) && ('s' in value) && ('l' in value);
+}
+
+export type IroColorValue = IroColor | HsvColor | RgbColor | HslColor | string;
+
+export class IroColor {
+  public onChange: Function;
+  private value: HsvColor;
   /**
     * @constructor Color object
-    * @param {Object | String | Color} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+    * @param {Object | String | IroColor} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
   */
-  constructor(value) {
+  constructor(value: IroColorValue, onChange?: Function) {
     // The watch callback function for this Color will be stored here
-    this._onChange = false;
+    this.onChange = onChange;
     // The default Color value
     this.value = {h: 0, s: 0, v: 0, a: 1};
     if (value) this.set(value);
@@ -69,30 +88,30 @@ export default class Color {
 
   /**
     * @desc set the Color from any valid value
-    * @param {Object | String | Color} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
+    * @param {Object | String | IroColor} value - Color instance, object (hsv, hsl or rgb), string (hsl, rgb, hex)
   */
-  public set(value: any) {
+  public set(value: IroColorValue) {
     const isString = typeof value === 'string';
     const isObject = typeof value === 'object';
-    if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value))) {
-      this.hexString = value;
+    if ((isString) && (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value as string))) {
+      this.hexString = value as string;
     }
-    else if ((isString) && (/^rgba?/.test(value))) {
-      this.rgbString = value;
+    else if ((isString) && (/^rgba?/.test(value as string))) {
+      this.rgbString = value as string;
     }
-    else if ((isString) && (/^hsla?/.test(value))) {
-      this.hslString = value;
+    else if ((isString) && (/^hsla?/.test(value as string))) {
+      this.hslString = value as string;
     }
-    else if ((isObject) && (value instanceof Color)) {
+    else if ((isObject) && (value instanceof IroColor)) {
       this.hsv = value.hsv;
     }
-    else if ((isObject) && ('r' in value) && ('g' in value) && ('b' in value)) {
+    else if ((isObject) && instanceOfRgb(value)) {
       this.rgb = value;
     }
-    else if ((isObject) && ('h' in value) && ('s' in value) && ('v' in value)) {
+    else if ((isObject) && instanceOfHsv(value)) {
       this.hsv = value;
     }
-    else if ((isObject) && ('h' in value) && ('s' in value) && ('l' in value)) {
+    else if ((isObject) && instanceOfHsl(value)) {
       this.hsl = value;
     }
     else {
@@ -112,10 +131,10 @@ export default class Color {
 
   /**
     * @desc make new Color instance with the same value as this one
-    * @return {Color}
+    * @return {IroColor}
   */
   public clone() {
-    return new Color(this);
+    return new IroColor(this);
   }
 
   /**
@@ -123,7 +142,7 @@ export default class Color {
     * @param {Object} hsv hsv object
     * @return {Object} rgb object
   */
-  public static hsvToRgb(hsv: HSV) {
+  public static hsvToRgb(hsv: HsvColor): RgbColor {
     const h = hsv.h / 60;
     const s = hsv.s / 100;
     const v = hsv.v / 100;
@@ -148,7 +167,7 @@ export default class Color {
     * @param {Object} rgb - rgb object
     * @return {Object} hsv object
   */
-  public static rgbToHsv(rgb: RGB) {
+  public static rgbToHsv(rgb: RgbColor): HsvColor {
     const r = rgb.r / 255;
     const g = rgb.g / 255;
     const b = rgb.b / 255;
@@ -184,7 +203,7 @@ export default class Color {
     * @param {Object} hsv - hsv object
     * @return {Object} hsl object
   */
-  public static hsvToHsl(hsv: HSV) {
+  public static hsvToHsl(hsv: HsvColor): HslColor {
     const s = hsv.s / 100;
     const v = hsv.v / 100;
     const l = (2 - s) * v;
@@ -203,7 +222,7 @@ export default class Color {
     * @param {Object} hsl - hsl object
     * @return {Object} hsv object
   */
-  public static hslToHsv(hsl: HSL) {
+  public static hslToHsv(hsl: HslColor): HsvColor {
     const l = hsl.l * 2;
     const s = (hsl.s * ((l <= 100) ? l : 200 - l)) / 100;
     // Avoid division by zero when l + s is near 0
@@ -221,18 +240,18 @@ export default class Color {
     return {h: value.h, s: value.s, v: value.v};
   }
 
-  public set hsv(newValue) {
+  public set hsv(newValue: any) {
     const oldValue = this.value;
 
     newValue = { ...oldValue, ...newValue };
     // If this Color is being watched for changes we need to compare the new and old values to check the difference
     // Otherwise we can just be lazy
-    if (this._onChange) {
+    if (this.onChange) {
       // Compute changed values
-      let changes: HSV = {
-        h: 0,
-        v: 0,
-        s: 0
+      let changes: ColorChanges = {
+        h: false,
+        v: false,
+        s: false
       };
 
       for (let key in oldValue) {
@@ -241,14 +260,14 @@ export default class Color {
       // Update the old value
       this.value = newValue;
       // If the value has changed, call hook callback
-      if (changes.h || changes.s || changes.v || changes.a) this._onChange(this, changes);
+      if (changes.h || changes.s || changes.v || changes.a) this.onChange(this, changes);
     } else {
       this.value = newValue;
     }
   }
 
   public get rgb() {
-    const {r, g, b} = Color.hsvToRgb(this.value);
+    const {r, g, b} = IroColor.hsvToRgb(this.value);
     return {
       r: Math.round(r),
       g: Math.round(g),
@@ -258,13 +277,13 @@ export default class Color {
 
   public set rgb(value: any) {
     this.hsv = {
-      ...Color.rgbToHsv(value), 
+      ...IroColor.rgbToHsv(value), 
       // a: (value.a === undefined) ? 1 : value.a
     };
   }
 
   public get hsl() {
-    const {h, s, l} = Color.hsvToHsl(this.value);
+    const {h, s, l} = IroColor.hsvToHsl(this.value);
     return {
       h: Math.round(h),
       s: Math.round(s),
@@ -274,7 +293,7 @@ export default class Color {
 
   public set hsl(value: any) {
     this.hsv = {
-      ...Color.hslToHsv(value), 
+      ...IroColor.hslToHsv(value), 
       // a: (value.a === undefined) ? 1 : value.a
     };
   }
@@ -284,7 +303,7 @@ export default class Color {
     return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
   }
 
-  public set rgbString(value: any) {
+  public set rgbString(value: string) {
     let match;
     let r, g, b, a = 1;
     if (match = REGEX_FUNCTIONAL_RGB.exec(value)) {
@@ -311,7 +330,7 @@ export default class Color {
     return `#${ intToHex(rgb.r) }${ intToHex(rgb.g) }${ intToHex(rgb.b) }`;
   }
 
-  public set hexString(value) {
+  public set hexString(value: string) {
     let match;
     let r, g, b, a = 255;
     if (match = REGEX_HEX_3.exec(value)) {
@@ -349,7 +368,7 @@ export default class Color {
     return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
   }
 
-  public set hslString(value: any) {
+  public set hslString(value: string) {
     let match;
     let h, s, l, a = 1;
     if (match = REGEX_FUNCTIONAL_HSL.exec(value)) {

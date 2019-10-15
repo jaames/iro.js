@@ -1,12 +1,16 @@
 import { h } from 'preact';
 
-import IroComponent, { EventResult } from './component';
-import IroHandle from './handle';
+import { IroComponent, IroComponentProps, EventResult } from './component';
+import { IroHandle } from './handle';
 import { resolveUrl, createArcPath } from '../util/svg';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 
-export default abstract class IroWheel extends IroComponent {
+interface IroWheelProps extends IroComponentProps {}
+
+interface IroWheelState {}
+
+export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
 
   private transformAngle(angle: number, handleFix?: boolean) {
     const wheelAngle = this.props.wheelAngle;

@@ -1,32 +1,23 @@
 import { Component } from 'preact';
+import { ColorPickerProps } from '../colorPicker';
 export declare enum EventResult {
     start = 0,
     move = 1,
     end = 2
 }
-interface Props {
-    sliderType: any;
-    onInput: any;
-    wheelAngle: any;
-    wheelDirection: any;
-    width: any;
-    padding: any;
-    handleRadius: any;
-    borderWidth: any;
-}
-interface State {
+export interface IroComponentProps extends ColorPickerProps {
+    onInput: Function;
 }
 /**
  * Base component class for iro UI components
  * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
  */
-export default abstract class IroComponent extends Component<Props, State> {
+export declare abstract class IroComponent<Props extends IroComponentProps, State> extends Component<Props, State> {
     uid: string;
     base: HTMLElement;
-    constructor(props: any);
+    constructor(props: Props);
     componentDidMount(): void;
     componentWillUnmount(): void;
     abstract handleInput(x: number, y: number, bounds: ClientRect | DOMRect, type: EventResult): any;
-    handleEvent(e: MouseEvent | TouchEvent): void;
+    handleEvent(e: MouseEvent & TouchEvent): void;
 }
-export {};

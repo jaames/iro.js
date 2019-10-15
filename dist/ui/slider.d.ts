@@ -1,5 +1,10 @@
-import IroComponent, { EventResult } from './component';
-export default class IroSlider extends IroComponent {
+import { IroComponent, IroComponentProps, EventResult } from './component';
+interface IroSliderProps extends IroComponentProps {
+    sliderType: string;
+}
+interface IroSliderState {
+}
+export declare class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
     height: number;
     width: number;
     renderGradient(props: any): JSX.Element;
@@ -16,3 +21,4 @@ export default class IroSlider extends IroComponent {
     */
     handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult): void;
 }
+export {};
