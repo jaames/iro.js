@@ -1,9 +1,15 @@
 import { h } from 'preact';
+import { 
+  resolveSvgUrl,
+  getSvgArcPath,
+  translateWheelAngle, 
+  getWheelCenter,
+  getWheelHandlePosition,
+  getWheelValueFromInput
+} from 'iro-core';
 
 import { IroComponent, IroComponentProps, EventResult } from './component';
 import { IroHandle } from './handle';
-import { resolveSvgUrl, getSvgArcPath } from '../core/svgUtils';
-import { translateWheelAngle, getWheelCenter, getWheelHandlePosition, getWheelValueFromInput } from '../core/wheelUtils';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 

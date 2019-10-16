@@ -1,10 +1,14 @@
 import { h } from 'preact';
-
-import { getSliderDimensions, getSliderValueFromInput, getSliderHandlePosition, getSliderGradient } from '../core/sliderUtils';
+import { 
+  resolveSvgUrl,
+  getSliderDimensions, 
+  getSliderValueFromInput, 
+  getSliderHandlePosition, 
+  getSliderGradient
+} from 'iro-core';
 
 import { IroComponent, IroComponentProps, EventResult } from './component';
 import { IroHandle } from './handle';
-import { resolveSvgUrl } from '../core/svgUtils';
 
 interface IroSliderProps extends IroComponentProps {
   sliderType: string;

@@ -1,8 +1,8 @@
 import { h, Component } from 'preact';
+import { IroColor, IroColorValue } from 'iro-core';
 
 import { IroWheel } from './ui/wheel';
 import { IroSlider } from './ui/slider';
-import { IroColor, IroColorValue } from './color';
 import { createWidget } from './util/createWidget';
 
 interface HandleOrigin {

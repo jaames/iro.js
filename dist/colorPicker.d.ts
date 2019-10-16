@@ -1,4 +1,4 @@
-import { IroColor, IroColorValue } from './color';
+import { IroColor, IroColorValue } from 'iro-core';
 interface HandleOrigin {
     x: number;
     y: number;
