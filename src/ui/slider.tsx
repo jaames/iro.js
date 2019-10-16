@@ -1,9 +1,10 @@
-import { h } from 'preact'; //Why is this here?
+import { h } from 'preact';
+
+import { getSliderDimensions, getSliderValueFromInput, getSliderHandlePosition, getSliderGradient } from '../core/sliderUtils';
 
 import { IroComponent, IroComponentProps, EventResult } from './component';
 import { IroHandle } from './handle';
-import { IroColor } from '../color';
-import { resolveUrl } from '../util/svg';
+import { resolveSvgUrl } from '../core/svgUtils';
 
 interface IroSliderProps extends IroComponentProps {
   sliderType: string;
@@ -15,78 +16,23 @@ export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
   public height: number;
   public width: number;
 
-
-  renderGradient(props: any) {
-    const hsv = props.color.hsv;
-    let stops = [];
-
-    switch (props.sliderType) {
-      case 'hue':
-        stops = [
-          {offset: '0',      color: '#f00'},
-          {offset: '16.666', color: '#ff0'},
-          {offset: '33.333', color: '#0f0'},
-          {offset: '50',     color: '#0ff'},
-          {offset: '66.666', color: '#00f'},
-          {offset: '83.333', color: '#f0f'},
-          {offset: '100',    color: '#f00'},
-        ];
-        break;
-      case 'saturation':
-        var noSat = IroColor.hsvToHsl({h: hsv.h, s: 0, v: hsv.v});
-        var fullSat = IroColor.hsvToHsl({h: hsv.h, s: 100, v: hsv.v});
-        stops = [
-          {offset: '0', color: `hsl(${noSat.h}, ${noSat.s}%, ${noSat.l}%)`},
-          {offset: '100', color: `hsl(${fullSat.h}, ${fullSat.s}%, ${fullSat.l}%)`}
-        ];
-        break;
-      case 'value':
-      default:
-        var hsl = IroColor.hsvToHsl({h: hsv.h, s: hsv.s, v: 100});
-        stops = [
-          {offset: '0', color: '#000'},
-          {offset: '100', color: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`}
-        ];
-        break;
-    }
-
-    return (
-      <linearGradient id={ this.uid }>
-        {stops.map(stop => (
-          <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
-        ))}
-      </linearGradient>
-    )
-  }
-
   render(props: any) {
-    let { width, sliderHeight, borderWidth, handleRadius } = props;
-    sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
-    this.width = width;
-    this.height = sliderHeight;
-    const cornerRadius = sliderHeight / 2;
-    const range = width - cornerRadius * 2
-    const hsv = props.color.hsv;
+    const {
+      x, 
+      y,
+      width,
+      height,
+      radius
+    } = getSliderDimensions(props);
     
-    let sliderValue;
-    switch (props.sliderType) {
-      case 'hue':
-        sliderValue = hsv.h /= 3.6;
-        break;
-      case 'saturation':
-        sliderValue = hsv.s;
-        break;
-      case 'value':
-      default:
-        sliderValue = hsv.v;
-        break;
-    }
+    const handlePos = getSliderHandlePosition(props);
+    const gradient = getSliderGradient(props);
 
     return (
       <svg 
-        class="iro__slider"
+        className="iro__slider"
         width={ width }
-        height={ sliderHeight }
+        height={ height }
         style= {{
           marginTop: props.sliderMargin,
           overflow: 'visible',
@@ -94,37 +40,33 @@ export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
         }}
       >
         <defs>
-          { this.renderGradient(props) }
+          <linearGradient id={ this.uid }>
+            {gradient.map(stop => (
+              <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
+            ))}
+          </linearGradient>
         </defs>
         <rect 
           className="iro__slider__value"
-          rx={ cornerRadius } 
-          ry={ cornerRadius } 
-          x={ borderWidth / 2 } 
-          y={ borderWidth / 2 } 
-          width={ width - borderWidth } 
-          height={ sliderHeight - borderWidth }
-          stroke-width={ borderWidth }
+          rx={ radius } 
+          ry={ radius } 
+          x={ props.borderWidth / 2 } 
+          y={ props.borderWidth / 2 } 
+          width={ width - props.borderWidth } 
+          height={ height - props.borderWidth }
+          stroke-width={ props.borderWidth }
           stroke={ props.borderColor }
-          fill={ `url(${resolveUrl('#' + this.uid)})` }
+          fill={ `url(${resolveSvgUrl('#' + this.uid)})` }
         />
         <IroHandle
-          r={ handleRadius }
+          r={ props.handleRadius }
           url={ props.handleSvg }
           origin={ props.handleOrigin }
-          x={ cornerRadius + (sliderValue / 100) * range }
-          y={ sliderHeight / 2 }
+          x={ handlePos.x }
+          y={ handlePos.y }
         />
       </svg>
     );
-  }
-
-  getValueFromPoint(x: number, y: number, { left }) {
-    const handleRange = this.width - this.height;
-    const cornerRadius = this.height / 2;
-    x = x - (left + cornerRadius);
-    let dist = Math.max(Math.min(x, handleRange), 0);
-    return Math.round((100 / handleRange) * dist);
   }
 
   /**
@@ -135,7 +77,7 @@ export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
   handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    let value = this.getValueFromPoint(x, y, bounds);
+    let value = getSliderValueFromInput(this.props, x, y, bounds);
     let channel;
     switch (this.props.sliderType) {
       case 'hue':

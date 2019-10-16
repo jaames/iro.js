@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import { IroComponent, IroComponentProps, EventResult } from './component';
 interface IroSliderProps extends IroComponentProps {
     sliderType: string;
@@ -7,11 +8,7 @@ interface IroSliderState {
 export declare class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
     height: number;
     width: number;
-    renderGradient(props: any): JSX.Element;
-    render(props: any): JSX.Element;
-    getValueFromPoint(x: number, y: number, { left }: {
-        left: any;
-    }): number;
+    render(props: any): h.JSX.Element;
     /**
       * @desc handles mouse input for this component
       * @param {Number} x - point x coordinate

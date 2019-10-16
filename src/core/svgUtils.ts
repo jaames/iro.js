@@ -1,5 +1,5 @@
 /**
- * @desc Resolve an SVG URL
+ * Resolve an SVG URL
  * This is required to work around how Safari handles gradient URLS under certain conditions
  * If a page is using a client-side routing library which makes use of the HTML <base> tag, 
  * Safari won't be able to render SVG gradients properly (as they are referenced by URLs)
@@ -7,10 +7,8 @@
  * https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
  * https://github.com/jaames/iro.js/issues/18
  * https://github.com/jaames/iro.js/issues/45
- * @param {String} url resource url (should be an id selector e.g "#example")
- * @returns {String} resolved url
  */
-export function resolveUrl(url) {
+export function resolveSvgUrl(url) {
   // Sniff useragent string to check if the user is running Safari
   const ua = window.navigator.userAgent;
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
@@ -20,15 +18,9 @@ export function resolveUrl(url) {
 }
 
 /**
- * @desc create the path commands to draw an svg arc
- * @param {Number} cx center point x
- * @param {Number} cy center point y
- * @param {Number} radius arc radius
- * @param {Number} startAngle arc start angle (degrees)
- * @param {Number} endAngle arc end angle (degrees)
- * @returns {String} arc path commands
+ * Get the path commands to draw an svg arc
  */
-export function createArcPath(cx, cy, radius, startAngle, endAngle) {
+export function getSvgArcPath(cx: number, cy: number, radius: number, startAngle: number, endAngle: number) {
   const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
   startAngle *= Math.PI / 180;
   endAngle *= Math.PI / 180;

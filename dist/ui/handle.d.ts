@@ -1,4 +1,5 @@
-declare function IroHandle(props: any): JSX.Element;
+import { h } from 'preact';
+declare function IroHandle(props: any): h.JSX.Element;
 declare namespace IroHandle {
     var defaultProps: {
         x: number;

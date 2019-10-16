@@ -1,3 +1,5 @@
+declare const VERSION: string;
+
 import { h } from 'preact';
 
 import { IroColorPickerWidget } from './colorPicker';

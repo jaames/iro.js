@@ -1,4 +1,4 @@
-import { parseUnit, parseHexInt, intToHex } from './util/colorUtils';
+import { parseUnit, parseHexInt, intToHex } from './colorUtils';
 
 // Some regular expressions for rgb() and hsl() Colors are borrowed from tinyColor
 // https://github.com/bgrins/TinyColor
@@ -174,7 +174,7 @@ export class IroColor {
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     const delta = max - min;
-    let hue;
+    let hue = 0;
     let value = max;
     let saturation = max === 0 ? 0 : delta / max;
     switch (max) {

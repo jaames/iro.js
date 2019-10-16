@@ -2,7 +2,8 @@ import { h } from 'preact';
 
 import { IroComponent, IroComponentProps, EventResult } from './component';
 import { IroHandle } from './handle';
-import { resolveUrl, createArcPath } from '../util/svg';
+import { resolveSvgUrl, getSvgArcPath } from '../core/svgUtils';
+import { translateWheelAngle, getWheelCenter, getWheelHandlePosition, getWheelValueFromInput } from '../core/wheelUtils';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 
@@ -11,20 +12,6 @@ interface IroWheelProps extends IroComponentProps {}
 interface IroWheelState {}
 
 export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
-
-  private transformAngle(angle: number, handleFix?: boolean) {
-    const wheelAngle = this.props.wheelAngle;
-    if (this.props.wheelDirection === 'clockwise') {
-      // im sure this math could be simplified...
-      angle = (-360 + angle - (handleFix ? -wheelAngle : wheelAngle));
-    } else {
-      angle = wheelAngle - angle
-    }
-    // javascript's modulo operator doesn't produce positive numbers with negative input
-    // https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
-    return (angle % 360 + 360) % 360;
-  }
-
   /**
     * @desc handles mouse input for this component
     * @param {Number} x - point x coordinate
@@ -33,41 +20,22 @@ export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
     * @param {String} type - input type: "START", "MOVE" or "END"
   */
   public handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    const { left, top } = bounds;
-    const props = this.props;
-    const radius = props.width / 2;
-    const handleRange = (radius - props.padding - props.handleRadius - props.borderWidth);
-    const cX = radius;
-    const cY = radius;
-
-    x = cX - (x - left);
-    y = cY - (y - top);
-
-    let handleAngle = Math.atan2(y, x);
-    // Calculate the hue by converting the angle to radians
-    let hue = this.transformAngle(Math.round(handleAngle * (180 / Math.PI)) + 180);
-
-    // Find the point's distance from the center of the wheel
-    // This is used to show the saturation level
-    let handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
-    props.onInput(type, {
-      h: hue,
-      s: Math.round((100 / handleRange) * handleDist)
-    });
+    this.props.onInput(type, getWheelValueFromInput(this.props, x, y, bounds));
   }
 
   public render(props: any) {
-    let { width, borderWidth, handleRadius } = props;
+    let { width, borderWidth } = props;
     const hsv = props.color.hsv;
     const radius = (width / 2) - borderWidth;
-    const handleAngle = this.transformAngle(hsv.h, true) * (Math.PI / 180);
-    const handleDist = (hsv.s / 100) * (radius - props.padding - handleRadius - borderWidth);
-    const cX = radius + borderWidth;
-    const cY = radius + borderWidth;
+    const center = getWheelCenter(props);
+    const cX = center.x;
+    const cY = center.y;
+
+    const handlePos = getWheelHandlePosition(props);
     
     return (
       <svg 
-        class="iro__wheel"
+        className="iro__wheel"
         width={ width }
         height={ width }
         style={{
@@ -81,25 +49,25 @@ export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
             <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
           </radialGradient>
         </defs>
-        <g class="iro__wheel__hue" stroke-width={ radius } fill="none">
+        <g className="iro__wheel__hue" stroke-width={ radius } fill="none">
           { HUE_STEPS.map(angle => (
             <path 
               key={ angle }
-              d={ createArcPath(cX, cY, radius / 2, angle, angle + 1.5) } 
-              stroke={ `hsl(${this.transformAngle(angle)}, 100%, 50%)` }
+              d={ getSvgArcPath(cX, cY, radius / 2, angle, angle + 1.5) } 
+              stroke={ `hsl(${translateWheelAngle(props, angle)}, 100%, 50%)` }
             />
           ))}
         </g>
         <circle 
-          class="iro__wheel__saturation"
+          className="iro__wheel__saturation"
           cx={ cX }
           cy={ cY }
           r={ radius }
-          fill={ `url(${resolveUrl('#' + this.uid)})` }
+          fill={ `url(${resolveSvgUrl('#' + this.uid)})` }
         />
         { props.wheelLightness && (
           <circle 
-            class="iro__wheel__lightness"
+            className="iro__wheel__lightness"
             cx={ cX }
             cy={ cY }
             r={ radius }
@@ -108,7 +76,7 @@ export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
           />
         )}
         <circle 
-          class="iro__wheel__border"
+          className="iro__wheel__border"
           cx={ cX }
           cy={ cY }
           r={ radius }
@@ -117,11 +85,11 @@ export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
           stroke-width={ borderWidth }
         />
         <IroHandle 
-          r={ handleRadius }
+          r={ props.handleRadius }
           url={ props.handleSvg }
           origin={ props.handleOrigin }
-          x={ cX + handleDist * Math.cos(handleAngle) }
-          y={ cY + handleDist * Math.sin(handleAngle) }
+          x={ handlePos.x }
+          y={ handlePos.y }
         />
       </svg>
     );

@@ -5,704 +5,7 @@
  * github.com/jaames/iro.js
  */
 
-var VNode = function VNode() {};
-
-var options = {};
-
-var stack = [];
-
-var EMPTY_CHILDREN = [];
-
-function h(nodeName, attributes) {
-	var arguments$1 = arguments;
-
-	var children = EMPTY_CHILDREN,
-	    lastSimple,
-	    child,
-	    simple,
-	    i;
-	for (i = arguments.length; i-- > 2;) {
-		stack.push(arguments$1[i]);
-	}
-	if (attributes && attributes.children != null) {
-		if (!stack.length) { stack.push(attributes.children); }
-		delete attributes.children;
-	}
-	while (stack.length) {
-		if ((child = stack.pop()) && child.pop !== undefined) {
-			for (i = child.length; i--;) {
-				stack.push(child[i]);
-			}
-		} else {
-			if (typeof child === 'boolean') { child = null; }
-
-			if (simple = typeof nodeName !== 'function') {
-				if (child == null) { child = ''; }else if (typeof child === 'number') { child = String(child); }else if (typeof child !== 'string') { simple = false; }
-			}
-
-			if (simple && lastSimple) {
-				children[children.length - 1] += child;
-			} else if (children === EMPTY_CHILDREN) {
-				children = [child];
-			} else {
-				children.push(child);
-			}
-
-			lastSimple = simple;
-		}
-	}
-
-	var p = new VNode();
-	p.nodeName = nodeName;
-	p.children = children;
-	p.attributes = attributes == null ? undefined : attributes;
-	p.key = attributes == null ? undefined : attributes.key;
-
-	return p;
-}
-
-function extend(obj, props) {
-  for (var i in props) {
-    obj[i] = props[i];
-  }return obj;
-}
-
-function applyRef(ref, value) {
-  if (ref != null) {
-    if (typeof ref == 'function') { ref(value); }else { ref.current = value; }
-  }
-}
-
-var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
-
-var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
-
-var items = [];
-
-function enqueueRender(component) {
-	if (!component._dirty && (component._dirty = true) && items.push(component) == 1) {
-		(defer)(rerender);
-	}
-}
-
-function rerender() {
-	var p;
-	while (p = items.pop()) {
-		if (p._dirty) { renderComponent(p); }
-	}
-}
-
-function isSameNodeType(node, vnode, hydrating) {
-	if (typeof vnode === 'string' || typeof vnode === 'number') {
-		return node.splitText !== undefined;
-	}
-	if (typeof vnode.nodeName === 'string') {
-		return !node._componentConstructor && isNamedNode(node, vnode.nodeName);
-	}
-	return hydrating || node._componentConstructor === vnode.nodeName;
-}
-
-function isNamedNode(node, nodeName) {
-	return node.normalizedNodeName === nodeName || node.nodeName.toLowerCase() === nodeName.toLowerCase();
-}
-
-function getNodeProps(vnode) {
-	var props = extend({}, vnode.attributes);
-	props.children = vnode.children;
-
-	var defaultProps = vnode.nodeName.defaultProps;
-	if (defaultProps !== undefined) {
-		for (var i in defaultProps) {
-			if (props[i] === undefined) {
-				props[i] = defaultProps[i];
-			}
-		}
-	}
-
-	return props;
-}
-
-function createNode(nodeName, isSvg) {
-	var node = isSvg ? document.createElementNS('http://www.w3.org/2000/svg', nodeName) : document.createElement(nodeName);
-	node.normalizedNodeName = nodeName;
-	return node;
-}
-
-function removeNode(node) {
-	var parentNode = node.parentNode;
-	if (parentNode) { parentNode.removeChild(node); }
-}
-
-function setAccessor(node, name, old, value, isSvg) {
-	if (name === 'className') { name = 'class'; }
-
-	if (name === 'key') ; else if (name === 'ref') {
-		applyRef(old, null);
-		applyRef(value, node);
-	} else if (name === 'class' && !isSvg) {
-		node.className = value || '';
-	} else if (name === 'style') {
-		if (!value || typeof value === 'string' || typeof old === 'string') {
-			node.style.cssText = value || '';
-		}
-		if (value && typeof value === 'object') {
-			if (typeof old !== 'string') {
-				for (var i in old) {
-					if (!(i in value)) { node.style[i] = ''; }
-				}
-			}
-			for (var i in value) {
-				node.style[i] = typeof value[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false ? value[i] + 'px' : value[i];
-			}
-		}
-	} else if (name === 'dangerouslySetInnerHTML') {
-		if (value) { node.innerHTML = value.__html || ''; }
-	} else if (name[0] == 'o' && name[1] == 'n') {
-		var useCapture = name !== (name = name.replace(/Capture$/, ''));
-		name = name.toLowerCase().substring(2);
-		if (value) {
-			if (!old) { node.addEventListener(name, eventProxy, useCapture); }
-		} else {
-			node.removeEventListener(name, eventProxy, useCapture);
-		}
-		(node._listeners || (node._listeners = {}))[name] = value;
-	} else if (name !== 'list' && name !== 'type' && !isSvg && name in node) {
-		try {
-			node[name] = value == null ? '' : value;
-		} catch (e) {}
-		if ((value == null || value === false) && name != 'spellcheck') { node.removeAttribute(name); }
-	} else {
-		var ns = isSvg && name !== (name = name.replace(/^xlink:?/, ''));
-
-		if (value == null || value === false) {
-			if (ns) { node.removeAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase()); }else { node.removeAttribute(name); }
-		} else if (typeof value !== 'function') {
-			if (ns) { node.setAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase(), value); }else { node.setAttribute(name, value); }
-		}
-	}
-}
-
-function eventProxy(e) {
-	return this._listeners[e.type](e);
-}
-
-var mounts = [];
-
-var diffLevel = 0;
-
-var isSvgMode = false;
-
-var hydrating = false;
-
-function flushMounts() {
-	var c;
-	while (c = mounts.shift()) {
-		if (c.componentDidMount) { c.componentDidMount(); }
-	}
-}
-
-function diff(dom, vnode, context, mountAll, parent, componentRoot) {
-	if (!diffLevel++) {
-		isSvgMode = parent != null && parent.ownerSVGElement !== undefined;
-
-		hydrating = dom != null && !('__preactattr_' in dom);
-	}
-
-	var ret = idiff(dom, vnode, context, mountAll, componentRoot);
-
-	if (parent && ret.parentNode !== parent) { parent.appendChild(ret); }
-
-	if (! --diffLevel) {
-		hydrating = false;
-
-		if (!componentRoot) { flushMounts(); }
-	}
-
-	return ret;
-}
-
-function idiff(dom, vnode, context, mountAll, componentRoot) {
-	var out = dom,
-	    prevSvgMode = isSvgMode;
-
-	if (vnode == null || typeof vnode === 'boolean') { vnode = ''; }
-
-	if (typeof vnode === 'string' || typeof vnode === 'number') {
-		if (dom && dom.splitText !== undefined && dom.parentNode && (!dom._component || componentRoot)) {
-			if (dom.nodeValue != vnode) {
-				dom.nodeValue = vnode;
-			}
-		} else {
-			out = document.createTextNode(vnode);
-			if (dom) {
-				if (dom.parentNode) { dom.parentNode.replaceChild(out, dom); }
-				recollectNodeTree(dom, true);
-			}
-		}
-
-		out['__preactattr_'] = true;
-
-		return out;
-	}
-
-	var vnodeName = vnode.nodeName;
-	if (typeof vnodeName === 'function') {
-		return buildComponentFromVNode(dom, vnode, context, mountAll);
-	}
-
-	isSvgMode = vnodeName === 'svg' ? true : vnodeName === 'foreignObject' ? false : isSvgMode;
-
-	vnodeName = String(vnodeName);
-	if (!dom || !isNamedNode(dom, vnodeName)) {
-		out = createNode(vnodeName, isSvgMode);
-
-		if (dom) {
-			while (dom.firstChild) {
-				out.appendChild(dom.firstChild);
-			}
-			if (dom.parentNode) { dom.parentNode.replaceChild(out, dom); }
-
-			recollectNodeTree(dom, true);
-		}
-	}
-
-	var fc = out.firstChild,
-	    props = out['__preactattr_'],
-	    vchildren = vnode.children;
-
-	if (props == null) {
-		props = out['__preactattr_'] = {};
-		for (var a = out.attributes, i = a.length; i--;) {
-			props[a[i].name] = a[i].value;
-		}
-	}
-
-	if (!hydrating && vchildren && vchildren.length === 1 && typeof vchildren[0] === 'string' && fc != null && fc.splitText !== undefined && fc.nextSibling == null) {
-		if (fc.nodeValue != vchildren[0]) {
-			fc.nodeValue = vchildren[0];
-		}
-	} else if (vchildren && vchildren.length || fc != null) {
-			innerDiffNode(out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML != null);
-		}
-
-	diffAttributes(out, vnode.attributes, props);
-
-	isSvgMode = prevSvgMode;
-
-	return out;
-}
-
-function innerDiffNode(dom, vchildren, context, mountAll, isHydrating) {
-	var originalChildren = dom.childNodes,
-	    children = [],
-	    keyed = {},
-	    keyedLen = 0,
-	    min = 0,
-	    len = originalChildren.length,
-	    childrenLen = 0,
-	    vlen = vchildren ? vchildren.length : 0,
-	    j,
-	    c,
-	    f,
-	    vchild,
-	    child;
-
-	if (len !== 0) {
-		for (var i = 0; i < len; i++) {
-			var _child = originalChildren[i],
-			    props = _child['__preactattr_'],
-			    key = vlen && props ? _child._component ? _child._component.__key : props.key : null;
-			if (key != null) {
-				keyedLen++;
-				keyed[key] = _child;
-			} else if (props || (_child.splitText !== undefined ? isHydrating ? _child.nodeValue.trim() : true : isHydrating)) {
-				children[childrenLen++] = _child;
-			}
-		}
-	}
-
-	if (vlen !== 0) {
-		for (var i = 0; i < vlen; i++) {
-			vchild = vchildren[i];
-			child = null;
-
-			var key = vchild.key;
-			if (key != null) {
-				if (keyedLen && keyed[key] !== undefined) {
-					child = keyed[key];
-					keyed[key] = undefined;
-					keyedLen--;
-				}
-			} else if (min < childrenLen) {
-					for (j = min; j < childrenLen; j++) {
-						if (children[j] !== undefined && isSameNodeType(c = children[j], vchild, isHydrating)) {
-							child = c;
-							children[j] = undefined;
-							if (j === childrenLen - 1) { childrenLen--; }
-							if (j === min) { min++; }
-							break;
-						}
-					}
-				}
-
-			child = idiff(child, vchild, context, mountAll);
-
-			f = originalChildren[i];
-			if (child && child !== dom && child !== f) {
-				if (f == null) {
-					dom.appendChild(child);
-				} else if (child === f.nextSibling) {
-					removeNode(f);
-				} else {
-					dom.insertBefore(child, f);
-				}
-			}
-		}
-	}
-
-	if (keyedLen) {
-		for (var i in keyed) {
-			if (keyed[i] !== undefined) { recollectNodeTree(keyed[i], false); }
-		}
-	}
-
-	while (min <= childrenLen) {
-		if ((child = children[childrenLen--]) !== undefined) { recollectNodeTree(child, false); }
-	}
-}
-
-function recollectNodeTree(node, unmountOnly) {
-	var component = node._component;
-	if (component) {
-		unmountComponent(component);
-	} else {
-		if (node['__preactattr_'] != null) { applyRef(node['__preactattr_'].ref, null); }
-
-		if (unmountOnly === false || node['__preactattr_'] == null) {
-			removeNode(node);
-		}
-
-		removeChildren(node);
-	}
-}
-
-function removeChildren(node) {
-	node = node.lastChild;
-	while (node) {
-		var next = node.previousSibling;
-		recollectNodeTree(node, true);
-		node = next;
-	}
-}
-
-function diffAttributes(dom, attrs, old) {
-	var name;
-
-	for (name in old) {
-		if (!(attrs && attrs[name] != null) && old[name] != null) {
-			setAccessor(dom, name, old[name], old[name] = undefined, isSvgMode);
-		}
-	}
-
-	for (name in attrs) {
-		if (name !== 'children' && name !== 'innerHTML' && (!(name in old) || attrs[name] !== (name === 'value' || name === 'checked' ? dom[name] : old[name]))) {
-			setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
-		}
-	}
-}
-
-var recyclerComponents = [];
-
-function createComponent(Ctor, props, context) {
-	var inst,
-	    i = recyclerComponents.length;
-
-	if (Ctor.prototype && Ctor.prototype.render) {
-		inst = new Ctor(props, context);
-		Component.call(inst, props, context);
-	} else {
-		inst = new Component(props, context);
-		inst.constructor = Ctor;
-		inst.render = doRender;
-	}
-
-	while (i--) {
-		if (recyclerComponents[i].constructor === Ctor) {
-			inst.nextBase = recyclerComponents[i].nextBase;
-			recyclerComponents.splice(i, 1);
-			return inst;
-		}
-	}
-
-	return inst;
-}
-
-function doRender(props, state, context) {
-	return this.constructor(props, context);
-}
-
-function setComponentProps(component, props, renderMode, context, mountAll) {
-	if (component._disable) { return; }
-	component._disable = true;
-
-	component.__ref = props.ref;
-	component.__key = props.key;
-	delete props.ref;
-	delete props.key;
-
-	if (typeof component.constructor.getDerivedStateFromProps === 'undefined') {
-		if (!component.base || mountAll) {
-			if (component.componentWillMount) { component.componentWillMount(); }
-		} else if (component.componentWillReceiveProps) {
-			component.componentWillReceiveProps(props, context);
-		}
-	}
-
-	if (context && context !== component.context) {
-		if (!component.prevContext) { component.prevContext = component.context; }
-		component.context = context;
-	}
-
-	if (!component.prevProps) { component.prevProps = component.props; }
-	component.props = props;
-
-	component._disable = false;
-
-	if (renderMode !== 0) {
-		if (renderMode === 1 || options.syncComponentUpdates !== false || !component.base) {
-			renderComponent(component, 1, mountAll);
-		} else {
-			enqueueRender(component);
-		}
-	}
-
-	applyRef(component.__ref, component);
-}
-
-function renderComponent(component, renderMode, mountAll, isChild) {
-	if (component._disable) { return; }
-
-	var props = component.props,
-	    state = component.state,
-	    context = component.context,
-	    previousProps = component.prevProps || props,
-	    previousState = component.prevState || state,
-	    previousContext = component.prevContext || context,
-	    isUpdate = component.base,
-	    nextBase = component.nextBase,
-	    initialBase = isUpdate || nextBase,
-	    initialChildComponent = component._component,
-	    skip = false,
-	    snapshot = previousContext,
-	    rendered,
-	    inst,
-	    cbase;
-
-	if (component.constructor.getDerivedStateFromProps) {
-		state = extend(extend({}, state), component.constructor.getDerivedStateFromProps(props, state));
-		component.state = state;
-	}
-
-	if (isUpdate) {
-		component.props = previousProps;
-		component.state = previousState;
-		component.context = previousContext;
-		if (renderMode !== 2 && component.shouldComponentUpdate && component.shouldComponentUpdate(props, state, context) === false) {
-			skip = true;
-		} else if (component.componentWillUpdate) {
-			component.componentWillUpdate(props, state, context);
-		}
-		component.props = props;
-		component.state = state;
-		component.context = context;
-	}
-
-	component.prevProps = component.prevState = component.prevContext = component.nextBase = null;
-	component._dirty = false;
-
-	if (!skip) {
-		rendered = component.render(props, state, context);
-
-		if (component.getChildContext) {
-			context = extend(extend({}, context), component.getChildContext());
-		}
-
-		if (isUpdate && component.getSnapshotBeforeUpdate) {
-			snapshot = component.getSnapshotBeforeUpdate(previousProps, previousState);
-		}
-
-		var childComponent = rendered && rendered.nodeName,
-		    toUnmount,
-		    base;
-
-		if (typeof childComponent === 'function') {
-
-			var childProps = getNodeProps(rendered);
-			inst = initialChildComponent;
-
-			if (inst && inst.constructor === childComponent && childProps.key == inst.__key) {
-				setComponentProps(inst, childProps, 1, context, false);
-			} else {
-				toUnmount = inst;
-
-				component._component = inst = createComponent(childComponent, childProps, context);
-				inst.nextBase = inst.nextBase || nextBase;
-				inst._parentComponent = component;
-				setComponentProps(inst, childProps, 0, context, false);
-				renderComponent(inst, 1, mountAll, true);
-			}
-
-			base = inst.base;
-		} else {
-			cbase = initialBase;
-
-			toUnmount = initialChildComponent;
-			if (toUnmount) {
-				cbase = component._component = null;
-			}
-
-			if (initialBase || renderMode === 1) {
-				if (cbase) { cbase._component = null; }
-				base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, true);
-			}
-		}
-
-		if (initialBase && base !== initialBase && inst !== initialChildComponent) {
-			var baseParent = initialBase.parentNode;
-			if (baseParent && base !== baseParent) {
-				baseParent.replaceChild(base, initialBase);
-
-				if (!toUnmount) {
-					initialBase._component = null;
-					recollectNodeTree(initialBase, false);
-				}
-			}
-		}
-
-		if (toUnmount) {
-			unmountComponent(toUnmount);
-		}
-
-		component.base = base;
-		if (base && !isChild) {
-			var componentRef = component,
-			    t = component;
-			while (t = t._parentComponent) {
-				(componentRef = t).base = base;
-			}
-			base._component = componentRef;
-			base._componentConstructor = componentRef.constructor;
-		}
-	}
-
-	if (!isUpdate || mountAll) {
-		mounts.push(component);
-	} else if (!skip) {
-
-		if (component.componentDidUpdate) {
-			component.componentDidUpdate(previousProps, previousState, snapshot);
-		}
-	}
-
-	while (component._renderCallbacks.length) {
-		component._renderCallbacks.pop().call(component);
-	}if (!diffLevel && !isChild) { flushMounts(); }
-}
-
-function buildComponentFromVNode(dom, vnode, context, mountAll) {
-	var c = dom && dom._component,
-	    originalComponent = c,
-	    oldDom = dom,
-	    isDirectOwner = c && dom._componentConstructor === vnode.nodeName,
-	    isOwner = isDirectOwner,
-	    props = getNodeProps(vnode);
-	while (c && !isOwner && (c = c._parentComponent)) {
-		isOwner = c.constructor === vnode.nodeName;
-	}
-
-	if (c && isOwner && (!mountAll || c._component)) {
-		setComponentProps(c, props, 3, context, mountAll);
-		dom = c.base;
-	} else {
-		if (originalComponent && !isDirectOwner) {
-			unmountComponent(originalComponent);
-			dom = oldDom = null;
-		}
-
-		c = createComponent(vnode.nodeName, props, context);
-		if (dom && !c.nextBase) {
-			c.nextBase = dom;
-
-			oldDom = null;
-		}
-		setComponentProps(c, props, 1, context, mountAll);
-		dom = c.base;
-
-		if (oldDom && dom !== oldDom) {
-			oldDom._component = null;
-			recollectNodeTree(oldDom, false);
-		}
-	}
-
-	return dom;
-}
-
-function unmountComponent(component) {
-
-	var base = component.base;
-
-	component._disable = true;
-
-	if (component.componentWillUnmount) { component.componentWillUnmount(); }
-
-	component.base = null;
-
-	var inner = component._component;
-	if (inner) {
-		unmountComponent(inner);
-	} else if (base) {
-		if (base['__preactattr_'] != null) { applyRef(base['__preactattr_'].ref, null); }
-
-		component.nextBase = base;
-
-		removeNode(base);
-		recyclerComponents.push(component);
-
-		removeChildren(base);
-	}
-
-	applyRef(component.__ref, null);
-}
-
-function Component(props, context) {
-	this._dirty = true;
-
-	this.context = context;
-
-	this.props = props;
-
-	this.state = this.state || {};
-
-	this._renderCallbacks = [];
-}
-
-extend(Component.prototype, {
-	setState: function setState(state, callback) {
-		if (!this.prevState) { this.prevState = this.state; }
-		this.state = extend(extend({}, this.state), typeof state === 'function' ? state(this.state, this.props) : state);
-		if (callback) { this._renderCallbacks.push(callback); }
-		enqueueRender(this);
-	},
-	forceUpdate: function forceUpdate(callback) {
-		if (callback) { this._renderCallbacks.push(callback); }
-		renderComponent(this, 2);
-	},
-	render: function render() {}
-});
-
-function render(vnode, parent, merge) {
-  return diff(merge, vnode, {}, false, parent, false);
-}
+var n,u,t,i,r,o,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|^--/i;function s(n,l){for(var u in l){ n[u]=l[u]; }return n}function a(n){var l=n.parentNode;l&&l.removeChild(n);}function h(n,l,u){var t,i,r,o,f=arguments;if(l=s({},l),arguments.length>3){ for(u=[u],t=3;t<arguments.length;t++){ u.push(f[t]); } }if(null!=u&&(l.children=u),null!=n&&null!=n.defaultProps){ for(i in n.defaultProps){ void 0===l[i]&&(l[i]=n.defaultProps[i]); } }return o=l.key,null!=(r=l.ref)&&delete l.ref,null!=o&&delete l.key,v(n,l,o,r)}function v(l,u,t,i){var r={type:l,props:u,key:t,ref:i,__k:null,__p:null,__b:0,__e:null,l:null,__c:null,constructor:void 0};return n.vnode&&n.vnode(r),r}function d(n){return n.children}function y(n){if(null==n||"boolean"==typeof n){ return null; }if("string"==typeof n||"number"==typeof n){ return v(null,n,null,null); }if(null!=n.__e||null!=n.__c){var l=v(n.type,n.props,n.key,null);return l.__e=n.__e,l}return n}function m(n,l){this.props=n,this.context=l;}function w(n,l){if(null==l){ return n.__p?w(n.__p,n.__p.__k.indexOf(n)+1):null; }for(var u;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){ return u.__e; } }return "function"==typeof n.type?w(n):null}function g(n){var l,u;if(null!=(n=n.__p)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break} }return g(n)}}function k(l){(!l.__d&&(l.__d=!0)&&1===u.push(l)||i!==n.debounceRendering)&&(i=n.debounceRendering,(n.debounceRendering||t)(_));}function _(){var n,l,t,i,r,o,f,e;for(u.sort(function(n,l){return l.__v.__b-n.__v.__b});n=u.pop();){ n.__d&&(t=void 0,i=void 0,o=(r=(l=n).__v).__e,f=l.__P,e=l.u,l.u=!1,f&&(t=[],i=$(f,r,s({},r),l.__n,void 0!==f.ownerSVGElement,null,t,e,null==o?w(r):o),j(t,r),i!=o&&g(r))); }}function b(n,l,u,t,i,r,o,c,s){var h,v,p,d,y,m,g,k=u&&u.__k||e,_=k.length;if(c==f&&(c=null!=r?r[0]:_?w(u,0):null),h=0,l.__k=x(l.__k,function(u){if(null!=u){if(u.__p=l,u.__b=l.__b+1,null===(p=k[h])||p&&u.key==p.key&&u.type===p.type){ k[h]=void 0; }else { for(v=0;v<_;v++){if((p=k[v])&&u.key==p.key&&u.type===p.type){k[v]=void 0;break}p=null;} }if(d=$(n,u,p=p||f,t,i,r,o,null,c,s),(v=u.ref)&&p.ref!=v&&(g||(g=[])).push(v,u.__c||d,u),null!=d){if(null==m&&(m=d),null!=u.l){ d=u.l,u.l=null; }else if(r==p||d!=c||null==d.parentNode){n:if(null==c||c.parentNode!==n){ n.appendChild(d); }else{for(y=c,v=0;(y=y.nextSibling)&&v<_;v+=2){ if(y==d){ break n; } }n.insertBefore(d,c);}"option"==l.type&&(n.value="");}c=d.nextSibling,"function"==typeof l.type&&(l.l=d);}}return h++,u}),l.__e=m,null!=r&&"function"!=typeof l.type){ for(h=r.length;h--;){ null!=r[h]&&a(r[h]); } }for(h=_;h--;){ null!=k[h]&&D(k[h],k[h]); }if(g){ for(h=0;h<g.length;h++){ A(g[h],g[++h],g[++h]); } }}function x(n,l,u){if(null==u&&(u=[]),null==n||"boolean"==typeof n){ l&&u.push(l(null)); }else if(Array.isArray(n)){ for(var t=0;t<n.length;t++){ x(n[t],l,u); } }else { u.push(l?l(y(n)):n); }return u}function C(n,l,u,t,i){var r;for(r in u){ r in l||N(n,r,null,u[r],t); }for(r in l){ i&&"function"!=typeof l[r]||"value"===r||"checked"===r||u[r]===l[r]||N(n,r,l[r],u[r],t); }}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]="number"==typeof u&&!1===c.test(l)?u+"px":null==u?"":u;}function N(n,l,u,t,i){var r,o,f,e,c;if("key"===(l=i?"className"===l?"class":l:"class"===l?"className":l)||"children"===l);else if("style"===l){ if(r=n.style,"string"==typeof u){ r.cssText=u; }else{if("string"==typeof t&&(r.cssText="",t=null),t){ for(o in t){ u&&o in u||P(r,o,""); } }if(u){ for(f in u){ t&&u[f]===t[f]||P(r,f,u[f]); } }} }else{ "o"===l[0]&&"n"===l[1]?(e=l!==(l=l.replace(/Capture$/,"")),c=l.toLowerCase(),l=(c in n?c:l).slice(2),u?(t||n.addEventListener(l,T,e),(n.t||(n.t={}))[l]=u):n.removeEventListener(l,T,e)):"list"!==l&&"tagName"!==l&&"form"!==l&&!i&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/^xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u?n.removeAttribute(l):n.setAttribute(l,u)); }}function T(l){return this.t[l.type](n.event?n.event(l):l)}function $(l,u,t,i,r,o,f,e,c,a){var h,v,p,y,w,g,k,_,C,P,N=u.type;if(void 0!==u.constructor){ return null; }(h=n.__b)&&h(u);try{n:if("function"==typeof N){if(_=u.props,C=(h=N.contextType)&&i[h.__c],P=h?C?C.props.value:h.__p:i,t.__c?k=(v=u.__c=t.__c).__p=v.__E:("prototype"in N&&N.prototype.render?u.__c=v=new N(_,P):(u.__c=v=new m(_,P),v.constructor=N,v.render=H),C&&C.sub(v),v.props=_,v.state||(v.state={}),v.context=P,v.__n=i,p=v.__d=!0,v.__h=[]),null==v.__s&&(v.__s=v.state),null!=N.getDerivedStateFromProps&&s(v.__s==v.state?v.__s=s({},v.__s):v.__s,N.getDerivedStateFromProps(_,v.__s)),p){ null==N.getDerivedStateFromProps&&null!=v.componentWillMount&&v.componentWillMount(),null!=v.componentDidMount&&f.push(v); }else{if(null==N.getDerivedStateFromProps&&null==e&&null!=v.componentWillReceiveProps&&v.componentWillReceiveProps(_,P),!e&&null!=v.shouldComponentUpdate&&!1===v.shouldComponentUpdate(_,v.__s,P)){for(v.props=_,v.state=v.__s,v.__d=!1,v.__v=u,u.__e=null!=c?c!==t.__e?c:t.__e:null,u.__k=t.__k,h=0;h<u.__k.length;h++){ u.__k[h]&&(u.__k[h].__p=u); }break n}null!=v.componentWillUpdate&&v.componentWillUpdate(_,v.__s,P);}for(y=v.props,w=v.state,v.context=P,v.props=_,v.state=v.__s,(h=n.__r)&&h(u),v.__d=!1,v.__v=u,v.__P=l,h=v.render(v.props,v.state,v.context),u.__k=x(null!=h&&h.type==d&&null==h.key?h.props.children:h),null!=v.getChildContext&&(i=s(s({},i),v.getChildContext())),p||null==v.getSnapshotBeforeUpdate||(g=v.getSnapshotBeforeUpdate(y,w)),b(l,u,t,i,r,o,f,c,a),v.base=u.__e;h=v.__h.pop();){ v.__s&&(v.state=v.__s),h.call(v); }p||null==y||null==v.componentDidUpdate||v.componentDidUpdate(y,w,g),k&&(v.__E=v.__p=null);}else { u.__e=z(t.__e,u,t,i,r,o,f,a); }(h=n.diffed)&&h(u);}catch(l){n.__e(l,u,t);}return u.__e}function j(l,u){for(var t;t=l.pop();){ try{t.componentDidMount();}catch(l){n.__e(l,t.__v);} }n.__c&&n.__c(u);}function z(n,l,u,t,i,r,o,c){var s,a,h,v,p=u.props,d=l.props;if(i="svg"===l.type||i,null==n&&null!=r){ for(s=0;s<r.length;s++){ if(null!=(a=r[s])&&(null===l.type?3===a.nodeType:a.localName===l.type)){n=a,r[s]=null;break} } }if(null==n){if(null===l.type){ return document.createTextNode(d); }n=i?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type),r=null;}return null===l.type?p!==d&&(null!=r&&(r[r.indexOf(n)]=null),n.data=d):l!==u&&(null!=r&&(r=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,c||(v||h)&&(v&&h&&v.__html==h.__html||(n.innerHTML=v&&v.__html||"")),C(n,d,p,i,c),l.__k=l.props.children,v||b(n,l,u,t,"foreignObject"!==l.type&&i,r,o,f,c),c||("value"in d&&void 0!==d.value&&d.value!==n.value&&(n.value=null==d.value?"":d.value),"checked"in d&&void 0!==d.checked&&d.checked!==n.checked&&(n.checked=d.checked))),n}function A(l,u,t){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,t);}}function D(l,u,t){var i,r,o;if(n.unmount&&n.unmount(l),(i=l.ref)&&A(i,null,u),t||"function"==typeof l.type||(t=null!=(r=l.__e)),l.__e=l.l=null,null!=(i=l.__c)){if(i.componentWillUnmount){ try{i.componentWillUnmount();}catch(l){n.__e(l,u);} }i.base=i.__P=null;}if(i=l.__k){ for(o=0;o<i.length;o++){ i[o]&&D(i[o],u,t); } }null!=r&&a(r);}function H(n,l,u){return this.constructor(n,u)}function I(l,u,t){var i,o,c;n.__p&&n.__p(l,u),o=(i=t===r)?null:t&&t.__k||u.__k,l=h(d,null,[l]),c=[],$(u,i?u.__k=l:(t||u).__k=l,o||f,f,void 0!==u.ownerSVGElement,t&&!i?[t]:o?null:e.slice.call(u.childNodes),c,!1,t||f,i),j(c,l);}n={},m.prototype.setState=function(n,l){var u=this.__s!==this.state&&this.__s||(this.__s=s({},this.state));("function"!=typeof n||(n=n(u,this.props)))&&s(u,n),null!=n&&this.__v&&(this.u=!1,l&&this.__h.push(l),k(this));},m.prototype.forceUpdate=function(n){this.__v&&(n&&this.__h.push(n),this.u=!0,k(this));},m.prototype.render=d,u=[],t="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,i=n.debounceRendering,n.__e=function(n,l,u){for(var t;l=l.__p;){ if((t=l.__c)&&!t.__p){ try{if(t.constructor&&null!=t.constructor.getDerivedStateFromError){ t.setState(t.constructor.getDerivedStateFromError(n)); }else{if(null==t.componentDidCatch){ continue; }t.componentDidCatch(n);}return k(t.__E=t)}catch(l){n=l;} } }throw n},r=f,o=0;
 
 /**
  * Listen to one or more events on an element
@@ -751,16 +54,16 @@ var EventResult;
  * Base component class for iro UI components
  * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
  */
-var IroComponent = /*@__PURE__*/(function (Component$$1) {
+var IroComponent = /*@__PURE__*/(function (Component) {
     function IroComponent(props) {
-        Component$$1.call(this, props);
+        Component.call(this, props);
         // Generate unique ID for the component
         // This can be used to generate unique IDs for gradients, etc
         this.uid = (Math.random() + 1).toString(36).substring(5);
     }
 
-    if ( Component$$1 ) IroComponent.__proto__ = Component$$1;
-    IroComponent.prototype = Object.create( Component$$1 && Component$$1.prototype );
+    if ( Component ) IroComponent.__proto__ = Component;
+    IroComponent.prototype = Object.create( Component && Component.prototype );
     IroComponent.prototype.constructor = IroComponent;
     IroComponent.prototype.componentDidMount = function componentDidMount () {
         listen(this.base, [EventType.MouseDown, EventType.TouchStart], this, { passive: false });
@@ -776,7 +79,7 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
         // Detect if the event is a touch event by checking if it has the `touches` property
         // If it is a touch event, use the first touch input
         var point = e.touches ? e.changedTouches[0] : e;
-        var x = point.clientX;
+        var x$$1 = point.clientX;
         var y = point.clientY;
         // Get the screen position of the component
         var bounds = this.base.getBoundingClientRect();
@@ -784,22 +87,22 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
             case EventType.MouseDown:
             case EventType.TouchStart:
                 listen(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
-                this.handleInput(x, y, bounds, EventResult.start);
+                this.handleInput(x$$1, y, bounds, EventResult.start);
                 break;
             case EventType.MouseMove:
             case EventType.TouchMove:
-                this.handleInput(x, y, bounds, EventResult.move);
+                this.handleInput(x$$1, y, bounds, EventResult.move);
                 break;
             case EventType.MouseUp:
             case EventType.TouchEnd:
-                this.handleInput(x, y, bounds, EventResult.end);
+                this.handleInput(x$$1, y, bounds, EventResult.end);
                 unlisten(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
                 break;
         }
     };
 
     return IroComponent;
-}(Component));
+}(m));
 
 /**
  * @desc Resolve an SVG URL
@@ -887,7 +190,7 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
       * @param {DOMRect} rect - bounding client rect for the component's base element
       * @param {String} type - input type: "START", "MOVE" or "END"
     */
-    IroWheel.prototype.handleInput = function handleInput (x, y, bounds, type) {
+    IroWheel.prototype.handleInput = function handleInput (x$$1, y, bounds, type) {
         var left = bounds.left;
         var top = bounds.top;
         var props = this.props;
@@ -895,20 +198,20 @@ var IroWheel = /*@__PURE__*/(function (IroComponent$$1) {
         var handleRange = (radius - props.padding - props.handleRadius - props.borderWidth);
         var cX = radius;
         var cY = radius;
-        x = cX - (x - left);
+        x$$1 = cX - (x$$1 - left);
         y = cY - (y - top);
-        var handleAngle = Math.atan2(y, x);
+        var handleAngle = Math.atan2(y, x$$1);
         // Calculate the hue by converting the angle to radians
         var hue = this.transformAngle(Math.round(handleAngle * (180 / Math.PI)) + 180);
         // Find the point's distance from the center of the wheel
         // This is used to show the saturation level
-        var handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
+        var handleDist = Math.min(Math.sqrt(x$$1 * x$$1 + y * y), handleRange);
         props.onInput(type, {
             h: hue,
             s: Math.round((100 / handleRange) * handleDist)
         });
     };
-    IroWheel.prototype.render = function render$$1 (props) {
+    IroWheel.prototype.render = function render (props) {
         var this$1 = this;
 
         var width = props.width;
@@ -1292,6 +595,79 @@ prototypeAccessors.hslString.set = function (value) {
 
 Object.defineProperties( IroColor.prototype, prototypeAccessors );
 
+function getRect(props) {
+    var width = props.width;
+    var sliderHeight = props.sliderHeight;
+    var borderWidth = props.borderWidth;
+    var handleRadius = props.handleRadius;
+    sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
+    return {
+        radius: sliderHeight / 2,
+        x: 0,
+        y: 0,
+        width: width,
+        height: sliderHeight,
+    };
+}
+function getValue(props) {
+    var hsv = props.color.hsv;
+    switch (props.sliderType) {
+        case 'hue':
+            return hsv.h /= 3.6;
+        case 'saturation':
+            return hsv.s;
+        case 'value':
+        default:
+            return hsv.v;
+    }
+}
+function getValueFromInput(x, y, bounds) {
+    var handleRange = bounds.width - bounds.height;
+    var cornerRadius = bounds.height / 2;
+    x = x - (bounds.left + cornerRadius);
+    var dist = Math.max(Math.min(x, handleRange), 0);
+    return Math.round((100 / handleRange) * dist);
+}
+function getHandlePosition(props) {
+    var ref = getRect(props);
+    var width = ref.width;
+    var height = ref.height;
+    var radius = ref.radius;
+    var sliderValue = getValue(props);
+    var handleRange = width - radius * 2;
+    var x = radius + (sliderValue / 100) * handleRange;
+    var y = height / 2;
+    return { x: x, y: y };
+}
+function getGradientStops(props) {
+    var hsv = props.color.hsv;
+    switch (props.sliderType) {
+        case 'hue':
+            return [
+                { offset: '0', color: '#f00' },
+                { offset: '16.666', color: '#ff0' },
+                { offset: '33.333', color: '#0f0' },
+                { offset: '50', color: '#0ff' },
+                { offset: '66.666', color: '#00f' },
+                { offset: '83.333', color: '#f0f' },
+                { offset: '100', color: '#f00' } ];
+        case 'saturation':
+            var noSat = IroColor.hsvToHsl({ h: hsv.h, s: 0, v: hsv.v });
+            var fullSat = IroColor.hsvToHsl({ h: hsv.h, s: 100, v: hsv.v });
+            return [
+                { offset: '0', color: ("hsl(" + (noSat.h) + ", " + (noSat.s) + "%, " + (noSat.l) + "%)") },
+                { offset: '100', color: ("hsl(" + (fullSat.h) + ", " + (fullSat.s) + "%, " + (fullSat.l) + "%)") }
+            ];
+        case 'value':
+        default:
+            var hsl = IroColor.hsvToHsl({ h: hsv.h, s: hsv.s, v: 100 });
+            return [
+                { offset: '0', color: '#000' },
+                { offset: '100', color: ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)") }
+            ];
+    }
+}
+
 var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
     function IroSlider () {
         IroComponent$$1.apply(this, arguments);
@@ -1301,80 +677,22 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
     IroSlider.prototype = Object.create( IroComponent$$1 && IroComponent$$1.prototype );
     IroSlider.prototype.constructor = IroSlider;
 
-    IroSlider.prototype.renderGradient = function renderGradient (props) {
-        var hsv = props.color.hsv;
-        var stops = [];
-        switch (props.sliderType) {
-            case 'hue':
-                stops = [
-                    { offset: '0', color: '#f00' },
-                    { offset: '16.666', color: '#ff0' },
-                    { offset: '33.333', color: '#0f0' },
-                    { offset: '50', color: '#0ff' },
-                    { offset: '66.666', color: '#00f' },
-                    { offset: '83.333', color: '#f0f' },
-                    { offset: '100', color: '#f00' } ];
-                break;
-            case 'saturation':
-                var noSat = IroColor.hsvToHsl({ h: hsv.h, s: 0, v: hsv.v });
-                var fullSat = IroColor.hsvToHsl({ h: hsv.h, s: 100, v: hsv.v });
-                stops = [
-                    { offset: '0', color: ("hsl(" + (noSat.h) + ", " + (noSat.s) + "%, " + (noSat.l) + "%)") },
-                    { offset: '100', color: ("hsl(" + (fullSat.h) + ", " + (fullSat.s) + "%, " + (fullSat.l) + "%)") }
-                ];
-                break;
-            case 'value':
-            default:
-                var hsl = IroColor.hsvToHsl({ h: hsv.h, s: hsv.s, v: 100 });
-                stops = [
-                    { offset: '0', color: '#000' },
-                    { offset: '100', color: ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)") }
-                ];
-                break;
-        }
-        return (h("linearGradient", { id: this.uid }, stops.map(function (stop) { return (h("stop", { offset: ((stop.offset) + "%"), "stop-color": stop.color })); })));
-    };
-    IroSlider.prototype.render = function render$$1 (props) {
-        var width = props.width;
-        var sliderHeight = props.sliderHeight;
-        var borderWidth = props.borderWidth;
-        var handleRadius = props.handleRadius;
-        sliderHeight = sliderHeight ? sliderHeight : props.padding * 2 + handleRadius * 2 + borderWidth * 2;
-        this.width = width;
-        this.height = sliderHeight;
-        var cornerRadius = sliderHeight / 2;
-        var range = width - cornerRadius * 2;
-        var hsv = props.color.hsv;
-        var sliderValue;
-        switch (props.sliderType) {
-            case 'hue':
-                sliderValue = hsv.h /= 3.6;
-                break;
-            case 'saturation':
-                sliderValue = hsv.s;
-                break;
-            case 'value':
-            default:
-                sliderValue = hsv.v;
-                break;
-        }
-        return (h("svg", { class: "iro__slider", width: width, height: sliderHeight, style: {
+    IroSlider.prototype.render = function render (props) {
+        var ref = getRect(props);
+        var width = ref.width;
+        var height = ref.height;
+        var radius = ref.radius;
+        var handlePos = getHandlePosition(props);
+        var gradient = getGradientStops(props);
+        return (h("svg", { className: "iro__slider", width: width, height: height, style: {
                 marginTop: props.sliderMargin,
                 overflow: 'visible',
                 display: 'block'
             } },
-            h("defs", null, this.renderGradient(props)),
-            h("rect", { className: "iro__slider__value", rx: cornerRadius, ry: cornerRadius, x: borderWidth / 2, y: borderWidth / 2, width: width - borderWidth, height: sliderHeight - borderWidth, "stroke-width": borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
-            h(IroHandle, { r: handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: cornerRadius + (sliderValue / 100) * range, y: sliderHeight / 2 })));
-    };
-    IroSlider.prototype.getValueFromPoint = function getValueFromPoint (x, y, ref) {
-        var left = ref.left;
-
-        var handleRange = this.width - this.height;
-        var cornerRadius = this.height / 2;
-        x = x - (left + cornerRadius);
-        var dist = Math.max(Math.min(x, handleRange), 0);
-        return Math.round((100 / handleRange) * dist);
+            h("defs", null,
+                h("linearGradient", { id: this.uid }, gradient.map(function (stop) { return (h("stop", { offset: ((stop.offset) + "%"), "stop-color": stop.color })); }))),
+            h("rect", { className: "iro__slider__value", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveUrl('#' + this.uid)) + ")") }),
+            h(IroHandle, { r: props.handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: handlePos.x, y: handlePos.y })));
     };
     /**
       * @desc handles mouse input for this component
@@ -1383,10 +701,10 @@ var IroSlider = /*@__PURE__*/(function (IroComponent$$1) {
       * @param {DOMRect} rect - bounding client rect for the component's base element
       * @param {String} type - input type: "START", "MOVE" or "END"
     */
-    IroSlider.prototype.handleInput = function handleInput (x, y, bounds, type) {
+    IroSlider.prototype.handleInput = function handleInput (x$$1, y, bounds, type) {
         var obj;
 
-        var value = this.getValueFromPoint(x, y, bounds);
+        var value = getValueFromInput(x$$1, y, bounds);
         var channel;
         switch (this.props.sliderType) {
             case 'hue':
@@ -1421,7 +739,7 @@ function createWidget(widgetComponent) {
         var widget = null; // will become an instance of the widget component class
         var widgetRoot = document.createElement('div');
         // Render widget into a temp DOM node
-        render(h(widgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
+        I(h(widgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
             props)), widgetRoot);
         // Mount it into the DOM when the page document is ready
         onDocumentReady(function () {
@@ -1440,9 +758,9 @@ function createWidget(widgetComponent) {
     return widgetFactory;
 }
 
-var IroColorPicker = /*@__PURE__*/(function (Component$$1) {
+var IroColorPicker = /*@__PURE__*/(function (Component) {
     function IroColorPicker(props) {
-        Component$$1.call(this, props, {});
+        Component.call(this, props, {});
         this.emitHook('init:before');
         this.events = {};
         this.deferredEvents = {};
@@ -1470,8 +788,8 @@ var IroColorPicker = /*@__PURE__*/(function (Component$$1) {
         this.emitHook('init:after');
     }
 
-    if ( Component$$1 ) IroColorPicker.__proto__ = Component$$1;
-    IroColorPicker.prototype = Object.create( Component$$1 && Component$$1.prototype );
+    if ( Component ) IroColorPicker.__proto__ = Component;
+    IroColorPicker.prototype = Object.create( Component && Component.prototype );
     IroColorPicker.prototype.constructor = IroColorPicker;
     // Public ColorPicker events API
     /**
@@ -1642,7 +960,7 @@ var IroColorPicker = /*@__PURE__*/(function (Component$$1) {
         // Super important to do this here and not in updateColor()
         this.colorUpdateSrc = null;
     };
-    IroColorPicker.prototype.render = function render$$1 (props, state) {
+    IroColorPicker.prototype.render = function render (props, state) {
         var this$1 = this;
 
         return (h("div", { class: "iro__colorPicker", id: props.id, style: {
@@ -1650,14 +968,14 @@ var IroColorPicker = /*@__PURE__*/(function (Component$$1) {
                 width: state.width
             } }, this.layout.map(function (ref) {
                 var UiComponent = ref.component;
-                var options$$1 = ref.options;
+                var options = ref.options;
 
-                return (h(UiComponent, Object.assign({}, state, options$$1, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1 })));
+                return (h(UiComponent, Object.assign({}, state, options, { onInput: function (type, hsv) { return this$1.handleInput(type, hsv); }, parent: this$1 })));
         })));
     };
 
     return IroColorPicker;
-}(Component));
+}(m));
 IroColorPicker.pluginHooks = {};
 IroColorPicker.defaultProps = {
     width: 300,
