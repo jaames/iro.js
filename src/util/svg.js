@@ -7,17 +7,19 @@
  * https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
  * https://github.com/jaames/iro.js/issues/18
  * https://github.com/jaames/iro.js/issues/45
+ * There's also a secondary issue with using absolute SVG gradient URLs in Ionic, as the
+ * Ionic Webview plugin changes location.protocol to "ionic://" which breaks URL resolution
+ * https://github.com/jaames/iro.js/issues/45#issuecomment-542949642
  * @param {String} url resource url (should be an id selector e.g "#example")
  * @returns {String} resolved url
  */
 export function resolveUrl(url) {
-  // Sniff useragent string to check if the user is running Safari or iOS Webview
+  // Sniff useragent string to check if iro.js is running in Safari or iOS Webview
   const location = window.location;
   const ua = window.navigator.userAgent;
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isIos = /iPhone|iPod|iPad/i.test(ua);
-  // Detect if running in ionic
-  // https://github.com/jaames/iro.js/issues/18
+  // Sniff protocol string to check if iro.js is running in an Ionic webview
   const isIonic = /ionic/i.test(location.protocol);
   return ((isSafari || isIos) && (!isIonic)) ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
 }

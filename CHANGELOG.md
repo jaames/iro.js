@@ -1,5 +1,17 @@
 ### Changelog
 
+#### 4.5.2
+
+##### Fixes
+
+* Fixes an issue where UI gradients were rendering as black when iro.js was used in an Ionic Webview on iOS. See #18 for more info.
+
+#### 4.5.1
+
+##### Fixes
+
+* Prevents a rendering bug caused when the color was updated before the picker was mounted into the DOM
+
 #### 4.5.0
 
 ##### Additions
