@@ -11,12 +11,15 @@
  * @returns {String} resolved url
  */
 export function resolveUrl(url) {
-  // Sniff useragent string to check if the user is running Safari
+  // Sniff useragent string to check if the user is running Safari or iOS Webview
+  const location = window.location;
   const ua = window.navigator.userAgent;
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isIos = /iPhone|iPod|iPad/i.test(ua);
-  const location = window.location;
-  return (isSafari || isIos) ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
+  // Detect if running in ionic
+  // https://github.com/jaames/iro.js/issues/18
+  const isIonic = /ionic/i.test(location.protocol);
+  return ((isSafari || isIos) && (!isIonic)) ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
 }
 
 /**

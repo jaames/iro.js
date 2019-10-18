@@ -822,12 +822,15 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
  * @returns {String} resolved url
  */
 function resolveUrl(url) {
-  // Sniff useragent string to check if the user is running Safari
+  // Sniff useragent string to check if the user is running Safari or iOS Webview
+  var location = window.location;
   var ua = window.navigator.userAgent;
   var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   var isIos = /iPhone|iPod|iPad/i.test(ua);
-  var location = window.location;
-  return (isSafari || isIos) ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
+  // Detect if running in ionic
+  // https://github.com/jaames/iro.js/issues/18
+  var isIonic = /ionic/i.test(location.protocol);
+  return ((isSafari || isIos) && (!isIonic)) ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
 }
 
 /**
