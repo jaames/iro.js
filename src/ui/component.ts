@@ -1,6 +1,19 @@
 import { Component } from 'preact';
-import { listen, unlisten } from '../util/dom';
-import { ColorPickerProps } from '../colorPicker';
+import { IroColor, IroColorPickerOptions } from 'iro-core';
+
+// Listen to one or more events on an element
+export function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
+  for (var i = 0; i < eventList.length; i++) {
+    el.addEventListener(eventList[i], callback, params);
+  }
+};
+
+// Remove an event listener on an element
+export function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
+  for (var i = 0; i < eventList.length; i++) {
+    el.removeEventListener(eventList[i], callback, params);
+  }
+};
 
 enum EventType {
   MouseDown = 'mousedown',
@@ -17,14 +30,13 @@ export enum EventResult {
   end
 }
 
-export interface IroComponentProps extends ColorPickerProps {
-  onInput: Function
+export interface IroComponentProps extends IroColorPickerOptions {
+  color: IroColor;
+  onInput: Function;
 }
 
-/**
- * Base component class for iro UI components
- * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
- */
+// Base component class for iro UI components
+// This extends the Preact component class to allow them to react to mouse/touch input events by themselves
 export abstract class IroComponent<Props extends IroComponentProps, State> extends Component<Props, State> {
   public uid: string;
   public base: HTMLElement;
@@ -43,8 +55,6 @@ export abstract class IroComponent<Props extends IroComponentProps, State> exten
   componentWillUnmount() {
     unlisten(this.base, [EventType.MouseDown, EventType.TouchStart], this);
   }
-
-
 
   abstract handleInput(x: number, y: number, bounds: ClientRect | DOMRect, type: EventResult);
 

@@ -2,6 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": { "*": ["types/*"] },
+        "moduleResolution": "Node",
         "outDir": "dist",
         "target": "es6",
         "jsx": "react",

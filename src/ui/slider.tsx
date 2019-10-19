@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import { 
+import {
   resolveSvgUrl,
   getSliderDimensions, 
   getSliderValueFromInput, 
   getSliderHandlePosition, 
-  getSliderGradient
+  getSliderGradient,
 } from 'iro-core';
 
 import { IroComponent, IroComponentProps, EventResult } from './component';
@@ -19,6 +19,27 @@ interface IroSliderState {}
 export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
   public height: number;
   public width: number;
+
+  // Handles mouse input for this component
+  handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
+    const value = getSliderValueFromInput(this.props, x, y, bounds);
+    let channel;
+    switch (this.props.sliderType) {
+      case 'hue':
+        channel = 'h';
+        break;
+      case 'saturation':
+        channel = 's';
+        break;
+      case 'value':
+      default:
+        channel = 'v';
+        break;
+    }
+    this.props.onInput(type, {
+      [channel]: value
+    });
+  }
 
   render(props: any) {
     const {
@@ -45,8 +66,8 @@ export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
       >
         <defs>
           <linearGradient id={ this.uid }>
-            {gradient.map(stop => (
-              <stop offset={`${stop.offset}%`} stop-color={ stop.color } />
+            { gradient.map(([ offset, color ]) => (
+              <stop offset={`${ offset }%`} stop-color={ color } />
             ))}
           </linearGradient>
         </defs>
@@ -71,33 +92,5 @@ export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
         />
       </svg>
     );
-  }
-
-  /**
-    * @desc handles mouse input for this component
-    * @param {Number} x - point x coordinate
-    * @param {Number} y - point y coordinate
-    * @param {DOMRect} rect - bounding client rect for the component's base element
-    * @param {String} type - input type: "START", "MOVE" or "END"
-  */
-  handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    let value = getSliderValueFromInput(this.props, x, y, bounds);
-    let channel;
-    switch (this.props.sliderType) {
-      case 'hue':
-        channel = 'h';
-        value *= 3.6;
-        break;
-      case 'saturation':
-        channel = 's';
-        break;
-      case 'value':
-      default:
-        channel = 'v';
-        break;
-    }
-    this.props.onInput(type, {
-      [channel]: value
-    });
   }
 }

@@ -1,14 +1,10 @@
 import { h, Component } from 'preact';
-import { IroColor, IroColorValue } from 'iro-core';
+import { IroColor, IroColorPickerOptions, iroColorPickerOptionDefaults } from 'iro-core';
 
+import { IroComponent } from './ui/component';
 import { IroWheel } from './ui/wheel';
 import { IroSlider } from './ui/slider';
 import { createWidget } from './util/createWidget';
-
-interface HandleOrigin {
-  x: number;
-  y: number;
-}
 
 interface ColorPickerEvents {
   [key: string]: Function[];
@@ -19,55 +15,27 @@ interface ColorDeferredEvents {
 }
 
 interface ColorPickerLayoutDefinition {
-  component: Component;
+  component: IroComponent<any, any>;
+  options: any;
 }
 
-
-export interface ColorPickerProps {
-  width: number,
-  height: number,
-  handleRadius: number,
-  handleSvg: string,
-  handleOrigin: HandleOrigin;
-  color: IroColorValue
-  borderColor: string,
-  borderWidth: number,
-  display: string,
-  id: null,
-  wheelLightness: boolean,
-  wheelAngle: number,
-  wheelDirection: string,
-  sliderHeight: number,
-  sliderMargin: number,
-  padding: number,
-  layout: any
+export interface ColorPickerProps extends IroColorPickerOptions {
+  display?: string;
+  id?: null;
+  layout?: ColorPickerLayoutDefinition[];
 }
 
 export interface ColorPickerState extends ColorPickerProps {
-  color: IroColor
+  color: IroColor;
 }
 
 class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
 
-
   public static pluginHooks = {};
   public static defaultProps = {
-    width: 300,
-    height: 300,
-    handleRadius: 8,
-    handleSvg: null,
-    handleOrigin: {x: 0, y: 0},
-    color: '#fff',
-    borderColor: '#fff',
-    borderWidth: 0,
+    ...iroColorPickerOptionDefaults,
     display: 'block',
     id: null,
-    wheelLightness: true,
-    wheelAngle: 0,
-    wheelDirection: 'anticlockwise',
-    sliderHeight: null,
-    sliderMargin: 12,
-    padding: 6,
     layout: null
   }
 
@@ -89,10 +57,9 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     this.colorUpdateActive = false;
     this.colorUpdateSrc = null;
     this.id = props.id;
-    this.color = new IroColor(props.color);
+    // Whenever the color changes, update the color wheel=
+    this.color = new IroColor(props.color, this.updateColor.bind(this));
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
-    // Whenever the color changes, update the color wheel
-    this.color.onChange = this.updateColor.bind(this);
     // Pass all the props into the component's state,
     // Except we want to add the color object and make sure that refs aren't passed down to children
     this.state = ({
@@ -173,7 +140,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {String} eventType The name of the event to emit
    * @param {Array} args array of args to pass to callbacks
    */
-  deferredEmit(eventType: string, ...args: Array<any>) {
+  public deferredEmit(eventType: string, ...args: Array<any>) {
     const deferredEvents = this.deferredEvents;
     this.emit(eventType, ...args);
     (deferredEvents[eventType] || (deferredEvents[eventType] = [])).push(args);
@@ -192,7 +159,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
   /**
    * @desc Reset the color picker to the initial color provided in the color picker options
    */
-  reset() {
+  public reset() {
     this.color.set(this.props.color);
   }
 
@@ -247,7 +214,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
       // While _colorUpdateActive == true, branch cannot be entered
       this.colorUpdateActive = true;
       // If the color change originates from user input, fire input:change
-      if (this.colorUpdateSrc == 'input') { // colorUpdateSrc is cleared in handeInput()
+      if (this.colorUpdateSrc === 'input') { // colorUpdateSrc is cleared in handeInput()
         this.emit('input:change', color, changes);
       } 
       // Always fire color:change event
@@ -262,9 +229,9 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {String} type "START" | "MOVE" | "END"
    * @param {Object} hsv new hsv values for the color
    */
-  handleInput(type: any, hsv: any) {
+  private handleInput(type: any, hsv: any) {
     // Fire input start and move events before color update
-    if (type === 'START') this.emit('input:start', [this.color]);
+    if (type === 'START') this.emit('input:start', this.color);
     if (type === 'MOVE') this.emit('input:move', this.color);
     // Set the color update source
     this.colorUpdateSrc = 'input';
@@ -292,7 +259,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
           <UiComponent
             {...state}
             {...options}
-            onInput={ (type, hsv) => this.handleInput(type, hsv) }
+            onInput={ this.handleInput.bind(this) }
             parent={ this }
           />
         ))}

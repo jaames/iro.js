@@ -1,17 +1,16 @@
 import { Component } from 'preact';
-import { ColorPickerProps } from '../colorPicker';
+import { IroColor, IroColorPickerOptions } from 'iro-core';
+export declare function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions): void;
+export declare function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions): void;
 export declare enum EventResult {
     start = 0,
     move = 1,
     end = 2
 }
-export interface IroComponentProps extends ColorPickerProps {
+export interface IroComponentProps extends IroColorPickerOptions {
+    color: IroColor;
     onInput: Function;
 }
-/**
- * Base component class for iro UI components
- * This extends the Preact component class to allow them to react to mouse/touch input events by themselves
- */
 export declare abstract class IroComponent<Props extends IroComponentProps, State> extends Component<Props, State> {
     uid: string;
     base: HTMLElement;

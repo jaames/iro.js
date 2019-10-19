@@ -1,7 +1,15 @@
 import { h } from 'preact';
 import { resolveSvgUrl } from 'iro-core';
 
-export function IroHandle(props: any) {
+interface IroHandleProps {
+  x: number;
+  y: number;
+  r: number;
+  url: string;
+  origin: { x: number, y: number };
+}
+
+export function IroHandle(props: IroHandleProps) {
   const radius = props.r;
   const url = props.url;
 

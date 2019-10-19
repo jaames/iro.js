@@ -1,26 +1,13 @@
-import { IroColor, IroColorValue } from 'iro-core';
-interface HandleOrigin {
-    x: number;
-    y: number;
+import { IroColor, IroColorPickerOptions } from 'iro-core';
+import { IroComponent } from './ui/component';
+interface ColorPickerLayoutDefinition {
+    component: IroComponent<any, any>;
+    options: any;
 }
-export interface ColorPickerProps {
-    width: number;
-    height: number;
-    handleRadius: number;
-    handleSvg: string;
-    handleOrigin: HandleOrigin;
-    color: IroColorValue;
-    borderColor: string;
-    borderWidth: number;
-    display: string;
-    id: null;
-    wheelLightness: boolean;
-    wheelAngle: number;
-    wheelDirection: string;
-    sliderHeight: number;
-    sliderMargin: number;
-    padding: number;
-    layout: any;
+export interface ColorPickerProps extends IroColorPickerOptions {
+    display?: string;
+    id?: null;
+    layout?: ColorPickerLayoutDefinition[];
 }
 export interface ColorPickerState extends ColorPickerProps {
     color: IroColor;
