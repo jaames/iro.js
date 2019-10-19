@@ -9,8 +9,8 @@ interface IroHandleProps {
         y: number;
     };
 }
-declare function IroHandle(props: IroHandleProps): h.JSX.Element;
-declare namespace IroHandle {
+export declare function IroHandle(props: IroHandleProps): h.JSX.Element;
+export declare namespace IroHandle {
     var defaultProps: {
         x: number;
         y: number;
@@ -22,4 +22,4 @@ declare namespace IroHandle {
         };
     };
 }
-export default IroHandle;
+export {};

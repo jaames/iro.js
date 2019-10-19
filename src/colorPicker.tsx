@@ -19,15 +19,15 @@ interface ColorPickerLayoutDefinition {
   options: any;
 }
 
-export interface ColorPickerProps extends IroColorPickerOptions {
+export type ColorPickerProps = {
   display?: string;
   id?: null;
   layout?: ColorPickerLayoutDefinition[];
-}
+} & IroColorPickerOptions;
 
-export interface ColorPickerState extends ColorPickerProps {
+export type ColorPickerState = {
   color: IroColor;
-}
+} & ColorPickerProps;
 
 class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
 

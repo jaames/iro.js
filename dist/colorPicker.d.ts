@@ -4,14 +4,14 @@ interface ColorPickerLayoutDefinition {
     component: IroComponent<any, any>;
     options: any;
 }
-export interface ColorPickerProps extends IroColorPickerOptions {
+export declare type ColorPickerProps = {
     display?: string;
     id?: null;
     layout?: ColorPickerLayoutDefinition[];
-}
-export interface ColorPickerState extends ColorPickerProps {
+} & IroColorPickerOptions;
+export declare type ColorPickerState = {
     color: IroColor;
-}
+} & ColorPickerProps;
 export declare const IroColorPickerWidget: {
     (parent: any, props: any): any;
     prototype: any;
