@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { IroColor, IroColorPickerOptions, iroColorPickerOptionDefaults } from 'iro-core';
+import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from 'iro-core';
 
 import { IroComponent } from './ui/component';
 import { IroWheel } from './ui/wheel';
@@ -19,15 +19,15 @@ interface ColorPickerLayoutDefinition {
   options: any;
 }
 
-export type ColorPickerProps = {
+export interface ColorPickerProps extends IroColorPickerOptions {
   display?: string;
   id?: null;
   layout?: ColorPickerLayoutDefinition[];
-} & IroColorPickerOptions;
+}
 
-export type ColorPickerState = {
+export interface ColorPickerState extends ColorPickerProps {
   color: IroColor;
-} & ColorPickerProps;
+}
 
 class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
 
@@ -41,6 +41,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
 
   public el: any;
   public id: string;
+  public defaultColor: IroColorValue;
   public color: IroColor;
   public layout: Array<any>;
 
@@ -49,7 +50,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
   private colorUpdateActive: boolean;
   private colorUpdateSrc: string;
 
-  constructor(props: ColorPickerProps) {
+  constructor(props) {
     super(props, {});
     this.emitHook('init:before');
     this.events = {};
@@ -57,7 +58,8 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     this.colorUpdateActive = false;
     this.colorUpdateSrc = null;
     this.id = props.id;
-    // Whenever the color changes, update the color wheel=
+    this.defaultColor = props.color;
+    // Whenever the color changes, update the color wheel
     this.color = new IroColor(props.color, this.updateColor.bind(this));
     this.deferredEmit('color:init', this.color, { h: false, s: false, v: false, a: false });
     // Pass all the props into the component's state,
@@ -153,14 +155,17 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {Number} width
    */
   public resize(width: number) {
-    this.setState({width}, ()=>{});
+    this.setState((current) => ({
+      ...current,
+      width
+    }), ()=>{});
   }
 
   /**
    * @desc Reset the color picker to the initial color provided in the color picker options
    */
   public reset() {
-    this.color.set(this.props.color);
+    this.color.set(this.defaultColor);
   }
 
   // Plugin hooks API
@@ -249,7 +254,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     return (
       <div 
         class="iro__colorPicker"
-        id={ props.id }
+        id={ state.id }
         style={{
           display: state.display,
           width: state.width
