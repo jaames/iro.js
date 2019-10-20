@@ -1,9 +1,9 @@
 import { h, Component } from 'preact';
 import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from 'iro-core';
 
-import { IroWheel } from './ui/wheel';
-import { IroSlider } from './ui/slider';
-import { createWidget } from './util/createWidget';
+import { IroWheel } from './Wheel';
+import { IroSlider } from './Slider';
+import { createWidget } from './createWidget';
 
 interface ColorPickerEvents {
   [key: string]: Function[];

@@ -38,18 +38,18 @@ var EventResult;
 })(EventResult || (EventResult = {}));
 // Base component class for iro UI components
 // This extends the Preact component class to allow them to react to mouse/touch input events by themselves
-var IroComponent = /*@__PURE__*/(function (Component) {
-    function IroComponent(props) {
+var IroComponentBase = /*@__PURE__*/(function (Component) {
+    function IroComponentBase(props) {
         Component.call(this, props);
         // Generate unique ID for the component
         // This can be used to generate unique IDs for gradients, etc
         this.uid = (Math.random() + 1).toString(36).substring(5);
     }
 
-    if ( Component ) IroComponent.__proto__ = Component;
-    IroComponent.prototype = Object.create( Component && Component.prototype );
-    IroComponent.prototype.constructor = IroComponent;
-    IroComponent.prototype.render = function render (props) {
+    if ( Component ) IroComponentBase.__proto__ = Component;
+    IroComponentBase.prototype = Object.create( Component && Component.prototype );
+    IroComponentBase.prototype.constructor = IroComponentBase;
+    IroComponentBase.prototype.render = function render (props) {
         var rootProps = {
             onMouseDown: this.handleEvent.bind(this),
             onTouchStart: this.handleEvent.bind(this)
@@ -63,7 +63,7 @@ var IroComponent = /*@__PURE__*/(function (Component) {
     // More info on handleEvent:
     // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
     // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
-    IroComponent.prototype.handleEvent = function handleEvent (e) {
+    IroComponentBase.prototype.handleEvent = function handleEvent (e) {
         e.preventDefault();
         // Detect if the event is a touch event by checking if it has the `touches` property
         // If it is a touch event, use the first touch input
@@ -91,7 +91,7 @@ var IroComponent = /*@__PURE__*/(function (Component) {
         }
     };
 
-    return IroComponent;
+    return IroComponentBase;
 }(m));
 
 function IroHandle(props) {
@@ -111,7 +111,6 @@ IroHandle.defaultProps = {
 };
 
 var HUE_STEPS = Array.apply(null, { length: 360 }).map(function (_, index) { return index; });
-// interface IroWheelState {}
 function IroWheel(props) {
     var width = props.width;
     var borderWidth = props.borderWidth;
@@ -124,7 +123,7 @@ function IroWheel(props) {
     function handleInput(x, y, bounds, type) {
         this.props.onInput(type, R(this.props, x, y, bounds));
     }
-    return (h(IroComponent, { onInput: handleInput.bind(this) }, function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "iro__wheel", width: width, height: width, style: rootStyles }),
+    return (h(IroComponentBase, { onInput: handleInput.bind(this) }, function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "iro__wheel", width: width, height: width, style: rootStyles }),
         h("defs", null,
             h("radialGradient", { id: uid },
                 h("stop", { offset: "0%", "stop-color": "#fff" }),
@@ -135,74 +134,6 @@ function IroWheel(props) {
         h("circle", { className: "iro__wheel__border", cx: cX, cy: cY, r: radius, fill: "none", stroke: props.borderColor, "stroke-width": borderWidth }),
         h(IroHandle, { r: props.handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: handlePos.x, y: handlePos.y }))); }));
 }
-// export class IroWheel extends IroComponent<IroWheelProps, IroWheelState> {
-//   // Handles mouse input for this component
-//   public handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-//     this.props.onInput(type, getWheelValueFromInput(this.props, x, y, bounds));
-//   }
-//   public render(props: any) {
-//     return (
-//       <svg 
-//         className="iro__wheel"
-//         width={ width }
-//         height={ width }
-//         style={{
-//           overflow: 'visible',
-//           display: 'block'
-//         }}
-//       >
-//         <defs>
-//           <radialGradient id={ this.uid }>
-//             <stop offset="0%" stop-color="#fff"/>
-//             <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-//           </radialGradient>
-//         </defs>
-//         <g className="iro__wheel__hue" stroke-width={ radius } fill="none">
-//           { HUE_STEPS.map(angle => (
-//             <path 
-//               key={ angle }
-//               d={ getSvgArcPath(cX, cY, radius / 2, angle, angle + 1.5) } 
-//               stroke={ `hsl(${translateWheelAngle(props, angle)}, 100%, 50%)` }
-//             />
-//           ))}
-//         </g>
-//         <circle 
-//           className="iro__wheel__saturation"
-//           cx={ cX }
-//           cy={ cY }
-//           r={ radius }
-//           fill={ `url(${resolveSvgUrl('#' + this.uid)})` }
-//         />
-//         { props.wheelLightness && (
-//           <circle 
-//             className="iro__wheel__lightness"
-//             cx={ cX }
-//             cy={ cY }
-//             r={ radius }
-//             fill="#000"
-//             opacity={ 1 - hsv.v / 100 }
-//           />
-//         )}
-//         <circle 
-//           className="iro__wheel__border"
-//           cx={ cX }
-//           cy={ cY }
-//           r={ radius }
-//           fill="none"
-//           stroke={ props.borderColor }
-//           stroke-width={ borderWidth }
-//         />
-//         <IroHandle 
-//           r={ props.handleRadius }
-//           url={ props.handleSvg }
-//           origin={ props.handleOrigin }
-//           x={ handlePos.x }
-//           y={ handlePos.y }
-//         />
-//       </svg>
-//     );
-//   }
-// }
 
 function IroSlider(props) {
     var ref = b$1(props);
@@ -230,7 +161,7 @@ function IroSlider(props) {
         }
         this.props.onInput(type, ( obj = {}, obj[channel] = value, obj ));
     }
-    return (h(IroComponent, { onInput: handleInput.bind(this) }, function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "iro__slider", width: width, height: height, style: Object.assign({}, rootStyles,
+    return (h(IroComponentBase, { onInput: handleInput.bind(this) }, function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "iro__slider", width: width, height: height, style: Object.assign({}, rootStyles,
             {marginTop: props.sliderMargin}) }),
         h("defs", null,
             h("linearGradient", { id: uid }, gradient.map(function (ref) {
@@ -242,62 +173,6 @@ function IroSlider(props) {
         h("rect", { className: "iro__slider__value", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (F('#' + uid)) + ")") }),
         h(IroHandle, { r: props.handleRadius, url: props.handleSvg, origin: props.handleOrigin, x: handlePos.x, y: handlePos.y }))); }));
 }
-// export class IroSlider extends IroComponent<IroSliderProps, IroSliderState> {
-//   public height: number;
-//   public width: number;
-//   // Handles mouse input for this component
-//   
-//   render(props: any) {
-//     const {
-//       x, 
-//       y,
-//       width,
-//       height,
-//       radius
-//     } = getSliderDimensions(props);
-//     const handlePos = getSliderHandlePosition(props);
-//     const gradient = getSliderGradient(props);
-//     return (
-//       <svg 
-//         className="iro__slider"
-//         width={ width }
-//         height={ height }
-//         style= {{
-//           marginTop: props.sliderMargin,
-//           overflow: 'visible',
-//           display: 'block'
-//         }}
-//       >
-//         <defs>
-//           <linearGradient id={ this.uid }>
-//             { gradient.map(([ offset, color ]) => (
-//               <stop offset={`${ offset }%`} stop-color={ color } />
-//             ))}
-//           </linearGradient>
-//         </defs>
-//         <rect 
-//           className="iro__slider__value"
-//           rx={ radius } 
-//           ry={ radius } 
-//           x={ props.borderWidth / 2 } 
-//           y={ props.borderWidth / 2 } 
-//           width={ width - props.borderWidth } 
-//           height={ height - props.borderWidth }
-//           stroke-width={ props.borderWidth }
-//           stroke={ props.borderColor }
-//           fill={ `url(${resolveSvgUrl('#' + this.uid)})` }
-//         />
-//         <IroHandle
-//           r={ props.handleRadius }
-//           url={ props.handleSvg }
-//           origin={ props.handleOrigin }
-//           x={ handlePos.x }
-//           y={ handlePos.y }
-//         />
-//       </svg>
-//     );
-//   }
-// }
 
 // Turn a component into a widget
 // This returns a factory function that can be used to create an instance of the widget component
@@ -586,7 +461,7 @@ var index = usePlugins({
     ColorPicker: IroColorPickerWidget,
     ui: {
         h: h,
-        Component: IroComponent,
+        ComponentBase: IroComponentBase,
         Handle: IroHandle,
         Slider: IroSlider,
         Wheel: IroWheel,

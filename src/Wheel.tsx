@@ -8,8 +8,8 @@ import {
   getWheelValueFromInput
 } from 'iro-core';
 
-import { IroComponentBase, IroComponentProps, EventResult } from './component';
-import { IroHandle } from './handle';
+import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
+import { IroHandle } from './Handle';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 

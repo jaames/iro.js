@@ -1,19 +1,19 @@
 import { h } from 'preact';
 import { IroColor } from 'iro-core';
 
-import { IroColorPickerWidget } from './colorPicker';
-import { IroComponentBase } from './ui/component';
-import { IroHandle }  from './ui/handle';
-import { IroSlider } from './ui/slider';
-import { IroWheel } from './ui/wheel';
-import { usePlugins } from './util/usePlugins';
+import { IroColorPickerWidget } from './ColorPicker';
+import { IroComponentBase } from './ComponentBase';
+import { IroHandle }  from './Handle';
+import { IroSlider } from './Slider';
+import { IroWheel } from './Wheel';
+import { usePlugins } from './usePlugins';
 
 export default usePlugins({
   Color: IroColor,
   ColorPicker: IroColorPickerWidget,
   ui: {
     h,
-    Component: IroComponentBase,
+    ComponentBase: IroComponentBase,
     Handle: IroHandle,
     Slider: IroSlider,
     Wheel: IroWheel,
