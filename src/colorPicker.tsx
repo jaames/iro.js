@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from 'iro-core';
 
-import { IroComponent } from './ui/component';
 import { IroWheel } from './ui/wheel';
 import { IroSlider } from './ui/slider';
 import { createWidget } from './util/createWidget';
@@ -15,7 +14,7 @@ interface ColorDeferredEvents {
 }
 
 interface ColorPickerLayoutDefinition {
-  component: IroComponent<any, any>;
+  component: Component;
   options: any;
 }
 

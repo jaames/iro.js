@@ -1,7 +1,7 @@
+import { Component } from 'preact';
 import { IroColor, IroColorPickerOptions } from 'iro-core';
-import { IroComponent } from './ui/component';
 interface ColorPickerLayoutDefinition {
-    component: IroComponent<any, any>;
+    component: Component;
     options: any;
 }
 export interface ColorPickerProps extends IroColorPickerOptions {

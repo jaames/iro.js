@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { Component, h } from 'preact';
 import { IroColor, IroColorPickerOptions } from 'iro-core';
 export declare function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions): void;
 export declare function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions): void;
@@ -11,12 +11,16 @@ export interface IroComponentProps extends IroColorPickerOptions {
     color: IroColor;
     onInput: Function;
 }
-export declare abstract class IroComponent<Props extends IroComponentProps, State> extends Component<Props, State> {
+interface Props {
+    onInput: Function;
+}
+interface State {
+}
+export declare class IroComponentBase extends Component<Props, State> {
     uid: string;
     base: HTMLElement;
     constructor(props: Props);
-    componentDidMount(): void;
-    componentWillUnmount(): void;
-    abstract handleInput(x: number, y: number, bounds: ClientRect | DOMRect, type: EventResult): any;
+    render(props: any): h.JSX.Element;
     handleEvent(e: MouseEvent & TouchEvent): void;
 }
+export {};

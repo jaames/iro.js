@@ -34,6 +34,12 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
       options: {
         sliderType: 'saturation'
       }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'kelvin'
+      }
     }
   ]
 });

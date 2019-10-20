@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { Fragment, Component, h } from 'preact';
 import { IroColor, IroColorPickerOptions } from 'iro-core';
 
 // Listen to one or more events on an element
@@ -35,9 +35,15 @@ export interface IroComponentProps extends IroColorPickerOptions {
   onInput: Function;
 }
 
+interface Props {
+  onInput: Function;
+}
+
+interface State {}
+
 // Base component class for iro UI components
 // This extends the Preact component class to allow them to react to mouse/touch input events by themselves
-export abstract class IroComponent<Props extends IroComponentProps, State> extends Component<Props, State> {
+export class IroComponentBase extends Component<Props, State> {
   public uid: string;
   public base: HTMLElement;
 
@@ -48,15 +54,24 @@ export abstract class IroComponent<Props extends IroComponentProps, State> exten
     this.uid = (Math.random() + 1).toString(36).substring(5);
   }
 
-  componentDidMount() {
-    listen(this.base, [EventType.MouseDown, EventType.TouchStart], this, { passive: false });
-  }
+  render(props) {
 
-  componentWillUnmount() {
-    unlisten(this.base, [EventType.MouseDown, EventType.TouchStart], this);
-  }
+    const rootProps = {
+      onMouseDown: this.handleEvent.bind(this),
+      onTouchStart: this.handleEvent.bind(this)
+    }
 
-  abstract handleInput(x: number, y: number, bounds: ClientRect | DOMRect, type: EventResult);
+    const rootStyles = {
+      overflow: 'visible',
+      display: 'block'
+    }
+
+    return (
+      <Fragment>
+        { props.children(this.uid, rootProps, rootStyles) }
+      </Fragment>
+    )
+  }
 
   // More info on handleEvent:
   // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
@@ -71,20 +86,21 @@ export abstract class IroComponent<Props extends IroComponentProps, State> exten
 
     // Get the screen position of the component
     const bounds = this.base.getBoundingClientRect();
+    const inputHandler = this.props.onInput;
 
     switch (e.type) {
       case EventType.MouseDown:
       case EventType.TouchStart:
         listen(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
-        this.handleInput(x, y, bounds, EventResult.start);
+        inputHandler(x, y, bounds, EventResult.start);
         break;
       case EventType.MouseMove:
       case EventType.TouchMove:
-        this.handleInput(x, y, bounds, EventResult.move);
+        inputHandler(x, y, bounds, EventResult.move);
         break;
       case EventType.MouseUp:
       case EventType.TouchEnd:
-        this.handleInput(x, y, bounds, EventResult.end);
+        inputHandler(x, y, bounds, EventResult.end);
         unlisten(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
         break;
     }
