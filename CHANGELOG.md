@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 4.5.3
+
+##### Fixes
+
+* Further fixes to UI gradient rendering in cases where iro.js is used in a page where a `<base>` tag is also present. 
+
 #### 4.5.2
 
 ##### Fixes

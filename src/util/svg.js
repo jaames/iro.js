@@ -1,3 +1,8 @@
+// Keep track of html <base> elements for resolveUrl
+// getElementsByTagName returns a live HTMLCollection, which stays in sync with the DOM tree
+// So it only needs to be called once
+const bases = document.getElementsByTagName('base');
+
 /**
  * @desc Resolve an SVG URL
  * This is required to work around how Safari handles gradient URLS under certain conditions
@@ -7,9 +12,7 @@
  * https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
  * https://github.com/jaames/iro.js/issues/18
  * https://github.com/jaames/iro.js/issues/45
- * There's also a secondary issue with using absolute SVG gradient URLs in Ionic, as the
- * Ionic Webview plugin changes location.protocol to "ionic://" which breaks URL resolution
- * https://github.com/jaames/iro.js/issues/45#issuecomment-542949642
+ * https://github.com/jaames/iro.js/pull/89
  * @param {String} url resource url (should be an id selector e.g "#example")
  * @returns {String} resolved url
  */
@@ -19,7 +22,6 @@ export function resolveUrl(url) {
   const ua = window.navigator.userAgent;
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isIos = /iPhone|iPod|iPad/i.test(ua);
-  var bases = document.getElementsByTagName('base');
   return ((isSafari || isIos) && (bases.length > 0)) ? `${location.protocol}//${location.host}${location.pathname}${location.search}${url}` : url;
 }
 
