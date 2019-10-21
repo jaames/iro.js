@@ -1,5 +1,5 @@
 /*!
- * iro.js v4.5.2
+ * iro.js v4.5.3
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -809,6 +809,11 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
   return IroComponent;
 }(Component));
 
+// Keep track of html <base> elements for resolveUrl
+// getElementsByTagName returns a live HTMLCollection, which stays in sync with the DOM tree
+// So it only needs to be called once
+var bases = document.getElementsByTagName('base');
+
 /**
  * @desc Resolve an SVG URL
  * This is required to work around how Safari handles gradient URLS under certain conditions
@@ -818,9 +823,7 @@ var IroComponent = /*@__PURE__*/(function (Component$$1) {
  * https://stackoverflow.com/questions/19742805/angular-and-svg-filters/19753427#19753427
  * https://github.com/jaames/iro.js/issues/18
  * https://github.com/jaames/iro.js/issues/45
- * There's also a secondary issue with using absolute SVG gradient URLs in Ionic, as the
- * Ionic Webview plugin changes location.protocol to "ionic://" which breaks URL resolution
- * https://github.com/jaames/iro.js/issues/45#issuecomment-542949642
+ * https://github.com/jaames/iro.js/pull/89
  * @param {String} url resource url (should be an id selector e.g "#example")
  * @returns {String} resolved url
  */
@@ -830,9 +833,7 @@ function resolveUrl(url) {
   var ua = window.navigator.userAgent;
   var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   var isIos = /iPhone|iPod|iPad/i.test(ua);
-  // Sniff protocol string to check if iro.js is running in an Ionic webview
-  var isIonic = /ionic/i.test(location.protocol);
-  return ((isSafari || isIos) && (!isIonic)) ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
+  return ((isSafari || isIos) && (bases.length > 0)) ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
 }
 
 /**
@@ -1847,7 +1848,7 @@ var iro = usePlugins({
     parseHexInt: parseHexInt,
     intToHex: intToHex
   },
-  version: "4.5.2",
+  version: "4.5.3",
 });
 
 export default iro;
