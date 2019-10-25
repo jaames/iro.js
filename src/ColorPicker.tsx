@@ -38,7 +38,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     layout: null
   }
 
-  public el: any;
+  public el: HTMLElement;
   public id: string;
   public defaultColor: IroColorValue;
   public color: IroColor;
@@ -50,7 +50,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
   private colorUpdateSrc: string;
 
   constructor(props) {
-    super(props, {});
+    super(props);
     this.emitHook('init:before');
     this.events = {};
     this.deferredEvents = {};
@@ -70,7 +70,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     } as ColorPickerState);
     this.emitHook('init:state');
 
-    if (props.layout) {
+    if (props.layout !== null) {
       this.layout = props.layout;
     } else {
       this.layout = [
@@ -88,7 +88,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {String | Array} eventList event(s) to listen to
    * @param {Function} callback
    */
-  public on(eventList: any, callback: any) {
+  public on(eventList: string[] | string, callback: Function) {
     const events = this.events;
     // eventList can be an eventType string or an array of eventType strings
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
@@ -114,7 +114,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {String | Array} eventList The name of the event
    * @param {Function} callback
    */
-  public off(eventList: Array<string>|string, callback: () => void) {
+  public off(eventList: string[] | string, callback: Function) {
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
       const callbackList = this.events[eventType];
       this.emitHook('event:off', eventType, callback);
@@ -174,7 +174,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {String} hookType The name of the hook to listen to
    * @param {Function} callback
    */
-  public static addHook(hookType: string, callback: () => void) {
+  public static addHook(hookType: string, callback: Function) {
     const pluginHooks = IroColorPicker.pluginHooks;
     (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
   }
@@ -191,17 +191,17 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     }
   }
 
-  // Internal methods
-
   /**
    * @desc Called by the createWidget wrapper when the element is mounted into the page
    * @access private
    * @param {Element} container the container element for this ColorPicker instance
    */
-  private onMount(container: any) {
+  public onMount(container: HTMLElement) {
     this.el = container;
     this.deferredEmit('mount', this);
   }
+
+  // Internal methods
 
   /**
    * @desc React to a color update
@@ -209,9 +209,9 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
    * @param {IroColor} color current color
    * @param {Object} changes shows which h,s,v color channels changed
    */
-  private updateColor(color: any, changes: any) {
+  private updateColor(color: IroColor, changes: any) {
     this.emitHook('color:beforeUpdate', color, changes);
-    this.setState({ "color": color });
+    this.setState({ color });
     this.emitHook('color:afterUpdate', color, changes);
     // Prevent infinite loops if the color is set inside a color:change or input:change callback
     if (!this.colorUpdateActive) {
@@ -252,7 +252,7 @@ class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
   public render(props: any, state: any) {
     return (
       <div 
-        class="iro__colorPicker"
+        class="IroColorPicker"
         id={ state.id }
         style={{
           display: state.display,

@@ -20,7 +20,7 @@ enum EventType {
   MouseMove = 'mousemove',
   MouseUp = 'mouseup',
   TouchStart = 'touchstart',
-  TouchMove = 'touchstart',
+  TouchMove = 'touchmove',
   TouchEnd = 'touchend'
 }
 

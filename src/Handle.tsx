@@ -14,13 +14,12 @@ export function IroHandle(props: IroHandleProps) {
   const url = props.url;
 
   return (
-    <svg className="iro__handle" x={ props.x } y={ props.y } style={{ overflow: 'visible' }}>
+    <svg className="IroHandle" x={ props.x } y={ props.y } style={{ overflow: 'visible' }}>
       {url && (
         <use xlinkHref={resolveSvgUrl(url)} { ...props.origin }/>
       )}
       {!url && (
         <circle 
-          className="iro__handle__inner"
           r={ radius }
           fill="none"
           stroke-width={ 2 }
@@ -29,7 +28,6 @@ export function IroHandle(props: IroHandleProps) {
       )}
       {!url && (
         <circle 
-          className="iro__handle__outer" 
           r={ radius - 2 }
           fill="none"
           stroke-width={ 2 }

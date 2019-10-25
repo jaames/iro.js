@@ -35,7 +35,7 @@ export function IroWheel(props: IroWheelProps) {
       {(uid, rootProps, rootStyles) => (
         <svg
           { ...rootProps }
-          className="iro__wheel"
+          className="IroWheel"
           width={ width }
           height={ width }
           style={ rootStyles } 
@@ -46,7 +46,7 @@ export function IroWheel(props: IroWheelProps) {
              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
            </radialGradient>
          </defs>
-         <g className="iro__wheel__hue" stroke-width={ radius } fill="none">
+         <g className="IroWheelHue" stroke-width={ radius } fill="none">
            { HUE_STEPS.map(angle => (
              <path 
                key={ angle }
@@ -56,7 +56,7 @@ export function IroWheel(props: IroWheelProps) {
            ))}
          </g>
          <circle 
-           className="iro__wheel__saturation"
+           className="IroWheelSaturation"
            cx={ cX }
            cy={ cY }
            r={ radius }
@@ -66,7 +66,7 @@ export function IroWheel(props: IroWheelProps) {
          />
          { props.wheelLightness && (
            <circle 
-             className="iro__wheel__lightness"
+             className="IroWheelLightness"
              cx={ cX }
              cy={ cY }
              r={ radius }
@@ -75,7 +75,7 @@ export function IroWheel(props: IroWheelProps) {
            />
          )}
          <circle 
-           className="iro__wheel__border"
+           className="IroWheelBorder"
            cx={ cX }
            cy={ cY }
            r={ radius }
