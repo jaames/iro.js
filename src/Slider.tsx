@@ -24,44 +24,20 @@ interface IroSliderProps extends IroComponentProps {
 };
 
 export function IroSlider(props: IroSliderProps) {
-  const {
-    x, 
-    y,
-    width,
-    height,
-    radius
-  } = getSliderDimensions(props);
-  
+  const { width, height, radius } = getSliderDimensions(props);
   const handlePos = getSliderHandlePosition(props);
   const gradient = getSliderGradient(props);
   const isAlpha = props.sliderType === 'alpha';
 
   function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    const value = getSliderValueFromInput(this.props, x, y, bounds);
-    let hsv = {};
-    switch (this.props.sliderType) {
-      case 'alpha':
-        hsv = {a: value};
-        break;
-      case 'temperature':
-        hsv = IroColor.rgbToHsv(IroColor.kelvinToRgb(value));
-        break;
-      case 'hue':
-        hsv = {h: value};
-        break;
-      case 'saturation':
-          hsv = {s: value};
-        break;
-      case 'value':
-      default:
-          hsv = {v: value};
-        break;
-    }
-    this.props.onInput(type, hsv);
+    const value = getSliderValueFromInput(props, x, y, bounds);
+    props.parent.inputActive = true;
+    props.color[props.sliderType] = value;
+    props.onInput(type);
   }
 
   return (
-    <IroComponentBase onInput={ handleInput.bind(this) }>
+    <IroComponentBase onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg 
           { ...rootProps }

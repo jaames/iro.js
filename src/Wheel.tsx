@@ -3,7 +3,7 @@ import {
   resolveSvgUrl,
   getSvgArcPath,
   translateWheelAngle, 
-  getWheelCenter,
+  getWheelDimensions,
   getWheelHandlePosition,
   getWheelValueFromInput
 } from 'iro-core';
@@ -17,21 +17,20 @@ interface IroWheelProps extends IroComponentProps {}
 
 export function IroWheel(props: IroWheelProps) {
 
-  let { width, borderWidth } = props;
+  const { borderWidth } = props;
   const hsv = props.color.hsv;
-  const radius = (width / 2) - borderWidth;
-  const center = getWheelCenter(props);
-  const cX = center.x;
-  const cY = center.y;
+  const { width, radius, cx, cy } = getWheelDimensions(props);
 
   const handlePos = getWheelHandlePosition(props);
 
   function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    this.props.onInput(type, getWheelValueFromInput(this.props, x, y, bounds));
+    props.parent.inputActive = true;
+    props.color.hsv = getWheelValueFromInput(props, x, y, bounds);
+    props.onInput(type);
   }
 
   return (
-    <IroComponentBase onInput={ handleInput.bind(this) }>
+    <IroComponentBase onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg
           { ...rootProps }
@@ -50,25 +49,23 @@ export function IroWheel(props: IroWheelProps) {
            { HUE_STEPS.map(angle => (
              <path 
                key={ angle }
-               d={ getSvgArcPath(cX, cY, radius / 2, angle, angle + 1.5) } 
+               d={ getSvgArcPath(cx, cy, radius / 2, angle, angle + 1.5) } 
                stroke={ `hsl(${translateWheelAngle(props, angle)}, 100%, 50%)` }
              />
            ))}
          </g>
          <circle 
            className="IroWheelSaturation"
-           cx={ cX }
-           cy={ cY }
+           cx={ cx }
+           cy={ cy }
            r={ radius }
            fill={ `url(${resolveSvgUrl('#' + uid)})` }
-           stroke={ props.borderColor }
-           stroke-width={ borderWidth }
          />
          { props.wheelLightness && (
            <circle 
              className="IroWheelLightness"
-             cx={ cX }
-             cy={ cY }
+             cx={ cx }
+             cy={ cy }
              r={ radius }
              fill="#000"
              opacity={ 1 - hsv.v / 100 }
@@ -76,8 +73,8 @@ export function IroWheel(props: IroWheelProps) {
          )}
          <circle 
            className="IroWheelBorder"
-           cx={ cX }
-           cy={ cY }
+           cx={ cx }
+           cy={ cy }
            r={ radius }
            fill="none"
            stroke={ props.borderColor }
