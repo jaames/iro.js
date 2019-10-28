@@ -9,6 +9,7 @@ import typescript from 'rollup-plugin-typescript2';
 import { uglify } from 'rollup-plugin-uglify';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import bundleSize from 'rollup-plugin-bundle-size';
 
 const build = process.env.BUILD || "development";
 const devserver = process.env.DEV_SERVER || false;
@@ -43,6 +44,7 @@ module.exports = {
     }
   ].filter(Boolean),
   plugins: [
+    bundleSize(),
     nodeResolve(),
     alias({
       resolve: ['.jsx', '.js'],

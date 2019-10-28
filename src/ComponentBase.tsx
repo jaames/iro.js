@@ -1,15 +1,16 @@
 import { Fragment, Component, h } from 'preact';
 import { IroColor, IroColorPickerOptions } from 'iro-core';
+import { IroColorPicker } from './ColorPicker';
 
 // Listen to one or more events on an element
-export function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
+function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
   for (var i = 0; i < eventList.length; i++) {
     el.addEventListener(eventList[i], callback, params);
   }
 };
 
 // Remove an event listener on an element
-export function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
+function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
   for (var i = 0; i < eventList.length; i++) {
     el.removeEventListener(eventList[i], callback, params);
   }
@@ -31,6 +32,7 @@ export enum EventResult {
 }
 
 export interface IroComponentProps extends IroColorPickerOptions {
+  parent: IroColorPicker;
   color: IroColor;
   onInput: Function;
 }
@@ -47,7 +49,7 @@ export class IroComponentBase extends Component<Props, State> {
   public uid: string;
   public base: HTMLElement;
 
-  constructor(props: Props) {
+  constructor(props) {
     super(props);
     // Generate unique ID for the component
     // This can be used to generate unique IDs for gradients, etc
@@ -63,7 +65,7 @@ export class IroComponentBase extends Component<Props, State> {
 
     const rootStyles = {
       overflow: 'visible',
-      display: 'block'
+      display: props.layoutDirection === 'vertical' ? 'block' : 'inline-block' 
     }
 
     return (
