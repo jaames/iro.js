@@ -6,7 +6,7 @@ import {
   getBoxGradients,
   getBoxValueFromInput,
   getBoxHandlePosition
-} from 'iro-core';
+} from '@irojs/iro-core';
 
 import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
 import { IroHandle } from './Handle';
@@ -67,7 +67,7 @@ export function IroBox(props: IroBoxProps) {
           <IroHandle
             r={ props.handleRadius }
             url={ props.handleSvg }
-            origin={ props.handleOrigin }
+            props={ props.handleProps }
             x={ handlePos.x }
             y={ handlePos.y }
           />

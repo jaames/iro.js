@@ -4,10 +4,7 @@ interface IroHandleProps {
     y: number;
     r: number;
     url: string;
-    origin: {
-        x: number;
-        y: number;
-    };
+    props: any;
 }
 export declare function IroHandle(props: IroHandleProps): h.JSX.Element;
 export declare namespace IroHandle {
@@ -16,7 +13,7 @@ export declare namespace IroHandle {
         y: number;
         r: number;
         url: any;
-        origin: {
+        props: {
             x: number;
             y: number;
         };

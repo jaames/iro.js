@@ -1,5 +1,5 @@
 import { h, Component, ComponentType } from 'preact';
-import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from 'iro-core';
+import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from '@irojs/iro-core';
 
 import { IroWheel } from './Wheel';
 import { IroSlider } from './Slider';
@@ -43,7 +43,6 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   public id: string;
   public defaultColor: IroColorValue;
   public color: IroColor;
-  public layout: Array<any>;
   public inputActive: boolean = false;
 
   private events: ColorPickerEvents = {};
@@ -65,6 +64,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
       ref: undefined,
       color: this.color,
       layout: props.layout !== null ? props.layout : [
+        // default layout is just a wheel and a slider
         {component: IroWheel, options: {}},
         {component: IroSlider, options: {}},
       ]
@@ -162,8 +162,8 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
 
   /**
    * @desc Set a callback function for a hook
-   * @param {String} hookType The name of the hook to listen to
-   * @param {Function} callback
+   * @param hookType - The name of the hook to listen to
+   * @param callback
    */
   public static addHook(hookType: string, callback: Function) {
     const pluginHooks = IroColorPicker.pluginHooks;
@@ -183,8 +183,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
 
   /**
    * @desc Called by the createWidget wrapper when the element is mounted into the page
-   * @access private
-   * @param {Element} container the container element for this ColorPicker instance
+   * @param container - the container element for this ColorPicker instance
    */
   public onMount(container: HTMLElement) {
     this.el = container;
@@ -234,7 +233,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
         id={ state.id }
         style={{
           display: state.display,
-          [props.layoutDirection === 'vertical' ? 'height' : 'width']: state.width
+          [props.layoutDirection === 'vertical' ? 'width' : 'height']: state.width
         }}
       >
         { state.layout.map(({component: UiComponent, options: options}) => (

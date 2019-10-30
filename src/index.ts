@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { IroColor } from 'iro-core';
+import { IroColor } from '@irojs/iro-core';
 
 import { IroColorPickerWidget } from './ColorPicker';
 import { IroComponentBase } from './ComponentBase';

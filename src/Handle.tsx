@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import { resolveSvgUrl } from 'iro-core';
+import { resolveSvgUrl } from '@irojs/iro-core';
 
 interface IroHandleProps {
   x: number;
   y: number;
   r: number;
   url: string;
-  origin: { x: number, y: number };
+  props: any;
 }
 
 export function IroHandle(props: IroHandleProps) {
@@ -16,7 +16,7 @@ export function IroHandle(props: IroHandleProps) {
   return (
     <svg className="IroHandle" x={ props.x } y={ props.y } style={{ overflow: 'visible' }}>
       {url && (
-        <use xlinkHref={resolveSvgUrl(url)} { ...props.origin }/>
+        <use xlinkHref={resolveSvgUrl(url)} { ...props.props }/>
       )}
       {!url && (
         <circle 
@@ -43,5 +43,5 @@ IroHandle.defaultProps = {
   y: 0,
   r: 8,
   url: null,
-  origin: {x: 0, y: 0}
+  props: {x: 0, y: 0}
 };

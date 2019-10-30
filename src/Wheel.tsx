@@ -6,7 +6,7 @@ import {
   getWheelDimensions,
   getWheelHandlePosition,
   getWheelValueFromInput
-} from 'iro-core';
+} from '@irojs/iro-core';
 
 import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
 import { IroHandle } from './Handle';
@@ -83,7 +83,7 @@ export function IroWheel(props: IroWheelProps) {
          <IroHandle 
            r={ props.handleRadius }
            url={ props.handleSvg }
-           origin={ props.handleOrigin }
+           props={ props.handleProps }
            x={ handlePos.x }
            y={ handlePos.y }
          />

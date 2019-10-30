@@ -1,5 +1,5 @@
 import { Fragment, Component, h } from 'preact';
-import { IroColor, IroColorPickerOptions } from 'iro-core';
+import { IroColor, IroColorPickerOptions } from '@irojs/iro-core';
 import { IroColorPicker } from './ColorPicker';
 
 // Listen to one or more events on an element

@@ -11,7 +11,7 @@ import {
   getSliderHandlePosition, 
   getSliderGradient,
   getSliderGradientCoords
-} from 'iro-core';
+} from '@irojs/iro-core';
 
 import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
 import { IroHandle } from './Handle';
@@ -84,7 +84,7 @@ export function IroSlider(props: IroSliderProps) {
           <IroHandle
             r={ props.handleRadius }
             url={ props.handleSvg }
-            origin={ props.handleOrigin }
+            props={ props.handleProps }
             x={ handlePos.x }
             y={ handlePos.y }
           />
