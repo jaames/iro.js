@@ -1,13 +1,13 @@
 {
   "name": "@jaames/iro",
-  "version": "5.0.0",
+  "version": "5.0.0-2",
   "description": "A moden, SVG-based color picker widget for JavaScript",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "preact": "^10.0.0",
-    "@irojs/iro-core": "0.0.4"
+    "@irojs/iro-core": "0.0.5",
+    "preact": "^10.0.0"
   },
   "devDependencies": {
     "css-reset-and-normalize": "^1.2.0",
@@ -28,9 +28,9 @@
     "sass-loader": "^7.1.0",
     "typescript": "^3.6.4",
     "vue-svg-loader": "^0.5.0",
-    "vuepress": "^0.14.2",
-    "webpack": "^4.31.0",
-    "webpack-cli": "^3.3.2"
+    "vuepress": "^1.2.0",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
     "prepublishOnly": "npm run build",

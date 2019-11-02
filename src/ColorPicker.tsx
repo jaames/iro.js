@@ -232,8 +232,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
         class="IroColorPicker"
         id={ state.id }
         style={{
-          display: state.display,
-          [props.layoutDirection === 'vertical' ? 'width' : 'height']: state.width
+          display: state.display
         }}
       >
         { state.layout.map(({component: UiComponent, options: options}) => (
