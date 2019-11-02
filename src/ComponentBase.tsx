@@ -65,7 +65,7 @@ export class IroComponentBase extends Component<Props, State> {
 
     const rootStyles = {
       overflow: 'visible',
-      display: props.layoutDirection === 'vertical' ? 'inline-block' : 'block' 
+      display: props.layoutDirection === 'vertical' ? 'block' : 'inline-block' 
     }
 
     return (

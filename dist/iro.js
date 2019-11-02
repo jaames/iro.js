@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.0.0-2
+ * iro.js v5.0.0-3
  * 2016-2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -62,7 +62,7 @@
           };
           var rootStyles = {
               overflow: 'visible',
-              display: props.layoutDirection === 'vertical' ? 'inline-block' : 'block'
+              display: props.layoutDirection === 'vertical' ? 'block' : 'inline-block'
           };
           return (h(d, null, props.children(this.uid, rootProps, rootStyles)));
       };
@@ -488,7 +488,7 @@
           Wheel: IroWheel,
           Box: IroBox,
       },
-      version: "5.0.0-2",
+      version: "5.0.0-3",
   });
 
   return index;
