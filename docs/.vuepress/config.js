@@ -43,15 +43,31 @@ module.exports = {
       }
     ]
   },
-  configureWebpack: (config, isServer) => {
-    config.module.rules
-      .filter(r => r.test.toString().includes("svg"))
-      .forEach(r => {
-        r.test = /\.(png|jpe?g|gif)$/;
-      });
-    config.module.rules.push({
-      test: /\.svg$/,
-      loader: 'vue-svg-loader'
-    });
-  }
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@styles': path.resolve(__dirname, './theme/styles'),
+        '@js': path.resolve(__dirname, './theme/js'),
+        '@svg': path.resolve(__dirname, './theme/svg'),
+      }
+    }
+  },
+  chainWebpack: config => {
+		config.module
+			.rule("vue")
+			.use("vue-svg-inline-loader")
+				.loader("vue-svg-inline-loader")
+				.options({ /* ... */ });
+	}
+  // configureWebpack: (config, isServer) => {
+  //   config.module.rules
+  //     .filter(r => r.test.toString().includes("svg"))
+  //     .forEach(r => {
+  //       r.test = /\.(png|jpe?g|gif)$/;
+  //     });
+  //   config.module.rules.push({
+  //     test: /\.svg$/,
+  //     loader: 'vue-svg-loader'
+  //   });
+  // }
 }

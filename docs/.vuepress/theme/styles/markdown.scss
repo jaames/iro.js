@@ -1,5 +1,5 @@
-.markdown {
-  // font-size: .9rem;
+.Markdown {
+  
 
   h1, h2, h3, h4 {
     margin-top: 2em;
@@ -133,4 +133,12 @@
   pre.language-css::before {content: "css";}
   pre.language-html::before {content: "html";}
   pre.language-svg::before {content: "svg";}
+}
+
+.Markdown.Markdown--invert {
+  color: mix($text-invert, $text-invert-alt, 50%);
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $text-invert;
+  }
 }
