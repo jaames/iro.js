@@ -1,8 +1,12 @@
 <template>
   <div class="FormatDemo">
     <div class="FormatDemo__picker" ref="container"></div>
-    <div>
-      {{ hexString }}
+    <div class="FormatDemo__readout">
+      <div>
+        <span class="FormatDemo__int">{{ hsv.h | formatInt }}</span>
+        <span class="FormatDemo__int">{{ hsv.s | formatInt }}</span>
+        <span class="FormatDemo__int">{{ hsv.v | formatInt }}</span>
+      </div>
     </div>
     <div>
       h {{ Math.round(hsv.h) }} s {{ Math.round(hsv.s) }} v {{ Math.round(hsv.v) }}
@@ -33,6 +37,11 @@ export default {
     rgb: {r: '', g: '', b: ''},
     kelvin: 0
   }),
+  filters: {
+    formatInt: function (value) {
+      return Math.round(value);
+    }
+  },
   mounted() {
     // https://vuepress.vuejs.org/guide/using-vue.html#browser-api-access-restrictions
     import('@js/iro.es.js').then(module => {
@@ -103,6 +112,13 @@ export default {
     .IroWheel, .IroSlider, .IroBox {
       margin: 0 !important;
     }
+  }
+
+  .FormatDemo__int {
+    width: 3ch;
+    text-align: right;
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
   }
 
 </style>

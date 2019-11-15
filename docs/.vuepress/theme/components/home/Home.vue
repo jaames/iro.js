@@ -1,57 +1,41 @@
 <template>
   <main class="Home" aria-labelledby="main-title">
     <a href="https://github.com/jaames/iro.js" class="GithubCorner" title="View on GitHub">
-      <img svg-inline class="GithubCorner__svg" src="@svg/github-corner.svg" alt="GitHub Logo"/>
+      <img svg-inline class="GithubCorner__svg" src="@icon/github-corner.svg" alt="GitHub Logo"/>
     </a>
-    <header class="Hero">
-      <div class="Hero__head"></div>
-      <div class="Hero__body">
-        <div class="Hero__demo">
-          <ColorPicker :color="color" @onChange="updateColor"/>
-        </div>
-        <div class="Hero__intro">
-          <h1 class="Hero__title">iro.js<sub>v5</sub></h1>
-          <h2 class="Hero__subtitle">A modern, SVG-based color picker for vanilla JS, React and Vue.</h2>
-          <div class="ButtonGroup">
-            <a href="https://github.com/jaames/iro.js" class="Button">GitHub</a>
-            <router-link class="Button" to="/introduction.html">Documentation →</router-link>
-          </div>
-        </div>
-      </div>
-      <div class="Hero__foot"></div>
-    </header>
+    <Hero>
+      <ColorPicker :color="color" @onChange="updateColor"/>
+    </Hero>
     <section class="Section">
       <div class="Section__head">
         <h2 class="Section__title">Features</h2>
       </div>
-      <div class="FeatureHighlight">
-        <div class="FeatureHighlight__main">
-          <h3 class="FeatureHighlight__title">Create the perfect color picker from a selection of built-in UI components -- and add your own.</h3>
+      <FeatureHighlight>
+        <template v-slot:header>
+          <h3>Create the perfect color picker from a selection of built-in UI components -- and add your own.</h3>
           <div class="ButtonGroup">
             <div class="Button">Full Demo</div>
             <div class="Button">Learn More</div>
           </div>
-        </div>
-        <div class="FeatureHighlight__secondary">
+        </template>
+        <template v-slot:content>
           <ComponentDemo :color="color" @onChange="updateColor"/>
-        </div>
-      </div>
-      <div class="FeatureHighlight FeatureHighlight--reverse">
-        <div class="FeatureHighlight__main">
-          <h3 class="FeatureHighlight__title">Out-of-the-box support for colors in HEX, RGB, HSV, HSL and kelvin temperature formats in one simple, frictionless API.</h3>
+        </template>
+      </FeatureHighlight>
+      <FeatureHighlight reverse>
+        <template v-slot:header>
+          <h3>Out-of-the-box support for colors in HEX, RGB, HSV, HSL and kelvin temperature formats in one simple, frictionless API.</h3>
           <div class="ButtonGroup">
             <div class="Button">Full Demo</div>
             <div class="Button">Learn More</div>
           </div>
-        </div>
-        <div class="FeatureHighlight__secondary">
+        </template>
+        <template v-slot:content>
           <FormatDemo :color="color" @onChange="updateColor"/>
-        </div>
-      </div>
-      <div class="FeatureHighlight FeatureHighlight--column">
-        <div class="FeatureHighlight__main">
-        </div>
-        <div class="FeatureHighlight__secondary">
+        </template>
+      </FeatureHighlight>
+      <FeatureHighlight column>
+        <template v-slot:content>
           <div class="FeatureGrid">
             <div class="FeatureItem">
               <h4>Works with any project</h4>
@@ -78,7 +62,21 @@
               <p>Everything is licenced under MPL 2.0 and is completely free for commercial or personal projects.</p>
             </div>
           </div>
-        </div>
+        </template>
+      </FeatureHighlight>
+    </section>
+    <section class="Section">
+      <div class="Section__head">
+        <h2 class="Section__title">Ecosystem</h2>
+      </div>
+      <div class="RepoGrid">
+        <GithubCard author="jaames" repo="iro.js">
+          The original standalone version of iro.js that works in any webpage.
+        </GithubCard>
+        <GithubCard author="irojs" repo="react-iro-color-picker">
+          Port of iro.js for React 16+
+        </GithubCard>
+        <GithubCard author="irojs" repo="vue-iro-color-picker"/>
       </div>
     </section>
     <section class="Section">
@@ -97,20 +95,48 @@
         </template>
       </Tutorial>
     </section>
+    <section class="Section">
+      <div class="Author">
+        <img class="Author__img" src="@icon/james-avatar.png" alt="">
+        <div class="Author__bio">
+          <h5 class="Author__name">Built by <a>James Daniel</a></h5>
+          <ul class="Author__linkGroup">
+            <a class="Author__link" href="mailto" title="Email me">
+              <img svg-inline class="Author__linkIcon" src="@icon/envelope.svg" alt="Email icon"/>
+            </a>
+            <a class="Author__link" href="https://github.com/jaames" title="@jaames on GitHub">
+              <img svg-inline class="Author__linkIcon" src="@icon/github-alt.svg" alt="GitHub icon"/>
+            </a>
+            <a class="Author__link" href="https://twitter.com/rakujira" title="@rakujira on Twitter">
+              <img svg-inline class="Author__linkIcon" src="@icon/twitter-alt.svg" alt="Twitter icon"/>
+            </a>
+            <a class="Author__link" href="https://dribbble.com/jaames" title="@jaames on Dribbble">
+              <img svg-inline class="Author__linkIcon" src="@icon/dribbble.svg" alt="Dribbble icon"/>
+            </a>
+          </ul>
+        </div>
+      </div>
+    </section>
   </main>
 </template>
 
 <script>
+import Hero from './Hero';
+import FeatureHighlight from './FeatureHighlight';
 import ColorPicker from "./ColorPicker";
 import ComponentDemo from "./ComponentDemo";
 import FormatDemo from "./FormatDemo";
+import GithubCard from "./GithubCard";
 import Tutorial from "./Tutorial";
 
 export default {
   components: {
+    Hero,
+    FeatureHighlight,
     ColorPicker,
     ComponentDemo,
     FormatDemo,
+    GithubCard,
     Tutorial
   },
   data: () => ({
@@ -129,15 +155,6 @@ export default {
 
 @import '@styles/config.scss';
 
-.GetStartedTabs {
-  display: flex;
-  background: $background-invert-alt;
-}
-
-.GetStartedTabs__tab {
-  flex: 1;
-}
-
 h2, h3 {
   background: linear-gradient(45deg, $text-invert, $text-invert-alt);
   background-clip: text;
@@ -145,18 +162,24 @@ h2, h3 {
 }
 
 .Home {
-  margin: $main-frame-padding;
+  margin: $main-frame-padding-mobile;
   border-radius: $main-frame-radius;
   color: $text-invert;
   background: $background-invert;
-  border-radius: 8px;
+  border-radius: 16px;
   box-shadow: 0 10px 15px -5px rgba(32,32,64,.25);
   z-index: 100;
   position: relative;
   overflow: hidden;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+
+  @media (min-width: $breakpoint-medium) {
+    margin: $main-frame-padding;
+  }
 }
+
+
 
 .GithubCorner {
   position: absolute;
@@ -181,9 +204,13 @@ h2, h3 {
 
 .Wrap {
   width: 100%;
-  max-width: 960px;
-  padding: 0 8px;
+  // max-width: 420px;
+  padding: 0 12px;
   margin: 0 auto;
+
+  @media (min-width: $breakpoint-medium) {
+    max-width: 960px;
+  }
 }
 
 .Title {
@@ -192,57 +219,6 @@ h2, h3 {
   margin: 0 auto;
 }
 
-.Hero {
-  @extend .Wrap;
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - #{$main-frame-padding * 2});
-}
-
-.Hero__head, .Hero__foot {
-  flex: 1 1 200px;
-}
-
-.Hero__foot {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.Hero__body {
-  display: flex;
-  align-items: flex-end;
-}
-
-.Hero__demo {
-  flex: 1;
-}
-
-.Hero__intro {
-  flex: 1;
-}
-
-.Hero__title {
-  font-weight: 700;
-  font-size: 52px;
-  margin-bottom: 22px;
-  line-height: 1;
-
-  sub {
-    color: $text-invert-alt;
-    font-size: 22px;
-    font-weight: 400;
-    bottom: 0;
-    margin-left: .5em;
-  }
-}
-
-.Hero__subtitle {
-  font-weight: 700;
-  font-size: 26px;
-  margin-bottom: 22px;
-}
 
 .Section {
   @extend .Wrap;
@@ -257,56 +233,25 @@ h2, h3 {
 
 .Section__title {
   display: inline;
-  font-size: 32px;
-}
-
-.FeatureHighlight {
-  display: flex;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-  align-items: center;
-}
-
-.FeatureHighlight__title {
-  font-size: 22px;
-  margin-bottom: 18px;
-}
-
-.FeatureHighlight__main {
-  flex: 1;
-}
-
-.FeatureHighlight__secondary {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.FeatureHighlight.FeatureHighlight--reverse {
-  flex-direction: row-reverse;
-
-  .FeatureHighlight__secondary {
-    justify-content: flex-start;
-  }
-}
-
-.FeatureHighlight.FeatureHighlight--column {
-  display: block;
-  text-align: center;
-
-  .FeatureHighlight__secondary {
-    justify-content: center;
-  }
+  font-size: 1.8rem;
 }
 
 .FeatureGrid {
+  width: 100%;
   background: linear-gradient(45deg, $text-invert, $text-invert-alt);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 24px;
   text-align: left;
+}
+
+.RepoGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 24px;
 }
 
 .Button {
@@ -318,7 +263,7 @@ h2, h3 {
   justify-content: center;
   align-items: center;
   padding: 0 24px;
-  font-size: 18px;
+  font-size: 1rem;
   transition: color .2s, border-color .2s;
 
   &:hover {
@@ -337,5 +282,43 @@ h2, h3 {
   }
 }
 
+.Author {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  color: mix($text-invert, $text-invert-alt, 50%);
+  background-color: $background-invert-alt;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.Author__img {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  margin-right: 18px;
+}
+
+.Author__linkGroup {
+  display: flex;
+  list-style-type: none;
+}
+
+.Author__link {
+  margin-right: 9px;
+  color: inherit;
+  &:hover {
+    color: $text-invert;
+  }
+}
+
+.Author__linkIcon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
 
 </style>

@@ -48,7 +48,7 @@ module.exports = {
       alias: {
         '@styles': path.resolve(__dirname, './theme/styles'),
         '@js': path.resolve(__dirname, './theme/js'),
-        '@svg': path.resolve(__dirname, './theme/svg'),
+        '@icon': path.resolve(__dirname, './theme/icon'),
       }
     }
   },

@@ -36,13 +36,22 @@ export default {
 <style lang="scss">
 @import '@styles/config.scss';
 
+.Tutorial {
+  @media (max-width: $breakpoint-small) {
+    margin: 0 -12px;
+  }
+}
+
 .Tutorial__body {
   font-size: 18px;
   color: mix($text-invert, $text-invert-alt, 50%);
   background-color: $background-invert-alt;
   border-radius: 12px;
   padding: 24px;
-  margin-top: 24px;
+  margin-top: 32px;
+  @media (max-width: $breakpoint-small) {
+    border-radius: 0;
+  }
 }
 
 .TabGroup {
@@ -62,6 +71,7 @@ export default {
   color: $text-invert-alt;
   border-right: 1px solid rgba($text-invert-alt, .75);
   cursor: pointer;
+
   &:last-of-type {
     border: 0;
   }
@@ -73,10 +83,10 @@ export default {
   &::after {
     content: ' ';
     display: block;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     position: absolute;
-    bottom: -44px;
+    bottom: -52px;
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
     background: $background-invert-alt;

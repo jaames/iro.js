@@ -3,10 +3,8 @@ $primary-color: #906bff;
 $primary-color-light: #b298ff;
 $text: #141414;
 $text-invert: #fff;
-$text-invert-alt: #979cc2;
 $background: #fff;
-$background-invert: #04071D;
-$background-invert-alt: #212231;
+$background-invert: #00002A;
 $light-gray: #eceff3;
 $medium-gray: #a7aaad;
 $dark-gray: #7c7c7c;
@@ -21,21 +19,18 @@ $font-family-monospace: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 
 // syntax highlighting
 $codeSyntax: (
-  color: #eef4fd,
+  color: #ddddef,
   background: $background-invert,
   comment: #9fa7b4,
   punctuation: #9ea5af,
-  property: #c670e9,
+  property: #c678dd,
   boolean: #ee7261,
-  string: #52E09A,
-  variable: #c670e9,
-  atrule: #4EBCF4,
+  string: #5addb1,
+  variable: #c678dd,
+  atrule: #61aeee,
   keyword: #c678dd,
   regex: #eb6f1d
 );
-
-$wrapper-width: 960px;
-$mobile-wrapper-width: 420px;
 
 // layout
 $mobile-navbar-height: 70px;
