@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { resolveSvgUrl } from '@irojs/iro-core';
 
 interface IroHandleProps {
+  fill?: string;
   x: number;
   y: number;
   r: number;
@@ -29,7 +30,7 @@ export function IroHandle(props: IroHandleProps) {
       {!url && (
         <circle 
           r={ radius - 2 }
-          fill="none"
+          fill={ props.fill } 
           stroke-width={ 2 }
           stroke="#fff"
         />
@@ -39,6 +40,7 @@ export function IroHandle(props: IroHandleProps) {
 }
 
 IroHandle.defaultProps = {
+  fill: 'none',
   x: 0,
   y: 0,
   r: 8,

@@ -37,7 +37,7 @@ export function IroSlider(props: IroSliderProps) {
   }
 
   return (
-    <IroComponentBase onInput={ handleInput }>
+    <IroComponentBase {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg 
           { ...rootProps }
