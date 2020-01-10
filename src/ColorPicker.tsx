@@ -6,22 +6,6 @@ import { IroSlider } from './Slider';
 import { createWidget } from './createWidget';
 import { EventResult } from './ComponentBase'
 
-class _TEMP_IroColor extends IroColor {
-  public index?: number;
-  public destroy() {
-    // remove onChange, etc
-  }
-  public initialValue: IroColorValue;
-  public reset() {
-    this.set(this.initialValue);
-  }
-
-  constructor(val: IroColorValue, onChange: Function) {
-    super(val, onChange);
-    this.initialValue = val;
-  }
-}
-
 interface ColorPickerEvents {
   [key: string]: Function[];
 }
@@ -44,8 +28,8 @@ export interface ColorPickerProps extends IroColorPickerOptions {
 
 export interface ColorPickerState extends ColorPickerProps {
   layout: ColorPickerLayoutDefinition[];
-  color: _TEMP_IroColor;
-  colors: _TEMP_IroColor[];
+  color: IroColor;
+  colors: IroColor[];
 }
 
 export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
@@ -61,8 +45,8 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
 
   public el: HTMLElement;
   public id: string;
-  public colors: _TEMP_IroColor[] = [];
-  public color: _TEMP_IroColor;
+  public colors: IroColor[] = [];
+  public color: IroColor;
   public inputActive: boolean = false;
 
   private events: ColorPickerEvents = {};
@@ -97,7 +81,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   public addColor(color: IroColorValue, index: number = this.colors.length) {
     // Create a new iro.Color
     // Also bind it to onColorChange, so whenever the color changes it updates the color picker
-    const newColor = new _TEMP_IroColor(color, this.onColorChange.bind(this));
+    const newColor = new IroColor(color, this.onColorChange.bind(this));
     // Insert color @ the given index
     this.colors.splice(index, 0, newColor);
     // Reindex colors
@@ -105,23 +89,27 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
     // Update picker state if necessary
     if (this.state) this.setState({ colors: this.colors });
     // Fire color init event
-    this.deferredEmit('color:init', this.color);
+    this.deferredEmit('color:init', newColor);
   }
 
   public removeColor(index: number) {
     const color = this.colors.splice(index, 1)[0];
     // Destroy the color object -- this unbinds it from the color picker
-    color.destroy();
+    color.unbind();
     // Reindex colors
     for (let i = 0; i < this.colors.length; i++) this.colors[i].index = i;
     // TODO: what happens if removed color is active?
     // Update picker state if necessary
     if (this.state) this.setState({ colors: this.colors });
+    // Fire color remove event
+    this.emit('color:remove', color);
   }
 
   public setActiveColor(index: number) {
     this.color = this.colors[index];
     if (this.state) this.setState({ color: this.color });
+    // Fire color switch event
+    this.emit('color:setActive', this.color);
   }
 
   // Public ColorPicker events API
