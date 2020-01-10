@@ -1,31 +1,47 @@
 import { h } from 'preact';
 import {
+  IroColor,
   resolveSvgUrl,
   getBoxStyles,
   getBoxDimensions,
   getBoxGradients,
   getBoxValueFromInput,
-  getBoxHandlePosition
+  getBoxHandlePosition,
+  getHandleAtPoint
 } from '@irojs/iro-core';
 
 import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
 import { IroHandle } from './Handle';
 
-interface IroBoxProps extends IroComponentProps {}
+interface IroBoxProps extends IroComponentProps {
+  colors: IroColor[];
+}
 
 export function IroBox(props: IroBoxProps) {
+  const activeColor = props.color;
   const { width, height, radius } = getBoxDimensions(props);
-  const gradients = getBoxGradients(props);
-  const handlePos = getBoxHandlePosition(props);
+  const gradients = getBoxGradients(props, activeColor);
+  const handlePositions = props.colors.map(color => getBoxHandlePosition(props, color));
 
   function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    props.parent.inputActive = true;
-    props.color.hsv = getBoxValueFromInput(props, x, y, bounds);
-    props.onInput(type);
+    // props.colors.length > 1 = the wheel uses multiple colors
+    // in multi color mode, to start with we want to find the color that the user clicked
+    if ((props.colors.length > 1) && (type === EventResult.start)) {
+      const activeHandle = getHandleAtPoint(props, x - bounds.left, y - bounds.top, handlePositions);
+      if (activeHandle !== null) {
+        props.parent.setActiveColor(activeHandle);
+        props.parent.inputActive = true;
+        props.onInput(type);
+      }
+    } else {
+      props.parent.inputActive = true;
+      activeColor.hsv = getBoxValueFromInput(props, x, y, bounds);
+      props.onInput(type);
+    }
   }
 
   return (
-    <IroComponentBase onInput={ handleInput }>
+    <IroComponentBase {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg 
           { ...rootProps }
@@ -64,12 +80,23 @@ export function IroBox(props: IroBoxProps) {
             stroke={ props.borderColor }
             fill={ `url(${resolveSvgUrl('#f' + uid )})` }
           />
-          <IroHandle
+          { props.colors.filter(color => color !== activeColor).map(color => (
+           <IroHandle 
+              fill={ color.hslString }
+              r={ props.handleRadius }
+              url={ props.handleSvg }
+              props={ props.handleProps }
+              x={ handlePositions[color.index].x }
+              y={ handlePositions[color.index].y }
+            />
+          ))}
+          <IroHandle 
+            fill={ activeColor.hslString }
             r={ props.handleRadius }
             url={ props.handleSvg }
             props={ props.handleProps }
-            x={ handlePos.x }
-            y={ handlePos.y }
+            x={ handlePositions[activeColor.index].x }
+            y={ handlePositions[activeColor.index].y }
           />
         </svg>
       )}

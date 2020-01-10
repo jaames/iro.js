@@ -10,7 +10,7 @@ import {
   getSliderValueFromInput, 
   getSliderHandlePosition, 
   getSliderGradient,
-  getSliderGradientCoords
+  getSliderGradientCoords,
 } from '@irojs/iro-core';
 
 import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
@@ -24,20 +24,21 @@ interface IroSliderProps extends IroComponentProps {
 };
 
 export function IroSlider(props: IroSliderProps) {
+  const activeColor = props.color;
   const { width, height, radius } = getSliderDimensions(props);
-  const handlePos = getSliderHandlePosition(props);
-  const gradient = getSliderGradient(props);
+  const handlePos = getSliderHandlePosition(props, activeColor);
+  const gradient = getSliderGradient(props, activeColor);
   const isAlpha = props.sliderType === 'alpha';
 
   function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
     const value = getSliderValueFromInput(props, x, y, bounds);
     props.parent.inputActive = true;
-    props.color[props.sliderType] = value;
+    activeColor[props.sliderType] = value;
     props.onInput(type);
   }
 
   return (
-    <IroComponentBase onInput={ handleInput }>
+    <IroComponentBase {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg 
           { ...rootProps }
