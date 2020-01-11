@@ -1,20 +1,24 @@
-import { h, Component, ComponentType } from 'preact';
+import { h, Component } from 'preact';
 import { IroColor, IroColorValue, IroColorPickerOptions } from '@irojs/iro-core';
 interface ColorPickerLayoutDefinition {
-    component: ComponentType;
+    component: any;
     options: any;
 }
 export interface ColorPickerProps extends IroColorPickerOptions {
     display?: string;
     id?: null;
     layout?: ColorPickerLayoutDefinition[];
+    colors?: IroColorValue[];
 }
 export interface ColorPickerState extends ColorPickerProps {
+    layout: ColorPickerLayoutDefinition[];
     color: IroColor;
+    colors: IroColor[];
 }
 export declare class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
     static pluginHooks: {};
     static defaultProps: {
+        colors: any[];
         display: string;
         id: any;
         layout: any;
@@ -36,13 +40,16 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
     };
     el: HTMLElement;
     id: string;
-    defaultColor: IroColorValue;
+    colors: IroColor[];
     color: IroColor;
     inputActive: boolean;
     private events;
     private deferredEvents;
     private colorUpdateActive;
-    constructor(props: any);
+    constructor(props: ColorPickerProps);
+    addColor(color: IroColorValue, index?: number): void;
+    removeColor(index: number): void;
+    setActiveColor(index: number): void;
     /**
      * @desc Set a callback function for an event
      * @param eventList event(s) to listen to
@@ -107,6 +114,6 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
 export declare const IroColorPickerWidget: {
     (parent: HTMLElement, props: any): any;
     prototype: any;
-    __component: ComponentType<{}>;
+    __component: import("preact").ComponentType<{}>;
 };
 export {};

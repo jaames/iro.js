@@ -1,5 +1,6 @@
 import { h } from 'preact';
 interface IroHandleProps {
+    fill?: string;
     x: number;
     y: number;
     r: number;
@@ -9,6 +10,7 @@ interface IroHandleProps {
 export declare function IroHandle(props: IroHandleProps): h.JSX.Element;
 export declare namespace IroHandle {
     var defaultProps: {
+        fill: string;
         x: number;
         y: number;
         r: number;
