@@ -1,6 +1,6 @@
 <template>
   <div class="Tutorial">
-    <div class="Tutorial__head">
+    <div v-if="useTabs" class="Tutorial__head">
       <ul class="Tutorial__tabs TabGroup">
         <li :class="['TabGroup__item', tab === activeTab ? 'TabGroup__item--active' : '']" v-for="tab in tabs" @click="setActiveTab(tab)">
           {{ tab }}
@@ -8,7 +8,8 @@
       </ul>
     </div>
     <div class="Tutorial__body Markdown Markdown--invert">
-      <slot :name="activeTab"></slot>
+      <slot v-if="useTabs" :name="activeTab"></slot>
+      <slot v-else></slot>
     </div>
   </div>
 </template>
@@ -16,6 +17,10 @@
 <script>
 export default {
   props: {
+    useTabs: {
+      type: Boolean,
+      default: true
+    },
     tabs: {
       type: Array,
       default: () => ['a', 'b', 'c']
@@ -51,6 +56,7 @@ export default {
   margin-top: 32px;
   @media (max-width: $breakpoint-small) {
     border-radius: 0;
+    padding: 12px;
   }
 }
 

@@ -17,35 +17,43 @@ module.exports = {
     ['meta', { name: 'twitter:image:width', property: 'og:image:width', content: '800' }],
     ['meta', { name: 'twitter:image:height', property: 'og:image:height', content: '400' }],
   ],
+  // theme: 'theme',
   themeConfig: {
     repo: 'jaames/iro.js',
     docsDir: 'docs',
     docsBranch: 'master',
     editLinks: true,
     sidebar: [
-      '/',
       '/introduction.html',
       '/guide.html',
       '/plugins.html',
       '/colorPicker_api.html',
       '/color_api.html',
       '/migrating.html',
-      {
-        title: 'Links',
-        children: [
-          ['https://github.com/jaames/iro.js', 'iro.js on GitHub'],
-          ['https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url', 'Donate'],
-          ['https://github.com/jaames/iro.js/issues', 'Submit an Issue / Request'],
-          // ['mailto:james@rakujira.jp', 'Email Support'],
-          ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
-          ['https://twitter.com/rakujira', 'Follow me on Twitter'],
-        ]
-      }
+    ],
+    sidebarLinks: [
+      ['https://github.com/jaames/iro.js', 'iro.js on GitHub'],
+      ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
+      ['https://github.com/jaames/iro.js/issues', 'Open an Issue / Feature Request'],
+      ['https://github.com/sponsors/jaames', 'Become a Sponsor'],
+      ['https://twitter.com/rakujira', 'Follow me on Twitter'],
     ]
   },
+  plugins: [
+    [
+      'vuepress-plugin-container',
+      {
+        type: 'tip',
+        defaultTitle: {
+          '/': 'TIP',
+        },
+      },
+    ],
+  ],
   configureWebpack: {
     resolve: {
       alias: {
+        '@components': path.resolve(__dirname, './theme/components'),
         '@styles': path.resolve(__dirname, './theme/styles'),
         '@js': path.resolve(__dirname, './theme/js'),
         '@icon': path.resolve(__dirname, './theme/icon'),
