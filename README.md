@@ -20,9 +20,6 @@
   <a href="">
     <img src="https://badgen.net/badge/jQuery/none/F8AE55" alt="no jQuery" />
   </a>
-  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url">
-    <img src="https://badgen.net/badge/donate/paypal/ED5151" alt="donate" />
-  </a>
 </p>
 
 <p align="center">
@@ -69,10 +66,10 @@ const iro = require('@jaames/iro');
 
 ### Download and host yourself
 
-**[Development version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js)**<br/>
+**[Development version](https://raw.githubusercontent.com/jaames/iro.js/v4/dist/iro.js)**<br/>
 Uncompressed at around 52kB, with source comments included
 
-**[Production version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js)**<br/>
+**[Production version](https://raw.githubusercontent.com/jaames/iro.js/v4/dist/iro.min.js)**<br/>
 Minified to 20kB
 
 Then add it to the `<head>` of your page with a `<script>` tag:
@@ -92,7 +89,7 @@ When manually including the library like this, it will be globally available as 
 ### Using the jsDelivr CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@4/dist/iro.min.js"></script>
 ```
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
@@ -138,8 +135,8 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 | `borderColor`    | Color of the border. Any valid CSS color is supported. | `"#ffffff"` |
 | `padding`        | Padding around the control handles. | `6` |
 | `handleRadius`   | Radius of the control handles. | `8` |
-| `handleSvg`      | Custom handle SVG, used for [Custom Handles](https://iro.js.org/guide.html#custom-handles) | `null` |
-| `handleOrigin`   | Custom handle origin point, used for [Custom Handles](https://iro.js.org/guide.html#custom-handles). | `{x:0,y:0}` |
+| `handleSvg`      | Custom handle SVG, used for [Custom Handles](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#custom-handles) | `null` |
+| `handleOrigin`   | Custom handle origin point, used for [Custom Handles](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#custom-handles). | `{x:0,y:0}` |
 | `wheelLightness` | If set to `false`, the color wheel will not fade to black when the lightness decreases. | `true` |
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
 | `wheelDirection` | Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlockwise"` | `"anticlockwise"` |
@@ -147,9 +144,9 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 | `sliderMargin`   | Distance between the wheel and the slider controls. | `12` |
 | `display`        | CSS display value for the color picker root element. | `"block"` |
 | `id`             | HTML ID for the color picker root element. | `null` |
-| `layout`         | Used for [Custom Layouts](https://iro.js.org/guide.html#custom-layouts) | `null` |
+| `layout`         | Used for [Custom Layouts](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#custom-layouts) | `null` |
 
-More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](https://iro.js.org/colorPicker_api.html).
+More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md).
 
 ### Selected Color API
 
@@ -184,14 +181,14 @@ The color object has properties which cover all of the most common web color for
 | `hslString` | `"hsl(360, 100%, 50%)"` |
 | `hsv`       | `{ h: 360, s: 100, v: 100 }` |
 
-For more details about the color object, check out the [Color API documentation](https://iro.js.org/color_api.html).
+For more details about the color object, check out the [Color API documentation](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md).
 
 
 ### Color Picker Events
 
 Events let you listen for specific color picker events such as changes to the selected color, the start of user input, or when the color picker has mounted.
 
-The color picker's [`on`](https://iro.js.org/colorPicker_api.html#on) method can be used to add callback functions which get called whenever the given event is fired. These callbacks can also be removed at any time by passing the same function to the color picker's [`off`](https://iro.js.org/colorPicker_api.html#off) method. In this example we add and remove a callback for the `color:change` event:
+The color picker's [`on`](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#on) method can be used to add callback functions which get called whenever the given event is fired. These callbacks can also be removed at any time by passing the same function to the color picker's [`off`](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#off) method. In this example we add and remove a callback for the `color:change` event:
 
 ```js
 // color:change event callback
@@ -253,33 +250,33 @@ Fired when the colorPicker's UI has been mounted to the DOM and is ready for use
 
 ## Documentation
 
-* [Usage](https://iro.js.org/guide.html)
-  * [Installation](https://iro.js.org/guide.html#installation)
-  * [Getting Started](https://iro.js.org/guide.html#getting-started)
-  * [Color Picker Options](https://iro.js.org/guide.html#color-picker-options)
-  * [Selected Color API](https://iro.js.org/guide.html#selected-color-api)
-  * [Color Picker Events](https://iro.js.org/guide.html#color-picker-events)
-  * [Custom Layouts](https://iro.js.org/guide.html#custom-layouts)
-  * [Custom Handles](https://iro.js.org/guide.html#custom-handles)
-* [Plugins](https://iro.js.org/plugins.html)
-  * [Available Plugins](https://iro.js.org/plugins.html#available-plugins)
-  * [Using Plugins](https://iro.js.org/plugins.html#using-plugins)
-* [ColorPicker API](https://iro.js.org/colorPicker_api.html)
-  * [Constructor](https://iro.js.org/colorPicker_api.html#constructor)
-  * [Options](https://iro.js.org/colorPicker_api.html#options)
-  * [Properties](https://iro.js.org/colorPicker_api.html#properties)
-  * [Methods](https://iro.js.org/colorPicker_api.html#methods)
-  * [Static Methods](https://iro.js.org/colorPicker_api.html#static-methods)
-  * [Events](https://iro.js.org/colorPicker_api.html#events)
-  * [Plugin Hooks](https://iro.js.org/colorPicker_api.html#plugin-hooks)
-* [Color API](https://iro.js.org/color_api.html)
-  * [Constructor](https://iro.js.org/color_api.html#constructor)
-  * [Supported Color Formats](https://iro.js.org/color_api.html#supported-color-formats)
-  * [Properties](https://iro.js.org/color_api.html#properties)
-  * [Methods](https://iro.js.org/color_api.html#methods)
-  * [Static Methods](https://iro.js.org/color_api.html#static-methods)
-* [Migration Guide](https://iro.js.org/migrating.html)
-  * [Migrating from v3](https://iro.js.org/migrating.html#migrating-from-v3)
+* [Usage](https://github.com/jaames/iro.js/blob/v4/docs/guide.md)
+  * [Installation](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#installation)
+  * [Getting Started](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#getting-started)
+  * [Color Picker Options](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#color-picker-options)
+  * [Selected Color API](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#selected-color-api)
+  * [Color Picker Events](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#color-picker-events)
+  * [Custom Layouts](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#custom-layouts)
+  * [Custom Handles](https://github.com/jaames/iro.js/blob/v4/docs/guide.md#custom-handles)
+* [Plugins](https://github.com/jaames/iro.js/blob/v4/docs/plugins.md)
+  * [Available Plugins](https://github.com/jaames/iro.js/blob/v4/docs/plugins.md#available-plugins)
+  * [Using Plugins](https://github.com/jaames/iro.js/blob/v4/docs/plugins.md#using-plugins)
+* [ColorPicker API](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md)
+  * [Constructor](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#constructor)
+  * [Options](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#options)
+  * [Properties](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#properties)
+  * [Methods](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#methods)
+  * [Static Methods](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#static-methods)
+  * [Events](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#events)
+  * [Plugin Hooks](https://github.com/jaames/iro.js/blob/v4/docs/colorPicker_api.md#plugin-hooks)
+* [Color API](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md)
+  * [Constructor](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md#constructor)
+  * [Supported Color Formats](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md#supported-color-formats)
+  * [Properties](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md#properties)
+  * [Methods](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md#methods)
+  * [Static Methods](https://github.com/jaames/iro.js/blob/v4/docs/color_api.md#static-methods)
+* [Migration Guide](https://github.com/jaames/iro.js/blob/v4/docs/migrating.md)
+  * [Migrating from v3](https://github.com/jaames/iro.js/blob/v4/docs/migrating.md#migrating-from-v3)
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
