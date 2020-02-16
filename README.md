@@ -1,25 +1,9 @@
+> :warning: This branch is for the old v4 version of iro.js, which will only be receiving major bugfixes from now on. If you are still using this version, please consider upgrading to the latest version (v5) using the [migration guide](https://iro.js.org/migrating.html).
+
 <h1 align="center"><a href="//iro.js.org" target="blank"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/screenshot.png"/><br/>iro.js</a></h1>
 
 <p align="center">
   <b>An HSV color picker widget for JavaScript, with a modern SVG-based user interface | <a href="//iro.js.org" target="blank">iro.js.org</a></b>
-</p>
-
-<p align="center">
-  <a href="https://github.com/jaames/iro.js/blob/master/LICENSE.txt">
-    <img src="https://badgen.net/github/license/jaames/iro.js?color=BB5FD1" alt="license" />
-  </a>
-  <a href="https://npmjs.org/package/@jaames/iro">
-    <img src="https://badgen.net/npm/v/@jaames/iro?color=6C8FF2" alt="version" />
-  </a>
-  <a href="https://npmjs.org/package/@jaames/iro">
-    <img src="https://badgen.net/npm/dt/@jaames/iro?color=6AD4E0" alt="downloads" />
-  </a>
-  <a href="https://bundlephobia.com/result?p=@jaames/iro">
-    <img src="https://badgen.net/bundlephobia/minzip/@jaames/iro?color=6FDF89" alt="minzip size" />
-  </a>
-  <a href="">
-    <img src="https://badgen.net/badge/jQuery/none/F8AE55" alt="no jQuery" />
-  </a>
 </p>
 
 <p align="center">
