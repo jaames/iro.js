@@ -106,7 +106,7 @@ export default {
   text-align: left;
 
   .FeatureHighlight__main, .FeatureHighlight__secondary {
-    margin: 0;
+    margin: 0 auto;
   }
 
   .FeatureHighlight__main {

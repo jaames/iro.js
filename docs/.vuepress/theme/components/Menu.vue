@@ -60,10 +60,15 @@ export default {
 
 .MenuPanel {
   border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
+  padding: 12px;
+  margin-bottom: 12px;
   color: $text-invert;
   background: $background-invert-alt;
+
+  @media (min-width: $breakpoint-medium) {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
 }
 
 .MenuPanel__title {

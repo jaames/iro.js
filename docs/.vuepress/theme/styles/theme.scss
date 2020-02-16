@@ -43,6 +43,11 @@ body:before, body:after {
   clear: both;
 }
 
+body.no-scroll {
+  overflow-y: hidden;
+  height: 100%;
+}
+
 a {
   color: $anchor-color;
   text-decoration: none;
@@ -80,5 +85,3 @@ em, i {
     // justify-content: center;
   }
 }
-
-

@@ -252,6 +252,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import FeatureHighlight from '@components/HomepageFeatureHighlight';
 import ColorPicker from '@components/ColorPicker';
 // import GithubCard from "./GithubCard";
@@ -285,6 +286,16 @@ export default {
       }
     }
   },
+  beforeMount() {
+    // fetch star count from github
+    axios.get(`https://api.github.com/repos/jaames/iro.js`)
+      .then(res => {
+        this.githubStarCount = res.data['stargazers_count'];
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
   mounted() {
     this.$onIroReady((iro) => {
       this.colorObj = new iro.Color(null, (color) => {
@@ -293,18 +304,9 @@ export default {
       });
       this.colorObj.set(this.color);
     });
-    // fetch star count from github
-    fetch(`https://api.github.com/repos/jaames/iro.js`)
-      .then(res => {
-        if (!res.ok) throw `Repo data could not be fetched`;
-        return res;
-      })
-      .then(res => res.json())
-      .then(data => {
-        this.githubStarCount = data['stargazers_count'];
-      }).catch(() => {
-        throw new Error('could not fetch github star count')
-      });
+    
+    // remove no-scroll class from docpage navbar logic
+    document.body.classList.remove('no-scroll');
   }
 }
 </script>
@@ -312,6 +314,20 @@ export default {
 <style src="../styles/theme.scss" lang="scss"></style>
 <style lang="scss">
 @import '@styles/config.scss';
+
+%wrapper {
+  width: 100%;
+  padding: 0 12px;
+  margin: 0 auto;
+
+  @media (min-width: $breakpoint-medium) {
+    max-width: 860px;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    max-width: 960px;
+  }
+}
 
 .Home {
   margin: $main-frame-padding-mobile;
@@ -366,17 +382,6 @@ export default {
   }
 }
 
-.Wrap {
-  width: 100%;
-  // max-width: 420px; // nice
-  padding: 0 12px;
-  margin: 0 auto;
-
-  @media (min-width: $breakpoint-medium) {
-    max-width: 960px;
-  }
-}
-
 .Title {
   text-align: center;
   display: inline-block;
@@ -384,9 +389,9 @@ export default {
 }
 
 .Hero {
-  @extend .Wrap;
+  @extend %wrapper;
   display: flex;
-  max-width: $mobile-wrapper-width;
+  // max-width: $mobile-wrapper-width;
   margin: 0 auto;
   width: 100%;
   padding: 0 12px;
@@ -444,9 +449,6 @@ export default {
 }
 
 @media (min-width: $breakpoint-medium) {
-  .Hero {
-    max-width: $wrapper-width;
-  }
   .Hero__body {
     align-items: flex-end;
     flex-direction: row;
@@ -469,7 +471,7 @@ export default {
 }
 
 .Section {
-  @extend .Wrap;
+  @extend %wrapper;
   padding-top: 2rem;
   padding-bottom: 8rem;
 }

@@ -16,9 +16,14 @@ export default {
 @import '@styles/config.scss';
 
 .Navbar {
-  height: 128px;
   display: flex;
   align-items: center;
+  padding: 12px 0;
+
+  @media (min-width: $breakpoint-medium) {
+    height: 128px;
+    padding: 0;
+  }
 }
 
 .SearchBox {
@@ -32,10 +37,11 @@ export default {
     background-color: $background-invert-alt;
     border: 0;
     border-radius: 6px;
-    width: 100%;
+    width: 100% !important;
     height: 2.5em;
     background-position: 1em center;
     padding: 0;
+    left: 0 !important;
     padding-left: 2.5em;
   }
 

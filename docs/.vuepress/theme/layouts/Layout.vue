@@ -1,10 +1,13 @@
 <template>
   <div class="Page">
-    <div class="Sidebar">
+    <div :class="{'Sidebar': true, 'Sidebar--isOpen': isSidebarOpen}">
       <header class="SidebarHeader">
         <router-link class="ProjectTitle" to="/">
           <h1>iro.js <sub>v5</sub></h1>
         </router-link>
+        <div class="SidebarHeader__sidebarToggle" @click="toggleSidebar">
+          <span :class="['menuIcon', isSidebarOpen ? 'menuIcon--active' : '']"></span>
+        </div>
       </header>
       <sidebar-menu class="SidebarBody" :items="sidebarItems"/>
     </div>
@@ -16,36 +19,6 @@
       </article>
       <article-footer :items="sidebarItems"/>
     </main>
-    <!-- <Navbar
-      v-if="shouldShowNavbar && !$page.frontmatter.home"
-      @toggle-sidebar="toggleSidebar"
-    /> -->
-
-    <!-- <div
-      class="sidebar-mask"
-      @click="toggleSidebar(false)"
-    ></div> -->
-
-    <!-- <Sidebar
-      v-if="!$page.frontmatter.home"
-      :items="sidebarItems"
-      @toggle-sidebar="toggleSidebar"
-    >
-      <slot
-        name="sidebar-top"
-        #top
-      />
-      <slot
-        name="sidebar-bottom"
-        #bottom
-      />
-    </Sidebar> -->
-<!-- 
-    <Article
-      v-else
-      :sidebar-items="sidebarItems"
-    >
-    </Article> -->
   </div>
 </template>
 
@@ -63,15 +36,29 @@ export default {
     ArticleHeader,
     ArticleFooter,
   },
-
   data () {
     return {
       isSidebarOpen: false
     }
   },
-
+  methods: {
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
+    }
+  },
+  watch: {
+    isSidebarOpen(isOpen) {
+      if (document !== undefined) {
+        if (isOpen) {
+          document.body.classList.add('no-scroll');
+        } else {
+          document.body.classList.remove('no-scroll')
+        }
+      }
+    }
+  },
   computed: {
-    sidebarItems () {
+    sidebarItems() {
       return resolveSidebarItems(
         this.$page,
         this.$page.regularPath,
@@ -103,25 +90,102 @@ export default {
   background: $background-invert;
   display: flex;
   font-size: 18px;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .Sidebar {
-  // flex: 0 1 0;
-  margin-left: 3em;
-  width: 300px;
-  max-height: 100vh;
-  position: sticky;
-  top: 0;
-  overflow-y: scroll;
+  
+  @media (min-width: $breakpoint-medium) {
+    width: 260px;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: scroll;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    width: 300px;
+    margin-left: 3em;
+  }
+  
+
   // padding: 24px;
 }
 
 .SidebarHeader {
-  height: 128px;
+  height: $mobile-navbar-height;
   display: flex;
+  background: $background-invert-alt;
   align-items: center;
   padding: 0 24px;
+
+  .SidebarHeader__sidebarToggle {
+    margin-left: auto;
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    height: $navbar-height;
+    padding: 0 24px;
+    background: none;
+
+    .SidebarHeader__sidebarToggle {
+      display: none;
+    }
+  }
+
+  @media (max-width: $breakpoint-medium) {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+  }
   // margin-bottom: 24px;
+}
+
+.SidebarHeader__sidebarToggle {
+  .menuIcon {
+    position: relative;
+    margin: ($mobile-navbar-toggle-height / 3) 0;
+  }
+
+  .menuIcon, .menuIcon:before, .menuIcon:after {
+    transition: background-color, transform 0.2s ease;
+    background-color: $primary-color;
+    display: block;
+    width: $mobile-navbar-toggle-height;
+    height: 2px; 
+  }
+
+  .menuIcon:before, .menuIcon:after { position: absolute; content: ""; }
+  .menuIcon:before { top: -$mobile-navbar-toggle-height / 3; }
+  .menuIcon:after { top: $mobile-navbar-toggle-height / 3; }
+
+  .menuIcon.menuIcon--active { background-color: transparent; }
+  .menuIcon.menuIcon--active:before { transform: translateY($mobile-navbar-toggle-height / 3) rotate(45deg); }
+  .menuIcon.menuIcon--active:after { transform: translateY(-$mobile-navbar-toggle-height / 3) rotate(-45deg); }
+}
+
+.SidebarBody {
+  padding: 0 12px;
+
+  @media (max-width: $breakpoint-medium) {
+    background: $background-invert;
+    position: fixed;
+    top: $mobile-navbar-height;
+    width: 100%;
+    height: calc(100vh - #{$mobile-navbar-height});
+    z-index: 1000;
+    overflow-y: scroll;
+    left: 0;
+    transform: translateX(-100vw);
+    transition: transform 0.3s ease;
+
+    .Sidebar--isOpen & {
+      left: 0;
+      transform: translateX(0);
+    }
+  }
 }
 
 .ProjectTitle {
@@ -146,10 +210,17 @@ export default {
 
 .Content {
   width: 100%;
-  padding: 0 24px;
-  margin-left: 6em;
-  // padding-top: 70px;
+  padding: 0 12px;
+  padding-top: $mobile-navbar-height;
   max-width: 752px;
+
+  @media (min-width: $breakpoint-medium) {
+    padding: 0 24px;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    margin-left: 6em;
+  }
 }
 
 .Content__head {
