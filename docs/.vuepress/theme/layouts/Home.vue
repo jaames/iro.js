@@ -16,10 +16,10 @@
         </div>
         <div class="Hero__intro">
           <h1 class="Hero__title">iro.js<sub>v5</sub></h1>
-          <h2 class="Hero__subtitle">A modern, SVG-based color picker for vanilla JS, React and Vue.</h2>
+          <h2 class="Hero__subtitle">A modern, SVG-based color picker widget for vanilla JavaScript.</h2>
           <div class="ButtonGroup">
             <a href="https://github.com/jaames/iro.js" class="Button">GitHub<span class="Button__starcount">★ {{ githubStarCount }}</span></a>
-            <router-link class="Button" to="/introduction.html">Documentation →</router-link>
+            <router-link class="Button" to="/guide.html">Get Started →</router-link>
           </div>
         </div>
       </div>
@@ -31,10 +31,73 @@
       </div>
       <FeatureHighlight reverse>
         <template v-slot:header>
+          <h3>Work with colors in hex, RGB, HSV and HSL formats (plus kelvin temperatures!) in one simple, frictionless API.</h3>
+          <div class="ButtonGroup">
+            <a class="Button" href="https://codepen.io/rakujira/pen/WZOeNq?editors=0010">Full Demo</a>
+            <router-link class="Button" to="/guide.html#working-with-colors">Learn More →</router-link>
+          </div>
+        </template>
+        <template v-slot:content>
+          <div class="FormatDemo">
+            <div class="FormatDemo__readout">
+              <div class="language-js">
+<code class="language-js">
+<span class="token comment">// Get the color as an RGB string</span>
+</br><span class="token keyword">var</span> rgb <span class="token operator">=</span> <span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>rgbString<span class="token punctuation">;</span>
+</br><span class="token comment">// rgb = "{{ rgbString }}"</span>
+</br></br><span class="token comment">// Get the color as a HSV object</span>
+</br><span class="token keyword">var</span> hsv <span class="token operator">=</span> <span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hsv<span class="token punctuation">;</span>
+</br><span class="token comment">// hsv = { h: {{ hsv.h | formatInt }}, s: {{ hsv.s | formatInt }}, v: {{ hsv.v | formatInt }} }</span>
+</br></br><span class="token comment">// Set the color from a hex string</span>
+</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hexString <span class="token operator">=</span> <span class="token string">"#fff"</span>;</span>
+</br></br><span class="token comment">// Set the color from a temperature</span>
+</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>kelvin <span class="token operator">=</span> <span class="token number">6000</span>;</span>
+</code>
+              </div>
+            </div>
+          </div>
+        </template>
+      </FeatureHighlight>
+
+      <FeatureHighlight>
+        <template v-slot:header>
+          <h3>Add multiple colors to the same color picker for selecting color harmonies and themes.</h3>
+          <div class="ButtonGroup">
+            <a class="Button" href="https://codepen.io/rakujira/pen/bGddRyq?editors=0010">Full Demo</a>
+            <router-link class="Button" to="/advanced.html#multi-color-selections">Learn More →</router-link>
+          </div>
+        </template>
+        <template v-slot:content>
+          <ColorPicker
+            class="MultiColorDemo"
+            :colors="[
+              color, 
+              {h: 120, s: 33, v: 33}, 
+              {h: 240, s: 66, v: 66}
+            ]"
+            display="block"
+            layoutDirection="horizontal"
+            :layout="[
+              {
+                component: 'Box',
+              },
+              {
+                component: 'Slider',
+                options: {
+                  sliderType: 'hue',
+                }
+              },
+            ]"
+            @onColorChange="updateColor"
+          />
+        </template>
+      </FeatureHighlight>
+      <FeatureHighlight reverse>
+        <template v-slot:header>
           <h3>Create the perfect color picker from a selection of pre-built UI components.</h3>
           <div class="ButtonGroup">
             <div class="Button">Full Demo</div>
-            <div class="Button">Learn More</div>
+            <router-link class="Button" to="/advanced.html#ui-components">Learn More →</router-link>
           </div>
         </template>
         <template v-slot:content>
@@ -92,69 +155,6 @@
           />
         </template>
       </FeatureHighlight>
-
-      <FeatureHighlight>
-        <template v-slot:header>
-          <h3>Work with colors in hex, RGB, HSV and HSL formats (plus kelvin temperatures!) in one simple, frictionless API.</h3>
-          <div class="ButtonGroup">
-            <div class="Button">Full Demo</div>
-            <div class="Button">Learn More</div>
-          </div>
-        </template>
-        <template v-slot:content>
-          <div class="FormatDemo">
-            <div class="FormatDemo__readout">
-              <div class="language-js">
-<code class="language-js">
-<span class="token comment">// Get the color as an RGB string</span>
-</br><span class="token keyword">var</span> rgb <span class="token operator">=</span> <span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>rgbString<span class="token punctuation">;</span>
-</br><span class="token comment">// rgb = "{{ rgbString }}"</span>
-</br></br><span class="token comment">// Get the color as a HSV object</span>
-</br><span class="token keyword">var</span> hsv <span class="token operator">=</span> <span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hsv<span class="token punctuation">;</span>
-</br><span class="token comment">// hsv = { h: {{ hsv.h | formatInt }}, s: {{ hsv.s | formatInt }}, v: {{ hsv.v | formatInt }} }</span>
-</br></br><span class="token comment">// Set the color from a hex string</span>
-</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hexString <span class="token operator">=</span> <span class="token string">"#fff"</span>;</span>
-</br></br><span class="token comment">// Set the color from a temperature</span>
-</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>kelvin <span class="token operator">=</span> <span class="token number">6000</span>;</span>
-</code>
-              </div>
-            </div>
-          </div>
-        </template>
-      </FeatureHighlight>
-      <FeatureHighlight reverse>
-        <template v-slot:header>
-          <h3>Add multiple colors to the same picker for selecting color harmonies and themes.</h3>
-          <div class="ButtonGroup">
-            <div class="Button">Full Demo</div>
-            <div class="Button">Learn More</div>
-          </div>
-        </template>
-        <template v-slot:content>
-          <ColorPicker
-            class="MultiColorDemo"
-            :colors="[
-              color, 
-              {h: 120, s: 33, v: 33}, 
-              {h: 240, s: 66, v: 66}
-            ]"
-            display="block"
-            layoutDirection="horizontal"
-            :layout="[
-              {
-                component: 'Box',
-              },
-              {
-                component: 'Slider',
-                options: {
-                  sliderType: 'hue',
-                }
-              },
-            ]"
-            @onColorChange="updateColor"
-          />
-        </template>
-      </FeatureHighlight>
       <FeatureHighlight column>
         <template v-slot:header>
           <h3>And more!</h3>
@@ -163,11 +163,11 @@
           <div class="FeatureGrid">
             <div class="FeatureItem">
               <h4>No externals</h4>
-              <p>All of iro.js is contained in a single script, with no extra CSS, images, or third-party libraries required.</p>
+              <p>All of iro.js can run from a single script - no extra CSS, images, or third-party libraries required.</p>
             </div>
             <div class="FeatureItem">
               <h4>Perfect for lighting</h4>
-              <p>iro.js provides the perfect UI for controlling RGB lighting with LED drivers and smart home applications</p>
+              <p>iro.js provides the perfect UI for controlling RGB lighting within LED drivers and smart home applications.</p>
             </div>
             <div class="FeatureItem">
               <h4>100% free</h4>
@@ -254,14 +254,14 @@
 <script>
 import axios from 'axios';
 import FeatureHighlight from '@components/HomepageFeatureHighlight';
-import ColorPicker from '@components/ColorPicker';
+// import ColorPicker from '@components/ColorPicker';
 // import GithubCard from "./GithubCard";
 import Tutorial from '@components/HomepageGuide';
 
 export default {
   components: {
     FeatureHighlight,
-    ColorPicker,
+    // ColorPicker,
     // GithubCard,
     Tutorial
   },
@@ -528,13 +528,14 @@ export default {
 
 .FeatureGrid {
   width: 100%;
-  background: linear-gradient(45deg, $text-invert, $text-invert-alt);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 24px;
   text-align: left;
+
+  p {
+    color: mix($text-invert, $text-invert-alt, 50%);
+  }
 }
 
 .RepoGrid {
@@ -600,7 +601,8 @@ export default {
 .Author {
   color: $text;
   font-weight: 500;
-  background: linear-gradient(to right, rgb(103, 148, 233) 0%, rgb(153, 188, 228) 50%, rgb(134, 221, 195) 100%);
+  line-height: 1.5;
+  background: linear-gradient(65deg, rgb(107, 128, 248) 0%,rgb(152, 145, 247) 50%, rgb(99, 193, 247) 75%, rgb(169, 250, 230) 100%);
   border-radius: 12px;
   padding: 24px;
   display: flex;

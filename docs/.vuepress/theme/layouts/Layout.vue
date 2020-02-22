@@ -90,8 +90,7 @@ export default {
   background: $background-invert;
   display: flex;
   font-size: 18px;
-  max-width: 100%;
-  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 .Sidebar {
@@ -100,7 +99,7 @@ export default {
     width: 260px;
     max-height: 100vh;
     position: sticky;
-    top: 0;
+    top: 0px;
     overflow-y: scroll;
   }
 

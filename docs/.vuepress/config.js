@@ -26,7 +26,7 @@ module.exports = {
     sidebar: [
       '/introduction.html',
       '/guide.html',
-      '/plugins.html',
+      '/advanced.html',
       '/colorPicker_api.html',
       '/color_api.html',
       '/migrating.html',

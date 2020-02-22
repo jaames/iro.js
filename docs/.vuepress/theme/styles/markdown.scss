@@ -34,7 +34,7 @@
   }
 
   p {
-    margin-bottom: 1.25em;
+    margin-bottom: 1.5em;
   }
 
   hr {
@@ -45,12 +45,12 @@
   }
 
   ul, ol, dl {
-    margin-bottom: 1.25em;
-    padding-left: 1.2em;
+    margin-bottom: 1.5em;
+    padding-left: 1.5em;
   }
 
   ul ul {
-    margin-top: .6em;
+    margin-top: .75em;
   }
 
   ul {
@@ -85,7 +85,7 @@
 
   table {
     width: 100%;
-    margin-bottom: 1.25em;
+    margin-bottom: 1.5em;
     overflow: hidden;
     border-collapse: collapse;
     // border-radius: 6px;
@@ -122,29 +122,30 @@
   }
 
   pre[class*="language-"] {
-    padding: 1.5em;
+    padding: 1.5rem;
+    padding-top: 3rem;
     overflow: auto;
     // border-radius: 0.3em;
   }
 
   pre[class*="language-"]::before {
     font-family: $font-family;
-    color: $medium-gray;
+    color: currentColor;
+    opacity: .8;
     position: absolute;
-    top: 1em;
-    right: 1em;
+    top: 1.5rem;
+    left: 1.5rem;
     text-align: right;
-    font-size: 0.75em;
-    line-height: 15px;
-    height: 15px;
-    font-weight: 600;
+    font-size: 0.8em;
+    line-height: 1em;
+    height: 3rem;
   }
 
-  pre.language-bash::before {content: "shell";}
-  pre.language-js::before {content: "js";}
-  pre.language-css::before {content: "css";}
-  pre.language-html::before {content: "html";}
-  pre.language-svg::before {content: "svg";}
+  pre.language-bash::before {content: "Shell";}
+  pre.language-js::before {content: "JavaScript";}
+  pre.language-css::before {content: "CSS";}
+  pre.language-html::before {content: "HTML";}
+  pre.language-svg::before {content: "SVG";}
 }
 
 .Markdown.Markdown--invert {
@@ -170,7 +171,7 @@
 
 // darker version of markdown--invert
 .Markdown.Markdown--invert-alt {
-  color: mix($text-invert, $text-invert-alt, 50%);
+  color: mix($text-invert, $text-invert-alt, 75%);
 
   h1, h2, h3, h4, h5, h6 {
     color: $text-invert;

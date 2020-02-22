@@ -7,7 +7,7 @@ export default {
   props: {
     colors: {
       type: Array,
-      default: []
+      default: () => ['#f00']
     },
     width: {
       type: Number,
@@ -84,7 +84,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .ColorPicker {
   display: inline-block;
 }

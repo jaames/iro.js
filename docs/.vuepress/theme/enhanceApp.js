@@ -22,11 +22,11 @@ export default ({
     };
 
     import('@js/iro.es.js').then(module => {
-      console.log('iro.js loaded!');
       iro = module.default;
       window.iro = iro;
       Vue.prototype.$iro = iro;
       iroLoadCallbacks.forEach(fn => fn(iro));
+      console.log("Hey there! You can play around with iro.js from the developer console if you want to! It's globally available on window.iro :)");
     });
   }
 }

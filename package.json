@@ -28,7 +28,7 @@
     "sass-loader": "^7.1.0",
     "typescript": "^3.6.4",
     "vue": "^2.6.10",
-    "vue-svg-inline-loader": "^0.5.0",
+    "vue-svg-inline-loader": "^1.4.5",
     "vue-template-compiler": "^2.6.10",
     "vuepress": "^1.2.0",
     "vuepress-plugin-container": "^2.1.2"
