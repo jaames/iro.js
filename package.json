@@ -1,12 +1,12 @@
 {
   "name": "@jaames/iro",
-  "version": "5.0.0-3",
+  "version": "5.0.0-5",
   "description": "A moden, SVG-based color picker widget for JavaScript",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@irojs/iro-core": "0.0.5",
+    "@irojs/iro-core": "0.0.6",
     "preact": "^10.0.0"
   },
   "devDependencies": {

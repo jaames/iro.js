@@ -1,11 +1,13 @@
 import { h } from 'preact';
 import { 
+  IroColor,
   resolveSvgUrl,
   getSvgArcPath,
   translateWheelAngle, 
   getWheelDimensions,
   getWheelHandlePosition,
-  getWheelValueFromInput
+  getWheelValueFromInput,
+  getHandleAtPoint
 } from '@irojs/iro-core';
 
 import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
@@ -13,24 +15,37 @@ import { IroHandle } from './Handle';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
 
-interface IroWheelProps extends IroComponentProps {}
+interface IroWheelProps extends IroComponentProps {
+  colors: IroColor[];
+}
 
 export function IroWheel(props: IroWheelProps) {
 
+  const activeColor = props.color;
+  const hsv = activeColor.hsv;
   const { borderWidth } = props;
-  const hsv = props.color.hsv;
   const { width, radius, cx, cy } = getWheelDimensions(props);
-
-  const handlePos = getWheelHandlePosition(props);
+  const handlePositions = props.colors.map(color => getWheelHandlePosition(props, color));
 
   function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    props.parent.inputActive = true;
-    props.color.hsv = getWheelValueFromInput(props, x, y, bounds);
-    props.onInput(type);
+    // props.colors.length > 1 = the wheel uses multiple colors
+    // in multi color mode, to start with we want to find the color that the user clicked
+    if ((props.colors.length > 1) && (type === EventResult.start)) {
+      const activeHandle = getHandleAtPoint(props, x - bounds.left, y - bounds.top, handlePositions);
+      if (activeHandle !== null) {
+        props.parent.setActiveColor(activeHandle);
+        props.parent.inputActive = true;
+        props.onInput(type);
+      }
+    } else {
+      props.parent.inputActive = true;
+      activeColor.hsv = getWheelValueFromInput(props, x, y, bounds);
+      props.onInput(type);
+    }
   }
 
   return (
-    <IroComponentBase onInput={ handleInput }>
+    <IroComponentBase {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg
           { ...rootProps }
@@ -80,13 +95,24 @@ export function IroWheel(props: IroWheelProps) {
            stroke={ props.borderColor }
            stroke-width={ borderWidth }
          />
+         { props.colors.filter(color => color !== activeColor).map(color => (
+           <IroHandle 
+              fill={ color.hslString }
+              r={ props.handleRadius }
+              url={ props.handleSvg }
+              props={ props.handleProps }
+              x={ handlePositions[color.index].x }
+              y={ handlePositions[color.index].y }
+            />
+         ))}
          <IroHandle 
-           r={ props.handleRadius }
-           url={ props.handleSvg }
-           props={ props.handleProps }
-           x={ handlePos.x }
-           y={ handlePos.y }
-         />
+            fill={ activeColor.hslString }
+            r={ props.handleRadius }
+            url={ props.handleSvg }
+            props={ props.handleProps }
+            x={ handlePositions[activeColor.index].x }
+            y={ handlePositions[activeColor.index].y }
+          />
        </svg>
       )}
     </IroComponentBase>
