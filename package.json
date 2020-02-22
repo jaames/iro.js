@@ -10,8 +10,8 @@
     "preact": "^10.0.0"
   },
   "devDependencies": {
+    "axios": "^0.19.2",
     "css-reset-and-normalize": "^1.2.0",
-    "iro-dynamic-css": "^1.0.3",
     "jest": "^24.0.0",
     "node-sass": "^4.9.3",
     "rollup": "^1.24.0",
@@ -27,10 +27,11 @@
     "rollup-plugin-uglify": "^6.0.3",
     "sass-loader": "^7.1.0",
     "typescript": "^3.6.4",
-    "vue-svg-loader": "^0.5.0",
-    "vuepress": "^1.2.0",
     "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10"
+    "vue-svg-inline-loader": "^1.4.5",
+    "vue-template-compiler": "^2.6.10",
+    "vuepress": "^1.2.0",
+    "vuepress-plugin-container": "^2.1.2"
   },
   "scripts": {
     "prepublishOnly": "npm run build",

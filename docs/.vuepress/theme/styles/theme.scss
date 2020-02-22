@@ -6,16 +6,18 @@
 @import "./markdown";
 @import "./prism";
 @import "./icons";
-@import "./buttons";
 @import "./custom-blocks";
 @import "./404";
 
-body {
+html, body {
   color: $text;
-  background: $background;
+  background: $background-invert;
+}
+
+body {
   font-family: $font-family;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.75;
   // letter-spacing: .015em;
   font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -28,11 +30,23 @@ body {
     // font-size: 14px;
   }
 
-  @media (min-width: $breakpoint-extra-large) {
+  @media (min-width: $breakpoint-large) {
     font-size: 18px;
   }
 }
 
+// clearfix body so that the margin around the homepage works correctly
+// https://css-tricks.com/snippets/css/clear-fix/
+body:before, body:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+body.no-scroll {
+  overflow-y: hidden;
+  height: 100%;
+}
 
 a {
   color: $anchor-color;
@@ -44,15 +58,17 @@ a {
   }
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5 {
   font-weight: bold;
   margin-bottom: .5em;
 }
 
-h1 { font-size: 2.25em; }
+h1 { font-size: 3em; }
 h2 { font-size: 1.5em; }
-h3 { font-size: 1.25em; }
-h4 { font-size: 1.142em; }
+h3 { font-size: 1.32em; }
+h4 { font-size: 1.15em; }
+h5 { font-size: 1.05em; }
+h6 { font-weight: bold; }
 
 code {
   color: $code-color;
@@ -69,5 +85,3 @@ em, i {
     // justify-content: center;
   }
 }
-
-

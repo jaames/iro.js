@@ -1,8 +1,12 @@
-.markdown {
-  // font-size: .9rem;
-
+.Markdown {
+  
   h1, h2, h3, h4 {
     margin-top: 2em;
+    margin-bottom: .75em;
+
+    &:first-child {
+      margin-top: 0;;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -30,7 +34,7 @@
   }
 
   p {
-    margin: 1.2em 0;
+    margin-bottom: 1.5em;
   }
 
   hr {
@@ -41,12 +45,12 @@
   }
 
   ul, ol, dl {
-    margin: 1.2em 0;
-    padding-left: 1.2em;
+    margin-bottom: 1.5em;
+    padding-left: 1.5em;
   }
 
   ul ul {
-    margin-top: .6em;
+    margin-top: .75em;
   }
 
   ul {
@@ -58,7 +62,7 @@
   }
 
   li > p {
-    margin-top: 1.2em;
+    margin-top: 1.25em;
   }
 
   li + li {
@@ -81,7 +85,7 @@
 
   table {
     width: 100%;
-    margin: 1.2em 0;
+    margin-bottom: 1.5em;
     overflow: hidden;
     border-collapse: collapse;
     // border-radius: 6px;
@@ -100,6 +104,14 @@
     padding: 1rem .6rem;
     text-align: left;
     border-bottom: 1px solid $light-gray;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
   }
 
   // code blocks are wrapped in divs
@@ -110,27 +122,76 @@
   }
 
   pre[class*="language-"] {
-    padding: 1.5em;
+    padding: 1.5rem;
+    padding-top: 3rem;
     overflow: auto;
     // border-radius: 0.3em;
   }
 
   pre[class*="language-"]::before {
     font-family: $font-family;
-    color: $medium-gray;
+    color: currentColor;
+    opacity: .8;
     position: absolute;
-    top: 1em;
-    right: 1em;
+    top: 1.5rem;
+    left: 1.5rem;
     text-align: right;
-    font-size: 0.75em;
-    line-height: 15px;
-    height: 15px;
-    font-weight: 600;
+    font-size: 0.8em;
+    line-height: 1em;
+    height: 3rem;
   }
 
-  pre.language-bash::before {content: "shell";}
-  pre.language-js::before {content: "js";}
-  pre.language-css::before {content: "css";}
-  pre.language-html::before {content: "html";}
-  pre.language-svg::before {content: "svg";}
+  pre.language-bash::before {content: "Shell";}
+  pre.language-js::before {content: "JavaScript";}
+  pre.language-css::before {content: "CSS";}
+  pre.language-html::before {content: "HTML";}
+  pre.language-svg::before {content: "SVG";}
+}
+
+.Markdown.Markdown--invert {
+  color: mix($text-invert, $text-invert-alt, 50%);
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $text-invert;
+  }
+
+  h2, hr, td, th {
+    border-bottom: 1px solid $text-invert-alt;
+  }
+
+  code {
+    background: $background-invert;
+    color: inherit;
+  }
+
+  thead {
+    color: $text-invert-alt;
+  }
+}
+
+// darker version of markdown--invert
+.Markdown.Markdown--invert-alt {
+  color: mix($text-invert, $text-invert-alt, 75%);
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $text-invert;
+  }
+
+  h2, hr, td, th {
+    border-bottom: 1px solid mix($text-invert, $background-invert-alt, 25%);
+  }
+
+  :not(pre) > code[class*="language-"], pre[class*="language-"] {
+    background: $background-invert-alt;
+    color: inherit;
+  }
+
+  code {
+    background: $background-invert-alt;
+    color: $text-invert;
+  }
+
+  thead {
+    color: $text-invert;
+  }
 }

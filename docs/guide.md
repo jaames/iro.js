@@ -1,18 +1,18 @@
 ---
-title: Guide
+title: Get Started
 ---
 
 ## Installation
 
-### Install with NPM
+### Install from NPM
 
 ```bash
 $ npm install @jaames/iro --save
 ```
 
-If you are using a module bundler like Webpack or Rollup, import iro.js into your project: 
+Then if you are using a module bundler like Webpack or Rollup, import iro.js into your project: 
 
-```javascript
+```js
 // Using ES6 module syntax
 import iro from '@jaames/iro';
 
@@ -20,56 +20,46 @@ import iro from '@jaames/iro';
 const iro = require('@jaames/iro');
 ```
 
-### Download and host yourself
+### Or use the jsDelivr CDN
+
+Drop this script into the `<head>` of your page's HTML:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+```
+
+When you manually include the library like this, iro.js will be made globally available on `window.iro`.
+
+### Or download and host yourself
 
 **[Development version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js)**<br/>
-Uncompressed at around 52kB, with source comments included
+Uncompressed, with source comments included. Intended for debugging.
 
 **[Production version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js)**<br/>
-Minified to 20kB
+Minified and optimized version.
 
-Then add it to the `<head>` of your page with a `<script>` tag:
+## Color Picker Setup
 
-```html
-<html>
-  <head>
-    <!-- ... -->
-    <script src="./path/to/iro.min.js"></script>
-  </head>
-  <!-- ... -->
-</html>
-```
-
-When manually including the library like this, it will be globally available as `window.iro`.
-
-### Using the jsDelivr CDN
+First, we need a HTML element with a unique identifier (such as an `id` attribute) to act as a container for the color picker:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
-```
-
-## Getting Started
-
-Create a HTML element with a unique identifier (such as an `id` attribute) to act as a container for the color picker:
-
-```html
-<div id="color-picker-container"></div>
+<div id="picker"></div>
 ```
 
 Then use JavaScript to create a new `iro.ColorPicker` with a CSS selector that matches your chosen container element:
 
 ```js
-var colorPicker = new iro.ColorPicker('#color-picker-container');
+var colorPicker = new iro.ColorPicker('#picker');
 ```
 
-You can also use a DOM object instead of a CSS selector here -- this might be more suitable if you're integrating iro.js into an application built with Vue, React, Angular, etc.
+You can also use a DOM object instead of a CSS selector here -- this might be more suitable if you're integrating iro.js into an application built with a framework such as Vue, React, etc.
 
 ## Color Picker Options
 
-The color picker can be configured by passing a set of options to the second `iro.ColorPicker` parameter:
+The color picker can be customized by passing a set of options to the second `iro.ColorPicker` parameter:
 
 ```js
-var colorPicker = new iro.ColorPicker("#color-picker-container", {
+var colorPicker = new iro.ColorPicker("#picker", {
   // Set the size of the color picker
   width: 320,
   // Set the initial color to pure red
@@ -79,34 +69,36 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 
 ### Available Options
 
-| Option           | Purpose | Default |
+| Option           | Purpose | Default Value |
 |:-----------------|:--------|:--------|
 | `width`          | Total width of the control UI. | `300` |
 | `color`          | The initial color value. This can be any [supported color format](/color_api.html#supported-color-formats). | `"#ffffff"` |
+| `colors`         | Initial color values used for [multi-color selections](/advanced.html#multi-color-selections). | null |
+| `display`        | CSS display value for the color picker root element. | `"block"` |
+| `id`             | HTML ID for the color picker root element. | `null` |
+| `layout`         | Used for customising the [UI component layout](/advanced.html#custom-ui-layouts). | `null` |
+| `layoutDirection` | UI component stacking direction; either `"vertical"` or `"horizontal"`. | `"vertical"` |
 | `borderWidth`    | Width of the border around the controls. Set to `0` for no border. | `0` |
 | `borderColor`    | Color of the border. Any valid CSS color is supported. | `"#ffffff"` |
 | `padding`        | Padding around the control handles. | `6` |
 | `handleRadius`   | Radius of the control handles. | `8` |
-| `handleSvg`      | Custom handle SVG, used for [Custom Handles](#custom-handles) | `null` |
-| `handleOrigin`   | Custom handle origin point, used for [Custom Handles](#custom-handles). | `{x:0,y:0}` |
+| `handleSvg`      | Custom handle SVG, used for [custom handles](/advanced.html#custom-handles). | `null` |
+| `handleProps`    | Custom handle properties, used for [custom handles](/advanced.html#custom-handles). | `{x:0, y:0}` |
 | `wheelLightness` | If set to `false`, the color wheel will not fade to black when the lightness decreases. | `true` |
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
-| `wheelDirection` | Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlockwise"` | `"anticlockwise"` |
-| `sliderHeight`   | Slider control height. By default this will be calculated automatically | `undefined` |
+| `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
+| `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
 | `sliderMargin`   | Distance between the wheel and the slider controls. | `12` |
-| `display`        | CSS display value for the color picker root element. | `"block"` |
-| `id`              | HTML ID for the color picker root element. | `null` |
-| `layout`         | Used for [Custom Layouts](#custom-layouts) | `null` |
 
-More details about color picker options, properties, and methods can be found on the [Color Picker API documentation](/colorPicker_api.html).
+More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](/colorPicker_api.html).
 
-## Selected Color API
+## Working with Colors
 
-Each color picker instance has a `color` object which stores the currently selected color. This color object is tied to the color picker, so any changes to its values will be reflected by the picker and vice versa.
+Each color picker has a `color` object which stores the currently selected color. This color object is tied to the color picker, so any changes to its values will be reflected by the picker, and vice versa.
 
 ### Color Properties
 
-The color object has a few "magic" properties which can be used to both get and set the selected color in different formats. Whenever one of these properties is set, the color picker controls will update and the [`color:change`](#color-picker-events) event will fire.
+The color object has some "magic" properties which can be used to both **get** and **set** the selected color in different formats. Whenever one of these properties is set, the color picker controls will update and the [`color:change`](#color-picker-events) event will fire.
 
 For example, to get the current color as a hex string:
 
@@ -122,38 +114,70 @@ colorPicker.color.hsl = { h: 180, s: 100, l: 50 };
 // Color picker updates to match hsl(180, 100, 50)
 ```
 
-The color object has properties which cover all of the most common web color formats (hex, rgb, and hsl) in the same manner, in addition to hsv:
+The color object has properties which cover all of the most common web color formats (HEX, RGB, HSL and HSV), as well as some extras:
 
 | Property    | Example Format     |
 |:------------|:-------------------|
 | `hexString` | `"#ff0000"` |
+| `hex8String` | `"#ff0000ff"` |
 | `rgb`       | `{ r: 255, g: 0, b: 0 }` |
+| `rgba`       | `{ r: 255, g: 0, b: 0, a: 1 }` |
 | `rgbString` | `"rgb(255, 0, 0)"` |
+| `rgbaString` | `"rgb(255, 0, 0, 1)"` |
 | `hsl`       | `{ h: 360, s: 100, l: 50 }` |
+| `hsla`       | `{ h: 360, s: 100, l: 50, a: 1 }` |
 | `hslString` | `"hsl(360, 100%, 50%)"` |
+| `hslaString` | `"hsla(360, 100%, 50%, 1)"` |
 | `hsv`       | `{ h: 360, s: 100, v: 100 }` |
+| `hsva`       | `{ h: 360, s: 100, v: 100, a: 1 }` |
+| `red`       | `0` to `255` |
+| `green`       | `0` to `255` |
+| `blue`       | `0` to `255` |
+| `alpha`       | `0` to `1` |
+| `hue`       | `0` to `360` |
+| `saturation` | `0` to `100` |
+| `value`       | `0` to `100` |
+| `kelvin`       | `1000` to `40000` |
 
-For more details about the color object, check out the [Color API documentation](/color_api.html).
+For more details about color objects, check out the [Color API documentation](/color_api.html).
 
 ## Color Picker Events
 
-Events let you listen for specific color picker events such as changes to the selected color, the start of user input, or when the color picker has mounted.
+Events let you to run your own code after certain things have happened, like when the selected color has changed or when the user has interacted with the color picker.
 
-The color picker's [`on`](colorPicker_api.html#on) method can be used to add callback functions which get called whenever the given event is fired. These callbacks can also be removed at any time by passing the same function to the color picker's [`off`](colorPicker_api.html#off) method. In this example we add and remove a callback for the `color:change` event:
+The color picker's [`on`](colorPicker_api.html#on) method can be used to attach functions that will be called whenever a particular event is fired. In this example, we add a listener for the `color:change` event:
 
 ```js
-// color:change event callback
-// color:change callbacks receive the current color and a changes object
-function onColorChange(color, changes) {
-  // print the color's new hex value to the developer console
+// listen to a color picker's color:change event
+// color:change callbacks receive the current color
+colorPicker.on('color:change', function(color) {
+  // log the current color as a HEX string
+  console.log(color.hexString);
+});
+```
+
+The [`on`](colorPicker_api.html#on) method can also take an array of event names, in case you want to listen to multiple events with one function:
+
+```js
+// listen to a color picker's color:init and color:change events
+colorPicker.on(['color:init', 'color:change'], function(color) {
+  // log the current color as a HEX string
+  console.log(color.hexString);
+});
+```
+
+Event listeners can also be removed at any time by passing the same function to the color picker's [`off`](colorPicker_api.html#off) method:
+
+```js
+// create a callback function
+function onColorChange(color) {
   console.log(color.hexString);
 }
 
-// listen to a color picker's color:change event
+// add color:change listener
 colorPicker.on('color:change', onColorChange);
 
 // later, if we want to stop listening to color:change...
-// remove the color:change callback
 colorPicker.off('color:change', onColorChange);
 ```
 
@@ -161,160 +185,52 @@ colorPicker.off('color:change', onColorChange);
 
 ##### `color:change`
 
-Fired whenever the selected color changes -- either when the user interacts with the color picker, or when the color is set via code. It is safe to modify the `color` object within callbacks for this event, and callbacks get passed two values:
+Fired whenever the selected color changes -- either when the user interacts with the color picker, or when the color is updated by your own code. This event's callback functions will recieve two values:
 
-* `color`: the [currently selected color](#selected-color-api)
+* `color`: the [currently selected color](#working-with-colors)
 * `changes`: an object showing which HSV channels have changed since the last time the event was fired
 
-##### `color:init`
+It is safe to modify the `color` object within callbacks for this event. This can be helpful if you want to limit the range or a certain color channel, for example:
 
-Same as `color:change`, but only fired once with the initial color value provided to the color picker.
+```js
+colorPicker.on('color:change', function(color) {
+  // don't let the color saturation fall below 50!
+  if (color.saturation < 50) {
+    color.saturation = 50;
+  }
+});
+```
 
 ##### `input:change`
 
-Similar to `color:change`, except this is only fired whenever the color is changed with *direct user input*. Callbacks for this event recieve exactly the same parameters as `color:change`, and it is also safe to modify the `color` object within callbacks for this event.
+Similar to `color:change`, except this event is only fired when the color is changed with the user's **mouse or touch input**. 
+
+Callbacks for this event recieve the same values as `color:change`, and it is also safe to modify the `color` object within callbacks for this event.
 
 ##### `input:start`
 
-Fired whenever the users starts interacting with the color picker controls. The [currently selected color](#selected-color-api) is passed to this event's callback function.
+Fired whenever the users starts interacting with the color picker controls. The [currently selected color](#working-with-colors) is passed to this event's callback function.
 
 ##### `input:move`
 
-Fired when the user moves their pointer/mouse after beginning interaction. The [currently selected color](#selected-color-api) is passed to this event's callback function.
+Fired when the user moves their pointer/mouse after beginning interaction. The [currently selected color](#working-with-colors) is passed to this event's callback function.
 
 ##### `input:end`
 
-Fired whenever the user stops interacting with the color picker controls. The [currently selected color](#selected-color-api) is passed to this event's callback function.
+Fired whenever the user stops interacting with the color picker controls. The [currently selected color](#working-with-colors) is passed to this event's callback function.
+
+##### `color:init`
+
+Fired whenever a color is added. This event's callbacks will recieve the newly added color object.
+
+##### `color:remove`
+
+Fired when a color is removed from the color picker. This event's callbacks will receive the removed color object.
+
+##### `color:setActive`
+
+Fired whenever the 'active' color is switched. This event's callbacks will receive the active color object.
 
 ##### `mount`
 
 Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. The colorPicker object is passed to this event's callback function.
-
-## Custom Handles
-
-By default, the color picker uses circular control handles which can be adjusted with the `handleRadius` option. However, it's possible to override this and use your own SVGs to create customized color picker handles.
-
-Handle SVGs need to be placed somewhere within the page HTML, and the SVG content also needs to be wrapped inside a `<g>` tag with a unique `id`, which itself is wrapped in a `<defs>` tag, like so:
-
-```svg
-<svg>
-  <defs>
-    <g id="handle">
-      <!-- this is where the handle svg content starts -->
-      <rect x="0" y="0" width="8" height="8"></rect>
-      <!-- this is where the handle svg content ends -->
-    </g>
-  </defs>
-</svg>
-```
-
-Then when the color picker is created, make sure the `handleSvg` option is an **id selector** which matches the handle SVG:
-
-```js
-var colorPicker = new iro.ColorPicker('#color-picker', {
-  handleSvg: '#handle'
-});
-```
-
-By default, the custom handle SVG will be drawn as if the center point is at `x 0, y 0`. If you need to adjust the position of the handle, the `handleOrigin` option can be used to change the center point:
-
-```js
-var colorPicker = new iro.ColorPicker('#color-picker', {
-  handleSvg: '#handle',
-  handleOrigin: { x: -4, y: -4 }
-});
-```
-
-It's recommended to check out the interactive [Custom Handle Demo](https://codepen.io/rakujira/pen/vbeENp?editors=1010) on Codepen to get a better understanding of how this feature works. If you want to use a different handle for each color picker component, you may want to also check out the [Custom Layouts](#custom-layouts) guide.
-
-## Custom Layouts
-
-The custom layout feature can be used to pass configuration options to individual color picker components, or to remove a component entirely. In the future it will also provide more control over the color picker layout and allow custom elments to be used, however this hasn't been fleshed out yet.
-
-Layouts are configured with the color picker's `layout` option. This should be an array where each item is an object with `component` and `options` properties:
-
-```js
-var colorPicker = new iro.ColorPicker('#color-picker', {
-  layout: [
-    {
-      component: iro.ui.Wheel,
-      options: {}
-    },
-    {
-      component: iro.ui.Slider,
-      options: {}
-    }
-  ]
-});
-```
-
-`component` can be either `iro.ui.Wheel` for a hue/saturation wheel, or `iro.ui.Slider` for a value slider.
-
-`options` provides configuration options for the component. All of the [options](#color-picker-options) available to the color picker are also supported here, and any unspecified options will be inherited from the color picker itself. 
-
-In this example, the wheel and slider will both have the same border width of `2`, but different border colors:
-
-```js
-var colorPicker = new iro.ColorPicker('#color-picker', {
-  borderWidth: 2,
-  layout: [
-    {
-      component: iro.ui.Wheel,
-      options: {
-        borderColor: '#ffffff'
-      }
-    },
-    {
-      component: iro.ui.Slider,
-      options: {
-        borderColor: '#000000'
-      }
-    }
-  ]
-});
-```
-
-Each color picker component is self-contained, so you can add, remove and rearrange them as you wish. For example, it's fairly common to only use the hue/saturation wheel part of the color picker:
-
-```js
-var colorPicker = new iro.ColorPicker('#color-picker', {
-  layout: [
-    {
-      component: iro.ui.Wheel,
-      options: {}
-    }
-  ]
-});
-```
-
-### Extra Slider Types
-
-`iro.ui.Slider` also has an additional `sliderType` property that can be used to create a hue or saturation slider instead:
-
-```js
-var colorPicker = new iro.ColorPicker('#color-picker', {
-  layout: [
-    ...
-    {
-      // regular value slider
-      component: iro.ui.Slider,
-      options: {
-      }
-    },
-    {
-      // hue slider
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'hue'
-      }
-    },
-    {
-      // saturation slider
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'saturation'
-      }
-    },
-  ]
-});
-```
