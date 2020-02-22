@@ -97,7 +97,7 @@ export default {
   
   @media (min-width: $breakpoint-medium) {
     width: 260px;
-    max-height: 100vh;
+    max-height: 100%;
     position: sticky;
     top: 0px;
     overflow-y: scroll;
@@ -173,11 +173,11 @@ export default {
     position: fixed;
     top: $mobile-navbar-height;
     width: 100%;
-    height: calc(100vh - #{$mobile-navbar-height});
+    height: calc(100% - #{$mobile-navbar-height});
     z-index: 1000;
     overflow-y: scroll;
     left: 0;
-    transform: translateX(-100vw);
+    transform: translateX(-100%);
     transition: transform 0.3s ease;
 
     .Sidebar--isOpen & {
@@ -208,7 +208,7 @@ export default {
 
 
 .Content {
-  width: 100%;
+  // width: 100%;
   padding: 0 12px;
   padding-top: $mobile-navbar-height;
   max-width: 752px;
