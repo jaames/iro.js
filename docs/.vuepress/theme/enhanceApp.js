@@ -5,6 +5,7 @@ export default ({
   siteData, // site metadata
   isServer
 }) => {
+  Vue.config.devtools = true
   // Make iro.js globally available to all client-side Vue components
   // https://vuepress.vuejs.org/guide/using-vue.html#browser-api-access-restrictions
   if (!isServer) {

@@ -51,6 +51,7 @@ module.exports = {
     ],
   ],
   configureWebpack: {
+    // devtool: 'source-map',
     resolve: {
       alias: {
         '@components': path.resolve(__dirname, './theme/components'),

@@ -49,9 +49,9 @@
 </br><span class="token keyword">var</span> hsv <span class="token operator">=</span> <span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hsv<span class="token punctuation">;</span>
 </br><span class="token comment">// hsv = { h: {{ hsv.h | formatInt }}, s: {{ hsv.s | formatInt }}, v: {{ hsv.v | formatInt }} }</span>
 </br></br><span class="token comment">// Set the color from a hex string</span>
-</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hexString <span class="token operator">=</span> <span class="token string">"#fff"</span>;</span>
+</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hexString <span class="token operator">=</span> <span class="token string">"#fff"</span>;
 </br></br><span class="token comment">// Set the color from a temperature</span>
-</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>kelvin <span class="token operator">=</span> <span class="token number">6000</span>;</span>
+</br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>kelvin <span class="token operator">=</span> <span class="token number">6000</span>;
 </code>
               </div>
             </div>
@@ -286,7 +286,7 @@ export default {
       }
     }
   },
-  beforeMount() {
+  mounted() {
     // fetch star count from github
     axios.get(`https://api.github.com/repos/jaames/iro.js`)
       .then(res => {
@@ -295,8 +295,7 @@ export default {
       .catch(error => {
         throw new Error(error);
       });
-  },
-  mounted() {
+      
     this.$onIroReady((iro) => {
       this.colorObj = new iro.Color(null, (color) => {
         this.hsv = color.hsv;
