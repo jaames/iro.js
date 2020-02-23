@@ -7,11 +7,12 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   // handleUrl: "#test",
   handleOrigin: {y: 0, x: 0},
   color: "#f00",
-  borderWidth: 2,
+  // borderWidth: 2,
   padding: 8,
   wheelLightness: true,
   wheelAngle: 270,
   wheelDirection: 'anticlockwise',
+  layoutDirection: 'vertical',
   layout: [
     {
       component: iro.ui.Wheel,
@@ -19,8 +20,13 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
       }
     },
     {
+      component: iro.ui.Box,
+      options: {}
+    },
+    {
       component: iro.ui.Slider,
       options: {
+        sliderType: 'alpha'
       }
     },
     {
@@ -34,22 +40,51 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
       options: {
         sliderType: 'saturation'
       }
-    }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value'
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'kelvin',
+        sliderShape: 'circle'
+      }
+    },
   ]
 });
 
-colorPicker.on('mount', function() {
-  console.log('mount')
-});
+// colorPicker.on('mount', function() {
+//   console.log('mount')
+// });
 
 colorPicker.on('color:change', function() {
   console.log('color:change');
 })
 
 colorPicker.on('input:change', function(color) {
+  console.log(color.hexString)
   console.log('input:change');
 })
 
-colorPicker.on(['color:init', 'color:change'], function() {
-  console.log('color:change or color:init');
+colorPicker.on('input:start', function(color) {
+  console.log(color.hexString)
+  console.log('input:start');
 })
+
+colorPicker.on('input:move', function(color) {
+  console.log(color.hexString)
+  console.log('input:move');
+})
+
+colorPicker.on('input:end', function(color) {
+  console.log(color.hexString)
+  console.log('input:end');
+})
+
+// colorPicker.on(['color:init', 'color:change'], function() {
+//   console.log('color:change or color:init');
+// })

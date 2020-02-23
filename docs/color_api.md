@@ -12,56 +12,134 @@ The Color API is used by color pickers to store the selected color and to handle
 
 ## Supported Color Formats
 
-* **hex string**: `"#ff0000"`
-* **hex rgba string**: `"#ff0000ff"`
-* **shorthand hex string**: `"#f00"`
-* **shorthand hex rgba string**: `"#f00f"`
-* **rgb(a) string**: `"rgb(255, 0, 0)"`, `"rgba(255, 0, 0, 1)"`
-* **percentage rgb(a) string**: `"rgb(100%, 0%, 0%)"`, `"rgba(100%, 0%, 0%, 100%)"`
-* **rgb object**: `{r: 255, g: 0, b: 0}`
-* **hsl(a) string**: `"hsl(360, 50%, 100%)"`, `"hsla(360, 50%, 100%, 1)"`
-* **hsl object**: `{h: 360, s: 50, l: 100}`
-* **hsv object**: `{h: 360, s: 100, v: 50}`
+* **Hex string**: `"#ff0000"`
+* **Hex alpha string**: `"#ff0000ff"`
+* **Shorthand hex string**: `"#f00"`
+* **Shorthand hex alpha string**: `"#f00f"`
+* **RGB string**: `"rgb(255, 0, 0)"`
+* **RGBA string**: `"rgba(255, 0, 0, 1)"`
+* **Percentage RGB string**: `"rgb(100%, 0%, 0%)"`
+* **Percentage RGBA string**: `"rgba(100%, 0%, 0%, 100%)"`
+* **RGB object**: `{r: 255, g: 0, b: 0}`
+* **RGBA object**: `{r: 255, g: 0, b: 0, a: 1}` 
+* **HSL string**: `"hsl(360, 50%, 100%)"`
+* **HSLA string**: `"hsla(360, 50%, 100%, 1)"`
+* **HSL object**: `{h: 360, s: 50, l: 100}`
+* **HSLA object**: `{h: 360, s: 50, l: 100, a: 1}`
+* **HSV object**: `{h: 360, s: 100, v: 50}`
+* **HSVA object**: `{h: 360, s: 100, v: 50, a: 1}`
 
 ## Properties
 
 Color objects have several "magic" properties that reflect the value of the color in different formats. The magic is that they are readable as well as writable, so they can both **get** and **set** the color from that given format.
 
-### `hsv`
+### `red`
 
-The color as a [hsv](https://www.wikiwand.com/en/HSL_and_HSV) object.
+The color's red channel as a number between `0` and `255`.
 
-**Example format**: `{h: 360, s: 100, v: 50}`
+### `green`
 
-### `hsl`
+The color's green channel as a number between `0` and `255`.
 
-The color as a [hsl](https://www.wikiwand.com/en/HSL_and_HSV) object.
+### `blue`
 
-**Example format**: `{h: 360, s: 50, l: 100}`
+The color's blue channel as a number between `0` and `255`.
+
+### `alpha`
+
+The color's value channel as a number between `0` and `1`.
+
+### `hue`
+
+The color's hue channel as a number between `0` and `360`.
+
+### `saturation`
+
+The color's saturation channel as a number between `0` and `100`.
+
+### `value`
+
+The color's value channel as a number between `0` and `100`.
+
+### `kelvin`
+
+The color's approximate kelvin temperature.
 
 ### `rgb`
 
-The color as an [rgb](https://www.wikiwand.com/en/RGB_color_model) object
+The color as an [RGB](https://www.wikiwand.com/en/RGB_color_model) object.
 
 **Example format**: `{r: 255, g: 0, b: 0}`
 
-### `hslString`
+### `rgba`
 
-The color as a percentage hsl string.
+The color as an [RGBA](https://www.wikiwand.com/en/RGB_color_model) object, where `a` represents the color's transparency.
 
-**Example format**: `"hsl(360, 100%, 50%)"`
+**Example format**: `{r: 255, g: 0, b: 0, a: 1}`
 
-### `rgbString`
+### `hsv`
 
-The color as an rgb string. Percentage-based rgb strings are also accepted as inputs.
+The color as a [HSV](https://www.wikiwand.com/en/HSL_and_HSV) object.
 
-**Example format**: `"rgb(255, 0, 0)"` or `"rgb(100%, 0%, 0%)"`
+**Example format**: `{h: 360, s: 100, v: 50}`
+
+### `hsva`
+
+The color as a [HSVA](https://www.wikiwand.com/en/HSL_and_HSV) object, where `a` represents the color's transparency.
+
+**Example format**: `{h: 360, s: 100, v: 50, a: 1}`
+
+### `hsl`
+
+The color as a [HSL](https://www.wikiwand.com/en/HSL_and_HSV) object.
+
+**Example format**: `{h: 360, s: 50, l: 100}`
+
+### `hsla`
+
+The color as a [HSLA](https://www.wikiwand.com/en/HSL_and_HSV) object, where `a` represents the color's transparency.
+
+**Example format**: `{h: 360, s: 50, l: 100, a: 1}`
 
 ### `hexString`
 
-The color as a hex rgb string. Shorthand hex input is also accepted.
+The color as a hex string. Shorthand hex input is also accepted.
 
 **Example format**: `"#ff0000"` or `"#f00"`
+
+### `hex8String`
+
+The color as a hex alpha string. Shorthand hex input is also accepted.
+
+**Example format**: `"#ff0000ff"` or `"#f00f"`
+
+### `rgbString`
+
+The color as an RGB string. Percentage-based RGB strings are also accepted as inputs.
+
+**Example format**: `"rgb(255, 0, 0)"` or `"rgb(100%, 0%, 0%)"`
+
+### `rgbaString`
+
+The color as an RGBA string. Percentage-based RGBA strings are also accepted as inputs.
+
+**Example format**: `"rgba(255, 0, 0, 1)"` or `"rgba(100%, 0%, 0%, 100%)"`
+
+### `hslString`
+
+The color as a percentage HSL string.
+
+**Example format**: `"hsl(360, 100%, 50%)"`
+
+### `hslaString`
+
+The color as a percentage HSLA string
+
+**Example format**: `"hsl(360, 100%, 50%, 1)"`
+
+### `index`
+
+The color's index.
 
 ## Methods
 
@@ -99,44 +177,69 @@ Copy the color and return a new Color object with the same value.
 
 **Returns**: `{Color}`
 
+### `reset`
+
+Resets the color back to the value initially passed to the `iro.Color` constructor.
+
 ## Static Methods
 
 ### `hsvToRgb`
 
-Convert a hsv object to an rgb object.
+Convert a HSV object to an RGB object.
 
 **Arguments**:
 
-* `{Object}` hsv values, e.g `{h: 360, s: 100, v: 50}`
+* `{Object}` HSV values, e.g `{h: 360, s: 100, v: 50}`
 
-**Returns**: `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
+**Returns**: `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
 
 ### `rgbToHsv`
 
-Convert an rgb object to a hsv object.
+Convert an RGB object to a HSV object.
 
 **Arguments**:
 
-* `{Object}` rgb values, e.g `{r: 255, g: 0, b: 0}`
+* `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
 
-**Returns**: `{Object}` hsv values, e.g `{h: 360, s: 100, v: 50}`
+**Returns**: `{Object}` HSV values, e.g `{h: 360, s: 100, v: 50}`
 
 ### `hsvToHsl`
 
-Convert a hsv object to a hsl object.
+Convert a HSV object to a HSL object.
 
 **Arguments**:
 
-* `{Object}` hsv values, e.g `{h: 360, s: 50, v: 100}`
+* `{Object}` HSV values, e.g `{h: 360, s: 50, v: 100}`
 
-**Returns**: `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
+**Returns**: `{Object}` HSL values, e.g `{h: 360, s: 100, l: 100}`
 
 ### `hslToHsv`
 
-Convert a hsl object to a hsv object.
+Convert a HSL object to a HSV object.
 
 **Arguments**:
 
-* `{Object}` hsl values, e.g `{h: 360, s: 100, l: 100}`
+* `{Object}` HSL values, e.g `{h: 360, s: 100, l: 100}`
 
-**Returns**: `{Object}` hsv values, e.g `{h: 360, s: 50, v: 100}`
+**Returns**: `{Object}` HSV values, e.g `{h: 360, s: 50, v: 100}`
+
+
+### `kelvinToRgb`
+
+Convert a kelvin temperature to an approximated RGB object.
+
+**Arguments**:
+
+* `{Number}` kelvin temperature
+
+**Returns**: `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
+
+### `rgbToKelvin`
+
+Convert an RGB object to an approximated kelvin temperature.
+
+**Arguments**:
+
+* `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
+
+**Returns**: `{Number}` kelvin temperature

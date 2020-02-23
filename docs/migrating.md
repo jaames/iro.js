@@ -2,49 +2,34 @@
 title: Migration Guide
 ---
 
-## Migrating from v3
+## Migrating from v4
 
-iro.js version 4.0.0 is a major rewrite of the core library which aims to solve numerous long-standing issues with the library. Most of these changes won't affect 99% of the core use-cases, but if needed, version 3.5.1 has been preserved in the [v3 branch](https://github.com/jaames/iro.js/tree/v3).
+iro.js version 5.0.0 mostly adds new features, with minimal changes that won't affect most people using the library. However, if for whatever reason you need to use v4, the latest v4 build has been preserved in the [v4 branch](https://github.com/jaames/iro.js/tree/v4).
 
 ### Color Picker Options
 
-* `anticlockwise` option has been removed, and is now hardcoded to `true`
-* `markerRadius` option has been renamed as `handleRadius`
+* `sliderHeight` option has been renamed to `sliderSize`.
+* `handleOrigin` option has been renamed to `handleProps`.
 
-### Safari Bugfix Note
+### Plugins
 
-To resolve an issue where Safari wasn't rendering the color picker properly because of certain client-side routing libraries, it was previously recommended to call `emit('history:statechange')` on the color picker when navigating to new client-side routes. This has been deprecated in favour of the catch-all `forceUpdate()` color picker method.
+The plugin API introduced in v4 has been deprecated, along with the [iro-dynamic-css](https://github.com/irojs/iro-dynamic-css) and [iro-transparency-plugin](https://github.com/irojs/iro-transparency-plugin) plugins. The transparency slider is now part of the core iro.js library, and the overall functionality of the dynamic CSS plugin can be easily replicated with [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties).
 
-### Static Color Methods
+#### Dynamic CSS Plugin Replacement
 
-The following methods have been renamed:
+Set up some JavaScript to update the `--iro-color-value` variable when the color changes:
 
-* `hsv2Hsl` -> `hsvToHsl`
-* `hsl2Hsv` -> `hslToHsv`
-* `rgb2Hsv` -> `rgbToHsv`
-* `hsv2Rgb` -> `hsvToRgb`
+```js
+var rootStyle = document.documentElement.style;
+colorPicker.on(['color:init', 'color:change'], function(color) {
+  rootStyle.setProperty('--iro-color-value', color.rgbString);
+});
+```
 
-The following methods have been removed:
+Then use `--iro-color-value` in any of the styles you want to update based on the current color:
 
-* `parseHexStr`
-* `parseRgbStr`
-* `parseHslStr`
-* `rgb2Hex`
-* `rgb2Str`
-* `hsl2Str`
-* `mix`
-* `lighten`
-* `darken`
-* `compare`
-
-### Color Methods
-
-The following color methods have been removed:
-
-* `mix`
-* `lighten`
-* `darken`
-
-### Dynamic CSS
-
-The Dynamic CSS feature and has become a seperate plugin; [iro-dynamic-css](https://github.com/jaames/iro-dynamic-css).
+```css
+body {
+  background-color: var(--iro-color-value);
+}
+```

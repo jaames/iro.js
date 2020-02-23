@@ -3,8 +3,10 @@ $primary-color: #906bff;
 $primary-color-light: #b298ff;
 $text: #141414;
 $text-invert: #fff;
+$text-invert-alt: #a2b0d4;
 $background: #fff;
-$background-invert: #00002A;
+$background-invert: #0e101f;
+$background-invert-alt: #1e1f31;
 $light-gray: #eceff3;
 $medium-gray: #a7aaad;
 $dark-gray: #7c7c7c;
@@ -19,28 +21,33 @@ $font-family-monospace: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 
 // syntax highlighting
 $codeSyntax: (
-  color: #ddddef,
+  color: #eef4fd,
   background: $background-invert,
   comment: #9fa7b4,
   punctuation: #9ea5af,
-  property: #c678dd,
+  property: #c670e9,
   boolean: #ee7261,
-  string: #5addb1,
-  variable: #c678dd,
-  atrule: #61aeee,
+  string: #52E09A,
+  variable: #c670e9,
+  atrule: #4EBCF4,
   keyword: #c678dd,
   regex: #eb6f1d
 );
 
+$wrapper-width: 960px;
+$mobile-wrapper-width: 420px;
+
 // layout
-$mobile-navbar-height: 70px;
+$mobile-navbar-height: 80px;
+$navbar-height: 128px;
+
 $mobile-navbar-toggle-height: 24px;
-$main-frame-padding-mobile: 16px;
+$main-frame-padding-mobile: 8px;
 $main-frame-padding: 32px;
 $main-frame-radius: 8px;
 
 // css breakpoints
-$breakpoint-small: 38em;
+$breakpoint-small: 28em;
 $breakpoint-medium: 64em;
 $breakpoint-large: 75em;
 $breakpoint-extra-large: 105em;
