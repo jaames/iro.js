@@ -7,9 +7,8 @@ import { IroHandle }  from './Handle';
 import { IroSlider } from './Slider';
 import { IroBox } from './Box';
 import { IroWheel } from './Wheel';
-import { usePlugins } from './usePlugins';
 
-export default usePlugins({
+export default {
   Color: IroColor,
   ColorPicker: IroColorPickerWidget,
   ui: {
@@ -21,5 +20,5 @@ export default usePlugins({
     Box: IroBox,
   },
   version: VERSION,
-});
+}
 

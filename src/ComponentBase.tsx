@@ -2,43 +2,31 @@ import { Fragment, Component, h } from 'preact';
 import { IroColor, IroColorPickerOptions } from '@irojs/iro-core';
 import { IroColorPicker } from './ColorPicker';
 
-// Listen to one or more events on an element
-function listen(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
-  for (var i = 0; i < eventList.length; i++) {
-    el.addEventListener(eventList[i], callback, params);
-  }
-};
-
-// Remove an event listener on an element
-function unlisten(el: EventTarget, eventList: string[], callback: any, params?: AddEventListenerOptions) {
-  for (var i = 0; i < eventList.length; i++) {
-    el.removeEventListener(eventList[i], callback, params);
-  }
-};
-
-enum EventType {
+const enum EventType {
   MouseDown = 'mousedown',
   MouseMove = 'mousemove',
   MouseUp = 'mouseup',
   TouchStart = 'touchstart',
   TouchMove = 'touchmove',
   TouchEnd = 'touchend'
-}
+};
 
-export enum EventResult {
-  start,
-  move,
-  end
-}
+export const enum EventResult {
+  Start,
+  Move,
+  End
+};
+
+const SECONDARY_EVENTS = [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd];
 
 export interface IroComponentProps extends IroColorPickerOptions {
   parent: IroColorPicker;
   color: IroColor;
-  onInput: Function;
+  onInput: (type: EventResult) => void;
 }
 
 interface Props {
-  onInput: Function;
+  onInput: (x: number, y: number, type: EventResult) => void;
 }
 
 interface State {}
@@ -58,15 +46,17 @@ export class IroComponentBase extends Component<Props, State> {
 
   render(props) {
 
+    const eventHandler = this.handleEvent.bind(this);
+
     const rootProps = {
-      onMouseDown: this.handleEvent.bind(this),
-      onTouchStart: this.handleEvent.bind(this)
-    }
+      onMouseDown: eventHandler,
+      onTouchStart: eventHandler
+    };
 
     const rootStyles = {
       overflow: 'visible',
       display: props.layoutDirection === 'vertical' ? 'block' : 'inline-block' 
-    }
+    };
 
     return (
       <Fragment>
@@ -79,31 +69,35 @@ export class IroComponentBase extends Component<Props, State> {
   // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   handleEvent(e: MouseEvent & TouchEvent) {
+    const inputHandler = this.props.onInput;
+    // Get the screen position of the component
+    const bounds = this.base.getBoundingClientRect();
+    // Prefect default browser action
     e.preventDefault();
     // Detect if the event is a touch event by checking if it has the `touches` property
     // If it is a touch event, use the first touch input
     const point = e.touches ? e.changedTouches[0] : e;
-    const x = point.clientX;
-    const y = point.clientY;
-
-    // Get the screen position of the component
-    const bounds = this.base.getBoundingClientRect();
-    const inputHandler = this.props.onInput;
+    const x = point.clientX - bounds.left;
+    const y = point.clientY - bounds.top;
 
     switch (e.type) {
       case EventType.MouseDown:
       case EventType.TouchStart:
-        listen(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
-        inputHandler(x, y, bounds, EventResult.start);
+        SECONDARY_EVENTS.forEach(event => {
+          document.addEventListener(event, this, { passive: false });
+        });
+        inputHandler(x, y, EventResult.Start);
         break;
       case EventType.MouseMove:
       case EventType.TouchMove:
-        inputHandler(x, y, bounds, EventResult.move);
+        inputHandler(x, y, EventResult.Move);
         break;
       case EventType.MouseUp:
       case EventType.TouchEnd:
-        inputHandler(x, y, bounds, EventResult.end);
-        unlisten(document, [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd], this, { passive: false });
+        inputHandler(x, y, EventResult.End);
+        SECONDARY_EVENTS.forEach(event => {
+          document.removeEventListener(event, this);
+        });
         break;
     }
   }

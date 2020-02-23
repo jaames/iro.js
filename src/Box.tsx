@@ -23,19 +23,20 @@ export function IroBox(props: IroBoxProps) {
   const gradients = getBoxGradients(props, activeColor);
   const handlePositions = props.colors.map(color => getBoxHandlePosition(props, color));
 
-  function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
+  function handleInput(x: number, y: number, type: EventResult) {
     // props.colors.length > 1 = the wheel uses multiple colors
     // in multi color mode, to start with we want to find the color that the user clicked
-    if ((props.colors.length > 1) && (type === EventResult.start)) {
-      const activeHandle = getHandleAtPoint(props, x - bounds.left, y - bounds.top, handlePositions);
+    if ((props.colors.length > 1) && (type === EventResult.Start)) {
+      const activeHandle = getHandleAtPoint(props, x, y, handlePositions);
       if (activeHandle !== null) {
         props.parent.setActiveColor(activeHandle);
         props.parent.inputActive = true;
         props.onInput(type);
       }
-    } else {
+    }
+    else {
       props.parent.inputActive = true;
-      activeColor.hsv = getBoxValueFromInput(props, x, y, bounds);
+      activeColor.hsv = getBoxValueFromInput(props, x, y);
       props.onInput(type);
     }
   }

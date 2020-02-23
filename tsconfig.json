@@ -1,17 +1,15 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": { "*": ["types/*"] },
-        "moduleResolution": "node",
-        "outDir": "dist",
-        "target": "es6",
-        "jsx": "react",
-        "jsxFactory": "h",
-        "declaration": true,
-        "sourceMap": true
-    },
-    "include": [
-        "./src/**/*.ts",
-        "./src/**/*.tsx"
-    ]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "*": ["types/*"] },
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "target": "es6",
+    "jsx": "react",
+    "jsxFactory": "h"
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ]
 }

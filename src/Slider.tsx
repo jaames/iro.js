@@ -30,8 +30,8 @@ export function IroSlider(props: IroSliderProps) {
   const gradient = getSliderGradient(props, activeColor);
   const isAlpha = props.sliderType === 'alpha';
 
-  function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
-    const value = getSliderValueFromInput(props, x, y, bounds);
+  function handleInput(x: number, y: number, type: EventResult) {
+    const value = getSliderValueFromInput(props, x, y);
     props.parent.inputActive = true;
     activeColor[props.sliderType] = value;
     props.onInput(type);

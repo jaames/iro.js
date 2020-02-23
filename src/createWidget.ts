@@ -9,7 +9,7 @@ export function createWidget(WidgetComponent: ComponentType) {
 
   const widgetFactory = function (parent: HTMLElement, props: any) {
     let widget: any; // will become an instance of the widget component class
-    let widgetRoot = document.createElement('div');
+    const widgetRoot = document.createElement('div');
 
     // Render widget into a temp DOM node
     render(

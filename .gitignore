@@ -5,3 +5,4 @@ node_modules
 docs/.vuepress/dist
 built/*
 .rpt2_cache/*
+package-lock.json

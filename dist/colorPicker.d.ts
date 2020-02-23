@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { IroColor, IroColorValue, IroColorPickerOptions } from '@irojs/iro-core';
 interface ColorPickerLayoutDefinition {
     component: any;
-    options: any;
+    options?: any;
 }
 export interface ColorPickerProps extends IroColorPickerOptions {
     display?: string;
@@ -16,7 +16,6 @@ export interface ColorPickerState extends ColorPickerProps {
     colors: IroColor[];
 }
 export declare class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
-    static pluginHooks: {};
     static defaultProps: {
         colors: any[];
         display: string;
@@ -47,9 +46,27 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
     private deferredEvents;
     private colorUpdateActive;
     constructor(props: ColorPickerProps);
+    /**
+    * @desc Add a color to the color picker
+    * @param color new color to add
+    * @param index optional color index
+    */
     addColor(color: IroColorValue, index?: number): void;
+    /**
+     * @desc Remove a color from the color picker
+     * @param index color index
+     */
     removeColor(index: number): void;
+    /**
+     * @desc Set the currently active color
+     * @param index color index
+     */
     setActiveColor(index: number): void;
+    /**
+     * @desc Replace all of the current colorPicker colors
+     * @param newColorValues list of new colors to add
+     */
+    setColors(newColorValues: IroColorValue[]): void;
     /**
      * @desc Set a callback function for an event
      * @param eventList event(s) to listen to
@@ -72,7 +89,7 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
      * @param eventType - The name of the event to emit
      */
     deferredEmit(eventType: string, ...args: any): void;
-    updateOptions(newOptions: Partial<ColorPickerState>): void;
+    setOptions(newOptions: Partial<ColorPickerState>): void;
     /**
      * @desc Resize the color picker
      * @param width - new width
@@ -82,17 +99,6 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
      * @desc Reset the color picker to the initial color provided in the color picker options
      */
     reset(): void;
-    /**
-     * @desc Set a callback function for a hook
-     * @param hookType - The name of the hook to listen to
-     * @param callback
-     */
-    static addHook(hookType: string, callback: Function): void;
-    /**
-     * @desc Emit a callback hook
-     * @param hookType - The type of hook event to emit
-     */
-    private emitHook;
     /**
      * @desc Called by the createWidget wrapper when the element is mounted into the page
      * @param container - the container element for this ColorPicker instance

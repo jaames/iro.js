@@ -1,10 +1,10 @@
 import { h, Component } from 'preact';
 import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from '@irojs/iro-core';
 
+import { EventResult } from './ComponentBase';
 import { IroWheel } from './Wheel';
 import { IroSlider } from './Slider';
 import { createWidget } from './createWidget';
-import { EventResult } from './ComponentBase'
 
 interface ColorPickerEvents {
   [key: string]: Function[];
@@ -16,7 +16,7 @@ interface ColorDeferredEvents {
 
 interface ColorPickerLayoutDefinition {
   component: any;
-  options: any;
+  options?: any;
 }
 
 export interface ColorPickerProps extends IroColorPickerOptions {
@@ -34,7 +34,6 @@ export interface ColorPickerState extends ColorPickerProps {
 
 export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
 
-  public static pluginHooks = {};
   public static defaultProps = {
     ...iroColorPickerOptionDefaults,
     colors: [],
@@ -55,7 +54,6 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
 
   constructor(props: ColorPickerProps) {
     super(props);
-    this.emitHook('init:before');
     this.id = props.id;
     const colors = props.colors.length > 0 ? props.colors : [props.color];
     colors.forEach(colorValue => this.addColor(colorValue));
@@ -68,16 +66,19 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
       colors: this.colors,
       layout: props.layout !== null ? props.layout : [
         // default layout is just a wheel and a slider
-        {component: IroWheel, options: {}},
-        {component: IroSlider, options: {}},
+        { component: IroWheel },
+        { component: IroSlider },
       ]
     };
-    this.emitHook('init:state');
-    this.emitHook('init:after');
   }
 
   // Plubic multicolor API
 
+   /**
+   * @desc Add a color to the color picker
+   * @param color new color to add
+   * @param index optional color index
+   */
   public addColor(color: IroColorValue, index: number = this.colors.length) {
     // Create a new iro.Color
     // Also bind it to onColorChange, so whenever the color changes it updates the color picker
@@ -85,31 +86,64 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
     // Insert color @ the given index
     this.colors.splice(index, 0, newColor);
     // Reindex colors
-    for (let i = 0; i < this.colors.length; i++) this.colors[i].index = i;
+    this.colors.forEach((color, index) => color.index = index);
     // Update picker state if necessary
-    if (this.state) this.setState({ colors: this.colors });
+    if (this.state) {
+      this.setState({ colors: this.colors });
+    }
     // Fire color init event
     this.deferredEmit('color:init', newColor);
   }
 
+  /**
+   * @desc Remove a color from the color picker
+   * @param index color index
+   */
   public removeColor(index: number) {
     const color = this.colors.splice(index, 1)[0];
     // Destroy the color object -- this unbinds it from the color picker
     color.unbind();
     // Reindex colors
-    for (let i = 0; i < this.colors.length; i++) this.colors[i].index = i;
-    // TODO: what happens if removed color is active?
+    this.colors.forEach((color, index) => color.index = index);
     // Update picker state if necessary
-    if (this.state) this.setState({ colors: this.colors });
+    if (this.state) {
+      this.setState({ colors: this.colors });
+    }
+    // If the active color was removed, default active color to 0
+    if (color.index === this.color.index) {
+      this.setActiveColor(0);
+    }
     // Fire color remove event
     this.emit('color:remove', color);
   }
 
+  /**
+   * @desc Set the currently active color
+   * @param index color index
+   */
   public setActiveColor(index: number) {
     this.color = this.colors[index];
-    if (this.state) this.setState({ color: this.color });
+    if (this.state) {
+      this.setState({ color: this.color });
+    }
     // Fire color switch event
     this.emit('color:setActive', this.color);
+  }
+
+  /**
+   * @desc Replace all of the current colorPicker colors
+   * @param newColorValues list of new colors to add
+   */
+  public setColors(newColorValues: IroColorValue[]) {
+    // Unbind color events
+    this.colors.forEach(color => color.unbind());
+    // Destroy old colors
+    this.colors = [];
+    // Add new colors
+    newColorValues.forEach(colorValue => this.addColor(colorValue));
+    // Reset active color
+    this.setActiveColor(0);
+    this.emit('color:setAll', this.colors);
   }
 
   // Public ColorPicker events API
@@ -124,7 +158,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
     // eventList can be an eventType string or an array of eventType strings
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
       // Emit plugin hook
-      this.emitHook('event:on', eventType, callback);
+      // this.emitHook('event:on', eventType, callback);
       // Add event callback
       (events[eventType] || (events[eventType] = [])).push(callback);
       // Call deferred events
@@ -148,7 +182,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   public off(eventList: string[] | string, callback: Function) {
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
       const callbackList = this.events[eventType];
-      this.emitHook('event:off', eventType, callback);
+      // this.emitHook('event:off', eventType, callback);
       if (callbackList) callbackList.splice(callbackList.indexOf(callback), 1);
     });
   }
@@ -159,11 +193,9 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    */
   public emit(eventType: string, ...args: any) {
     // Events are plugin hooks too
-    this.emitHook(eventType, ...args);
+    // this.emitHook(eventType, ...args);
     const callbackList = this.events[eventType] || [];
-    for (let i = 0; i < callbackList.length; i++) {
-      callbackList[i].apply(this, args); 
-    }
+    callbackList.forEach(fn => fn.apply(this, args));
   }
 
   /**
@@ -178,7 +210,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
 
   // Public utility methods
 
-  public updateOptions(newOptions: Partial<ColorPickerState>) {
+  public setOptions(newOptions: Partial<ColorPickerState>) {
     this.setState({ ...this.state, ...newOptions });
   }
 
@@ -187,7 +219,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param width - new width
    */
   public resize(width: number) {
-    this.updateOptions({ width })
+    this.setOptions({ width })
   }
 
   /**
@@ -196,29 +228,6 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   public reset() {
     this.colors.forEach(color => color.reset());
     this.setState({ colors: this.colors });
-  }
-
-  // Plugin hooks API
-
-  /**
-   * @desc Set a callback function for a hook
-   * @param hookType - The name of the hook to listen to
-   * @param callback
-   */
-  public static addHook(hookType: string, callback: Function) {
-    const pluginHooks = IroColorPicker.pluginHooks;
-    (pluginHooks[hookType] || (pluginHooks[hookType] = [])).push(callback);
-  }
-
-  /**
-   * @desc Emit a callback hook
-   * @param hookType - The type of hook event to emit
-   */
-  private emitHook(hookType: string, ...args: any) {
-    const callbackList = IroColorPicker.pluginHooks[hookType] || [];
-    for (let i = 0; i < callbackList.length; i++) {
-      callbackList[i].apply(this, args); 
-    }
   }
 
   /**
@@ -238,9 +247,9 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param changes - shows which h,s,v,a color channels changed
    */
   private onColorChange(color: IroColor, changes: any) {
-    this.emitHook('color:beforeUpdate', color, changes);
+    // this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: this.color });
-    this.emitHook('color:afterUpdate', color, changes);
+    // this.emitHook('color:afterUpdate', color, changes);
     // Prevent infinite loops if the color is set inside a color:change or input:change callback
     if (!this.colorUpdateActive) {
       // While _colorUpdateActive == true, branch cannot be entered
@@ -261,9 +270,16 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param type - event type
    */
   private handleInput(type: EventResult) {
-    if (type === EventResult.start) this.emit('input:start', this.color);
-    if (type === EventResult.move) this.emit('input:move', this.color);
-    if (type === EventResult.end) this.emit('input:end', this.color);
+    // this.emit(type, this.color);
+    if (type === EventResult.Start) {
+      this.emit('input:start', this.color);
+    }
+    else if (type === EventResult.Move) {
+      this.emit('input:move', this.color);
+    }
+    else if (type === EventResult.End) {
+      this.emit('input:end', this.color);
+    }
   }
 
   public render(props, state) {
@@ -275,7 +291,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
           display: state.display
         }}
       >
-        { state.layout.map(({component: UiComponent, options: options}) => (
+        { state.layout.map(({component: UiComponent, options: options }) => (
           <UiComponent
             {...state}
             {...options}

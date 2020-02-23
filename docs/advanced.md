@@ -255,7 +255,7 @@ colorPicker.setActiveColor(1);
 
 ### Adding and Removing Colors
 
-Colors can also be added and removed from the color picker at any time:
+Colors can be added and removed from the color picker at any time:
 
 ```js
 // add a color to the color picker
@@ -268,6 +268,16 @@ colorPicker.addColor('rgb(100%, 100%, 100%)', 0);
 
 // remove the color at index 1
 colorPicker.removeColor(1);
+```
+
+You can also replace all of the colors at once with the `setColors` method:
+
+```js
+colorPicker.setColors([
+  'rgba(100%, 0%, 100%)'
+  'rgba(0%, 0%, 0%)'
+  'rgba(0%, 100%, 100%)'
+]);
 ```
 
 ## Custom Handles

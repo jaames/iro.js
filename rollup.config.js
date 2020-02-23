@@ -1,10 +1,8 @@
-import path from 'path';
 import { version } from './package.json';
-import buble from 'rollup-plugin-buble';
-import alias from 'rollup-plugin-alias';
-import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import replace from 'rollup-plugin-replace';
+import alias from '@rollup/plugin-alias';
+import buble from '@rollup/plugin-buble';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
 import { uglify } from 'rollup-plugin-uglify';
 import serve from 'rollup-plugin-serve';
@@ -18,7 +16,7 @@ const prod = build === "production";
 
 const banner = `/*!
  * iro.js v${version}
- * 2016-2019 James Daniel
+ * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
  */
@@ -32,14 +30,14 @@ module.exports = {
       format: 'es',
       name: 'iro',
       banner: banner,
-      sourcemap: true,
+      sourcemap: devserver ? true : false,
       sourcemapFile: 'dist/iro.es.map'
     } : {
       file: prod ? 'dist/iro.min.js' : 'dist/iro.js',
       format: 'umd',
       name: 'iro',
       banner: banner,
-      sourcemap: true,
+      sourcemap: devserver ? true : false,
       sourcemapFile: prod ? 'dist/iro.min.js.map' : 'dist/iro.js.map'
     }
   ].filter(Boolean),
@@ -48,9 +46,6 @@ module.exports = {
     nodeResolve(),
     alias({
       resolve: ['.jsx', '.js'],
-      'ui': path.resolve(__dirname, 'src/ui/'),
-      'util': path.resolve(__dirname, 'src/util/'),
-      'modules': path.resolve(__dirname, 'src/modules/'),
     }),
     replace({
       VERSION: JSON.stringify(version),
@@ -64,22 +59,18 @@ module.exports = {
         compilerOptions: {
           module: 'esnext',
           target: 'esnext',
+          declaration: !devserver ? true : false,
+          sourceMap: devserver ? true : false
         },
       },
     }),
     buble({
-      extensions: [
-      '.js',
-      '.jsx',
-      '.ts',
-      '.tsx'
-      ],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
       jsx: 'h',
       objectAssign: 'Object.assign',
-      transforms: {
-      }
+      transforms: {}
     }),
-    commonjs(),
+    // commonjs(),
     devserver ? serve({
       contentBase: ['dist', 'demo']
     }) : false,
@@ -88,6 +79,11 @@ module.exports = {
     }) : false,
     // only minify if we're producing a non-es production build
     prod && !esmodule ? uglify({
+      mangle: {
+        properties: {
+          regex: /^_/
+        },
+      },
       output: {
         comments: function(node, comment) {
           if (comment.type === 'comment2') {

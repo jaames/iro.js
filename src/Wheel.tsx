@@ -27,11 +27,11 @@ export function IroWheel(props: IroWheelProps) {
   const { width, radius, cx, cy } = getWheelDimensions(props);
   const handlePositions = props.colors.map(color => getWheelHandlePosition(props, color));
 
-  function handleInput(x: number, y: number, bounds: DOMRect | ClientRect, type: EventResult) {
+  function handleInput(x: number, y: number, type: EventResult) {
     // props.colors.length > 1 = the wheel uses multiple colors
     // in multi color mode, to start with we want to find the color that the user clicked
-    if ((props.colors.length > 1) && (type === EventResult.start)) {
-      const activeHandle = getHandleAtPoint(props, x - bounds.left, y - bounds.top, handlePositions);
+    if ((props.colors.length > 1) && (type === EventResult.Start)) {
+      const activeHandle = getHandleAtPoint(props, x, y, handlePositions);
       if (activeHandle !== null) {
         props.parent.setActiveColor(activeHandle);
         props.parent.inputActive = true;
@@ -39,7 +39,7 @@ export function IroWheel(props: IroWheelProps) {
       }
     } else {
       props.parent.inputActive = true;
-      activeColor.hsv = getWheelValueFromInput(props, x, y, bounds);
+      activeColor.hsv = getWheelValueFromInput(props, x, y);
       props.onInput(type);
     }
   }

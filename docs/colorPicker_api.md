@@ -225,6 +225,14 @@ Set the currently 'active' color (the color that is selected and highlighted).
 
 * `{Number}` color index
 
+### `setColors`
+
+Replaces all the colors currently on the color picker with a new set of colors.
+
+**Arguments:**
+
+* `{Color []}` new color values
+
 ## Utility Methods
 
 ### `resize`
