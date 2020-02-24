@@ -1,5 +1,50 @@
 ### Changelog
 
+#### 5.0.0
+
+##### Additions
+
+- Rewritten entire library in Typescript (thanks KaanMol and mksglu for getting me started!)
+- Split color and generic UI coordinate logic into a separate package ([iro-core](https://github.com/irojs/iro-core)), in preparation for creating dedicated React and Vue packages on top of the same core logic
+- Added support for kelvin temperatures (with `color.kelvin`, `iro.Color.rgbToKelvin()` and `iro.Color.kelvinToRgb()`).
+- Added transparency support without the need for a separate plugin
+- Added some shorthand `color` properties for common color channels
+  - `red`
+  - `green`
+  - `blue`
+  - `hue`
+  - `saturation`
+  - `value`
+  - `alpha`
+- Added new `color` properties for color-with-alpha formats
+  - `rgba`
+  - `hsva`
+  - `hsla`
+  - `rgbaString`
+  - `hslaString`
+  - `hex8String`
+- New API for handling multiple selectable colors on the same color picker:
+  - Added color objects `index` property, for keeping track of their position in the color array
+  - Color pickers now have a `colors` property which provides an array of its selectable colors 
+  - Color pickers now have `addColor`, `removeColor`, `setActiveColor` and `setColors` methods for manipulating the color array
+  - Added `color:setActive` and `color:remove` and `color:setAll` events
+- UI additions:
+  - Customisable layout direction with the new `layoutDirection` property (thanks asonix!)
+  - New saturation-value box component
+  - New slider types for kelvin temperatures and transparency
+  - New circular slider shape
+  - Improved touch input handling
+- Added color picker `setOptions` method to update config options at any point
+- Added color picker `reset` method to reset all colors back to their initial values
+- Redesigned the [project website](http://iro.js.org/) so that it does a bet
+  
+### Breaking changes
+- Removed plugin API
+- `sliderHeight` option renamed to `sliderSize`
+- `handleOrigin` option renamed to `handleProps`
+- `iro.Color.onChange` no longer external
+- `color:init` event no longer provides color changester job of showing off what the library can do
+
 #### 4.5.3
 
 ##### Fixes
@@ -122,7 +167,7 @@ iro.js version 4.0.0 is a major rewrite of the core library which aims to solve 
 * Code tests
 * Rewritten codebase, is now *much* cleaner
 * Color picker components are now built using [preact](https://preactjs.com/)
-* Rewritten documentaion and readme, which huge focus on making things easier to follow
+* Rewritten documentaion and readme, with huge focus on making things easier to follow
 
 ##### Breaking Changes
 
