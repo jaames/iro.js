@@ -6,7 +6,11 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   handleUrl: null,
   // handleUrl: "#test",
   handleOrigin: {y: 0, x: 0},
-  color: "#f00",
+  colors: [
+    '#f00',
+    '#0f0',
+    '#00f',
+  ],
   // borderWidth: 2,
   padding: 8,
   wheelLightness: true,

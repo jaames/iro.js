@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.1.1
+
+Tweaked input handling so that interacting with handles on a multi-color picker is more predictable.
+
 #### 5.0.0
 
 ##### Additions
@@ -38,7 +42,7 @@
 - Added color picker `reset` method to reset all colors back to their initial values
 - Redesigned the [project website](http://iro.js.org/) so that it does a bet
   
-### Breaking changes
+##### Breaking changes
 - Removed plugin API
 - `sliderHeight` option renamed to `sliderSize`
 - `handleOrigin` option renamed to `handleProps`

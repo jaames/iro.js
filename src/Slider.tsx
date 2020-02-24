@@ -13,7 +13,7 @@ import {
   getSliderGradientCoords,
 } from '@irojs/iro-core';
 
-import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
+import { IroComponentBase, IroComponentProps, IroInputType } from './ComponentBase';
 import { IroHandle } from './Handle';
 
 interface IroSliderProps extends IroComponentProps {
@@ -30,7 +30,7 @@ export function IroSlider(props: IroSliderProps) {
   const gradient = getSliderGradient(props, activeColor);
   const isAlpha = props.sliderType === 'alpha';
 
-  function handleInput(x: number, y: number, type: EventResult) {
+  function handleInput(x: number, y: number, type: IroInputType) {
     const value = getSliderValueFromInput(props, x, y);
     props.parent.inputActive = true;
     activeColor[props.sliderType] = value;

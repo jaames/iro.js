@@ -42,6 +42,7 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
     colors: IroColor[];
     color: IroColor;
     inputActive: boolean;
+    activeHandle: number;
     private events;
     private deferredEvents;
     private colorUpdateActive;

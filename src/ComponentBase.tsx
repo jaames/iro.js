@@ -11,7 +11,7 @@ const enum EventType {
   TouchEnd = 'touchend'
 };
 
-export const enum EventResult {
+export const enum IroInputType {
   Start,
   Move,
   End
@@ -22,11 +22,11 @@ const SECONDARY_EVENTS = [EventType.MouseMove, EventType.TouchMove, EventType.Mo
 export interface IroComponentProps extends IroColorPickerOptions {
   parent: IroColorPicker;
   color: IroColor;
-  onInput: (type: EventResult) => void;
+  onInput: (type: IroInputType) => void;
 }
 
 interface Props {
-  onInput: (x: number, y: number, type: EventResult) => void;
+  onInput: (x: number, y: number, type: IroInputType) => void;
 }
 
 interface State {}
@@ -34,7 +34,7 @@ interface State {}
 // Base component class for iro UI components
 // This extends the Preact component class to allow them to react to mouse/touch input events by themselves
 export class IroComponentBase extends Component<Props, State> {
-  public uid: string;
+  public uid: string
   public base: HTMLElement;
 
   constructor(props) {
@@ -86,15 +86,15 @@ export class IroComponentBase extends Component<Props, State> {
         SECONDARY_EVENTS.forEach(event => {
           document.addEventListener(event, this, { passive: false });
         });
-        inputHandler(x, y, EventResult.Start);
+        inputHandler(x, y, IroInputType.Start);
         break;
       case EventType.MouseMove:
       case EventType.TouchMove:
-        inputHandler(x, y, EventResult.Move);
+        inputHandler(x, y, IroInputType.Move);
         break;
       case EventType.MouseUp:
       case EventType.TouchEnd:
-        inputHandler(x, y, EventResult.End);
+        inputHandler(x, y, IroInputType.End);
         SECONDARY_EVENTS.forEach(event => {
           document.removeEventListener(event, this);
         });

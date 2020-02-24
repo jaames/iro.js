@@ -10,7 +10,7 @@ import {
   getHandleAtPoint
 } from '@irojs/iro-core';
 
-import { IroComponentBase, IroComponentProps, EventResult } from './ComponentBase';
+import { IroComponentBase, IroComponentProps, IroInputType } from './ComponentBase';
 import { IroHandle } from './Handle';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
@@ -21,26 +21,45 @@ interface IroWheelProps extends IroComponentProps {
 
 export function IroWheel(props: IroWheelProps) {
 
+  const { width, radius, cx, cy } = getWheelDimensions(props);
+  const { colors, borderWidth } = props;
+
+  const colorPicker = props.parent;
   const activeColor = props.color;
   const hsv = activeColor.hsv;
-  const { borderWidth } = props;
-  const { width, radius, cx, cy } = getWheelDimensions(props);
-  const handlePositions = props.colors.map(color => getWheelHandlePosition(props, color));
+  const isMulticolor = colors.length > 1;
+  const handlePositions = colors.map(color => getWheelHandlePosition(props, color));
 
-  function handleInput(x: number, y: number, type: EventResult) {
-    // props.colors.length > 1 = the wheel uses multiple colors
-    // in multi color mode, to start with we want to find the color that the user clicked
-    if ((props.colors.length > 1) && (type === EventResult.Start)) {
-      const activeHandle = getHandleAtPoint(props, x, y, handlePositions);
-      if (activeHandle !== null) {
-        props.parent.setActiveColor(activeHandle);
-        props.parent.inputActive = true;
-        props.onInput(type);
-      }
-    } else {
-      props.parent.inputActive = true;
+  function handleInput(x: number, y: number, inputType: IroInputType) {
+    // In non-multicolor mode, the user should be able to click anywhere to set the color
+    if (!isMulticolor) {
+      // Setting inputActive lets the color picker know it needs to fire input:change when the color changes
+      colorPicker.inputActive = true;
       activeColor.hsv = getWheelValueFromInput(props, x, y);
-      props.onInput(type);
+      props.onInput(inputType);
+    }
+    // In multicolor mode, the color should only be set if the user intentionally clicks the handle and drags it around
+    else {
+      if (inputType === IroInputType.Start) {
+        // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
+        const activeHandle = getHandleAtPoint(props, x, y, handlePositions);
+        if (activeHandle !== null) {
+          colorPicker.activeHandle = activeHandle;
+          colorPicker.setActiveColor(activeHandle);
+          props.onInput(inputType);
+        }
+      }
+      else if ((colorPicker.activeHandle !== null) && (inputType === IroInputType.Move)) {
+        colorPicker.inputActive = true;
+        activeColor.hsv = getWheelValueFromInput(props, x, y);
+        props.onInput(inputType);
+      }
+      else if ((colorPicker.activeHandle !== null) && (inputType === IroInputType.End)) {
+        colorPicker.activeHandle = null;
+        colorPicker.inputActive = true;
+        activeColor.hsv = getWheelValueFromInput(props, x, y);
+        props.onInput(inputType);
+      }
     }
   }
 
@@ -95,7 +114,7 @@ export function IroWheel(props: IroWheelProps) {
            stroke={ props.borderColor }
            stroke-width={ borderWidth }
          />
-         { props.colors.filter(color => color !== activeColor).map(color => (
+         { colors.filter(color => color !== activeColor).map(color => (
            <IroHandle 
               fill={ color.hslString }
               r={ props.handleRadius }

@@ -1,7 +1,7 @@
 import { Component, h } from 'preact';
 import { IroColor, IroColorPickerOptions } from '@irojs/iro-core';
 import { IroColorPicker } from './ColorPicker';
-export declare const enum EventResult {
+export declare const enum IroInputType {
     Start = 0,
     Move = 1,
     End = 2
@@ -9,10 +9,10 @@ export declare const enum EventResult {
 export interface IroComponentProps extends IroColorPickerOptions {
     parent: IroColorPicker;
     color: IroColor;
-    onInput: (type: EventResult) => void;
+    onInput: (type: IroInputType) => void;
 }
 interface Props {
-    onInput: (x: number, y: number, type: EventResult) => void;
+    onInput: (x: number, y: number, type: IroInputType) => void;
 }
 interface State {
 }
