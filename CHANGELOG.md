@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.1.2
+
+Further tweaks to input handling so that interacting with handles is more predictable overall.
+
 #### 5.1.1
 
 Tweaked input handling so that interacting with handles on a multi-color picker is more predictable.
