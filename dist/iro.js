@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.1
+ * iro.js v5.1.2
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1168,39 +1168,29 @@
       var colorPicker = props.parent;
       var activeColor = props.color;
       var hsv = activeColor.hsv;
-      var isMulticolor = colors.length > 1;
       var handlePositions = colors.map(function (color) { return getWheelHandlePosition(props, color); });
       function handleInput(x, y, inputType) {
-          // In non-multicolor mode, the user should be able to click anywhere to set the color
-          if (!isMulticolor) {
-              // Setting inputActive lets the color picker know it needs to fire input:change when the color changes
+          if (inputType === 0 /* Start */) {
+              // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
+              var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
+              // If the input hit a handle, set it as the active handle, but don't update the color
+              if (activeHandle !== null) {
+                  colorPicker.setActiveColor(activeHandle);
+              }
+              // If the input didn't hit a handle, set the currently active handle to that position
+              else {
+                  colorPicker.inputActive = true;
+                  activeColor.hsv = getWheelValueFromInput(props, x, y);
+                  props.onInput(inputType);
+              }
+          }
+          // move is fired when the user has started dragging
+          else if (inputType === 1 /* Move */) {
               colorPicker.inputActive = true;
               activeColor.hsv = getWheelValueFromInput(props, x, y);
-              props.onInput(inputType);
           }
-          // In multicolor mode, the color should only be set if the user intentionally clicks the handle and drags it around
-          else {
-              if (inputType === 0 /* Start */) {
-                  // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
-                  var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
-                  if (activeHandle !== null) {
-                      colorPicker.activeHandle = activeHandle;
-                      colorPicker.setActiveColor(activeHandle);
-                      props.onInput(inputType);
-                  }
-              }
-              else if ((colorPicker.activeHandle !== null) && (inputType === 1 /* Move */)) {
-                  colorPicker.inputActive = true;
-                  activeColor.hsv = getWheelValueFromInput(props, x, y);
-                  props.onInput(inputType);
-              }
-              else if ((colorPicker.activeHandle !== null) && (inputType === 2 /* End */)) {
-                  colorPicker.activeHandle = null;
-                  colorPicker.inputActive = true;
-                  activeColor.hsv = getWheelValueFromInput(props, x, y);
-                  props.onInput(inputType);
-              }
-          }
+          // let the color picker fire input:start, input:move or input:end events
+          props.onInput(inputType);
       }
       return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroWheel", width: width, height: width, style: rootStyles }),
           h("defs", null,
@@ -1294,7 +1284,6 @@
           Component.call(this, props);
           this.colors = [];
           this.inputActive = false;
-          this.activeHandle = null;
           this.events = {};
           this.deferredEvents = {};
           this.colorUpdateActive = false;
@@ -1556,39 +1545,29 @@
       var colorPicker = props.parent;
       var activeColor = props.color;
       var gradients = getBoxGradients(props, activeColor);
-      var isMulticolor = colors.length > 1;
       var handlePositions = colors.map(function (color) { return getBoxHandlePosition(props, color); });
       function handleInput(x, y, inputType) {
-          // In non-multicolor mode, the user should be able to click anywhere to set the color
-          if (!isMulticolor) {
-              // Setting inputActive lets the color picker know it needs to fire input:change when the color changes
+          if (inputType === 0 /* Start */) {
+              // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
+              var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
+              // If the input hit a handle, set it as the active handle, but don't update the color
+              if (activeHandle !== null) {
+                  colorPicker.setActiveColor(activeHandle);
+              }
+              // If the input didn't hit a handle, set the currently active handle to that position
+              else {
+                  colorPicker.inputActive = true;
+                  activeColor.hsv = getBoxValueFromInput(props, x, y);
+                  props.onInput(inputType);
+              }
+          }
+          // move is fired when the user has started dragging
+          else if (inputType === 1 /* Move */) {
               colorPicker.inputActive = true;
               activeColor.hsv = getBoxValueFromInput(props, x, y);
-              props.onInput(inputType);
           }
-          // In multicolor mode, the color should only be set if the user intentionally clicks the handle and drags it around
-          else {
-              if (inputType === 0 /* Start */) {
-                  // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
-                  var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
-                  if (activeHandle !== null) {
-                      colorPicker.activeHandle = activeHandle;
-                      colorPicker.setActiveColor(activeHandle);
-                      props.onInput(inputType);
-                  }
-              }
-              else if ((colorPicker.activeHandle !== null) && (inputType === 1 /* Move */)) {
-                  colorPicker.inputActive = true;
-                  activeColor.hsv = getBoxValueFromInput(props, x, y);
-                  props.onInput(inputType);
-              }
-              else if ((colorPicker.activeHandle !== null) && (inputType === 2 /* End */)) {
-                  colorPicker.activeHandle = null;
-                  colorPicker.inputActive = true;
-                  activeColor.hsv = getBoxValueFromInput(props, x, y);
-                  props.onInput(inputType);
-              }
-          }
+          // let the color picker fire input:start, input:move or input:end events
+          props.onInput(inputType);
       }
       return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: Object.assign({}, rootStyles,
               getBoxStyles(props)) }),
@@ -1625,7 +1604,7 @@
           Wheel: IroWheel,
           Box: IroBox,
       },
-      version: "5.1.1",
+      version: "5.1.2",
   };
 
   return index;
