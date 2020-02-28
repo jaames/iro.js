@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.2
+ * iro.js v5.1.3
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1142,7 +1142,9 @@
   function IroHandle(props) {
       var radius = props.r;
       var url = props.url;
-      return (h("svg", { className: "IroHandle", x: props.x, y: props.y, style: { overflow: 'visible' } },
+      return (h("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), x: props.x, y: props.y, style: {
+              overflow: 'visible'
+          } },
           url && (h("use", Object.assign({ xlinkHref: resolveSvgUrl(url) }, props.props))),
           !url && (h("circle", { r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
           !url && (h("circle", { r: radius - 2, fill: props.fill, "stroke-width": 2, stroke: "#fff" }))));
@@ -1201,8 +1203,8 @@
           h("circle", { className: "IroWheelSaturation", cx: cx, cy: cy, r: radius, fill: ("url(" + (resolveSvgUrl('#' + uid)) + ")") }),
           props.wheelLightness && (h("circle", { className: "IroWheelLightness", cx: cx, cy: cy, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 })),
           h("circle", { className: "IroWheelBorder", cx: cx, cy: cy, r: radius, fill: "none", stroke: props.borderColor, "stroke-width": borderWidth }),
-          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-          h(IroHandle, { fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
+          h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
 
   function IroSlider(props) {
@@ -1238,7 +1240,7 @@
                   " }",
                   h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#g' + uid)) + ")") })))),
           h("rect", { className: "IroSliderBg", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl((isAlpha ? '#f' : '#g') + uid)) + ")") }),
-          h(IroHandle, { r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
+          h(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
   }
   IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
 
@@ -1296,10 +1298,7 @@
           this.state = Object.assign({}, props,
               {color: this.color,
               colors: this.colors,
-              layout: props.layout !== null ? props.layout : [
-                  // default layout is just a wheel and a slider
-                  { component: IroWheel },
-                  { component: IroSlider } ]});
+              layout: props.layout});
       }
 
       if ( Component ) IroColorPicker.__proto__ = Component;
@@ -1517,9 +1516,29 @@
       IroColorPicker.prototype.render = function render (props, state) {
           var this$1 = this;
 
+          var layout = state.layout;
+          // use layout shorthands
+          if (!Array.isArray(layout)) {
+              switch (layout) {
+                  // TODO: implement some?
+                  default:
+                      layout = [
+                          { component: IroWheel },
+                          { component: IroSlider } ];
+              }
+              // add transparency slider to the layout
+              if (state.transparency) {
+                  layout.push({
+                      component: IroSlider,
+                      options: {
+                          sliderType: 'alpha'
+                      }
+                  });
+              }
+          }
           return (h("div", { class: "IroColorPicker", id: state.id, style: {
                   display: state.display
-              } }, state.layout.map(function (ref) {
+              } }, layout.map(function (ref) {
                   var UiComponent = ref.component;
                   var options = ref.options;
 
@@ -1533,7 +1552,7 @@
       {colors: [],
       display: 'block',
       id: null,
-      layout: null});
+      layout: 'default'});
   var IroColorPickerWidget = createWidget(IroColorPicker);
 
   function IroBox(props) {
@@ -1589,8 +1608,8 @@
                   " }",
                   h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#l' + uid)) + ")") }))),
           h("rect", { rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl('#f' + uid)) + ")") }),
-          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-          h(IroHandle, { fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
+          h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
 
   var index = {
@@ -1604,7 +1623,7 @@
           Wheel: IroWheel,
           Box: IroBox,
       },
-      version: "5.1.2",
+      version: "5.1.3",
   };
 
   return index;

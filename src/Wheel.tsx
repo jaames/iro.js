@@ -106,6 +106,8 @@ export function IroWheel(props: IroWheelProps) {
          />
          { colors.filter(color => color !== activeColor).map(color => (
            <IroHandle 
+              isActive={ false }
+              index={ color.index }
               fill={ color.hslString }
               r={ props.handleRadius }
               url={ props.handleSvg }
@@ -115,6 +117,8 @@ export function IroWheel(props: IroWheelProps) {
             />
          ))}
          <IroHandle 
+            isActive={ true }
+            index={ activeColor.index }
             fill={ activeColor.hslString }
             r={ props.handleRadius }
             url={ props.handleSvg }

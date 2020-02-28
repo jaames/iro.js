@@ -83,6 +83,8 @@ export function IroSlider(props: IroSliderProps) {
             fill={ `url(${resolveSvgUrl( (isAlpha ? '#f' : '#g') + uid )})` }
           />
           <IroHandle
+            isActive={ true }
+            index={ activeColor.index }
             r={ props.handleRadius }
             url={ props.handleSvg }
             props={ props.handleProps }

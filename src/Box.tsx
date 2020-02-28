@@ -92,6 +92,8 @@ export function IroBox(props: IroBoxProps) {
           />
           { colors.filter(color => color !== activeColor).map(color => (
            <IroHandle 
+              isActive={ false }
+              index={ color.index }
               fill={ color.hslString }
               r={ props.handleRadius }
               url={ props.handleSvg }
@@ -101,6 +103,8 @@ export function IroBox(props: IroBoxProps) {
             />
           ))}
           <IroHandle 
+            isActive={ true }
+            index={ activeColor.index }
             fill={ activeColor.hslString }
             r={ props.handleRadius }
             url={ props.handleSvg }

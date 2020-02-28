@@ -1,11 +1,13 @@
 import { h } from 'preact';
 interface IroHandleProps {
-    fill?: string;
+    isActive: boolean;
+    index: number;
     x: number;
     y: number;
     r: number;
     url: string;
     props: any;
+    fill?: string;
 }
 export declare function IroHandle(props: IroHandleProps): h.JSX.Element;
 export declare namespace IroHandle {

@@ -17,48 +17,49 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   wheelAngle: 270,
   wheelDirection: 'anticlockwise',
   layoutDirection: 'vertical',
-  layout: [
-    {
-      component: iro.ui.Wheel,
-      options: {
-      }
-    },
-    {
-      component: iro.ui.Box,
-      options: {}
-    },
-    {
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'alpha'
-      }
-    },
-    {
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'hue'
-      }
-    },
-    {
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'saturation'
-      }
-    },
-    {
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'value'
-      }
-    },
-    {
-      component: iro.ui.Slider,
-      options: {
-        sliderType: 'kelvin',
-        sliderShape: 'circle'
-      }
-    },
-  ]
+  transparency: true,
+  // layout: [
+  //   {
+  //     component: iro.ui.Wheel,
+  //     options: {
+  //     }
+  //   },
+  //   {
+  //     component: iro.ui.Box,
+  //     options: {}
+  //   },
+  //   {
+  //     component: iro.ui.Slider,
+  //     options: {
+  //       sliderType: 'alpha'
+  //     }
+  //   },
+  //   {
+  //     component: iro.ui.Slider,
+  //     options: {
+  //       sliderType: 'hue'
+  //     }
+  //   },
+  //   {
+  //     component: iro.ui.Slider,
+  //     options: {
+  //       sliderType: 'saturation'
+  //     }
+  //   },
+  //   {
+  //     component: iro.ui.Slider,
+  //     options: {
+  //       sliderType: 'value'
+  //     }
+  //   },
+  //   {
+  //     component: iro.ui.Slider,
+  //     options: {
+  //       sliderType: 'kelvin',
+  //       sliderShape: 'circle'
+  //     }
+  //   },
+  // ]
 });
 
 // colorPicker.on('mount', function() {

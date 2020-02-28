@@ -19,27 +19,30 @@ interface ColorPickerLayoutDefinition {
   options?: any;
 }
 
+type ColorPickerLayoutShorthand = 'default';
+
 export interface ColorPickerProps extends IroColorPickerOptions {
   display?: string;
   id?: null;
-  layout?: ColorPickerLayoutDefinition[];
+  layout?: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
   colors?: IroColorValue[];
+  transparency?: boolean;
 }
 
 export interface ColorPickerState extends ColorPickerProps {
-  layout: ColorPickerLayoutDefinition[];
+  layout: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
   color: IroColor;
   colors: IroColor[];
 }
 
 export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
 
-  public static defaultProps = {
+  public static defaultProps: ColorPickerProps = {
     ...iroColorPickerOptionDefaults,
     colors: [],
     display: 'block',
     id: null,
-    layout: null
+    layout: 'default'
   }
 
   public el: HTMLElement;
@@ -64,11 +67,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
       ...props,
       color: this.color,
       colors: this.colors,
-      layout: props.layout !== null ? props.layout : [
-        // default layout is just a wheel and a slider
-        { component: IroWheel },
-        { component: IroSlider },
-      ]
+      layout: props.layout
     };
   }
 
@@ -283,6 +282,29 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   }
 
   public render(props, state) {
+    let layout = state.layout;
+
+    // use layout shorthands
+    if (!Array.isArray(layout)) {
+      switch (layout) {
+        // TODO: implement some?
+        default:
+          layout = [
+            { component: IroWheel },
+            { component: IroSlider },
+          ];
+      }
+      // add transparency slider to the layout
+      if (state.transparency) {
+        layout.push({
+          component: IroSlider,
+          options: {
+            sliderType: 'alpha'
+          }
+        })
+      }
+    }
+
     return (
       <div 
         class="IroColorPicker"
@@ -291,7 +313,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
           display: state.display
         }}
       >
-        { state.layout.map(({component: UiComponent, options: options }) => (
+        { layout.map(({component: UiComponent, options: options }) => (
           <UiComponent
             {...state}
             {...options}

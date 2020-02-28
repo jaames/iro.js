@@ -4,39 +4,21 @@ interface ColorPickerLayoutDefinition {
     component: any;
     options?: any;
 }
+declare type ColorPickerLayoutShorthand = 'default';
 export interface ColorPickerProps extends IroColorPickerOptions {
     display?: string;
     id?: null;
-    layout?: ColorPickerLayoutDefinition[];
+    layout?: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
     colors?: IroColorValue[];
+    transparency?: boolean;
 }
 export interface ColorPickerState extends ColorPickerProps {
-    layout: ColorPickerLayoutDefinition[];
+    layout: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
     color: IroColor;
     colors: IroColor[];
 }
 export declare class IroColorPicker extends Component<ColorPickerProps, ColorPickerState> {
-    static defaultProps: {
-        colors: any[];
-        display: string;
-        id: any;
-        layout: any;
-        width?: number;
-        height?: number;
-        handleRadius?: number;
-        handleSvg?: string;
-        handleProps?: any;
-        color?: IroColorValue;
-        borderColor?: string;
-        borderWidth?: number;
-        wheelLightness?: boolean;
-        wheelAngle?: number;
-        wheelDirection?: import("@irojs/iro-core").WheelDirection;
-        layoutDirection?: import("@irojs/iro-core").LayoutDirection;
-        sliderSize?: number;
-        sliderMargin?: number;
-        padding?: number;
-    };
+    static defaultProps: ColorPickerProps;
     el: HTMLElement;
     id: string;
     colors: IroColor[];
