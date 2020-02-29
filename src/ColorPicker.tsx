@@ -14,6 +14,10 @@ interface ColorDeferredEvents {
   [key: string]: Array<any>;
 }
 
+interface ColorPickerEventGuards {
+  [key: string]: boolean;
+}
+
 interface ColorPickerLayoutDefinition {
   component: any;
   options?: any;
@@ -52,8 +56,8 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   public inputActive: boolean = false;
 
   private events: ColorPickerEvents = {};
+  private activeEvents: ColorPickerEventGuards = {};
   private deferredEvents: ColorDeferredEvents = {};
-  private colorUpdateActive: boolean = false;
 
   constructor(props: ColorPickerProps) {
     super(props);
@@ -156,8 +160,6 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
     const events = this.events;
     // eventList can be an eventType string or an array of eventType strings
     (!Array.isArray(eventList) ? [eventList] : eventList).forEach(eventType => {
-      // Emit plugin hook
-      // this.emitHook('event:on', eventType, callback);
       // Add event callback
       (events[eventType] || (events[eventType] = [])).push(callback);
       // Call deferred events
@@ -191,10 +193,17 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param eventType event to emit
    */
   public emit(eventType: string, ...args: any) {
-    // Events are plugin hooks too
-    // this.emitHook(eventType, ...args);
-    const callbackList = this.events[eventType] || [];
-    callbackList.forEach(fn => fn.apply(this, args));
+    const activeEvents = this.activeEvents;
+    const isEventActive = activeEvents.hasOwnProperty(eventType) ? activeEvents[eventType] : false;
+    // Prevent event callbacks from firing if the event is already active
+    // This stops infinite loops if something in an event callback causes the same event to be fired again
+    // (e.g. setting the color inside a color:change callback)
+    if (!isEventActive) {
+      activeEvents[eventType] = true;
+      const callbackList = this.events[eventType] || [];
+      callbackList.forEach(fn => fn.apply(this, args));
+      activeEvents[eventType] = false;
+    }
   }
 
   /**
@@ -246,30 +255,19 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param changes - shows which h,s,v,a color channels changed
    */
   private onColorChange(color: IroColor, changes: any) {
-    // this.emitHook('color:beforeUpdate', color, changes);
     this.setState({ color: this.color });
-    // this.emitHook('color:afterUpdate', color, changes);
-    // Prevent infinite loops if the color is set inside a color:change or input:change callback
-    if (!this.colorUpdateActive) {
-      // While _colorUpdateActive == true, branch cannot be entered
-      this.colorUpdateActive = true;
-      // If the color change originates from user input, fire input:change
-      if (this.inputActive) {
-        this.inputActive = false;
-        this.emit('input:change', color, changes);
-      } 
-      // Always fire color:change event
-      this.emit('color:change', color, changes);
-      this.colorUpdateActive = false;
-    }
+    if (this.inputActive) {
+      this.inputActive = false;
+      this.emit('input:change', color, changes);
+    } 
+    this.emit('color:change', color, changes);
   }
 
   /**
    * @desc Handle input from a UI control element
    * @param type - event type
    */
-  private handleInput(type: IroInputType) {
-    // this.emit(type, this.color);
+  private emitInputEvent(type: IroInputType) {
     if (type === IroInputType.Start) {
       this.emit('input:start', this.color);
     }
@@ -318,7 +316,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
             {...state}
             {...options}
             ref={ undefined }
-            onInput={ this.handleInput.bind(this) }
+            onInput={ this.emitInputEvent.bind(this) }
             parent={ this }
           />
         ))}

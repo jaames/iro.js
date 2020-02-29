@@ -1,5 +1,16 @@
 ### Changelog
 
+#### 5.1.4
+
+Internal improvements to prevent events causing infinite loops 
+
+#### 5.1.3
+
+##### Additions
+
+- Added `transparency` color picker option
+- Made it easier to style handles individually
+
 #### 5.1.2
 
 Further tweaks to input handling so that interacting with handles is more predictable overall.

@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.3
+ * iro.js v5.1.4
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1281,8 +1281,8 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
         this.colors = [];
         this.inputActive = false;
         this.events = {};
+        this.activeEvents = {};
         this.deferredEvents = {};
-        this.colorUpdateActive = false;
         this.id = props.id;
         var colors = props.colors.length > 0 ? props.colors : [props.color];
         colors.forEach(function (colorValue) { return this$1.addColor(colorValue); });
@@ -1383,8 +1383,6 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
         var events = this.events;
         // eventList can be an eventType string or an array of eventType strings
         (!Array.isArray(eventList) ? [eventList] : eventList).forEach(function (eventType) {
-            // Emit plugin hook
-            // this.emitHook('event:on', eventType, callback);
             // Add event callback
             (events[eventType] || (events[eventType] = [])).push(callback);
             // Call deferred events
@@ -1423,10 +1421,17 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
         var args = [], len = arguments.length - 1;
         while ( len-- > 0 ) args[ len ] = arguments[ len + 1 ];
 
-        // Events are plugin hooks too
-        // this.emitHook(eventType, ...args);
-        var callbackList = this.events[eventType] || [];
-        callbackList.forEach(function (fn) { return fn.apply(this$1, args); });
+        var activeEvents = this.activeEvents;
+        var isEventActive = activeEvents.hasOwnProperty(eventType) ? activeEvents[eventType] : false;
+        // Prevent event callbacks from firing if the event is already active
+        // This stops infinite loops if something in an event callback causes the same event to be fired again
+        // (e.g. setting the color inside a color:change callback)
+        if (!isEventActive) {
+            activeEvents[eventType] = true;
+            var callbackList = this.events[eventType] || [];
+            callbackList.forEach(function (fn) { return fn.apply(this$1, args); });
+            activeEvents[eventType] = false;
+        }
     };
     /**
      * @desc Emit an event now, or save it for when the relevent event listener is added
@@ -1474,29 +1479,18 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
      * @param changes - shows which h,s,v,a color channels changed
      */
     IroColorPicker.prototype.onColorChange = function onColorChange (color, changes) {
-        // this.emitHook('color:beforeUpdate', color, changes);
         this.setState({ color: this.color });
-        // this.emitHook('color:afterUpdate', color, changes);
-        // Prevent infinite loops if the color is set inside a color:change or input:change callback
-        if (!this.colorUpdateActive) {
-            // While _colorUpdateActive == true, branch cannot be entered
-            this.colorUpdateActive = true;
-            // If the color change originates from user input, fire input:change
-            if (this.inputActive) {
-                this.inputActive = false;
-                this.emit('input:change', color, changes);
-            }
-            // Always fire color:change event
-            this.emit('color:change', color, changes);
-            this.colorUpdateActive = false;
+        if (this.inputActive) {
+            this.inputActive = false;
+            this.emit('input:change', color, changes);
         }
+        this.emit('color:change', color, changes);
     };
     /**
      * @desc Handle input from a UI control element
      * @param type - event type
      */
-    IroColorPicker.prototype.handleInput = function handleInput (type) {
-        // this.emit(type, this.color);
+    IroColorPicker.prototype.emitInputEvent = function emitInputEvent (type) {
         if (type === 0 /* Start */) {
             this.emit('input:start', this.color);
         }
@@ -1536,7 +1530,7 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
                 var UiComponent = ref.component;
                 var options = ref.options;
 
-                return (h(UiComponent, Object.assign({}, state, options, { ref: undefined, onInput: this$1.handleInput.bind(this$1), parent: this$1 })));
+                return (h(UiComponent, Object.assign({}, state, options, { ref: undefined, onInput: this$1.emitInputEvent.bind(this$1), parent: this$1 })));
         })));
     };
 
@@ -1617,7 +1611,7 @@ var index = {
         Wheel: IroWheel,
         Box: IroBox,
     },
-    version: "5.1.3",
+    version: "5.1.4",
 };
 
 export default index;

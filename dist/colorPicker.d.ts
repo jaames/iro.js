@@ -25,8 +25,8 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
     color: IroColor;
     inputActive: boolean;
     private events;
+    private activeEvents;
     private deferredEvents;
-    private colorUpdateActive;
     constructor(props: ColorPickerProps);
     /**
     * @desc Add a color to the color picker
@@ -96,7 +96,7 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
      * @desc Handle input from a UI control element
      * @param type - event type
      */
-    private handleInput;
+    private emitInputEvent;
     render(props: any, state: any): h.JSX.Element;
 }
 export declare const IroColorPickerWidget: {
