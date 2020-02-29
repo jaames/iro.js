@@ -91,13 +91,14 @@ export default {
   display: flex;
   font-size: 18px;
   max-width: 100vw;
+  align-items: flex-start;
 }
 
 .Sidebar {
   
   @media (min-width: $breakpoint-medium) {
     width: 260px;
-    max-height: 100%;
+    max-height: 100vh;
     position: sticky;
     top: 0px;
     overflow-y: scroll;
@@ -179,6 +180,7 @@ export default {
     left: 0;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+    padding: 12px;
 
     .Sidebar--isOpen & {
       left: 0;

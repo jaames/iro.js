@@ -50,7 +50,7 @@
 </br><span class="token comment">// hsv = { h: {{ hsv.h | formatInt }}, s: {{ hsv.s | formatInt }}, v: {{ hsv.v | formatInt }} }</span>
 </br></br><span class="token comment">// Set the color from a hex string</span>
 </br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>hexString <span class="token operator">=</span> <span class="token string">"#fff"</span>;
-</br></br><span class="token comment">// Set the color from a temperature</span>
+</br><span class="token comment">// Set the color from a temperature</span>
 </br><span class="token class-name">colorPicker<span class="token punctuation">.</span>color</span><span class="token punctuation">.</span>kelvin <span class="token operator">=</span> <span class="token number">6000</span>;
 </code>
               </div>
@@ -500,6 +500,10 @@ export default {
 .ComponentDemo .IroSlider:last-of-type {
   grid-column-start: 2;
   grid-column-end: 6;
+}
+
+.FormatDemo div[class*="language-"] {
+  background: $background-invert-alt;
 }
 
 .FormatDemo__readout {

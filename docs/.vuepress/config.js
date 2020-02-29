@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   title: 'iro.js',
@@ -49,6 +50,12 @@ module.exports = {
         },
       },
     ],
+    [
+      '@vuepress/plugin-google-analytics', 
+      {
+        'ga': 'UA-52026208-5'
+      }
+    ]
   ],
   configureWebpack: {
     // devtool: 'source-map',
@@ -59,14 +66,15 @@ module.exports = {
         '@js': path.resolve(__dirname, './theme/js'),
         '@icon': path.resolve(__dirname, './theme/icon'),
       }
-    }
+    },
+
   },
   chainWebpack: config => {
 		config.module
 			.rule("vue")
 			.use("vue-svg-inline-loader")
 				.loader("vue-svg-inline-loader")
-				.options({ /* ... */ });
+        .options({ /* ... */ });
 	}
   // configureWebpack: (config, isServer) => {
   //   config.module.rules
