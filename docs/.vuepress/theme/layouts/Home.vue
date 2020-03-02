@@ -96,7 +96,7 @@
         <template v-slot:header>
           <h3>Create the perfect color picker from a selection of pre-built UI components.</h3>
           <div class="ButtonGroup">
-            <div class="Button">Full Demo</div>
+            <a class="Button" href="https://codepen.io/rakujira/pen/XWbgwYm?editors=1011">Full Demo</a>
             <router-link class="Button" to="/advanced.html#ui-components">Learn More →</router-link>
           </div>
         </template>
@@ -166,8 +166,8 @@
               <p>All of iro.js can run from a single script - no extra CSS, images, or third-party libraries required.</p>
             </div>
             <div class="FeatureItem">
-              <h4>Perfect for lighting</h4>
-              <p>iro.js provides the perfect UI for controlling RGB lighting within LED drivers and smart home applications.</p>
+              <h4>Perfect for LED control</h4>
+              <p>iro.js provides the perfect UI for controlling RGB lighting within smart home applications.</p>
             </div>
             <div class="FeatureItem">
               <h4>100% free</h4>
