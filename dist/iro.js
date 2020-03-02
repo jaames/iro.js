@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.4
+ * iro.js v5.1.5
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -610,16 +610,6 @@
     maxTemperature: 11000
   };
   /**
-   * @desc Get the CSS styles for the slider root
-   * @param props - slider props
-   */
-
-  function getSliderStyles(props) {
-    var obj;
-
-    return ( obj = {}, obj[props.layoutDirection === 'horizontal' ? 'marginLeft' : 'marginTop'] = props.sliderMargin, obj );
-  }
-  /**
    * @desc Get the bounding dimensions of the slider
    * @param props - slider props
    */
@@ -904,16 +894,6 @@
       s: Math.round(100 / handleRange * handleDist)
     };
   }
-
-  /**
-   * @desc Get the CSS styles for the box root element
-   * @param props - box props
-   */
-  function getBoxStyles(props) {
-    var obj;
-
-    return ( obj = {}, obj[props.layoutDirection === 'horizontal' ? 'marginLeft' : 'marginTop'] = props.sliderMargin, obj );
-  }
   /**
    * @desc Get the bounding dimensions of the box
    * @param props - box props
@@ -1092,10 +1072,16 @@
               onMouseDown: eventHandler,
               onTouchStart: eventHandler
           };
+          var isHorizontal = props.layoutDirection === 'horizontal';
+          var margin = props.margin === null ? props.sliderMargin : props.margin;
           var rootStyles = {
               overflow: 'visible',
-              display: props.layoutDirection === 'vertical' ? 'block' : 'inline-block'
+              display: isHorizontal ? 'inline-block' : 'block'
           };
+          // first component shouldn't have any margin
+          if (props.index > 0) {
+              rootStyles[isHorizontal ? 'marginLeft' : 'marginTop'] = margin;
+          }
           return (h(d, null, props.children(this.uid, rootProps, rootStyles)));
       };
       // More info on handleEvent:
@@ -1222,8 +1208,7 @@
           activeColor[props.sliderType] = value;
           props.onInput(type);
       }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: Object.assign({}, rootStyles,
-              getSliderStyles(props)) }),
+      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: rootStyles }),
           h("defs", null,
               h("linearGradient", Object.assign({ id: 'g' + uid }, getSliderGradientCoords(props)), gradient.map(function (ref) {
                   var offset = ref[0];
@@ -1532,11 +1517,11 @@
           }
           return (h("div", { class: "IroColorPicker", id: state.id, style: {
                   display: state.display
-              } }, layout.map(function (ref) {
+              } }, layout.map(function (ref, componentIndex) {
                   var UiComponent = ref.component;
                   var options = ref.options;
 
-                  return (h(UiComponent, Object.assign({}, state, options, { ref: undefined, onInput: this$1.emitInputEvent.bind(this$1), parent: this$1 })));
+                  return (h(UiComponent, Object.assign({}, state, options, { ref: undefined, onInput: this$1.emitInputEvent.bind(this$1), parent: this$1, index: componentIndex })));
           })));
       };
 
@@ -1546,7 +1531,8 @@
       {colors: [],
       display: 'block',
       id: null,
-      layout: 'default'});
+      layout: 'default',
+      margin: null});
   var IroColorPickerWidget = createWidget(IroColorPicker);
 
   function IroBox(props) {
@@ -1582,8 +1568,7 @@
           // let the color picker fire input:start, input:move or input:end events
           props.onInput(inputType);
       }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: Object.assign({}, rootStyles,
-              getBoxStyles(props)) }),
+      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: rootStyles }),
           h("defs", null,
               h("linearGradient", { id: 's' + uid, x1: "0%", y1: "0%", x2: "100%", y2: "0%" }, gradients[0].map(function (ref) {
                   var offset = ref[0];
@@ -1617,7 +1602,7 @@
           Wheel: IroWheel,
           Box: IroBox,
       },
-      version: "5.1.4",
+      version: "5.1.5",
   };
 
   return index;

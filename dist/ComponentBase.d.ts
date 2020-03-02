@@ -8,6 +8,7 @@ export declare const enum IroInputType {
 }
 export interface IroComponentProps extends IroColorPickerOptions {
     parent: IroColorPicker;
+    index: number;
     color: IroColor;
     onInput: (type: IroInputType) => void;
 }

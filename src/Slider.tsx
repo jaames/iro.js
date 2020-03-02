@@ -5,7 +5,6 @@ import {
   SliderType,
   sliderDefaultOptions,
   resolveSvgUrl,
-  getSliderStyles,
   getSliderDimensions, 
   getSliderValueFromInput, 
   getSliderHandlePosition, 
@@ -45,10 +44,7 @@ export function IroSlider(props: IroSliderProps) {
           className="IroSlider"
           width={ width }
           height={ height }
-          style= {{
-            ...rootStyles,
-            ...getSliderStyles(props)
-          }}
+          style= { rootStyles }
         >
           <defs>
             <linearGradient id={ 'g' + uid } {...getSliderGradientCoords(props)}>

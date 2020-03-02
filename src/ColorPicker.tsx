@@ -31,6 +31,7 @@ export interface ColorPickerProps extends IroColorPickerOptions {
   layout?: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
   colors?: IroColorValue[];
   transparency?: boolean;
+  margin: number;
 }
 
 export interface ColorPickerState extends ColorPickerProps {
@@ -46,7 +47,8 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
     colors: [],
     display: 'block',
     id: null,
-    layout: 'default'
+    layout: 'default',
+    margin: null
   }
 
   public el: HTMLElement;
@@ -311,13 +313,14 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
           display: state.display
         }}
       >
-        { layout.map(({component: UiComponent, options: options }) => (
+        { layout.map(({component: UiComponent, options: options }, componentIndex: number) => (
           <UiComponent
             {...state}
             {...options}
             ref={ undefined }
             onInput={ this.emitInputEvent.bind(this) }
             parent={ this }
+            index={ componentIndex }
           />
         ))}
       </div>

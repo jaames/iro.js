@@ -2,7 +2,6 @@ import { h } from 'preact';
 import {
   IroColor,
   resolveSvgUrl,
-  getBoxStyles,
   getBoxDimensions,
   getBoxGradients,
   getBoxValueFromInput,
@@ -58,10 +57,7 @@ export function IroBox(props: IroBoxProps) {
           className="IroBox"
           width={ width }
           height={ height }
-          style= {{
-            ...rootStyles,
-            ...getBoxStyles(props)
-          }}
+          style= { rootStyles }
         >
           <defs>
             <linearGradient id={ 's' + uid } x1="0%" y1="0%" x2="100%" y2="0%">

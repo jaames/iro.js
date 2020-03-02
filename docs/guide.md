@@ -78,9 +78,10 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `id`             | HTML ID for the color picker root element. | `null` |
 | `layout`         | Used for customising the [UI component layout](/advanced.html#custom-ui-layouts). | `null` |
 | `layoutDirection` | UI component stacking direction; either `"vertical"` or `"horizontal"`. | `"vertical"` |
+| `padding`        | Padding around the control handles. | `6` |
+| `margin`         | Gap between individual components. | `12` |
 | `borderWidth`    | Width of the border around the controls. Set to `0` for no border. | `0` |
 | `borderColor`    | Color of the border. Any valid CSS color is supported. | `"#ffffff"` |
-| `padding`        | Padding around the control handles. | `6` |
 | `handleRadius`   | Radius of the control handles. | `8` |
 | `handleSvg`      | Custom handle SVG, used for [custom handles](/advanced.html#custom-handles). | `null` |
 | `handleProps`    | Custom handle properties, used for [custom handles](/advanced.html#custom-handles). | `{x:0, y:0}` |
@@ -88,7 +89,6 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
 | `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
 | `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
-| `sliderMargin`   | Distance between the wheel and the slider controls. | `12` |
 
 More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](/colorPicker_api.html).
 

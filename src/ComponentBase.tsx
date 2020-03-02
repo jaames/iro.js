@@ -21,6 +21,7 @@ const SECONDARY_EVENTS = [EventType.MouseMove, EventType.TouchMove, EventType.Mo
 
 export interface IroComponentProps extends IroColorPickerOptions {
   parent: IroColorPicker;
+  index: number;
   color: IroColor;
   onInput: (type: IroInputType) => void;
 }
@@ -53,10 +54,18 @@ export class IroComponentBase extends Component<Props, State> {
       onTouchStart: eventHandler
     };
 
+    const isHorizontal = props.layoutDirection === 'horizontal';
+    const margin = props.margin === null ? props.sliderMargin : props.margin;
+
     const rootStyles = {
       overflow: 'visible',
-      display: props.layoutDirection === 'vertical' ? 'block' : 'inline-block' 
+      display: isHorizontal ? 'inline-block' : 'block'
     };
+
+    // first component shouldn't have any margin
+    if (props.index > 0) {
+      rootStyles[isHorizontal ? 'marginLeft' : 'marginTop'] = margin;
+    }
 
     return (
       <Fragment>

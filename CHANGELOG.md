@@ -1,5 +1,11 @@
 ### Changelog
 
+#### 5.1.5
+
+##### Additions
+
+Added `margin` color picker option for setting the gap between individual components. `sliderMargin` will also work for now, but will be deprecated in a later version.
+
 #### 5.1.4
 
 Internal improvements to prevent events causing infinite loops 

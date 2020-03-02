@@ -63,9 +63,15 @@ Color of the border. Any valid CSS color is supported.
 
 ### `padding`
 
-Padding around the control handles.
+Padding between control handles and the edges of a component.
 
 **Default value**: `6`
+
+### `margin`
+
+Gap between individual components.
+
+**Default value**: `12`
 
 ### `handleRadius`
 
@@ -108,12 +114,6 @@ Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlock
 Slider size, measued in pixels.
 
 **Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
-
-### `sliderMargin`
-
-Gap between the wheel and the slider controls, measured in pixels. 
-
-**Default value**: `12`
 
 ## Properties
 

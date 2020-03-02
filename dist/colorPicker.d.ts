@@ -11,6 +11,7 @@ export interface ColorPickerProps extends IroColorPickerOptions {
     layout?: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
     colors?: IroColorValue[];
     transparency?: boolean;
+    margin: number;
 }
 export interface ColorPickerState extends ColorPickerProps {
     layout: ColorPickerLayoutDefinition[] | ColorPickerLayoutShorthand;
