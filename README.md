@@ -20,9 +20,6 @@
   <a href="">
     <img src="https://badgen.net/badge/jQuery/none/F8AE55" alt="no jQuery" />
   </a>
-  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS9R3QTLZYAXQ&source=url">
-    <img src="https://badgen.net/badge/donate/paypal/ED5151" alt="donate" />
-  </a>
 </p>
 
 <p align="center">
