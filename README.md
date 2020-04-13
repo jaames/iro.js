@@ -136,11 +136,11 @@ var colorPicker = new iro.ColorPicker("#color-picker-container", {
 | `padding`        | Padding around the control handles. | `6` |
 | `handleRadius`   | Radius of the control handles. | `8` |
 | `handleSvg`      | Custom handle SVG, used for [Custom Handles](https://iro.js.org/guide.html#custom-handles) | `null` |
-| `handleOrigin`   | Custom handle origin point, used for [Custom Handles](https://iro.js.org/guide.html#custom-handles). | `{x:0,y:0}` |
+| `handleProps`   | Custom handle properties, used for [Custom Handles](https://iro.js.org/guide.html#custom-handles). | `{x:0,y:0}` |
 | `wheelLightness` | If set to `false`, the color wheel will not fade to black when the lightness decreases. | `true` |
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
 | `wheelDirection` | Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlockwise"` | `"anticlockwise"` |
-| `sliderHeight`   | Slider control height. By default this will be calculated automatically | `undefined` |
+| `sliderSize`   | Slider control size. By default this will be calculated automatically | `undefined` |
 | `sliderMargin`   | Distance between the wheel and the slider controls. | `12` |
 | `display`        | CSS display value for the color picker root element. | `"block"` |
 | `id`             | HTML ID for the color picker root element. | `null` |
