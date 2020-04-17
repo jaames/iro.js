@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.5
+ * iro.js v5.1.6
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1602,7 +1602,7 @@
           Wheel: IroWheel,
           Box: IroBox,
       },
-      version: "5.1.5",
+      version: "5.1.6",
   };
 
   return index;

@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.1.6
+
+Fixes `package.json` to include Typescript typedef files in the NPM package
+
 #### 5.1.5
 
 ##### Additions
