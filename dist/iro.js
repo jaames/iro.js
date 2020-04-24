@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.6
+ * iro.js v5.1.7
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1144,6 +1144,98 @@
       props: { x: 0, y: 0 }
   };
 
+  function IroSlider(props) {
+      var activeColor = props.color;
+      var ref = getSliderDimensions(props);
+      var width = ref.width;
+      var height = ref.height;
+      var radius = ref.radius;
+      var handlePos = getSliderHandlePosition(props, activeColor);
+      var gradient = getSliderGradient(props, activeColor);
+      var isAlpha = props.sliderType === 'alpha';
+      function handleInput(x, y, type) {
+          var value = getSliderValueFromInput(props, x, y);
+          props.parent.inputActive = true;
+          activeColor[props.sliderType] = value;
+          props.onInput(type);
+      }
+      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: rootStyles }),
+          h("defs", null,
+              h("linearGradient", Object.assign({ id: 'g' + uid }, getSliderGradientCoords(props)), gradient.map(function (ref) {
+                  var offset = ref[0];
+                  var color = ref[1];
+
+                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
+          })),
+              isAlpha && (h("pattern", { id: 'b' + uid, width: "8", height: "8", patternUnits: "userSpaceOnUse" },
+                  h("rect", { x: "0", y: "0", width: "8", height: "8", fill: "#fff" }),
+                  h("rect", { x: "0", y: "0", width: "4", height: "4", fill: "#ccc" }),
+                  h("rect", { x: "4", y: "4", width: "4", height: "4", fill: "#ccc" }))),
+              isAlpha && (h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
+                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#b' + uid)) + ")") }),
+                  " }",
+                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#g' + uid)) + ")") })))),
+          h("rect", { className: "IroSliderBg", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl((isAlpha ? '#f' : '#g') + uid)) + ")") }),
+          h(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
+  }
+  IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
+
+  function IroBox(props) {
+      var ref = getBoxDimensions(props);
+      var width = ref.width;
+      var height = ref.height;
+      var radius = ref.radius;
+      var colors = props.colors;
+      var colorPicker = props.parent;
+      var activeColor = props.color;
+      var gradients = getBoxGradients(props, activeColor);
+      var handlePositions = colors.map(function (color) { return getBoxHandlePosition(props, color); });
+      function handleInput(x, y, inputType) {
+          if (inputType === 0 /* Start */) {
+              // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
+              var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
+              // If the input hit a handle, set it as the active handle, but don't update the color
+              if (activeHandle !== null) {
+                  colorPicker.setActiveColor(activeHandle);
+              }
+              // If the input didn't hit a handle, set the currently active handle to that position
+              else {
+                  colorPicker.inputActive = true;
+                  activeColor.hsv = getBoxValueFromInput(props, x, y);
+                  props.onInput(inputType);
+              }
+          }
+          // move is fired when the user has started dragging
+          else if (inputType === 1 /* Move */) {
+              colorPicker.inputActive = true;
+              activeColor.hsv = getBoxValueFromInput(props, x, y);
+          }
+          // let the color picker fire input:start, input:move or input:end events
+          props.onInput(inputType);
+      }
+      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: rootStyles }),
+          h("defs", null,
+              h("linearGradient", { id: 's' + uid, x1: "0%", y1: "0%", x2: "100%", y2: "0%" }, gradients[0].map(function (ref) {
+                  var offset = ref[0];
+                  var color = ref[1];
+
+                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
+          })),
+              h("linearGradient", { id: 'l' + uid, x1: "0%", y1: "0%", x2: "0%", y2: "100%" }, gradients[1].map(function (ref) {
+                  var offset = ref[0];
+                  var color = ref[1];
+
+                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
+          })),
+              h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
+                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#s' + uid)) + ")") }),
+                  " }",
+                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#l' + uid)) + ")") }))),
+          h("rect", { rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl('#f' + uid)) + ")") }),
+          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
+          h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+  }
+
   var HUE_STEPS = Array.apply(null, { length: 360 }).map(function (_, index) { return index; });
   function IroWheel(props) {
       var ref = getWheelDimensions(props);
@@ -1192,42 +1284,6 @@
           colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
           h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
-
-  function IroSlider(props) {
-      var activeColor = props.color;
-      var ref = getSliderDimensions(props);
-      var width = ref.width;
-      var height = ref.height;
-      var radius = ref.radius;
-      var handlePos = getSliderHandlePosition(props, activeColor);
-      var gradient = getSliderGradient(props, activeColor);
-      var isAlpha = props.sliderType === 'alpha';
-      function handleInput(x, y, type) {
-          var value = getSliderValueFromInput(props, x, y);
-          props.parent.inputActive = true;
-          activeColor[props.sliderType] = value;
-          props.onInput(type);
-      }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: rootStyles }),
-          h("defs", null,
-              h("linearGradient", Object.assign({ id: 'g' + uid }, getSliderGradientCoords(props)), gradient.map(function (ref) {
-                  var offset = ref[0];
-                  var color = ref[1];
-
-                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
-          })),
-              isAlpha && (h("pattern", { id: 'b' + uid, width: "8", height: "8", patternUnits: "userSpaceOnUse" },
-                  h("rect", { x: "0", y: "0", width: "8", height: "8", fill: "#fff" }),
-                  h("rect", { x: "0", y: "0", width: "4", height: "4", fill: "#ccc" }),
-                  h("rect", { x: "4", y: "4", width: "4", height: "4", fill: "#ccc" }))),
-              isAlpha && (h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#b' + uid)) + ")") }),
-                  " }",
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#g' + uid)) + ")") })))),
-          h("rect", { className: "IroSliderBg", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl((isAlpha ? '#f' : '#g') + uid)) + ")") }),
-          h(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
-  }
-  IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
 
   // Turn a component into a widget
   // This returns a factory function that can be used to create an instance of the widget component
@@ -1535,76 +1591,22 @@
       margin: null});
   var IroColorPickerWidget = createWidget(IroColorPicker);
 
-  function IroBox(props) {
-      var ref = getBoxDimensions(props);
-      var width = ref.width;
-      var height = ref.height;
-      var radius = ref.radius;
-      var colors = props.colors;
-      var colorPicker = props.parent;
-      var activeColor = props.color;
-      var gradients = getBoxGradients(props, activeColor);
-      var handlePositions = colors.map(function (color) { return getBoxHandlePosition(props, color); });
-      function handleInput(x, y, inputType) {
-          if (inputType === 0 /* Start */) {
-              // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
-              var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
-              // If the input hit a handle, set it as the active handle, but don't update the color
-              if (activeHandle !== null) {
-                  colorPicker.setActiveColor(activeHandle);
-              }
-              // If the input didn't hit a handle, set the currently active handle to that position
-              else {
-                  colorPicker.inputActive = true;
-                  activeColor.hsv = getBoxValueFromInput(props, x, y);
-                  props.onInput(inputType);
-              }
-          }
-          // move is fired when the user has started dragging
-          else if (inputType === 1 /* Move */) {
-              colorPicker.inputActive = true;
-              activeColor.hsv = getBoxValueFromInput(props, x, y);
-          }
-          // let the color picker fire input:start, input:move or input:end events
-          props.onInput(inputType);
-      }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: rootStyles }),
-          h("defs", null,
-              h("linearGradient", { id: 's' + uid, x1: "0%", y1: "0%", x2: "100%", y2: "0%" }, gradients[0].map(function (ref) {
-                  var offset = ref[0];
-                  var color = ref[1];
+  var iro;
+  (function (iro) {
+      iro.Color = IroColor;
+      iro.ColorPicker = IroColorPickerWidget;
+      var ui;
+      (function (ui) {
+          ui.h = h;
+          ui.ComponentBase = IroComponentBase;
+          ui.Handle = IroHandle;
+          ui.Slider = IroSlider;
+          ui.Wheel = IroWheel;
+          ui.Box = IroBox;
+      })(ui = iro.ui || (iro.ui = {}));
+  })(iro || (iro = {}));
+  var iro$1 = iro;
 
-                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
-          })),
-              h("linearGradient", { id: 'l' + uid, x1: "0%", y1: "0%", x2: "0%", y2: "100%" }, gradients[1].map(function (ref) {
-                  var offset = ref[0];
-                  var color = ref[1];
-
-                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
-          })),
-              h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#s' + uid)) + ")") }),
-                  " }",
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#l' + uid)) + ")") }))),
-          h("rect", { rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl('#f' + uid)) + ")") }),
-          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-          h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
-  }
-
-  var index = {
-      Color: IroColor,
-      ColorPicker: IroColorPickerWidget,
-      ui: {
-          h: h,
-          ComponentBase: IroComponentBase,
-          Handle: IroHandle,
-          Slider: IroSlider,
-          Wheel: IroWheel,
-          Box: IroBox,
-      },
-      version: "5.1.6",
-  };
-
-  return index;
+  return iro$1;
 
 }));
