@@ -7,7 +7,7 @@ import { h, render, ComponentType } from 'preact';
 // This factory function can also delay mounting the element into the DOM until the page is ready
 export function createWidget(WidgetComponent: ComponentType) {
 
-  const widgetFactory = function (parent: HTMLElement, props: any) {
+  const widgetFactory = function (parent: string | HTMLElement, props: any) {
     let widget: any; // will become an instance of the widget component class
     const widgetRoot = document.createElement('div');
 
