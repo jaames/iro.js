@@ -8,6 +8,8 @@ import { IroWheel } from './Wheel';
 import { IroColorPicker, IroColorPickerWidget } from './ColorPicker';
 
 namespace iro {
+  export const version = VERSION; // replaced by @rollup/plugin-replace; see rollup.config.js
+
   export type Color = IroColor;
   export const Color = IroColor;
   export type ColorPicker = IroColorPicker;

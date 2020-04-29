@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.1.8
+
+Re-adds iro.version since it was accidentally omitted in 5.1.7
+
 #### 5.1.7
 
 Fixes Typescript issues noted in #109

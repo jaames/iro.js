@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.7
+ * iro.js v5.1.8
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1587,6 +1587,7 @@ var IroColorPickerWidget = createWidget(IroColorPicker);
 
 var iro;
 (function (iro) {
+    iro.version = "5.1.8"; // replaced by @rollup/plugin-replace; see rollup.config.js
     iro.Color = IroColor;
     iro.ColorPicker = IroColorPickerWidget;
     var ui;
