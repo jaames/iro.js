@@ -145,6 +145,8 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 Sliders allow the user to adjust a specific color channel. Currently there are multiple types of sliders available, covering **hue**, **saturation**, **value**, **alpha** and **kelvin temperature**.
 
+##### `sliderType`
+
 The type of slider can be specified with the `sliderType` option:
 
 ```js
@@ -160,7 +162,16 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-The `sliderShape` option can be used to make the slider circular:
+If `sliderType` is set to `'kelvin'`, the temperature range can be set with these options:
+
+| Option           | Purpose | Default Value |
+|:-----------------|:--------|:--------|
+| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `1000`) | `2200` |
+| `maxTemperature` | Maximum color temperature, in Kelvin (largest value is `40000`) | `11000` |
+
+##### `sliderShape`
+
+The `sliderShape` option can also be used to make the slider circular:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
