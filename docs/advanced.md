@@ -192,7 +192,7 @@ iro.js supports having more than one selectable colors on the same color picker 
 
 ### Setup
 
-The `colors` [config option](http://localhost:8080/guide.html#color-picker-options) can be used to provide an intial list of colors to the color picker. Any [supported color format](/color_api.html#supported-color-formats) will work here:
+The `colors` [config option](/guide.html#color-picker-options) can be used to provide an intial list of colors to the color picker. Any [supported color format](/color_api.html#supported-color-formats) will work here:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {

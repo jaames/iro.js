@@ -19,7 +19,7 @@
     "css-reset-and-normalize": "^1.2.0",
     "iro-dynamic-css": "^1.0.3",
     "jest": "^24.0.0",
-    "node-sass": "^4.9.3",
+    "node-sass": "^4.14.1",
     "rollup": "^1.24.0",
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-livereload": "^1.0.4",
