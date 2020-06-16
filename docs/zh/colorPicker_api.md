@@ -1,17 +1,17 @@
 ---
-title: ColorPicker API
+title: 颜色选择器 API
 ---
 
-The color picker API is the main feature of iro.js, and is accessible on `iro.ColorPicker`.
+颜色选择器 API 是iro.js 的主要功能，可在 `iro.ColorPicker` 上访问。
 
-## Constructor
+## 构造函数
 
-**Arguments:**
+**参数：**
 
-* `{String | DOM Element}` CSS selector or DOM node for the color picker container
-* `{Object}` [color picker options](#options)
+* `{String | DOM Element}` 颜色选择器容器的CSS选择器或DOM节点
+* `{Object}` [选取颜色的选项](#options)
 
-## Options
+## 选项
 
 ### `width`
 
@@ -115,7 +115,7 @@ Slider size, measued in pixels.
 
 **Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
 
-## Properties
+## 属性
 
 ### `color`
 
@@ -143,7 +143,7 @@ The initial configeration options passed to the color picker.
 
 The ID value passed to the color picker config.
 
-## Event Methods
+## 事件方法
 
 **Arguments:**
 
@@ -198,7 +198,7 @@ example.on("color:change", colorChangeCallback);
 example.off("color:change", colorChangeCallback);
 ```
 
-## Multicolor Methods
+## 多种颜色方法
 
 ### `addColor`
 
@@ -233,7 +233,7 @@ Replaces all the colors currently on the color picker with a new set of colors.
 
 * `{Color []}` new color values
 
-## Utility Methods
+## 实用方法
 
 ### `resize`
 
@@ -267,7 +267,7 @@ Used internally to dispatch an deferred event. Deferred events are stored until 
 
 * `{String}` [Event Type](#events)
 
-## Events
+## 事件
 
 The color picker's [on](#on) method can be used to register callbacks for color picker events, such as when the selected color changes or when the user begins interacting with the picker. These callbacks can also be removed with the [off](#off) method.
 
