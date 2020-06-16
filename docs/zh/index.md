@@ -15,10 +15,10 @@ $ npm install @jaames/iro --save
 如果您使用的是Webpack或Rollup之类的模块捆绑器，请将iro.js导入您的项目中：
 
 ```js
-// Using ES6 module syntax
+//使用ES6模块语法
 import iro from '@jaames/iro';
 
-// Using CommonJS modules
+//使用CommonJS模块
 const iro = require('@jaames/iro');
 ```
 
@@ -34,9 +34,9 @@ const iro = require('@jaames/iro');
 
 ##### 也可下载并自己托管
 
-**[Development version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js)**<br/> Uncompressed, with source comments included. 用于调试。
+**[开发版本](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js)**<br/>未压缩，包括源注释。 用于调试。
 
-**[Production version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js)**<br/> Minified and optimized version.
+**[生产版本](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js)**<br/>缩小和优化的版本。
 
 ### 颜色选择器设置
 
@@ -60,9 +60,9 @@ var colorPicker = new iro.ColorPicker('#picker');
 
 ```js
 var colorPicker = new iro.ColorPicker("#picker", {
-  // Set the size of the color picker
+  //设置颜色选择器的大小
   width: 320,
-  // Set the initial color to pure red
+  //将初始颜色设置为纯红色
   color: "#f00"
 });
 ```
