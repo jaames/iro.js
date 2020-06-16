@@ -67,7 +67,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 });
 ```
 
-颜色选择器选项的完整列表可以在 [选项文档](guide.html#color-picker-options) 中找到。
+颜色选择器选项的完整列表可以在 [选项文档](guide.html#颜色选择器选项) 中找到。
 
 ### 使用颜色
 
@@ -86,7 +86,7 @@ colorPicker.color.hsl = { h: 180, s: 100, l: 50 };
 // 颜色选择器更新以匹配hsl(180, 100, 50)
 ```
 
-有关颜色属性的完整列表，请参见[颜色文档](/guide.html#working-with-colors)。
+有关颜色属性的完整列表，请参见[颜色文档](/guide.html#使用颜色)。
 
 ### 事件
 
@@ -104,4 +104,4 @@ colorPicker.on('color:change', function(color) {
 });
 ```
 
-关于可用事件的全面概述，可在 [事件文档](/guide.html#color-picker-events) 中找到。
+关于可用事件的全面概述，可在 [事件文档](/guide.html#颜色选择事件) 中找到。
