@@ -1,23 +1,23 @@
 ---
-title: Migration Guide
+title: 迁移指南
 ---
 
-## Migrating from v4
+## 从 v4 迁移
 
-iro.js version 5.0.0 mostly adds new features, with minimal changes that won't affect most people using the library. However, if for whatever reason you need to use v4, the latest v4 build has been preserved in the [v4 branch](https://github.com/jaames/iro.js/tree/v4).
+iro.js 5.0.0版本添加了很多新功能，最小的更改不会影响大多数使用库的人。 然而，如果你需要使用 v4，那么最新的 v4 版本已经在 [v4 分支](https://github.com/jaames/iro.js/tree/v4) 中保存。
 
-### Color Picker Options
+### 颜色选择器选项
 
-* `sliderHeight` option has been renamed to `sliderSize`.
-* `handleOrigin` option has been renamed to `handleProps`.
+* `sliderHeight` 选项已重命名为 `sliderSize`。
+* `handleOrigin` 选项已改名为 `handleProps`。
 
-### Plugins
+### 插件
 
-The plugin API introduced in v4 has been deprecated, along with the [iro-dynamic-css](https://github.com/irojs/iro-dynamic-css) and [iro-transparency-plugin](https://github.com/irojs/iro-transparency-plugin) plugins. The transparency slider is now part of the core iro.js library, and the overall functionality of the dynamic CSS plugin can be easily replicated with [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties).
+在 v4 中引入的插件 API 以及 [iro-dynamic-css](https://github.com/irojs/iro-dynamic-css) 和 [iro-obligy-plugin](https://github.com/irojs/iro-transparency-plugin) 插件已被废弃。 透明度滑块现在是核心iro.js库的一部分，动态CSS插件的整体功能可以轻松地通过 [CSS变量](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) 复制
 
-#### Dynamic CSS Plugin Replacement
+#### 动态 CSS 插件替换
 
-Set up some JavaScript to update the `--iro-color-value` variable when the color changes:
+设置一些JavaScript，以在颜色更改时更新 `--iro-color-value` 变量：
 
 ```js
 var rootStyle = document.documentElement.style;
@@ -26,7 +26,7 @@ colorPicker.on(['color:init', 'color:change'], function(color) {
 });
 ```
 
-Then use `--iro-color-value` in any of the styles you want to update based on the current color:
+然后以您要基于当前颜色更新的任何样式使用 `--iro-color-value` ：
 
 ```css
 body {
