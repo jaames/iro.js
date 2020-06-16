@@ -24,7 +24,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-组件定义还可以包含一个 `options` 属性来提供 [配置选项](/guide.html#color-picker-options) 覆盖个别组件。 在这个示例中，滚轮和滑块的边框宽度都是2，但是边框颜色不同：
+组件定义还可以包含一个 `选项` 属性来提供 [配置选项](/guide.html#颜色选择器设置) 覆盖个别组件。 在这个示例中，滚轮和滑块的边框宽度都是2，但是边框颜色不同：
 
 ```js
 var colorPicker = new iro.ColorPicker('#color-picker', {
@@ -56,7 +56,7 @@ var colorPicker = new iro.ColorPicker('#color-picker', {
   }
 ]"/>
 
-轮子允许用户调整颜色的 **色调** 和 **饱和度**. 它们还支持 [同时显示多个可选颜色](#multi-color-selections)。
+轮子允许用户调整颜色的 **色调** 和 **饱和度**. 它们还支持 [同时显示多个可选颜色](#多颜色选择器)。
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -85,7 +85,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
   }
 ]"/>
 
-盒子允许用户调整颜色的 **饱和度** 和 **值**。 它们还支持 [同时显示多个可选颜色](#multi-color-selections)。
+盒子允许用户调整颜色的 **饱和度** 和 **值**。 它们还支持 [同时显示多个可选颜色](#多颜色选择器)。
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -190,7 +190,7 @@ iro.js支持随时在同一颜色选择器上具有多种可选颜色，这对�
 
 ### 设置
 
-`colors` [配置选项](/guide.html#color-picker-options) 可以用来为颜色选择器提供一份颜色列表。 任何 [支持的颜色格式](/color_api.html#supported-color-formats) 将在这里工作：
+`colors` [配置选项](/guide.html#颜色选择器选项) 可以用来为颜色选择器提供一份颜色列表。 任何 [支持的颜色格式](/color_api.html#支持的颜色格式) 将在这里工作：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -204,9 +204,9 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 ### 使用多个颜色
 
-颜色对象数组可用于** get **和** set **，每种颜色的值可以在颜色选择器的` colors `属性中找到。 此数组将在 [设置](#setup) 期间以相同的颜色传递给颜色选择器。
+颜色对象数组可用于** get **和** set **，每种颜色的值可以在颜色选择器的` colors `属性中找到。 此数组将在 [设置](#设置) 期间以相同的颜色传递给颜色选择器。
 
-值得查阅[使用颜色指南](/guide.html#working-with-colors)，以了解有关这些单个颜色对象如何工作的更多信息，但这里有一个简要概述：
+值得查阅[使用颜色指南](/guide.html#使用颜色)，以了解有关这些单个颜色对象如何工作的更多信息，但这里有一个简要概述：
 
 ```js
 //将第一种颜色设置为新值
@@ -223,7 +223,7 @@ colorPicker.colors.forEach(function (color) {
 
 ### 事件
 
-在处理[事件](/guide.html#color-picker-events)时，请务必记住所有颜色更改事件将针对每种颜色触发 (例如` color:change ` ，` input:change `，` input:start `等)。 要找到触发事件的颜色，您可以使用颜色的 `index` 属性：
+在处理[事件](/guide.html#颜色选择事件)时，请务必记住所有颜色更改事件将针对每种颜色触发 (例如` color:change ` ，` input:change `，` input:start `等)。 要找到触发事件的颜色，您可以使用颜色的 `index` 属性：
 
 ```js
 colorPicker.on('color:change', function(color) {
