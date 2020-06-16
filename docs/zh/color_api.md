@@ -2,7 +2,7 @@
 title: 颜色 API
 ---
 
-颜色选择器使用颜色API来存储选定的颜色和处理不同颜色模型之间的转换。 还可以通过 `iro.``Color` 对其进行访问，以便可以将其用作常规颜色实用程序库。
+颜色选择器使用颜色API来存储选定的颜色和处理不同颜色模型之间的转换。 还可以通过 `iro.Color` 对其进行访问，以便可以将其用作常规颜色实用程序库。
 
 ## 构造函数
 
@@ -33,213 +33,213 @@ title: 颜色 API
 
 颜色对象有几个“魔法”属性，它们以不同格式反映颜色的值。 神奇之处在于它们既可读又可写，因此它们都可以 **get** 和 **set** 给定的格式。
 
-### `red`
+### `red 红色`
 
-The color's red channel as a number between `0` and `255`.
+颜色的红色通道为 `0` 到 `255` 之间的数字。
 
-### `green`
+### `green 绿色`
 
-The color's green channel as a number between `0` and `255`.
+颜色的绿色通道为 `0` 到 `255` 之间的数字。
 
-### `blue`
+### `blue 蓝色`
 
-The color's blue channel as a number between `0` and `255`.
+颜色的蓝色通道为 `0` 到 `255` 之间的数字。
 
-### `alpha`
+### `alpha 透明度`
 
-The color's value channel as a number between `0` and `1`.
+颜色的透明通道为 `0` 到 `1` 之间的小数。
 
-### `hue`
+### `hue 色相`
 
-The color's hue channel as a number between `0` and `360`.
+颜色的色相通道为 `0` 到 `360` 之间的数字。
 
-### `saturation`
+### `saturation 饱和度`
 
-The color's saturation channel as a number between `0` and `100`.
+颜色的饱和度通道为 `0` 到 `100` 之间的数字。
 
-### `value`
+### `value 值`
 
-The color's value channel as a number between `0` and `100`.
+颜色的值通道为 `0` 到 `100` 之间的数字。
 
-### `kelvin`
+### `kelvin 开尔文温度（色温、冷暖值）`
 
-The color's approximate kelvin temperature.
+颜色的大概值为开尔文温度值。
 
-### `rgb`
+### `rgb 红色 绿色 蓝色`
 
-The color as an [RGB](https://www.wikiwand.com/en/RGB_color_model) object.
+作为 [RGB](https://www.wikiwand.com/en/RGB_color_model) 对象的颜色。
 
-**Example format**: `{r: 255, g: 0, b: 0}`
+**示例格式**: `{r: 255, g: 0, b: 0}`
 
-### `rgba`
+### `rgba 红色 绿色 蓝色 透明度`
 
-The color as an [RGBA](https://www.wikiwand.com/en/RGB_color_model) object, where `a` represents the color's transparency.
+作为 [RGBA](https://www.wikiwand.com/en/RGB_color_model) 对象的颜色，在那里 `a` 代表着颜色的透明度。
 
-**Example format**: `{r: 255, g: 0, b: 0, a: 1}`
+**示例格式**: `{r: 255, g: 0, b: 0, a: 1}`
 
-### `hsv`
+### `hsv 色调 饱和度 亮度`
 
-The color as a [HSV](https://www.wikiwand.com/en/HSL_and_HSV) object.
+作为 [HSV](https://www.wikiwand.com/en/HSL_and_HSV) 对象的颜色
 
-**Example format**: `{h: 360, s: 100, v: 50}`
+**示例格式**: `{h: 360, s: 100, v: 50}`
 
-### `hsva`
+### `hsva 色调 饱和度 亮度 透明度`
 
-The color as a [HSVA](https://www.wikiwand.com/en/HSL_and_HSV) object, where `a` represents the color's transparency.
+作为 [HSVA](https://www.wikiwand.com/en/HSL_and_HSV) 对象的颜色，在那里 `a` 代表着颜色的透明度。
 
-**Example format**: `{h: 360, s: 100, v: 50, a: 1}`
+**示例格式**: `{h: 360, s: 100, v: 50, a: 1}`
 
-### `hsl`
+### `hsl 色相 饱和度 明亮度`
 
-The color as a [HSL](https://www.wikiwand.com/en/HSL_and_HSV) object.
+作为 [HSL](https://www.wikiwand.com/en/HSL_and_HSV) 对象的颜色。
 
-**Example format**: `{h: 360, s: 50, l: 100}`
+**示例格式**: `{h: 360, s: 50, l: 100}`
 
-### `hsla`
+### `hsla 色相 饱和度 明亮度 透明度`
 
-The color as a [HSLA](https://www.wikiwand.com/en/HSL_and_HSV) object, where `a` represents the color's transparency.
+作为 [HSLA](https://www.wikiwand.com/en/HSL_and_HSV) 对象的颜色，在那里 `a` 代表着颜色的透明度。
 
-**Example format**: `{h: 360, s: 50, l: 100, a: 1}`
+**示例格式**: `{h: 360: 50, l: 100, a: 1}`
 
-### `hexString`
+### `hexString 十六进制字符串`
 
-The color as a hex string. Shorthand hex input is also accepted.
+作为十六进制字符串的颜色。 也支持简写的十六进制色值。
 
-**Example format**: `"#ff0000"` or `"#f00"`
+**示例格式**: `"#ff0000"` 或 `"#f00"`
 
-### `hex8String`
+### `hex8String 十六进制字符串`
 
-The color as a hex alpha string. Shorthand hex input is also accepted.
+作为带有透明通道的十六进制透明字符串的颜色。 也支持简写的十六进制色值。
 
-**Example format**: `"#ff0000ff"` or `"#f00f"`
+**示例格式**: `"#ff0000ff"` 或 `"#f00f"`
 
-### `rgbString`
+### `rgbString 红绿蓝字符串`
 
-The color as an RGB string. Percentage-based RGB strings are also accepted as inputs.
+作为RGB字符串的颜色。 也支持百分比的 RGB 字符串。
 
-**Example format**: `"rgb(255, 0, 0)"` or `"rgb(100%, 0%, 0%)"`
+**示例格式**: `"rgb(255,0,0)"` 或 `"rgb(100%, 0%, 0%)"`
 
-### `rgbaString`
+### `rgbaString 红绿蓝透明字符串`
 
-The color as an RGBA string. Percentage-based RGBA strings are also accepted as inputs.
+作为带有透明通道的RGB字符串的颜色。 也支持百分比的 RGBA 字符串。
 
-**Example format**: `"rgba(255, 0, 0, 1)"` or `"rgba(100%, 0%, 0%, 100%)"`
+**示例格式**: `"rgba(255, 0, 0, 1)"` 或 `"rgba(100%, 0%, 0%, 100%)"`
 
-### `hslString`
+### `hslString 色相、饱和度、明亮度的字符串`
 
-The color as a percentage HSL string.
+作为百分比HSL字符串的颜色。
 
-**Example format**: `"hsl(360, 100%, 50%)"`
+**示例格式**: `"hsl(360, 100% 50%)"`
 
-### `hslaString`
+### `hslaString 色相、饱和度、明亮度、透明度的字符串`
 
-The color as a percentage HSLA string
+作为百分比HSLA 字符串的颜色
 
-**Example format**: `"hsl(360, 100%, 50%, 1)"`
+**示例格式**: `"hsl(360%, 100%, 50%, 1)"`
 
-### `index`
+### `index 索引`
 
-The color's index.
+颜色的索引。
 
 ## 方法
 
-### `set`
+### `set 设置`
 
-Set the color from any [supported color format](#supported-color-formats).
+从任意 [支持的颜色格式](#supported-color-formats) 设置颜色。
 
-**Arguments**:
+**参数**:
 
 * `{Color}`
 
-### `setChannel`
+### `setChannel 设置通道`
 
-Set a specific color channel to a new value. `format` can be either `hsv` or `rgb`, and `channel` should be a single letter representing which channel from the format you wish to set.
+设置一个特定的颜色通道为新值。 `format` 可以是 `hsv` 或 `rgb`中的一个, `channel` 应该是一个字母，代表您想要设置的格式中的哪个频道。
 
-**Arguments**:
+**参数**:
 
-* `{String}` format
-* `{String}` channel
-* `{Number}` value
+* `{String}` format 格式
+* `{String}` channel 通道
+* `{Number}` value 值
 
-**Example**:
+**示例**:
 
 ```js
-// set the rgb red channel to 255:
+//将rgb的红色通道设置为255：
 color.setChannel('rgb', 'r', 255);
 
-// set the hsv hue channel to 180:
+//将hsv的色调通道设置为180：
 color.setChannel('hsv', 'h', 255);
 ```
 
-### `clone`
+### `clone 复制`
 
-Copy the color and return a new Color object with the same value.
+复制颜色并返回具有相同值的新颜色对象。
 
-**Returns**: `{Color}`
+**返回**: `{Color}`
 
-### `reset`
+### `reset 重置`
 
-Resets the color back to the value initially passed to the `iro.Color` constructor.
+将颜色重置为最初传递给`iro.Color`构造函数的值。
 
 ## 静态方法
 
 ### `hsvToRgb`
 
-Convert a HSV object to an RGB object.
+将 HSV 对象转换为 RGB 对象。
 
-**Arguments**:
+**参数**:
 
-* `{Object}` HSV values, e.g `{h: 360, s: 100, v: 50}`
+* `{Object}` HSV 值，例如 `{h: 360, s: 100, v: 50}`
 
-**Returns**: `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
+**返回**: `{Object}` RGB 值, 例如 `{r: 255, g: 0, b: 0}`
 
 ### `rgbToHsv`
 
-Convert an RGB object to a HSV object.
+将 RGB 对象转换为 HSV 对象。
 
-**Arguments**:
+**参数**:
 
-* `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
+* `{Object}` RGB 值，例如： `{r: 255, g: 0, b: 0}`
 
-**Returns**: `{Object}` HSV values, e.g `{h: 360, s: 100, v: 50}`
+**返回**: `{Object}` HSV 值, 例如 `{h: 360, s: 100, v: 50}`
 
 ### `hsvToHsl`
 
-Convert a HSV object to a HSL object.
+将 HSV 对象转换为 HSL 对象。
 
-**Arguments**:
+**参数**:
 
-* `{Object}` HSV values, e.g `{h: 360, s: 50, v: 100}`
+* `{Object}` HSV 值，例如： `{h: 360, s: 50, v: 100}`
 
-**Returns**: `{Object}` HSL values, e.g `{h: 360, s: 100, l: 100}`
+**返回**: `{Object}` HSL 值，例如 `{h: 360, s: 100, l: 100}`
 
 ### `hslToHsv`
 
-Convert a HSL object to a HSV object.
+将HSL对象转换为 HSV 对象。
 
-**Arguments**:
+**参数**:
 
-* `{Object}` HSL values, e.g `{h: 360, s: 100, l: 100}`
+* `{Object}` HSL 值，例如： `{h: 360, s: 100, l: 100}`
 
-**Returns**: `{Object}` HSV values, e.g `{h: 360, s: 50, v: 100}`
+**返回**: `{Object}` HSV 值，例如 `{h: 360, s: 50, v: 100}`
 
 
 ### `kelvinToRgb`
 
-Convert a kelvin temperature to an approximated RGB object.
+将kelvin温度转换为近似的 RGB 对象。
 
-**Arguments**:
+**参数**:
 
-* `{Number}` kelvin temperature
+* `{Number}` kelvin 温度
 
-**Returns**: `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
+**返回**: `{Object}` RGB 值，例如 `{r: 255, g: 0, b: 0}`
 
 ### `rgbToKelvin`
 
-Convert an RGB object to an approximated kelvin temperature.
+将RGB 对象转换为近似的kelvin温度。
 
-**Arguments**:
+**参数**:
 
-* `{Object}` RGB values, e.g `{r: 255, g: 0, b: 0}`
+* `{Object}` RGB 值，例如： `{r: 255, g: 0, b: 0}`
 
-**Returns**: `{Number}` kelvin temperature
+**返回**: `{Number}` kelvin 温度
