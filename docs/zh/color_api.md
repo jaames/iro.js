@@ -1,37 +1,37 @@
 ---
-title: Color API
+title: 颜色 API
 ---
 
-The Color API is used by color pickers to store the selected color and to handle conversions between different color models. It's also made accessible via `iro.Color` so that it can be used as a general color utility library.
+颜色选择器使用颜色API来存储选定的颜色和处理不同颜色模型之间的转换。 还可以通过 `iro.``Color` 对其进行访问，以便可以将其用作常规颜色实用程序库。
 
-## Constructor
+## 构造函数
 
-**Arguments:**
+**参数：**
 
-* `{String | Object | Color}` Initial color. This can be any [supported color format](#supported-color-formats), or another Color instance.
+* `{String | Object | Color}` 初始颜色。 这可以是任何 [支持的颜色格式](#supported-color-formats)或另一个颜色实例。
 
-## Supported Color Formats
+## 支持的颜色格式
 
-* **Hex string**: `"#ff0000"`
-* **Hex alpha string**: `"#ff0000ff"`
-* **Shorthand hex string**: `"#f00"`
-* **Shorthand hex alpha string**: `"#f00f"`
-* **RGB string**: `"rgb(255, 0, 0)"`
-* **RGBA string**: `"rgba(255, 0, 0, 1)"`
-* **Percentage RGB string**: `"rgb(100%, 0%, 0%)"`
-* **Percentage RGBA string**: `"rgba(100%, 0%, 0%, 100%)"`
-* **RGB object**: `{r: 255, g: 0, b: 0}`
-* **RGBA object**: `{r: 255, g: 0, b: 0, a: 1}`
-* **HSL string**: `"hsl(360, 50%, 100%)"`
-* **HSLA string**: `"hsla(360, 50%, 100%, 1)"`
-* **HSL object**: `{h: 360, s: 50, l: 100}`
-* **HSLA object**: `{h: 360, s: 50, l: 100, a: 1}`
-* **HSV object**: `{h: 360, s: 100, v: 50}`
-* **HSVA object**: `{h: 360, s: 100, v: 50, a: 1}`
+* **十六进制字符串**: `"#ff0000"`
+* **带透明通道的十六进制字符串**: `"#ff0000ff"`
+* **简写的十六进制字符串**: `"#f00"`
+* **简写的带透明通道的十六进制字符串**: `"#ff0000ff"`
+* **RGB字符串**: `"rgb(255, 0, 0)"`
+* **带透明通道的RGB字符串**: `"rgba(255, 0, 0, 1)"`
+* **百分比RGB字符串**: `"rgb(100%，0%，0%)"`
+* **带透明通道的百分比RGB字符串**: `"rgba(100%，0%，0%，100%)"`
+* **RGB对象**: `{r: 255, g: 0, b: 0}`
+* **带透明通道的RGB对象**: `{r: 255, g: 0, b: 0, a: 1}`
+* **HSL字符串**: `"hsl(360%, 50%)"`
+* **带透明通道的HSL字符串**: `"hslam (360, 50%, 100%, 1)"`
+* **HSL对象**: `{h: 360, s: 50, l: 100}`
+* **带透明通道的HSL对象**: `{h: 360, s: 50, l: 100, a: 1}`
+* **HSV对象**: `{h: 360, s: 100, v: 50}`
+* **带透明通道的HSV对象**: `{h: 360, s: 100, v: 50, a: 1}`
 
-## Properties
+## 属性
 
-Color objects have several "magic" properties that reflect the value of the color in different formats. The magic is that they are readable as well as writable, so they can both **get** and **set** the color from that given format.
+颜色对象有几个“魔法”属性，它们以不同格式反映颜色的值。 神奇之处在于它们既可读又可写，因此它们都可以 **get** 和 **set** 给定的格式。
 
 ### `red`
 
@@ -141,7 +141,7 @@ The color as a percentage HSLA string
 
 The color's index.
 
-## Methods
+## 方法
 
 ### `set`
 
@@ -181,7 +181,7 @@ Copy the color and return a new Color object with the same value.
 
 Resets the color back to the value initially passed to the `iro.Color` constructor.
 
-## Static Methods
+## 静态方法
 
 ### `hsvToRgb`
 
