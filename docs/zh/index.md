@@ -1,18 +1,18 @@
 ---
-layout: Home
+layout: 首页
 home: true
 ---
 
 ::: slot tutorial-iro-js
-### Installation
+### 安装
 
-##### Install from NPM
+##### 通过NPM安装
 
 ```bash
 $ npm install @jaames/iro --save
 ```
 
-Then if you are using a module bundler like Webpack or Rollup, import iro.js into your project:
+如果您使用的是Webpack或Rollup之类的模块捆绑器，请将iro.js导入您的项目中：
 
 ```js
 // Using ES6 module syntax
@@ -22,41 +22,41 @@ import iro from '@jaames/iro';
 const iro = require('@jaames/iro');
 ```
 
-##### Or use the jsDelivr CDN
+##### 也可使用 CDN
 
-Drop this script into the `<head>` of your page's HTML:
+将此脚本拖放到您页面的 HTML `<head>` 中：
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 ```
 
-When you manually include the library like this, iro.js will be made globally available on `window.iro`.
+当您手动包含这样的库时，iro.js将在 `window.iro` 上全局可用。
 
-##### Or download and host yourself
+##### 也可下载并自己托管
 
-**[Development version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js)**<br/> Uncompressed, with source comments included. Intended for debugging.
+**[Development version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.js)**<br/> Uncompressed, with source comments included. 用于调试。
 
 **[Production version](https://raw.githubusercontent.com/jaames/iro.js/master/dist/iro.min.js)**<br/> Minified and optimized version.
 
-### Color Picker Setup
+### 颜色选择器设置
 
-First, we need a HTML element with a unique identifier (such as an `id` attribute) to act as a container for the color picker:
+首先， 我们需要一个具有唯一标识符的HTML元素 (例如一个 `id` 属性) 作为颜色选择器的容器：
 
 ```html
 <div id="picker"></div>
 ```
 
-Then use JavaScript to create a new `iro.ColorPicker` with a CSS selector that matches your chosen container element:
+然后使用 JavaScript 创建一个新的 `iro.ColorPicker` 与您选择的容器元素匹配的 CSS 选择器：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker');
 ```
 
-You can also use a DOM object instead of a CSS selector here -- this might be more suitable if you're integrating iro.js into an application built with a framework such as Vue, React, etc.
+您还可以在此处使用DOM对象而不是CSS选择器 -- 如果将iro.js集成到使用诸如Vue，React等框架构建的应用程序中，这可能更合适。
 
-### Color Picker Options
+### 颜色选择器选项
 
-The color picker can be customized by passing a set of options to the second `iro.ColorPicker` parameter:
+可以通过将一组选项传递给 `iro.ColorPicker` 的第二个参数来自定义颜色选择器：
 
 ```js
 var colorPicker = new iro.ColorPicker("#picker", {
@@ -67,11 +67,11 @@ var colorPicker = new iro.ColorPicker("#picker", {
 });
 ```
 
-A full list of color picker options can be found in the [options documentation](guide.html#color-picker-options).
+颜色选择器选项的完整列表可以在 [选项文档](guide.html#color-picker-options) 中找到。
 
-### Working with Colors
+### 使用颜色
 
-Each color picker has a color object which stores the currently selected color.
+每个颜色选择器都有一个 color 对象来存储当前选中的颜色。
 
 
 ```js
@@ -79,11 +79,11 @@ var hex = colorPicker.color.hexString;
 console.log(hex); // hex = "#ff0000"
 ```
 
-Whenever you set any of these color properties, the color picker will automatically update to match it!
+每当您设置这些颜色属性时，颜色选择器将自动更新以匹配它！
 
 ```js
 colorPicker.color.hsl = { h: 180, s: 100, l: 50 };
-// Color picker updates to match hsl(180, 100, 50)
+// 颜色选择器更新以匹配hsl(180, 100, 50)
 ```
 
 A full list of color properties can be found in the [color documentation](/guide.html#working-with-colors).
