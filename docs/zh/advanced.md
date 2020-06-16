@@ -1,13 +1,13 @@
 ---
-title: Advanced Usage
+title: 高级使用
 ---
 
 
-## Custom UI Layouts
+## 自定义 UI 布局
 
-iro.js comes with a variety of built-in UI components. With the color picker's `layout` option, these can be combined together however you'd like.
+iro.js带有各种内置UI组件。 使用颜色选择器的`layout`选项，可以根据需要将它们组合在一起。
 
-Layouts are configured with the color picker's `layout` option. This should be an array where each item is an object with a `component` property. The `component` property specifies the type of component to use, which can be either `iro.ui.Wheel`, `iro.ui.Box` or `iro.ui.Slider`.
+布局使用颜色选择器的 `layout` 选项配置。 这应该是一个数组，每个元素都是具有 `component` 属性的对象。 The `component` property specifies the type of component to use, which can be either `iro.ui.Wheel`, `iro.ui.Box` or `iro.ui.Slider`.
 
 For example, here's what the component definitions for the default layout (a color wheel and a value slider) would look like:
 
