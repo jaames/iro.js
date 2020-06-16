@@ -7,9 +7,9 @@ title: 高级使用
 
 iro.js带有各种内置UI组件。 使用颜色选择器的`layout`选项，可以根据需要将它们组合在一起。
 
-布局使用颜色选择器的 `layout` 选项配置。 这应该是一个数组，每个元素都是具有 `component` 属性的对象。 The `component` property specifies the type of component to use, which can be either `iro.ui.Wheel`, `iro.ui.Box` or `iro.ui.Slider`.
+布局使用颜色选择器的 `layout` 选项配置。 这应该是一个数组，每个元素都是具有 `component` 属性的对象。 `component` 属性指定了要使用的组件类型，可以是 `iro.ui.``Wheel`, `iro.ui.``Box` 或者 `iro.ui.``Slider`.
 
-For example, here's what the component definitions for the default layout (a color wheel and a value slider) would look like:
+例如，此处默认布局的组件定义(颜色轮和值滑块) 将会是这样的：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -24,7 +24,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-Component definitions can also include an `options` property to provide [config option](/guide.html#color-picker-options) overrides to individual components. In this example, the wheel and slider will both have the same border width of 2, but different border colors:
+组件定义还可以包含一个 `options` 属性来提供 [配置选项](/guide.html#color-picker-options) 覆盖个别组件。 在这个示例中，滚轮和滑块的描边宽度都是2，但是描边颜色不同：
 
 ```js
 var colorPicker = new iro.ColorPicker('#color-picker', {
@@ -46,9 +46,9 @@ var colorPicker = new iro.ColorPicker('#color-picker', {
 });
 ```
 
-### Available Components
+### 可选组件
 
-#### Wheel
+#### Wheel 轮子
 
 <ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" :layout="[
   {
@@ -56,7 +56,7 @@ var colorPicker = new iro.ColorPicker('#color-picker', {
   }
 ]"/>
 
-Wheels allow the user to adjust the color's **hue** and **saturation**. They can also support showing [more than one selectable color at once](#multi-color-selections).
+轮子允许用户调整颜色的 **色调** 和 **饱和度**. 它们还支持 [同时显示多个可选颜色](#multi-color-selections)。
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -69,15 +69,15 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-There's a few optional wheel-specific config options that can be used:
+有几个可选的轮子专用配置选项可以使用：
 
-| Option           | Purpose                                                                                 | Default Value     |
-|:---------------- |:--------------------------------------------------------------------------------------- |:----------------- |
-| `wheelLightness` | If set to `false`, the color wheel will not fade to black when the lightness decreases. | `true`            |
-| `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees.                  | `0`               |
-| `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
+| 选项               | 用途                                                     | 默认值               |
+|:---------------- |:------------------------------------------------------ |:----------------- |
+| `wheelLightness` | 如果设置为 `false`, 当亮度降低时，颜色轮将不会变成黑色.                      | `true`            |
+| `wheelAngle`     | 色轮的色调渐变的起始角度，以度为单位。                                    | `0`               |
+| `wheelDirection` | 颜色轮的色调渐变方向；可选 顺时针`"clockwise"` 或 逆时针`"anticlockwise"`。 | `"anticlockwise"` |
 
-#### Box
+#### Box 盒子
 
 <ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" :layout="[
   {
@@ -85,7 +85,7 @@ There's a few optional wheel-specific config options that can be used:
   }
 ]"/>
 
-Boxes allow the user to adjust the color's **saturation** and **value**. They can also support showing [more than one selectable color at once](#multi-color-selections).
+盒子允许用户调整颜色的 **饱和度** 和 **值**。 它们还支持 [同时显示多个可选颜色](#multi-color-selections)。
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -98,7 +98,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-#### Sliders
+#### Sliders 滑块
 
 <ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" :layout="[
   {
@@ -141,11 +141,11 @@ var colorPicker = new iro.ColorPicker('#picker', {
     }
   }, ]"/>
 
-Sliders allow the user to adjust a specific color channel. Currently there are multiple types of sliders available, covering **hue**, **saturation**, **value**, **alpha** and **kelvin temperature**.
+滑块允许用户调整特定的颜色通道。 当前有多种类型的滑块可用，包括 色调 **hue**，饱和度 **saturation**，值 **value**，透明通道 **alpha** 和 冷暖值（开尔文温度） **kelvin temperature**.
 
-##### `sliderType`
+##### `sliderType 滑块类型`
 
-The type of slider can be specified with the `sliderType` option:
+可以使用 `sliderType` 选项指定滑块类型：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -153,23 +153,23 @@ var colorPicker = new iro.ColorPicker('#picker', {
     { 
       component: iro.ui.Slider,
       options: {
-        sliderType: 'hue' // can also be 'saturation', 'value', 'alpha' or 'kelvin'
+        sliderType: 'hue' //也可以是 'saturation', 'value', 'alpha' 或 'kelvin'
       }
     },
   ]
 });
 ```
 
-If `sliderType` is set to `'kelvin'`, the temperature range can be set with these options:
+如果 `sliderType` 设置为 `kelvin`, 色温范围可以用这些选项设置：
 
-| Option           | Purpose                                                         | Default Value |
-|:---------------- |:--------------------------------------------------------------- |:------------- |
-| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `1000`) | `2200`        |
-| `maxTemperature` | Maximum color temperature, in Kelvin (largest value is `40000`) | `11000`       |
+| 选项               | 用途                        | 默认值     |
+|:---------------- |:------------------------- |:------- |
+| `minTemperature` | Kelvin最小色温值(最小值为 `1000`)  | `2200`  |
+| `maxTemperature` | Kelvin最大色温值(最大值是 `40000`) | `11000` |
 
-##### `sliderShape`
+##### `sliderShape 滑块形状`
 
-The `sliderShape` option can also be used to make the slider circular:
+`sliderShape` 选项也可用于使滑块变为圆形：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -184,44 +184,44 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-## Multi-Color Selections
+## 多颜色选择器
 
-iro.js supports having more than one selectable colors on the same color picker at any time, which can be useful for situations where you want the user to be able to work with color themes or harmonies!
+iro.js支持随时在同一颜色选择器上具有多种可选颜色，这对于希望用户能够处理颜色主题的情况非常有用！
 
-### Setup
+### 设置
 
-The `colors` [config option](/guide.html#color-picker-options) can be used to provide an intial list of colors to the color picker. Any [supported color format](/color_api.html#supported-color-formats) will work here:
+`colors` [配置选项](/guide.html#color-picker-options) 可以用来为颜色选择器提供一份颜色列表。 任何 [支持的颜色格式](/color_api.html#supported-color-formats) 将在这里工作：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
   colors: [
-    'rgb(100%, 0, 0)', // pure red
-    'rgb(0, 100%, 0)', // pure green
-    'rgb(0, 0, 100%)', // pure blue
+    'rgb(100%, 0, 0)', //纯红色
+    'rgb(0, 100%, 0)', //纯绿色
+    'rgb(0, 0, 100%)', //纯蓝色
   ]
 });
 ```
 
-### Working with Multiple Colors
+### 使用多个颜色
 
-An array of color objects which can be used to **get** and **set** the value of each color can be found on the color picker's `colors` property. This array will be in the same order as the colors passed to the color picker during [setup](#setup).
+颜色对象数组可用于** get **和** set **，每种颜色的值可以在颜色选择器的` colors `属性中找到。 此数组将在 [设置](#setup) 期间以相同的颜色传递给颜色选择器。
 
-It's worth checking out the [working with colors guide](/guide.html#working-with-colors) to learn more about how these individual color objects work, but here's a quick overview:
+值得查阅[使用颜色指南](/guide.html#working-with-colors)，以了解有关这些单个颜色对象如何工作的更多信息，但这里有一个简要概述：
 
 ```js
-// set the first color to a new value
+//将第一种颜色设置为新值
 colorPicker.colors[0].rgbString = 'rgb(0%, 0%, 0%)';
 
-// get the saturation of the second color
+//获得第二种颜色的饱和度
 var saturation = colorPicker.colors[1].saturation;
 
-// we can also loop through the colors array
+//我们还可以遍历颜色数组
 colorPicker.colors.forEach(function (color) {
   console.log(color.hexString);
 });
 ```
 
-### Events
+### 事件
 
 When working with [events](/guide.html#color-picker-events), it's important to remember that all of the color-change events (like `color:change`, `input:change`, `input:start`, etc) will fire for every color. To find which color fired the event, you can use the color's `index` property:
 
