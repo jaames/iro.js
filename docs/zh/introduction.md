@@ -1,24 +1,24 @@
 ---
-title: Introduction
+title: 简介
 ---
 
-## Features
+## 特性
 
- * Simple, low-friction API with support for colors in HEX, RGB, HSL and HSV color formats -- plus kelvin temperatures!
- * Create the perfect color picker from a selection of pre-built UI components.
- * Add multiple colors to the same picker for selecting color harmonies and themes.
- * Contained within a single [9.5kb](https://bundlephobia.com/result?p=@jaames/iro) (min + gzip) script. No extra css, images, or third-party libraries (like jQuery) needed.
- * Works across all modern browsers and devices, including touchscreens.
- * Licenced under MPL 2.0. 100% free for personal and commercial use.
+ * 简单、易上手的API，支持HEX、RGB、HSL 和 HSV 颜色格式的颜色 -- 还支持开尔文温度（即冷暖值、色温）！
+ * 从预构建界面组件中创建完美的颜色选择器。
+ * 将多个颜色添加到同一个选取器以选择主题。
+ * 包含在单个 [9.5kb](https://bundlephobia.com/result?p=@jaames/iro) (min + gzip) 脚本内。 无需额外的 css、图像或第三方库 (如jQuery)。
+ * 适用于所有现代浏览器和设备，包括触摸屏。
+ * 根据MPL 2.0授权许可的。 100%免费供个人和商业使用。
 
-## Examples
+## 示例
 
-A collection of [interactive examples](https://codepen.io/collection/XQgGRB) are available on Codepen.
+Codepen上有 [可交互的示例](https://codepen.io/collection/XQgGRB) 。
 
-## Support
+## 支持
 
-If you run into any problems when using iro.js, feel free to contact me for help! The best way to get support is by [opening an issue thread on the iro.js Github repo](https://github.com/jaames/iro.js/issues), but you can also [email me](mailto:irojs@jamesdaniel.dev) or [send me a DM on Twitter](https://twitter.com/rakujira).
+如果您在使用 iro.js 时遇到任何问题，请随时联系我寻求帮助！ 获得支持的最好方法是通过 [在iro.js Github存储库上创建问题](https://github.com/jaames/iro.js/issues)，但是您也可以 [给我发电子邮件](mailto:irojs@jamesdaniel.dev)或[在Twitter上向我发送留言](https://twitter.com/rakujira)。
 
 ## Motivation
 
-I built iro.js after feeling pretty unsatisifed with the existing color picker widgets I came across while working on a project. They were either unintuitive, bloated, depended on extra libraries, or had been long-abandoned by their author.
+我在对项目工作时遇到的现有颜色选择器小部件不满意之后，我构建了iro.js。 They were either unintuitive, bloated, depended on extra libraries, or had been long-abandoned by their author.
