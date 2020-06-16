@@ -7,7 +7,7 @@ title: 高级使用
 
 iro.js带有各种内置UI组件。 使用颜色选择器的`layout`选项，可以根据需要将它们组合在一起。
 
-布局使用颜色选择器的 `layout` 选项配置。 这应该是一个数组，每个元素都是具有 `component` 属性的对象。 `component` 属性指定了要使用的组件类型，可以是 `iro.ui.``Wheel`, `iro.ui.``Box` 或者 `iro.ui.``Slider`.
+布局使用颜色选择器的 `layout` 选项配置。 这应该是一个数组，每个元素都是具有 `component` 属性的对象。 `component` 属性指定了要使用的组件类型，可以是 `iro.ui.Wheel`, `iro.ui.Box` 或者 `iro.ui.Slider`.
 
 例如，此处默认布局的组件定义(颜色轮和值滑块) 将会是这样的：
 
