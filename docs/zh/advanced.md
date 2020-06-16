@@ -24,7 +24,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-组件定义还可以包含一个 `options` 属性来提供 [配置选项](/guide.html#color-picker-options) 覆盖个别组件。 在这个示例中，滚轮和滑块的描边宽度都是2，但是描边颜色不同：
+组件定义还可以包含一个 `options` 属性来提供 [配置选项](/guide.html#color-picker-options) 覆盖个别组件。 在这个示例中，滚轮和滑块的边框宽度都是2，但是边框颜色不同：
 
 ```js
 var colorPicker = new iro.ColorPicker('#color-picker', {
