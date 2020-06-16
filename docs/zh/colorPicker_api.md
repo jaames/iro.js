@@ -9,7 +9,7 @@ title: 颜色选择器 API
 **参数：**
 
 * `{String | DOM Element}` 颜色选择器容器的CSS选择器或DOM节点
-* `{Object}` [选取颜色的选项](#options)
+* `{Object}` [选取颜色的选项](#选项)
 
 ## 选项
 
@@ -21,7 +21,7 @@ title: 颜色选择器 API
 
 ### `color`
 
-默认选中的颜色。 此选项可以是任意 [支持的颜色格式](/color_api.html#supported-color-formats)。
+默认选中的颜色。 此选项可以是任意 [支持的颜色格式](/color_api.html#支持的颜色格式)。
 
 **默认值**: `"#ffffffff"`
 
@@ -39,7 +39,7 @@ title: 颜色选择器 API
 
 ### `layout`
 
-用于 [自定义布局](/advanced.html#custom-ui-layouts) 的组件定义数组。
+用于 [自定义布局](/advanced.html#自定义-UI-布局) 的组件定义数组。
 
 **默认值**: `null`
 
@@ -81,13 +81,13 @@ title: 颜色选择器 API
 
 ### `handleSvg`
 
-[自定义手柄](/advanced.html#custom-handles)的SVG参考。 这应该是一个与您的手柄SVG匹配的ID选择器。
+[自定义手柄](/advanced.html#自定义手柄)的SVG参考。 这应该是一个与您的手柄SVG匹配的ID选择器。
 
 **默认值**: `null` (使用默认手柄)
 
 ### `handleProps`
 
-[自定义手柄](/advanced.html#custom-handles) 的属性。
+[自定义手柄](/advanced.html#自定义手柄) 的属性。
 
 **默认值**: `{ x: 0, y: 0 }`
 
@@ -121,11 +121,11 @@ title: 颜色选择器 API
 
 [`iro.Color`](/colorPicker_api.html) 对象代表当前选中的颜色。 更新此颜色对象也会更新选择器中的选定颜色。
 
-<strong x-id =“ 1”>另请参见：</strong>[使用选定的颜色](/guide.html#color-picker-options)
+<strong x-id =“ 1”>另请参见：</strong>[使用选定的颜色](/guide.html#颜色选择器选项)
 
 ### `colors`
 
-代表当前选定颜色的 [`iro.Color`](/colorPicker_api.html) 对象数组，用于[多颜色](/advanced.html#multicolor)。 更新任何这些颜色对象也将更新选择器中的选定颜色。
+代表当前选定颜色的 [`iro.Color`](/colorPicker_api.html) 对象数组，用于[多颜色](/advanced.html#多颜色选择器)。 更新任何这些颜色对象也将更新选择器中的选定颜色。
 
 ### `el`
 
@@ -156,7 +156,7 @@ title: 颜色选择器 API
 
 **参数：**
 
-* `{String | Array}` [事件类型](#events)
+* `{String | Array}` [事件类型](#事件)
 * `{Function}` 回调
 
 **示例︰**
@@ -178,7 +178,7 @@ example.on("color:change", colorChangeCallback);
 
 **参数：**
 
-* `{String | Array}` [事件类型](#events)
+* `{String | Array}` [事件类型](#事件)
 * `{Function}` 回调
 
 **示例︰**
@@ -206,7 +206,7 @@ example.off("color:change", colorChangeCallback);
 
 **参数：**
 
-* `{IroColorValue}` 颜色值 - 要添加的颜色，这可以是 `iro.Color` 或任意 [支持的颜色格式](/color_api.html#supported-color-formats)。
+* `{IroColorValue}` 颜色值 - 要添加的颜色，这可以是 `iro.Color` 或任意 [支持的颜色格式](/color_api.html#支持的颜色格式)。
 * `{Number}` 颜色索引 (可选) - 默认为颜色数组的末尾
 
 ### `removeColor`
@@ -257,7 +257,7 @@ example.off("color:change", colorChangeCallback);
 
 **参数：**
 
-* `{String}` [事件类型](#events)
+* `{String}` [事件类型](#事件)
 
 ### `deferredEmit`
 
@@ -265,7 +265,7 @@ example.off("color:change", colorChangeCallback);
 
 **参数：**
 
-* `{String}` [事件类型](#events)
+* `{String}` [事件类型](#事件)
 
 ## 事件
 
