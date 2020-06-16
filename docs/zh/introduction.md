@@ -19,6 +19,6 @@ Codepen上有 [可交互的示例](https://codepen.io/collection/XQgGRB) 。
 
 如果您在使用 iro.js 时遇到任何问题，请随时联系我寻求帮助！ 获得支持的最好方法是通过 [在iro.js Github存储库上创建问题](https://github.com/jaames/iro.js/issues)，但是您也可以 [给我发电子邮件](mailto:irojs@jamesdaniel.dev)或[在Twitter上向我发送留言](https://twitter.com/rakujira)。
 
-## Motivation
+## 项目动机
 
-我在对项目工作时遇到的现有颜色选择器小部件不满意之后，我构建了iro.js。 They were either unintuitive, bloated, depended on extra libraries, or had been long-abandoned by their author.
+我在为一些项目工作时，对寻找的颜色选择器小组件非常不满意，为此我构建了iro.js。 他们要么不直观，臃肿，依赖额外的库，要么就被作者长期遗弃。
