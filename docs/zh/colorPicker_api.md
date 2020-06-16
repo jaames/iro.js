@@ -15,160 +15,160 @@ title: 颜色选择器 API
 
 ### `width`
 
-The total width of the color picker UI, measured in pixels.
+以像素为单位的颜色选择器界面的总宽度。
 
-**Default value**: `300`
+**默认值**: `300`
 
 ### `color`
 
-The default selected color. This option can be any [supported color format](/color_api.html#supported-color-formats).
+默认选中的颜色。 此选项可以是任意 [支持的颜色格式](/color_api.html#supported-color-formats)。
 
-**Default value**: `"#ffffff"`
+**默认值**: `"#ffffffff"`
 
 ### `display`
 
-CSS display value for the color picker root element.
+颜色选择器根元素的 CSS 显示值。
 
-**Default value**: `"block"`
+**默认值**: `"block"`
 
 ### `id`
 
-HTML ID for the color picker root element.
+颜色选择器根元素的 HTML ID。
 
-**Default value**: `null`
+**默认值**: `null`
 
 ### `layout`
 
-Component definition array used for [custom layouts](/advanced.html#custom-ui-layouts).
+用于 [自定义布局](/advanced.html#custom-ui-layouts) 的组件定义数组。
 
-**Default value**: `null`
+**默认值**: `null`
 
 ### `layoutDirection`
 
-Component stacking direction; either `"vertical"` or `"horizontal"`.
+组件堆叠方向； 垂直 `"vertical"` 或 水平 `"horizontal"`.
 
-**Default value**: `"vertical"`
+**默认值**: `"vertical"`
 
 ### `borderWidth`
 
-Width of the border around the controls, measured in pixels.
+控件的边框宽度，以像素为单位。
 
-**Default value**: `0` (no border)
+**默认值**: `0` (无边框)
 
 ### `borderColor`
 
-Color of the border. Any valid CSS color is supported.
+边框的颜色。 支持任何有效的 CSS 颜色。
 
-**Default value**: `"#ffffff"`
+**默认值**: `"#ffffffff"`
 
 ### `padding`
 
-Padding between control handles and the edges of a component.
+控制手柄和组件边缘之间的填充。
 
-**Default value**: `6`
+**默认值**: `6`
 
 ### `margin`
 
-Gap between individual components.
+各个组件之间的间隙。
 
-**Default value**: `12`
+**默认值**: `12`
 
 ### `handleRadius`
 
-Radius of the control handles, measued in pixels.
+控制手柄的半径，以像素为单位。
 
-**Default value**: `8`
+**默认值**: `8`
 
 ### `handleSvg`
 
-SVG reference for [Custom Handles](/advanced.html#custom-handles). This should be an ID selector that matches your handle SVG.
+[自定义手柄](/advanced.html#custom-handles)的SVG参考。 这应该是一个与您的手柄SVG匹配的ID选择器。
 
-**Default value**: `null` (default handle is used)
+**默认值**: `null` (使用默认手柄)
 
 ### `handleProps`
 
-Properties for [Custom Handles](/advanced.html#custom-handles).
+[自定义手柄](/advanced.html#custom-handles) 的属性。
 
-**Default value**: `{ x: 0, y: 0 }`
+**默认值**: `{ x: 0, y: 0 }`
 
 ### `wheelLightness`
 
-If set to `false`, the color wheel will not fade to black when the lightness decreases.
+如果设置为 `false`，当亮度降低时，颜色轮将不会变成黑色。
 
-**Default value**: `true`
+**默认值**: `true`
 
 ### `wheelAngle`
 
-Starting angle of the color wheel's hue gradient, measured in degrees.
+色轮的色调渐变的起始角度，以度为单位。
 
-**Default value**: `0`
+**默认值**: `0`
 
 ### `wheelDirection`
 
-Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlockwise"`.
+颜色轮的色调渐变方向，可选 顺时针`"clockwise"` 或 逆时针`"anticlockwise"`。
 
-**Default value**: `"anticlockwise"`
+**默认值**: `"anticlockwise"`
 
 ### `sliderSize`
 
-Slider size, measued in pixels.
+滑块大小，以像素为单位。
 
-**Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
+**默认值**: 默认情况下，这将自动以 `padding` 和 `handleRadius` 计算。
 
 ## 属性
 
 ### `color`
 
-An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. Updating this color object will also update the seclected color in the picker.
+[`iro.Color`](/colorPicker_api.html) 对象代表当前选中的颜色。 更新此颜色对象也会更新选择器中的选定颜色。
 
-**See also:** [Using the Selected Color](/guide.html#color-picker-options)
+<strong x-id =“ 1”>另请参见：</strong>[使用选定的颜色](/guide.html#color-picker-options)
 
 ### `colors`
 
-An array of [`iro.Color`](/colorPicker_api.html) objects representing the currently selected colors, used for [multicolor](/advanced.html#multicolor). Updating any of these color objects will also update the seclected color in the picker.
+代表当前选定颜色的 [`iro.Color`](/colorPicker_api.html) 对象数组，用于[多颜色](/advanced.html#multicolor)。 更新任何这些颜色对象也将更新选择器中的选定颜色。
 
 ### `el`
 
-The HTML element being used as the color picker container.
+使用 HTML 元素作为颜色选择器容器。
 
 ### `base`
 
-The HTML element being used as the color picker's base element.
+使用 HTML 元素作为颜色选择器的基本元素。
 
 ### `props`
 
-The initial configeration options passed to the color picker.
+初始配置选项传递到颜色选择器。
 
 ### `id`
 
-The ID value passed to the color picker config.
+将ID值传递到颜色选择器配置。
 
 ## 事件方法
 
-**Arguments:**
+**参数：**
 
-* `{Number}` width
-* `{Number}` height
+* `{Number}` width 宽度
+* `{Number}` height 高度
 
 ### `on`
 
-Add a listener to a color picker event.
+将监听器添加到颜色选择器事件中。
 
-**Arguments:**
+**参数：**
 
-* `{String | Array}` [Event Type(s)](#events)
-* `{Function}` callback
+* `{String | Array}` [事件类型](#events)
+* `{Function}` 回调
 
-**Example:**
+**示例︰**
 
 ```js
-// make a handler function
+//做一个处理函数
 function colorChangeCallback(color) {
   console.log(color.hexString);
 }
 
-// start listening to the color change event
-// colorChangeCallback will be called whenever the color changes
+//开始听颜色变化事件
+//颜色变化时将调用colorChangeCallback
 example.on("color:change", colorChangeCallback);
 ```
 
