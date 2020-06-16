@@ -1,10 +1,10 @@
 ---
-title: Get Started
+title: 开始使用
 ---
 
-## Installation
+## 安装
 
-### Install from NPM
+### 通过NPM安装
 
 ```bash
 $ npm install @jaames/iro --save
