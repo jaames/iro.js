@@ -8,7 +8,7 @@ title: 颜色 API
 
 **参数：**
 
-* `{String | Object | Color}` 初始颜色。 这可以是任何 [支持的颜色格式](#supported-color-formats)或另一个颜色实例。
+* `{String | Object | Color}` 初始颜色。 这可以是任何 [支持的颜色格式](#支持的颜色格式)或另一个颜色实例。
 
 ## 支持的颜色格式
 
@@ -145,7 +145,7 @@ title: 颜色 API
 
 ### `set 设置`
 
-从任意 [支持的颜色格式](#supported-color-formats) 设置颜色。
+从任意 [支持的颜色格式](#支持的颜色格式) 设置颜色。
 
 **参数**:
 
