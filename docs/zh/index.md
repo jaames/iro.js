@@ -86,22 +86,22 @@ colorPicker.color.hsl = { h: 180, s: 100, l: 50 };
 // 颜色选择器更新以匹配hsl(180, 100, 50)
 ```
 
-A full list of color properties can be found in the [color documentation](/guide.html#working-with-colors).
+有关颜色属性的完整列表，请参见[颜色文档](/guide.html#working-with-colors)。
 
-### Events
+### 事件
 
 
-Events let you to run your own code after certain things have happened, like when the selected color has changed or when the user has interacted with the color picker.
+通过事件，您可以在某些事情发生后运行自己的代码，例如，当选定的颜色发生更改或用户与颜色选择器进行交互时。
 
-The color picker's [`on`](colorPicker_api.html#on) method can be used to attach functions that will be called whenever a particular event is fired. For example, we can add a listener that fires whenever the color is changed:
+拾色器的 [`on`](colorPicker_api.html#on) 方法可用于附加在触发特定事件时将调用的函数。 例如，我们可以添加一个监听器，当颜色被更改时触发：
 
 ```js
-// listen to a color picker's color:change event
-// color:change callbacks receive the current color
+//收听颜色选择器的color:change事件
+//color:change回调接收当前颜色
 colorPicker.on('color:change', function(color) {
-  // log the current color as a HEX string
+  //将当前颜色记录为十六进制字符串
   console.log(color.hexString);
 });
 ```
 
-For a full overview of the available events can be found in the [events documentation](/guide.html#color-picker-events).
+关于可用事件的全面概述，可在 [事件文档](/guide.html#color-picker-events) 中找到。
