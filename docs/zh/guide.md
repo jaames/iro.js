@@ -67,26 +67,26 @@ var colorPicker = new iro.ColorPicker("#picker", {
 
 ### 可选选项
 
-| 选项                | 用途                                                                | 默认值               |
-|:----------------- |:----------------------------------------------------------------- |:----------------- |
-| `width`           | 控件的总宽度。                                                           | `300`             |
-| `color`           | 初始颜色值。 这可以是任意 [支持的颜色格式](/color_api.html#supported-color-formats)。 | `"#ffffff"`       |
-| `colors`          | 用于 [多颜色选择](/advanced.html#multi-color-selections) 的初始颜色值。         | null              |
-| `display`         | 颜色选择器根元素的 CSS 显示值。                                                | `"block"`         |
-| `id`              | 颜色选择器根元素的 HTML ID。                                                | `null`            |
-| `layout`          | 用于自定义 [UI 组件布局](/advanced.html#custom-ui-layouts)。                | `null`            |
-| `layoutDirection` | UI组件堆叠方向； 垂直 `"vertical"` 或 水平 `"horizontal"`.                    | `"vertical"`      |
-| `padding`         | 在控制手柄周围填充。                                                        | `6`               |
-| `margin`          | 各个组件之间的间隙。                                                        | `12`              |
-| `borderWidth`     | 控制点边框的宽度。 设置为 `0` 表示无边框。                                          | `0`               |
-| `borderColor`     | 边框的颜色。 支持任何有效的 CSS 颜色。                                            | `"#ffffff"`       |
-| `handleRadius`    | 控制手柄的半径                                                           | `8`               |
-| `handleSvg`       | 自定义手柄SVG，用于 [自定义手柄](/advanced.html#custom-handles)。               | `null`            |
-| `handleProps`     | 自定义手柄属性，用于 [自定义手柄](/advanced.html#custom-handles)。                | `{x:0, y:0}`      |
-| `wheelLightness`  | 如果设置为 `false`, 当亮度降低时，颜色轮将不会变成黑色.                                 | `true`            |
-| `wheelAngle`      | 色轮的色调渐变的起始角度，以度为单位。                                               | `0`               |
-| `wheelDirection`  | 颜色轮的色调渐变方向；可选 顺时针`"clockwise"` 或 逆时针`"anticlockwise"`。            | `"anticlockwise"` |
-| `sliderSize`      | 滑块控制大小。 默认情况下，这将自动计算。                                             | `undefined`       |
+| 选项                | 用途                                                     | 默认值               |
+|:----------------- |:------------------------------------------------------ |:----------------- |
+| `width`           | 控件的总宽度。                                                | `300`             |
+| `color`           | 初始颜色值。 这可以是任意 [支持的颜色格式](/color_api.html#支持的颜色格式)。      | `"#ffffff"`       |
+| `colors`          | 用于 [多颜色选择](/advanced.html#多颜色选择器) 的初始颜色值。              | null              |
+| `display`         | 颜色选择器根元素的 CSS 显示值。                                     | `"block"`         |
+| `id`              | 颜色选择器根元素的 HTML ID。                                     | `null`            |
+| `layout`          | 用于自定义 [UI 组件布局](/advanced.html#自定义-UI-布局)。             | `null`            |
+| `layoutDirection` | UI组件堆叠方向； 垂直 `"vertical"` 或 水平 `"horizontal"`.         | `"vertical"`      |
+| `padding`         | 在控制手柄周围填充。                                             | `6`               |
+| `margin`          | 各个组件之间的间隙。                                             | `12`              |
+| `borderWidth`     | 控制点边框的宽度。 设置为 `0` 表示无边框。                               | `0`               |
+| `borderColor`     | 边框的颜色。 支持任何有效的 CSS 颜色。                                 | `"#ffffff"`       |
+| `handleRadius`    | 控制手柄的半径                                                | `8`               |
+| `handleSvg`       | 自定义手柄SVG，用于 [自定义手柄](/advanced.html#自定义手柄)。             | `null`            |
+| `handleProps`     | 自定义手柄属性，用于 [自定义手柄](/advanced.html#自定义手柄)。              | `{x:0, y:0}`      |
+| `wheelLightness`  | 如果设置为 `false`, 当亮度降低时，颜色轮将不会变成黑色.                      | `true`            |
+| `wheelAngle`      | 色轮的色调渐变的起始角度，以度为单位。                                    | `0`               |
+| `wheelDirection`  | 颜色轮的色调渐变方向；可选 顺时针`"clockwise"` 或 逆时针`"anticlockwise"`。 | `"anticlockwise"` |
+| `sliderSize`      | 滑块控制大小。 默认情况下，这将自动计算。                                  | `undefined`       |
 
 更多关于颜色选择器选项、属性和方法的详细信息可以在 [颜色选择器API 文档](/colorPicker_api.html) 中找到。
 
@@ -96,7 +96,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 
 ### 颜色属性
 
-颜色对象有一些“魔法”属性，可用于 **get** 和 **set** 不同的格式。 每当设置其中一个属性时，颜色选择器控制将更新， [`color:change`](#color-picker-events) 事件将触发。
+颜色对象有一些“魔法”属性，可用于 **get** 和 **set** 不同的格式。 每当设置其中一个属性时，颜色选择器控制将更新， [`color:change`](#颜色选择事件) 事件将触发。
 
 例如，获取当前颜色作为十六进制字符串：
 
@@ -185,7 +185,7 @@ colorPicker.off('color:change', onColorChange);
 
 当选中的颜色发生变化时 -- 当用户与颜色选择器交互时触发， 或者当颜色由您自己的代码更新。 此事件的回调函数将接收两个值：
 
-* `color`: [目前选定的颜色](#working-with-colors)
+* `color`: [目前选定的颜色](#使用颜色)
 * `changes`: 显示自上次事件触发以来哪些HSV 频道已经改变的对象
 
 在回调中修改此事件的 `color` 对象是安全的。 如果你想限制范围或某个颜色通道, 例如:
@@ -207,15 +207,15 @@ colorPicker.on('color:change', function(color) {
 
 ##### `input:start`
 
-每当用户开始与色彩选择器控制交互时都会触发。 [当前选中的颜色](#working-with-colors) 被传递到此事件的回调函数中。
+每当用户开始与色彩选择器控制交互时都会触发。 [当前选中的颜色](#使用颜色) 被传递到此事件的回调函数中。
 
 ##### `input:move`
 
-当用户在开始交互后移动他们的指针/鼠标时触发。 [当前选中的颜色](#working-with-colors) 被传递到此事件的回调函数中。
+当用户在开始交互后移动他们的指针/鼠标时触发。 [当前选中的颜色](#使用颜色) 被传递到此事件的回调函数中。
 
 ##### `input:end`
 
-每当用户停止与色彩选择器控件交互时触发。 [当前选中的颜色](#working-with-colors) 被传递到此事件的回调函数中。
+每当用户停止与色彩选择器控件交互时触发。 [当前选中的颜色](#使用颜色) 被传递到此事件的回调函数中。
 
 ##### `color:init`
 
