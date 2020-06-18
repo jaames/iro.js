@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="#documentation">Documentation</a>
+  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="#documentation">Documentation</a> | <a href="#special-thanks">Special Thanks</a>
 </p>
 
 <br/>
@@ -72,8 +72,6 @@ const iro = require('@jaames/iro');
 <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 ```
 
-<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
-
 When you manually include the library like this, iro.js will be made globally available on window.iro.
 
 ### Download and host yourself
@@ -96,6 +94,8 @@ Then add it to the `<head>` of your page with a `<script>` tag:
 </html>
 ```
 
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
+
 ## Usage
 
 ### Getting Started
@@ -114,6 +114,7 @@ var colorPicker = new iro.ColorPicker('#picker');
 
 You can also use a DOM object instead of a CSS selector here -- this might be more suitable if you're integrating iro.js into an application built with a framework such as Vue, React, etc.
 
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Color Picker Options
 
@@ -152,6 +153,8 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
 
 More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](https://iro.js.org/colorPicker_api.html).
+
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Working with Colors
 
@@ -201,6 +204,8 @@ The color object has properties which cover all of the most common web color for
 | `kelvin`       | `1000` to `40000` |
 
 For more details about color objects, check out the [Color API documentation](https://iro.js.org/color_api.html).
+
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
 ## Color Picker Events
 
@@ -295,6 +300,19 @@ Fired whenever the 'active' color is switched. This event's callbacks will recei
 ##### `mount`
 
 Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. The colorPicker object is passed to this event's callback function.
+
+<img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
+
+## Special Thanks
+
+Thank you to the following people for their support and contributions!
+
+- @KaanMol and @mksglu for starting the Typescript port
+- @asonix for vertical slider implementation
+
+**Sponsored by [Ship Shape](https://shipshape.io)**
+
+<img width="400" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/sponsor_shipshape.png">
 
 <img height="16" height="888" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/break.png"/>
 
