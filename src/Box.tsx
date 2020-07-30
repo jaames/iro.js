@@ -71,7 +71,7 @@ export function IroBox(props: IroBoxProps) {
               ))}
             </linearGradient>
             <pattern id={ 'f' + uid } width="100%" height="100%">
-              <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#s' + uid )})`}></rect> }
+              <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#s' + uid )})`}></rect>
               <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#l' + uid )})`}></rect>
             </pattern>
           </defs>
