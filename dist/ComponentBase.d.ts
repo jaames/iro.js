@@ -10,6 +10,8 @@ export interface IroComponentProps extends IroColorPickerOptions {
     parent: IroColorPicker;
     index: number;
     color: IroColor;
+    colors: IroColor[];
+    activeIndex?: number;
     onInput: (type: IroInputType) => void;
 }
 interface Props {

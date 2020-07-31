@@ -23,7 +23,8 @@ interface IroSliderProps extends IroComponentProps {
 };
 
 export function IroSlider(props: IroSliderProps) {
-  const activeColor = props.color;
+  const activeIndex = props.activeIndex;
+  const activeColor = (activeIndex !== undefined && activeIndex < props.colors.length) ? props.colors[activeIndex] : props.color;
   const { width, height, radius } = getSliderDimensions(props);
   const handlePos = getSliderHandlePosition(props, activeColor);
   const gradient = getSliderGradient(props, activeColor);

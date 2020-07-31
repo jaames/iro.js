@@ -21,7 +21,8 @@ export function IroBox(props: IroBoxProps) {
   const { colors } = props;
 
   const colorPicker = props.parent;
-  const activeColor = props.color;
+  const activeIndex = props.activeIndex;
+  const activeColor = (activeIndex !== undefined && activeIndex < props.colors.length) ? props.colors[activeIndex] : props.color;
   const gradients = getBoxGradients(props, activeColor);
   const handlePositions = colors.map(color => getBoxHandlePosition(props, color));
 

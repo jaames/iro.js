@@ -17,7 +17,27 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   wheelAngle: 270,
   wheelDirection: 'anticlockwise',
   layoutDirection: 'vertical',
-  transparency: true,
+  // transparency: true,
+  layout: [
+    {
+      component: iro.ui.Wheel,
+      options: {
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value'
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value',
+        activeIndex: 2,
+      }
+    },
+  ]
   // layout: [
   //   {
   //     component: iro.ui.Wheel,

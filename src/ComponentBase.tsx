@@ -21,8 +21,10 @@ const SECONDARY_EVENTS = [EventType.MouseMove, EventType.TouchMove, EventType.Mo
 
 export interface IroComponentProps extends IroColorPickerOptions {
   parent: IroColorPicker;
-  index: number;
+  index: number; // component index
   color: IroColor;
+  colors: IroColor[];
+  activeIndex?: number; // active color index (for optional overriding!)
   onInput: (type: IroInputType) => void;
 }
 
