@@ -262,24 +262,50 @@ colorPicker.on('color:setActive', function(color) {
 colorPicker.setActiveColor(1);
 ```
 
-### 添加和删除颜色
+### Components Using the Active Color
 
-颜色可以随时从颜色选择器中添加和删除：
+By default, Silder and Box components will reflect whichever color is currently active. However this can be manually overriden with their `activeIndex` option:
 
 ```js
-//为颜色选择器添加颜色
-//这会将颜色添加到colors数组的末尾
+var colorPicker = new iro.ColorPicker("#demoWheel", {
+  layout: [
+    // default slider, will reflect whichever color is currently active
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value'
+      }
+    },
+    // this slider will always reflect the color at index 2
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value',
+        activeIndex: 2,
+      }
+    },
+  ]
+});
+```
+
+### Adding and Removing Colors
+
+Colors can be added and removed from the color picker at any time:
+
+```js
+// add a color to the color picker
+// this will add the color to the end of the colors array
 colorPicker.addColor('rgb(100%, 100%, 100%)');
 
-//您还可以为新颜色指定索引
-//在索引0添加颜色
+// you can also specify an index for the new color
+// add a color at index 0
 colorPicker.addColor('rgb(100%, 100%, 100%)', 0);
 
-//删除索引1处的颜色
+// remove the color at index 1
 colorPicker.removeColor(1);
 ```
 
-您也可以用 `setColors` 方法一次性替换所有颜色：
+You can also replace all of the colors at once with the `setColors` method:
 
 ```js
 colorPicker.setColors([
@@ -291,19 +317,23 @@ colorPicker.setColors([
 
 ## 自定义手柄
 
-默认情况下，颜色选择器使用圆形控制手柄，可以使用 `handleRadius` 选项进行调整。 然而，可以覆盖这个并使用你自己的SVG来创建自定义手柄。
+By default, the color picker uses circular control handles which can be adjusted with the `handleRadius` option. However, it's possible to override this and use your own SVGs to create custom handles.
 
-手柄的SVG需要放置在页面HTML内的某处，并且SVG内容也需要包装在具有唯一 `id` 的 `<g>` 标签内，该标签本身包装在 `<defs>` 标签中：
+Handle SVGs need to be placed somewhere within the page HTML, and the SVG content also needs to be wrapped inside a `<g>` tag with a unique `id`, which itself is wrapped in a `<defs>` tag:
 
 ```svg
 <svg>
   <defs>
-    <g id="handle"><!-- 手柄的svg内容开始 --><rect x="0" y="0" width="8" height="8"></rect><!-- 手柄的svg内容结束 --></g>
+    <g id="handle">
+      <!-- this is where the handle svg content starts -->
+      <rect x="0" y="0" width="8" height="8"></rect>
+      <!-- this is where the handle svg content ends -->
+    </g>
   </defs>
 </svg>
 ```
 
-然后，在创建颜色选择器时，确保` handleSvg `选项是与手柄SVG匹配的 **id选择器 **：
+Then when the color picker is created, make sure the `handleSvg` option is an **id selector** which matches the handle SVG:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -311,7 +341,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-自定义手柄SVG将被绘制为中心点在 `x 0, y 0` ，但是如果需要调整手柄的位置，` handleProps` 选项用于更改中心点：
+The custom handle SVG will be drawn as if the center point is at `x 0, y 0`, but if you need to adjust the position of the handle, the `handleProps` option can be used to change the center point:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -320,4 +350,4 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-建议在 Codepen 上查看交互式 [自定义手柄演示](https://codepen.io/rakujira/pen/vbeENp?editors=1010) 以更好地了解此功能的运作方式。
+It's recommended to check out the interactive [Custom Handle Demo](https://codepen.io/rakujira/pen/vbeENp?editors=1010) on Codepen to get a better understanding of how this feature works.
