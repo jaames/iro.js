@@ -1,5 +1,27 @@
 ### Changelog
 
+#### 5.1.9
+
+Adds `activeIndex` option for Slider and Box components, for manually specifying which color to use in multi-color setups
+
+```js
+var colorPicker = new iro.ColorPicker("#demoWheel", {
+  layout: [
+    // default slider, will reflect whichever color is currently active
+    {
+      component: iro.ui.Slider,
+    },
+    // this slider will always reflect the color at index 2
+    {
+      component: iro.ui.Slider,
+      options: {
+        activeIndex: 2,
+      }
+    },
+  ]
+});
+```
+
 #### 5.1.8
 
 Re-adds iro.version since it was accidentally omitted in 5.1.7
