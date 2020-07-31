@@ -264,6 +264,32 @@ It's also possible to programmatically set the active color, by passing the inde
 colorPicker.setActiveColor(1);
 ```
 
+### Components Using the Active Color
+
+By default, Silder and Box components will reflect whichever color is currently active. However this can be manually overriden with their `activeIndex` option:
+
+```js
+var colorPicker = new iro.ColorPicker("#demoWheel", {
+  layout: [
+    // default slider, will reflect whichever color is currently active
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value'
+      }
+    },
+    // this slider will always reflect the color at index 2
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'value',
+        activeIndex: 2,
+      }
+    },
+  ]
+});
+```
+
 ### Adding and Removing Colors
 
 Colors can be added and removed from the color picker at any time:
