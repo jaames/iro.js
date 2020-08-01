@@ -1,7 +1,11 @@
 ---
-layout: 首页
+layout: Home
 home: true
 ---
+
+::: slot introduction
+A modern, SVG-based color picker widget for vanilla JavaScript.
+:::
 
 ::: slot tutorial-iro-js
 ### 安装

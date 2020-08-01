@@ -43,7 +43,7 @@ export function ensureExt (path) {
 }
 
 export function isActive (route, path) {
-  const routeHash = route.hash
+  const routeHash = decodeURIComponent(route.hash)
   const linkHash = getHash(path)
   if (linkHash && routeHash !== linkHash) {
     return false
@@ -124,6 +124,8 @@ function resolvePath (relative, base, append) {
 export function resolveSidebarItems (page, regularPath, site, localePath) {
   const { pages, themeConfig } = site
 
+  console.log(pages);
+
   const localeConfig = localePath && themeConfig.locales
     ? themeConfig.locales[localePath] || themeConfig
     : themeConfig
@@ -133,11 +135,14 @@ export function resolveSidebarItems (page, regularPath, site, localePath) {
     return resolveHeaders(page)
   }
 
-  const sidebarConfig = localeConfig.sidebar || themeConfig.sidebar
+  const sidebarConfig = localeConfig.sidebar || themeConfig.sidebar;
   if (!sidebarConfig) {
     return []
   } else {
     const { base, config } = resolveMatchingConfig(regularPath, sidebarConfig)
+    if (config === 'auto') {
+      return resolveHeaders(page)
+    }
     return config
       ? config.map(item => resolveItem(item, pages, base))
       : []
@@ -222,11 +227,6 @@ function resolveItem (item, pages, base, groupDepth = 1) {
       title: item[1]
     })
   } else {
-    if (groupDepth > 3) {
-      console.error(
-        '[vuepress] detected a too deep nested sidebar group.'
-      )
-    }
     const children = item.children || []
     if (children.length === 0 && item.path) {
       return Object.assign(resolvePage(pages, item.path, base), {

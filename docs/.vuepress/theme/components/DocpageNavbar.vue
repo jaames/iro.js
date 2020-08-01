@@ -15,6 +15,8 @@ export default {
 <style lang="scss">
 @import '@styles/config.scss';
 
+$input-height: 44px;
+
 .Navbar {
   display: flex;
   align-items: center;
@@ -30,40 +32,53 @@ export default {
   width: 100%;
   display: block;
   margin: 0;
+  position: relative;
+  z-index: 0;
 
   input {
-    font-size: 1em;
+    font-size: 1rem;
     color: $text-invert;
     background-color: $background-invert-alt;
     border: 0;
-    border-radius: 6px;
     width: 100% !important;
-    height: 2.5em;
+    height: $input-height;
+    border-radius: $input-height / 2;
     background-position: 1em center;
     padding: 0;
     left: 0 !important;
-    padding-left: 2.5em;
+    padding-left: $input-height;
   }
 
   input.focused {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    background-color: $text-invert;
+    color: $text;
+    border-color: $text-invert;
+    // border-bottom-left-radius: 0;
+    // border-bottom-right-radius: 0;
   }
 
   .suggestions {
-    color: $text-invert;
-    background-color: $background-invert-alt;
-    border-radius: 0;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+    position: absolute;
+    z-index: -1;
+    top: 0;
     left: 0;
     right: 0;
-    top: 100%;
-    width: 100%;
+    color: $text-invert;
+    width: auto;
     border: 0;
+    background: lighten($background-invert-alt, 12);
+    margin: -8px;
+    padding: 8px;
+    border-radius: calc(#{$input-height / 2} + 8px);
+    padding-top: $input-height * 1.5;
 
     a {
       color: $text-invert;
+    }
+
+    .suggestion {
+      border-radius: $input-height / 2;
+      padding: 8px 20px;
     }
 
     .suggestion.focused {

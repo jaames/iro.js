@@ -12,7 +12,10 @@
       <sidebar-menu class="SidebarBody" :items="sidebarItems"/>
     </div>
     <main class="Content">
-      <docpage-navbar/>
+      <div class="Content__nav">
+        <docpage-navbar class="Content__search"/>
+        <LanguageSelect class="Content__language"/>
+      </div>
       <article-header/>
       <article class="Article">
         <Content class="Markdown Markdown--invert-alt" />
@@ -24,6 +27,7 @@
 
 <script>
 import SidebarMenu from '@components/Menu.vue';
+import LanguageSelect from '@components/LanguageSelect';
 import DocpageNavbar from '@components/DocpageNavbar.vue';
 import ArticleHeader from '@components/ArticleHeader';
 import ArticleFooter from '@components/ArticleFooter';
@@ -32,6 +36,7 @@ import { resolveSidebarItems } from '../util'
 export default {
   components: {
     SidebarMenu,
+    LanguageSelect,
     DocpageNavbar,
     ArticleHeader,
     ArticleFooter,
@@ -118,7 +123,7 @@ export default {
   display: flex;
   background: $background-invert-alt;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 12px;
 
   .SidebarHeader__sidebarToggle {
     margin-left: auto;
@@ -126,7 +131,7 @@ export default {
 
   @media (min-width: $breakpoint-medium) {
     height: $navbar-height;
-    padding: 0 24px;
+    padding: 0 12px;
     background: none;
 
     .SidebarHeader__sidebarToggle {
@@ -230,5 +235,15 @@ export default {
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+}
+
+.Content__nav {
+  display: flex;
+  align-items: center;
+}
+
+.Content__search {
+  flex: 1;
+  margin-right: 16px;
 }
 </style>

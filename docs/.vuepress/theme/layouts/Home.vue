@@ -3,6 +3,9 @@
     <a href="https://github.com/jaames/iro.js" class="GithubCorner" title="View on GitHub">
       <img svg-inline class="GithubCorner__svg" src="@icon/github-corner.svg" alt="GitHub Logo"/>
     </a>
+    <div class="HomeLanguageSelect">
+      <LanguageSelect/>
+    </div>
     <header class="Hero">
       <div class="Hero__head"></div>
       <div class="Hero__body">
@@ -15,11 +18,15 @@
           />
         </div>
         <div class="Hero__intro">
-          <h1 class="Hero__title">iro.js<sub>v5</sub></h1>
-          <h2 class="Hero__subtitle">A modern, SVG-based color picker widget for vanilla JavaScript.</h2>
+          <h1 class="Hero__title">
+            iro.js<sub>v5</sub>
+          </h1>
+          <h2 class="Hero__subtitle">
+            <Content slot-key="introduction" rgbString="beans"/>
+          </h2>
           <div class="ButtonGroup">
             <a href="https://github.com/jaames/iro.js" class="Button">GitHub<span class="Button__starcount">★ {{ githubStarCount }}</span></a>
-            <router-link class="Button" to="/guide.html">Get Started →</router-link>
+            <router-link class="Button" to="./guide.html">Get Started →</router-link>
           </div>
         </div>
       </div>
@@ -34,7 +41,7 @@
           <h3>Work with colors in hex, RGB, HSV and HSL formats (plus kelvin temperatures!) in one simple, frictionless API.</h3>
           <div class="ButtonGroup">
             <a class="Button" href="https://codepen.io/rakujira/pen/WZOeNq?editors=0010">Full Demo</a>
-            <router-link class="Button" to="/guide.html#working-with-colors">Learn More →</router-link>
+            <router-link class="Button" to="./guide.html#working-with-colors">Learn More →</router-link>
           </div>
         </template>
         <template v-slot:content>
@@ -64,7 +71,7 @@
           <h3>Add multiple colors to the same color picker for selecting color harmonies and themes.</h3>
           <div class="ButtonGroup">
             <a class="Button" href="https://codepen.io/rakujira/pen/bGddRyq?editors=0010">Full Demo</a>
-            <router-link class="Button" to="/advanced.html#multi-color-selections">Learn More →</router-link>
+            <router-link class="Button" to="./advanced.html#multi-color-selections">Learn More →</router-link>
           </div>
         </template>
         <template v-slot:content>
@@ -97,7 +104,7 @@
           <h3>Create the perfect color picker from a selection of pre-built UI components.</h3>
           <div class="ButtonGroup">
             <a class="Button" href="https://codepen.io/rakujira/pen/XWbgwYm?editors=1011">Full Demo</a>
-            <router-link class="Button" to="/advanced.html#ui-components">Learn More →</router-link>
+            <router-link class="Button" to="./advanced.html#ui-components">Learn More →</router-link>
           </div>
         </template>
         <template v-slot:content>
@@ -195,8 +202,9 @@
       <div class="Section__head">
         <h2 class="Section__title">Get Started</h2>
       </div>
-      <Tutorial :use-tabs="false">
+      <Tutorial :use-tabs="false" class="GetStartedTutorial">
         <template>
+          <LanguageSelect class="GetStartedTutorial__language"/>
           <Content slot-key="tutorial-iro-js"/>
         </template>
       </Tutorial>
@@ -254,6 +262,7 @@
 <script>
 import axios from 'axios';
 import FeatureHighlight from '@components/HomepageFeatureHighlight';
+import LanguageSelect from '@components/LanguageSelect';
 // import ColorPicker from '@components/ColorPicker';
 // import GithubCard from "./GithubCard";
 import Tutorial from '@components/HomepageGuide';
@@ -261,6 +270,7 @@ import Tutorial from '@components/HomepageGuide';
 export default {
   components: {
     FeatureHighlight,
+    LanguageSelect,
     // ColorPicker,
     // GithubCard,
     Tutorial
@@ -270,7 +280,7 @@ export default {
     hexString: '',
     rgbString: '',
     hsv: {h: '', s: '', v: ''},
-    githubStarCount: '570'
+    githubStarCount: '650'
   }),
   filters: {
     formatInt: function (value) {
@@ -381,6 +391,12 @@ export default {
   }
 }
 
+.HomeLanguageSelect {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}
+
 .Title {
   text-align: center;
   display: inline-block;
@@ -423,7 +439,7 @@ export default {
 .Hero__title {
   font-weight: 700;
   // font-size: 52px;
-  margin-bottom: 22px;
+  margin-bottom: .4em;
   line-height: 1;
 
   sub {
@@ -449,7 +465,7 @@ export default {
 
 @media (min-width: $breakpoint-medium) {
   .Hero__body {
-    align-items: flex-end;
+    align-items: center;
     flex-direction: row;
   }
 
@@ -462,6 +478,7 @@ export default {
   .Hero__intro {
     flex: 1;
     text-align: left;
+    margin-top: 3rem;
     
     .ButtonGroup {
       justify-content: flex-start;
@@ -550,14 +567,15 @@ export default {
 
 .Button {
   color: $text-invert;
-  height: 48px;
+  height: 54px;
   border: 2px solid rgb(192, 196, 216);
+  // background: rgb(89, 89, 99);
   border-radius: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 28px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   transition: color .2s, border-color .2s, background-color .2s;
   cursor: pointer;
 
@@ -587,6 +605,16 @@ export default {
   .Button {
     margin: 9px;
   }
+}
+
+.GetStartedTutorial {
+  position: relative;
+}
+
+.GetStartedTutorial__language {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .Footer {

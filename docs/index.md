@@ -3,6 +3,40 @@ layout: Home
 home: true
 ---
 
+::: slot introduction
+A modern, SVG-based color picker widget for vanilla JavaScript.
+:::
+
+::: slot feature-colors
+Work with colors in hex, RGB, HSV and HSL formats (plus kelvin temperatures!) in one simple, frictionless API.
+:::
+
+::: slot feature-colors-example 
+```js
+// Get the color as an RGB string 
+var rgb = colorPicker.color.rgbString; 
+// rgb = "{{ rgbString }}" 
+
+// Get the color as a HSV object 
+var hsv = colorPicker.color.hsv; 
+// hsv = {{ rgbString }}
+
+// Set the color from a hex string 
+colorPicker.color.hexString = "#fff";
+
+// Set the color from a temperature 
+colorPicker.color.kelvin = 6000;
+```
+:::
+
+::: slot feature-multicolor
+Add multiple colors to the same color picker for selecting color harmonies and themes.
+:::
+
+::: slot feature-components
+Create the perfect color picker from a selection of pre-built UI components.
+:::
+
 ::: slot tutorial-iro-js
 ### Installation
 
@@ -107,3 +141,4 @@ colorPicker.on('color:change', function(color) {
 ```
 
 For a full overview of the available events can be found in the [events documentation](/guide.html#color-picker-events).
+:::

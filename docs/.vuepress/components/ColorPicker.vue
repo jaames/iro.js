@@ -38,7 +38,7 @@ export default {
     },
     display: {
       type: String,
-      default: 'inline-block'
+      default: 'block'
     },
     makeGlobal: {
       type: Boolean,
@@ -86,6 +86,6 @@ export default {
 
 <style scoped>
 .ColorPicker {
-  display: inline-block;
+  /* display: inline-block; */
 }
 </style>
