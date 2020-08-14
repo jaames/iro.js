@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.1.10
+
+Fixes issue with kelvin -> RGB conversion that resulted in the red channel overflowing the 0-255 range in certain cases, see #124
+
 #### 5.1.9
 
 Adds `activeIndex` option for Slider and Box components, for manually specifying which color to use in multi-color setups
