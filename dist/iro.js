@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.1.10
+ * iro.js v5.2.0
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -102,7 +102,7 @@
     this.initialValue = Object.assign({}, this.$); // copy initial value
   };
 
-  var prototypeAccessors = { hsv: { configurable: true },hsva: { configurable: true },hue: { configurable: true },saturation: { configurable: true },value: { configurable: true },alpha: { configurable: true },kelvin: { configurable: true },rgb: { configurable: true },rgba: { configurable: true },hsl: { configurable: true },hsla: { configurable: true },rgbString: { configurable: true },rgbaString: { configurable: true },hexString: { configurable: true },hex8String: { configurable: true },hslString: { configurable: true },hslaString: { configurable: true } };
+  var prototypeAccessors = { hsv: { configurable: true },hsva: { configurable: true },hue: { configurable: true },saturation: { configurable: true },value: { configurable: true },alpha: { configurable: true },kelvin: { configurable: true },red: { configurable: true },green: { configurable: true },blue: { configurable: true },rgb: { configurable: true },rgba: { configurable: true },hsl: { configurable: true },hsla: { configurable: true },rgbString: { configurable: true },rgbaString: { configurable: true },hexString: { configurable: true },hex8String: { configurable: true },hslString: { configurable: true },hslaString: { configurable: true } };
   /**
     * @desc Set the Color from any valid value
     * @param value - new color value
@@ -419,6 +419,36 @@
     this.rgb = IroColor.kelvinToRgb(value);
   };
 
+  prototypeAccessors.red.get = function () {
+    var rgb = this.rgb;
+    return rgb.r;
+  };
+
+  prototypeAccessors.red.set = function (value) {
+    this.rgb = Object.assign({}, this.rgb,
+      {r: value});
+  };
+
+  prototypeAccessors.green.get = function () {
+    var rgb = this.rgb;
+    return rgb.g;
+  };
+
+  prototypeAccessors.green.set = function (value) {
+    this.rgb = Object.assign({}, this.rgb,
+      {g: value});
+  };
+
+  prototypeAccessors.blue.get = function () {
+    var rgb = this.rgb;
+    return rgb.b;
+  };
+
+  prototypeAccessors.blue.set = function (value) {
+    this.rgb = Object.assign({}, this.rgb,
+      {b: value});
+  };
+
   prototypeAccessors.rgb.get = function () {
     var ref = IroColor.hsvToRgb(this.$);
       var r = ref.r;
@@ -666,8 +696,18 @@
 
   function getCurrentSliderValue(props, color) {
     var hsva = color.hsva;
+    var rgb = color.rgb;
 
     switch (props.sliderType) {
+      case 'red':
+        return rgb.r / 2.55;
+
+      case 'green':
+        return rgb.g / 2.55;
+
+      case 'blue':
+        return rgb.b / 2.55;
+
       case 'alpha':
         return hsva.a * 100;
 
@@ -726,6 +766,11 @@
       case 'hue':
         return percent * 3.6;
 
+      case 'red':
+      case 'blue':
+      case 'green':
+        return percent * 2.55;
+
       default:
         return percent;
     }
@@ -764,10 +809,19 @@
 
   function getSliderGradient(props, color) {
     var hsv = color.hsv;
+    var rgb = color.rgb;
 
     switch (props.sliderType) {
+      case 'red':
+        return [[0, ("rgb(" + (0) + "," + (rgb.g) + "," + (rgb.b) + ")")], [100, ("rgb(" + (255) + "," + (rgb.g) + "," + (rgb.b) + ")")]];
+
+      case 'green':
+        return [[0, ("rgb(" + (rgb.r) + "," + (0) + "," + (rgb.b) + ")")], [100, ("rgb(" + (rgb.r) + "," + (255) + "," + (rgb.b) + ")")]];
+
+      case 'blue':
+        return [[0, ("rgb(" + (rgb.r) + "," + (rgb.g) + "," + (0) + ")")], [100, ("rgb(" + (rgb.r) + "," + (rgb.g) + "," + (255) + ")")]];
+
       case 'alpha':
-        var rgb = color.rgb;
         return [[0, ("rgba(" + (rgb.r) + "," + (rgb.g) + "," + (rgb.b) + ",0)")], [100, ("rgb(" + (rgb.r) + "," + (rgb.g) + "," + (rgb.b) + ")")]];
 
       case 'kelvin':
@@ -1605,7 +1659,7 @@
 
   var iro;
   (function (iro) {
-      iro.version = "5.1.10"; // replaced by @rollup/plugin-replace; see rollup.config.js
+      iro.version = "5.2.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
       iro.Color = IroColor;
       iro.ColorPicker = IroColorPickerWidget;
       var ui;

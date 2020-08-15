@@ -61,7 +61,8 @@ export default {
         padding: this.padding,
         display: this.display,
         layout: Array.isArray(this.layout) ? this.layout.map(element => {
-          if (element.component) element.component = iro.ui[element.component];
+          if (element.component)
+            element.component = iro.ui[element.component];
           return element;
         }): null,
         layoutDirection: this.layoutDirection,

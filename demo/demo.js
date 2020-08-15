@@ -27,16 +27,34 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
     {
       component: iro.ui.Slider,
       options: {
-        sliderType: 'value'
+        sliderType: 'red'
       }
     },
     {
       component: iro.ui.Slider,
       options: {
-        sliderType: 'value',
-        activeIndex: 2,
+        sliderType: 'green'
       }
     },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'blue'
+      }
+    },
+    // {
+    //   component: iro.ui.Slider,
+    //   options: {
+    //     sliderType: 'value'
+    //   }
+    // },
+    // {
+    //   component: iro.ui.Slider,
+    //   options: {
+    //     sliderType: 'value',
+    //     activeIndex: 2,
+    //   }
+    // },
   ]
   // layout: [
   //   {

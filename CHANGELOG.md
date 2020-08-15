@@ -1,8 +1,12 @@
 ### Changelog
 
+#### 5.2.0
+
+Added slider types for red, green and blue color channels! See https://github.com/jaames/iro.js/issues/78
+
 #### 5.1.10
 
-Fixes issue with kelvin -> RGB conversion that resulted in the red channel overflowing the 0-255 range in certain cases, see #124
+Fixes issue with kelvin -> RGB conversion that resulted in the red channel overflowing the 0-255 range in certain cases, see https://github.com/jaames/iro.js/issues/124
 
 #### 5.1.9
 
