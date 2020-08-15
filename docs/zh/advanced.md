@@ -100,7 +100,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 #### Sliders 滑块
 
-<ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" :layout="[
+<ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" layoutDirection="horizontal" :layout="[
   {
     component: 'Slider',
     options: {
@@ -122,6 +122,24 @@ var colorPicker = new iro.ColorPicker('#picker', {
   {
     component: 'Slider',
     options: {
+      sliderType: 'red',
+    }
+  },
+  {
+    component: 'Slider',
+    options: {
+      sliderType: 'green',
+    }
+  },
+  {
+    component: 'Slider',
+    options: {
+      sliderType: 'blue',
+    }
+  },
+  {
+    component: 'Slider',
+    options: {
       sliderType: 'alpha',
     }
   },
@@ -130,9 +148,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
     options: {
       sliderType: 'kelvin',
     }
-  }, ]"/>
-
-<ColorPicker :width="230" :handleRadius="8" :sliderMargin="12" :layout="[
+  },
   {
     component: 'Slider',
     options: {
@@ -140,12 +156,16 @@ var colorPicker = new iro.ColorPicker('#picker', {
       sliderShape: 'circle',
     }
   }, ]"/>
+<!-- 
+<ColorPicker :width="230" :handleRadius="8" :sliderMargin="12" :layout="[
+  
+]"/> -->
 
-滑块允许用户调整特定的颜色通道。 当前有多种类型的滑块可用，包括 色调 **hue**，饱和度 **saturation**，值 **value**，透明通道 **alpha** 和 冷暖值（开尔文温度） **kelvin temperature**.
+Sliders allow the user to adjust a specific color channel. There are multiple slider types available, covering **hue**, **saturation**, **value**, **red**, **green**, **blue**, **alpha** and **kelvin temperature**.
 
 ##### `sliderType 滑块类型`
 
-可以使用 `sliderType` 选项指定滑块类型：
+The type of slider can be specified with the `sliderType` option:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -153,14 +173,15 @@ var colorPicker = new iro.ColorPicker('#picker', {
     { 
       component: iro.ui.Slider,
       options: {
-        sliderType: 'hue' //也可以是 'saturation', 'value', 'alpha' 或 'kelvin'
+        // can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'
+        sliderType: 'hue'
       }
     },
   ]
 });
 ```
 
-如果 `sliderType` 设置为 `kelvin`, 色温范围可以用这些选项设置：
+If `sliderType` is set to `'kelvin'`, the temperature range can be set with these options:
 
 | 选项               | 用途                        | 默认值     |
 |:---------------- |:------------------------- |:------- |
@@ -169,7 +190,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 ##### `sliderShape 滑块形状`
 
-`sliderShape` 选项也可用于使滑块变为圆形：
+The `sliderShape` option can also be used to make the slider circular:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -186,11 +207,11 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 ## 多颜色选择器
 
-iro.js支持随时在同一颜色选择器上具有多种可选颜色，这对于希望用户能够处理颜色主题的情况非常有用！
+iro.js supports having more than one selectable colors on the same color picker at any time, which can be useful for situations where you want the user to be able to work with color themes or harmonies!
 
 ### 设置
 
-`colors` [配置选项](/guide.html#颜色选择器选项) 可以用来为颜色选择器提供一份颜色列表。 任何 [支持的颜色格式](/color_api.html#支持的颜色格式) 将在这里工作：
+The `colors` [config option](/guide.html#color-picker-options) can be used to provide an intial list of colors to the color picker. Any [supported color format](/color_api.html#supported-color-formats) will work here:
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -204,9 +225,9 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 ### 使用多个颜色
 
-颜色对象数组可用于** get **和** set **，每种颜色的值可以在颜色选择器的` colors `属性中找到。 此数组将在 [设置](#设置) 期间以相同的颜色传递给颜色选择器。
+An array of color objects which can be used to **get** and **set** the value of each color can be found on the color picker's `colors` property. This array will be in the same order as the colors passed to the color picker during [setup](#setup).
 
-值得查阅[使用颜色指南](/guide.html#使用颜色)，以了解有关这些单个颜色对象如何工作的更多信息，但这里有一个简要概述：
+It's worth checking out the [working with colors guide](/guide.html#working-with-colors) to learn more about how these individual color objects work, but here's a quick overview:
 
 ```js
 //将第一种颜色设置为新值
@@ -223,7 +244,7 @@ colorPicker.colors.forEach(function (color) {
 
 ### 事件
 
-在处理[事件](/guide.html#颜色选择事件)时，请务必记住所有颜色更改事件将针对每种颜色触发 (例如` color:change ` ，` input:change `，` input:start `等)。 要找到触发事件的颜色，您可以使用颜色的 `index` 属性：
+When working with [events](/guide.html#color-picker-events), it's important to remember that all of the color-change events (like `color:change`, `input:change`, `input:start`, etc) will fire for every color. To find which color fired the event, you can use the color's `index` property:
 
 ```js
 colorPicker.on('color:change', function(color) {
@@ -238,7 +259,7 @@ colorPicker.on('color:change', function(color) {
 
 ### 活动颜色
 
-“活动”颜色是指最近由用户选择的颜色。 当在同一颜色选择器上使用多个颜色时，颜色选择器的 `color` 属性将永远反映当前活动的颜色：
+The 'active' color refers to the color that was most recently selected by the user. When working with multiple colors on the same color picker, the colorPicker's `color` property will always reflect the currently active color:
 
 ```js
 //记录活动颜色的十六进制值
@@ -248,7 +269,7 @@ console.log(colorPicker.color.hexString);
 var activeColorIndex = colorPicker.color.index;
 ```
 
-当活动颜色改变时， `color:setActive` 事件将会触发：
+Whenever the active color changes, the `color:setActive` event will fire:
 
 ```js
 colorPicker.on('color:setActive', function(color) {
@@ -256,7 +277,7 @@ colorPicker.on('color:setActive', function(color) {
 });
 ```
 
-也可以通过将所需颜色的索引传递到 `setActiveColor` 方法来设置活动颜色：
+It's also possible to programmatically set the active color, by passing the index of the desired color to the `setActiveColor` method:
 
 ```js
 colorPicker.setActiveColor(1);
