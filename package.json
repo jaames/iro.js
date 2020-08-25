@@ -1,5 +1,5 @@
 {
-  "name": "@davidlan/iro",
+  "name": "@jaames/iro",
   "version": "5.2.0",
   "description": "A moden, SVG-based color picker widget for JavaScript",
   "module": "dist/iro.es.js",
@@ -42,7 +42,7 @@
     "build": "npm run dev && npm run build:es && npm run build:min && npm run docs:copyscript",
     "build:min": "rollup -c --environment BUILD:production",
     "build:es": "rollup -c --environment ES_MODULE,BUILD:production",
-    "docs:copyscript": "cp dist/iro.es.js docs/.vuepress/theme/js/iro.es.js",
+    "docs:copyscript": "\\cp dist/iro.es.js docs/.vuepress/theme/js/iro.es.js",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   },
