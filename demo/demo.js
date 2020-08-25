@@ -7,7 +7,9 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   // handleUrl: "#test",
   handleOrigin: {y: 0, x: 0},
   colors: [
-    '#f00'
+    '#f00',
+    '#0f0',
+    '#00f',
   ],
   // borderWidth: 2,
   padding: 8,
@@ -21,7 +23,25 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
       component: iro.ui.Wheel,
       options: {
       }
-    }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'red'
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'green'
+      }
+    },
+    {
+      component: iro.ui.Slider,
+      options: {
+        sliderType: 'blue'
+      }
+    },
     // {
     //   component: iro.ui.Slider,
     //   options: {
@@ -84,14 +104,14 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
 //   console.log('mount')
 // });
 
-// colorPicker.on('color:change', function() {
-//   console.log('color:change');
-// })
+colorPicker.on('color:change', function() {
+  console.log('color:change');
+})
 
-// colorPicker.on('input:change', function(color) {
-//   console.log(color.hexString)
-//   console.log('input:change');
-// })
+colorPicker.on('input:change', function(color) {
+  console.log(color.hexString)
+  console.log('input:change');
+})
 
 colorPicker.on('input:start', function(color) {
   console.log(color.hexString)
@@ -103,10 +123,10 @@ colorPicker.on('input:move', function(color) {
   console.log('input:move');
 })
 
-// colorPicker.on('input:end', function(color) {
-//   console.log(color.hexString)
-//   console.log('input:end');
-// })
+colorPicker.on('input:end', function(color) {
+  console.log(color.hexString)
+  console.log('input:end');
+})
 
 // colorPicker.on(['color:init', 'color:change'], function() {
 //   console.log('color:change or color:init');

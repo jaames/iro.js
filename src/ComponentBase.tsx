@@ -51,8 +51,7 @@ export class IroComponentBase extends Component<Props, State> {
     const eventHandler = this.handleEvent.bind(this);
 
     let rootProps = {
-      onMouseDown: eventHandler,
-      // onTouchStart: eventHandler
+      onMouseDown: eventHandler
     };
     if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
       rootProps['onTouchStart'] = eventHandler
@@ -85,17 +84,6 @@ export class IroComponentBase extends Component<Props, State> {
   // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   handleEvent(e: MouseEvent & TouchEvent) {
-    console.log('handleEvent', e)
-    // debugger
-    // document.querySelector('body').addEventListener("touchstart", function(e) {
-    //   // 判断默认行为是否可以被禁用
-    //   if (e.cancelable) {
-    //       // 判断默认行为是否已经被禁用
-    //       if (!e.defaultPrevented) {
-    //           e.preventDefault();
-    //       }
-    //   }
-    // })
     const inputHandler = this.props.onInput;
     // Get the screen position of the component
     const bounds = this.base.getBoundingClientRect();
