@@ -1129,9 +1129,14 @@ var IroComponentBase = /*@__PURE__*/(function (Component) {
         var eventHandler = this.handleEvent.bind(this);
         var rootProps = {
             onMouseDown: eventHandler,
-            // onTouchStart: eventHandler,
-            ontouchstart: eventHandler
         };
+        if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+            rootProps['onTouchStart'] = eventHandler;
+        }
+        else {
+            // solve the problem that user touching actions doest not work on touching screen PC
+            rootProps['ontouchstart'] = eventHandler;
+        }
         var isHorizontal = props.layoutDirection === 'horizontal';
         var margin = props.margin === null ? props.sliderMargin : props.margin;
         var rootStyles = {
