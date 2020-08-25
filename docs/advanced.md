@@ -100,7 +100,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 #### Sliders
 
-<ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" :layout="[
+<ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" layoutDirection="horizontal" :layout="[
   {
     component: 'Slider',
     options: {
@@ -122,6 +122,24 @@ var colorPicker = new iro.ColorPicker('#picker', {
   {
     component: 'Slider',
     options: {
+      sliderType: 'red',
+    }
+  },
+  {
+    component: 'Slider',
+    options: {
+      sliderType: 'green',
+    }
+  },
+  {
+    component: 'Slider',
+    options: {
+      sliderType: 'blue',
+    }
+  },
+  {
+    component: 'Slider',
+    options: {
       sliderType: 'alpha',
     }
   },
@@ -131,9 +149,6 @@ var colorPicker = new iro.ColorPicker('#picker', {
       sliderType: 'kelvin',
     }
   },
-]"/>
-
-<ColorPicker :width="230" :handleRadius="8" :sliderMargin="12" :layout="[
   {
     component: 'Slider',
     options: {
@@ -142,8 +157,12 @@ var colorPicker = new iro.ColorPicker('#picker', {
     }
   },
 ]"/>
+<!-- 
+<ColorPicker :width="230" :handleRadius="8" :sliderMargin="12" :layout="[
+  
+]"/> -->
 
-Sliders allow the user to adjust a specific color channel. Currently there are multiple types of sliders available, covering **hue**, **saturation**, **value**, **alpha** and **kelvin temperature**.
+Sliders allow the user to adjust a specific color channel. There are multiple slider types available, covering **hue**, **saturation**, **value**, **red**, **green**, **blue**, **alpha** and **kelvin temperature**.
 
 ##### `sliderType`
 
@@ -155,7 +174,8 @@ var colorPicker = new iro.ColorPicker('#picker', {
     { 
       component: iro.ui.Slider,
       options: {
-        sliderType: 'hue' // can also be 'saturation', 'value', 'alpha' or 'kelvin'
+        // can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'
+        sliderType: 'hue'
       }
     },
   ]
