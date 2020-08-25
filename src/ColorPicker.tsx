@@ -270,7 +270,6 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param type - event type
    */
   private emitInputEvent(type: IroInputType) {
-    console.log('emitInputEvent', type, event)
     if (type === IroInputType.Start) {
       this.emit('input:start', this.color);
     }

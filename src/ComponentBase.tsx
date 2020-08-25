@@ -96,7 +96,6 @@ export class IroComponentBase extends Component<Props, State> {
     switch (e.type) {
       case EventType.MouseDown:
       case EventType.TouchStart:
-        console.log('EventType.TouchStart')
         SECONDARY_EVENTS.forEach(event => {
           document.addEventListener(event, this, { passive: false });
         });

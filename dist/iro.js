@@ -1173,7 +1173,6 @@
           switch (e.type) {
               case "mousedown" /* MouseDown */:
               case "touchstart" /* TouchStart */:
-                  console.log('EventType.TouchStart');
                   SECONDARY_EVENTS.forEach(function (event) {
                       document.addEventListener(event, this$1, { passive: false });
                   });
@@ -1321,7 +1320,6 @@
       var hsv = activeColor.hsv;
       var handlePositions = colors.map(function (color) { return getWheelHandlePosition(props, color); });
       function handleInput(x, y, inputType) {
-          console.log('handleInput:', inputType);
           if (inputType === 0 /* Start */) {
               // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
               var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
@@ -1610,7 +1608,6 @@
        * @param type - event type
        */
       IroColorPicker.prototype.emitInputEvent = function emitInputEvent (type) {
-          console.log('emitInputEvent', type, event);
           if (type === 0 /* Start */) {
               this.emit('input:start', this.color);
           }
