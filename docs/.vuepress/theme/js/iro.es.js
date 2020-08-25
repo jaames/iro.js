@@ -1126,6 +1126,7 @@ var IroComponentBase = /*@__PURE__*/(function (Component) {
     IroComponentBase.prototype = Object.create( Component && Component.prototype );
     IroComponentBase.prototype.constructor = IroComponentBase;
     IroComponentBase.prototype.render = function render (props) {
+      console.log('zhe li')
         var eventHandler = this.handleEvent.bind(this);
         var rootProps = {
             onMouseDown: eventHandler,

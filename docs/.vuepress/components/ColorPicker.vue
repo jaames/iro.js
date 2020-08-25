@@ -73,6 +73,7 @@ export default {
       });
 
       this.colorPicker.on(['color:init', 'input:change'], (color) => {
+        console.log('input:change, colorpicker')
         this.$emit('onColorChange', color);
       });
 

@@ -62,7 +62,7 @@ export function IroSlider(props: IroSliderProps) {
             )}
             { isAlpha && (
               <pattern id={ 'f' + uid } width="100%" height="100%">
-                <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#b' + uid )})`}></rect> }
+                <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#b' + uid )})`}></rect>
                 <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#g' + uid )})`}></rect>
               </pattern>
             )}

@@ -48,13 +48,18 @@ export class IroComponentBase extends Component<Props, State> {
   }
 
   render(props) {
-
     const eventHandler = this.handleEvent.bind(this);
 
-    const rootProps = {
+    let rootProps = {
       onMouseDown: eventHandler,
-      onTouchStart: eventHandler
+      // onTouchStart: eventHandler
     };
+    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+      rootProps['onTouchStart'] = eventHandler
+    } else {
+      // solve the problem that user touching actions doest not work on touching screen PC
+      rootProps['ontouchstart'] = eventHandler
+    }
 
     const isHorizontal = props.layoutDirection === 'horizontal';
     const margin = props.margin === null ? props.sliderMargin : props.margin;
@@ -80,6 +85,17 @@ export class IroComponentBase extends Component<Props, State> {
   // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
   // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
   handleEvent(e: MouseEvent & TouchEvent) {
+    console.log('handleEvent', e)
+    // debugger
+    // document.querySelector('body').addEventListener("touchstart", function(e) {
+    //   // 判断默认行为是否可以被禁用
+    //   if (e.cancelable) {
+    //       // 判断默认行为是否已经被禁用
+    //       if (!e.defaultPrevented) {
+    //           e.preventDefault();
+    //       }
+    //   }
+    // })
     const inputHandler = this.props.onInput;
     // Get the screen position of the component
     const bounds = this.base.getBoundingClientRect();
@@ -90,10 +106,10 @@ export class IroComponentBase extends Component<Props, State> {
     const point = e.touches ? e.changedTouches[0] : e;
     const x = point.clientX - bounds.left;
     const y = point.clientY - bounds.top;
-
     switch (e.type) {
       case EventType.MouseDown:
       case EventType.TouchStart:
+        console.log('EventType.TouchStart')
         SECONDARY_EVENTS.forEach(event => {
           document.addEventListener(event, this, { passive: false });
         });

@@ -30,6 +30,7 @@ export function IroWheel(props: IroWheelProps) {
   const handlePositions = colors.map(color => getWheelHandlePosition(props, color));
 
   function handleInput(x: number, y: number, inputType: IroInputType) {
+    console.log('handleInput:', inputType)
     if (inputType === IroInputType.Start) {
       // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
       const activeHandle = getHandleAtPoint(props, x, y, handlePositions);
