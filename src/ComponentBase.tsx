@@ -56,7 +56,6 @@ export class IroComponentBase extends Component<Props, State> {
     if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
       rootProps['onTouchStart'] = eventHandler
     } else {
-      // solve the problem that user touching actions doest not work on touching screen PC
       rootProps['ontouchstart'] = eventHandler
     }
 

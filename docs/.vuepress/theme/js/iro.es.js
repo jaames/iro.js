@@ -1128,13 +1128,12 @@ var IroComponentBase = /*@__PURE__*/(function (Component) {
     IroComponentBase.prototype.render = function render (props) {
         var eventHandler = this.handleEvent.bind(this);
         var rootProps = {
-            onMouseDown: eventHandler,
+            onMouseDown: eventHandler
         };
         if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
             rootProps['onTouchStart'] = eventHandler;
         }
         else {
-            // solve the problem that user touching actions doest not work on touching screen PC
             rootProps['ontouchstart'] = eventHandler;
         }
         var isHorizontal = props.layoutDirection === 'horizontal';
@@ -1155,17 +1154,6 @@ var IroComponentBase = /*@__PURE__*/(function (Component) {
     IroComponentBase.prototype.handleEvent = function handleEvent (e) {
         var this$1 = this;
 
-        console.log('handleEvent', e);
-        // debugger
-        // document.querySelector('body').addEventListener("touchstart", function(e) {
-        //   // 判断默认行为是否可以被禁用
-        //   if (e.cancelable) {
-        //       // 判断默认行为是否已经被禁用
-        //       if (!e.defaultPrevented) {
-        //           e.preventDefault();
-        //       }
-        //   }
-        // })
         var inputHandler = this.props.onInput;
         // Get the screen position of the component
         var bounds = this.base.getBoundingClientRect();
