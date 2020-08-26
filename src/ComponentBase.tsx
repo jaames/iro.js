@@ -48,12 +48,14 @@ export class IroComponentBase extends Component<Props, State> {
   }
 
   render(props) {
-
     const eventHandler = this.handleEvent.bind(this);
 
-    const rootProps = {
+    let rootProps = {
       onMouseDown: eventHandler,
-      onTouchStart: eventHandler
+      // https://github.com/jaames/iro.js/issues/126
+      // https://github.com/preactjs/preact/issues/2113#issuecomment-553408767
+      ontouchstart: eventHandler,
+      // onTouchStart: eventHandler,
     };
 
     const isHorizontal = props.layoutDirection === 'horizontal';
@@ -90,7 +92,6 @@ export class IroComponentBase extends Component<Props, State> {
     const point = e.touches ? e.changedTouches[0] : e;
     const x = point.clientX - bounds.left;
     const y = point.clientY - bounds.top;
-
     switch (e.type) {
       case EventType.MouseDown:
       case EventType.TouchStart:

@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.2.1
+
+Fixed an issue where the touchstart event wasn't firing on certain touchscreen desktop PCs, see https://github.com/jaames/iro.js/issues/126
+
 #### 5.2.0
 
 Added slider types for red, green and blue color channels! See https://github.com/jaames/iro.js/issues/78

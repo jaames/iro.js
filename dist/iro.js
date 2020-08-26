@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.2.0
+ * iro.js v5.2.1
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1135,7 +1135,9 @@
           var eventHandler = this.handleEvent.bind(this);
           var rootProps = {
               onMouseDown: eventHandler,
-              onTouchStart: eventHandler
+              // https://github.com/jaames/iro.js/issues/126
+              // https://github.com/preactjs/preact/issues/2113#issuecomment-553408767
+              ontouchstart: eventHandler,
           };
           var isHorizontal = props.layoutDirection === 'horizontal';
           var margin = props.margin === null ? props.sliderMargin : props.margin;
@@ -1239,7 +1241,6 @@
                   h("rect", { x: "4", y: "4", width: "4", height: "4", fill: "#ccc" }))),
               isAlpha && (h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
                   h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#b' + uid)) + ")") }),
-                  " }",
                   h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#g' + uid)) + ")") })))),
           h("rect", { className: "IroSliderBg", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl((isAlpha ? '#f' : '#g') + uid)) + ")") }),
           h(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
@@ -1659,7 +1660,7 @@
 
   var iro;
   (function (iro) {
-      iro.version = "5.2.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
+      iro.version = "5.2.1"; // replaced by @rollup/plugin-replace; see rollup.config.js
       iro.Color = IroColor;
       iro.ColorPicker = IroColorPickerWidget;
       var ui;
