@@ -51,13 +51,12 @@ export class IroComponentBase extends Component<Props, State> {
     const eventHandler = this.handleEvent.bind(this);
 
     let rootProps = {
-      onMouseDown: eventHandler
+      onMouseDown: eventHandler,
+      // https://github.com/jaames/iro.js/issues/126
+      // https://github.com/preactjs/preact/issues/2113#issuecomment-553408767
+      ontouchstart: eventHandler,
+      // onTouchStart: eventHandler,
     };
-    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
-      rootProps['onTouchStart'] = eventHandler
-    } else {
-      rootProps['ontouchstart'] = eventHandler
-    }
 
     const isHorizontal = props.layoutDirection === 'horizontal';
     const margin = props.margin === null ? props.sliderMargin : props.margin;
