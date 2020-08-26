@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.2.1
+ * iro.js v5.2.2
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1660,7 +1660,7 @@
 
   var iro;
   (function (iro) {
-      iro.version = "5.2.1"; // replaced by @rollup/plugin-replace; see rollup.config.js
+      iro.version = "5.2.2"; // replaced by @rollup/plugin-replace; see rollup.config.js
       iro.Color = IroColor;
       iro.ColorPicker = IroColorPickerWidget;
       var ui;
