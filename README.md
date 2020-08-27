@@ -1,4 +1,4 @@
-> :warning: This branch is for the old v3 version of iro.js, which will only be receiving major bugfixes from now on. If you are still using this version, please consider upgrading to the latest version (v4) using the [migration guide](https://iro.js.org/migrating.html). There are very few breaking changes and the new version is a drastic improvement!
+> :warning: This branch is for the old v3 version of iro.js, which will only be receiving major bugfixes from now on. If you are still using this version, please consider upgrading to the latest version (v5) using the [migration guide](https://iro.js.org/migrating.html). There are very few breaking changes and the new version is a drastic improvement!
 
 ### Documentation
 
