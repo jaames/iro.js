@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.2.2
+ * iro.js v5.2.3
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1026,7 +1026,7 @@ function getBoxGradients(props, color) {
 // Keep track of html <base> elements for resolveSvgUrl
 // getElementsByTagName returns a live HTMLCollection, which stays in sync with the DOM tree
 // So it only needs to be called once
-var BASE_ELEMENTS = document.getElementsByTagName('base');
+var BASE_ELEMENTS;
 /**
  * @desc Resolve an SVG reference URL
  * This is required to work around how Safari and iOS webviews handle gradient URLS under certain conditions
@@ -1041,7 +1041,8 @@ var BASE_ELEMENTS = document.getElementsByTagName('base');
  */
 
 function resolveSvgUrl(url) {
-  // Sniff useragent string to check if the user is running Safari
+  if (!BASE_ELEMENTS) { BASE_ELEMENTS = document.getElementsByTagName('base'); } // Sniff useragent string to check if the user is running Safari
+
   var ua = window.navigator.userAgent;
   var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   var isIos = /iPhone|iPod|iPad/i.test(ua);
@@ -1654,7 +1655,7 @@ var IroColorPickerWidget = createWidget(IroColorPicker);
 
 var iro;
 (function (iro) {
-    iro.version = "5.2.2"; // replaced by @rollup/plugin-replace; see rollup.config.js
+    iro.version = "5.2.3"; // replaced by @rollup/plugin-replace; see rollup.config.js
     iro.Color = IroColor;
     iro.ColorPicker = IroColorPickerWidget;
     var ui;

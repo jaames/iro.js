@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.2.3
+
+Bumps iro-core version to fix server-side environment issues noted in https://github.com/jaames/iro.js/issues/131
+
 #### 5.2.2
 
 Fixes https://github.com/jaames/iro.js/issues/129
