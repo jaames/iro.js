@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { SliderShape, SliderType } from '@irojs/iro-core';
-import { IroComponentProps } from './ComponentBase';
+import { IroComponentProps } from './ComponentTypes';
 interface IroSliderProps extends IroComponentProps {
     sliderType: SliderType;
     sliderShape: SliderShape;

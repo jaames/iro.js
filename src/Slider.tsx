@@ -35,7 +35,7 @@ export function IroSlider(props: IroSliderProps) {
     const value = getSliderValueFromInput(props, x, y);
     props.parent.inputActive = true;
     activeColor[props.sliderType] = value;
-    props.onInput(type);
+    props.onInput(type, props.id);
   }
 
   return (

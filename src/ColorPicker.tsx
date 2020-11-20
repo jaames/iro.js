@@ -269,15 +269,15 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @desc Handle input from a UI control element
    * @param type - event type
    */
-  private emitInputEvent(type: IroInputType) {
+  private emitInputEvent(type: IroInputType, originId: string) {
     if (type === IroInputType.Start) {
-      this.emit('input:start', this.color);
+      this.emit('input:start', this.color, originId);
     }
     else if (type === IroInputType.Move) {
-      this.emit('input:move', this.color);
+      this.emit('input:move', this.color, originId);
     }
     else if (type === IroInputType.End) {
-      this.emit('input:end', this.color);
+      this.emit('input:end', this.color, originId);
     }
   }
 

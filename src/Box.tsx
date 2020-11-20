@@ -39,7 +39,7 @@ export function IroBox(props: IroBoxProps) {
       else {
         colorPicker.inputActive = true;
         activeColor.hsv = getBoxValueFromInput(props, x, y);
-        props.onInput(inputType);
+        props.onInput(inputType, props.id);
       }
     }
     // move is fired when the user has started dragging
@@ -48,7 +48,7 @@ export function IroBox(props: IroBoxProps) {
       activeColor.hsv = getBoxValueFromInput(props, x, y);
     }
     // let the color picker fire input:start, input:move or input:end events
-    props.onInput(inputType);
+    props.onInput(inputType, props.id);
   }
 
   return (

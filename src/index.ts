@@ -1,6 +1,6 @@
 import { h as _h } from 'preact';
 import { IroColor } from '@irojs/iro-core';
-import { IroComponentWrapper } from './ComponentBase';
+import { IroComponentWrapper } from './ComponentWrapper';
 import { IroHandle } from './Handle';
 import { IroSlider } from './Slider';
 import { IroBox } from './Box';

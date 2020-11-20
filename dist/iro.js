@@ -1121,18 +1121,18 @@
   var SECONDARY_EVENTS = ["mousemove" /* MouseMove */, "touchmove" /* TouchMove */, "mouseup" /* MouseUp */, "touchend" /* TouchEnd */];
   // Base component class for iro UI components
   // This extends the Preact component class to allow them to react to mouse/touch input events by themselves
-  var IroComponentBase = /*@__PURE__*/(function (Component) {
-      function IroComponentBase(props) {
+  var IroComponentWrapper = /*@__PURE__*/(function (Component) {
+      function IroComponentWrapper(props) {
           Component.call(this, props);
           // Generate unique ID for the component
           // This can be used to generate unique IDs for gradients, etc
           this.uid = (Math.random() + 1).toString(36).substring(5);
       }
 
-      if ( Component ) IroComponentBase.__proto__ = Component;
-      IroComponentBase.prototype = Object.create( Component && Component.prototype );
-      IroComponentBase.prototype.constructor = IroComponentBase;
-      IroComponentBase.prototype.render = function render (props) {
+      if ( Component ) IroComponentWrapper.__proto__ = Component;
+      IroComponentWrapper.prototype = Object.create( Component && Component.prototype );
+      IroComponentWrapper.prototype.constructor = IroComponentWrapper;
+      IroComponentWrapper.prototype.render = function render (props) {
           var eventHandler = this.handleEvent.bind(this);
           var rootProps = {
               onMouseDown: eventHandler,
@@ -1155,7 +1155,7 @@
       // More info on handleEvent:
       // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
       // TL;DR this lets us have a single point of entry for multiple events, and we can avoid callback/binding hell
-      IroComponentBase.prototype.handleEvent = function handleEvent (e) {
+      IroComponentWrapper.prototype.handleEvent = function handleEvent (e) {
           var this$1 = this;
 
           var inputHandler = this.props.onInput;
@@ -1190,7 +1190,7 @@
           }
       };
 
-      return IroComponentBase;
+      return IroComponentWrapper;
   }(m));
 
   function IroHandle(props) {
@@ -1226,9 +1226,9 @@
           var value = getSliderValueFromInput(props, x, y);
           props.parent.inputActive = true;
           activeColor[props.sliderType] = value;
-          props.onInput(type);
+          props.onInput(type, props.id);
       }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: rootStyles }),
+      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: rootStyles }),
           h("defs", null,
               h("linearGradient", Object.assign({ id: 'g' + uid }, getSliderGradientCoords(props)), gradient.map(function (ref) {
                   var offset = ref[0];
@@ -1271,7 +1271,7 @@
               else {
                   colorPicker.inputActive = true;
                   activeColor.hsv = getBoxValueFromInput(props, x, y);
-                  props.onInput(inputType);
+                  props.onInput(inputType, props.id);
               }
           }
           // move is fired when the user has started dragging
@@ -1280,9 +1280,9 @@
               activeColor.hsv = getBoxValueFromInput(props, x, y);
           }
           // let the color picker fire input:start, input:move or input:end events
-          props.onInput(inputType);
+          props.onInput(inputType, props.id);
       }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: rootStyles }),
+      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: rootStyles }),
           h("defs", null,
               h("linearGradient", { id: 's' + uid, x1: "0%", y1: "0%", x2: "100%", y2: "0%" }, gradients[0].map(function (ref) {
                   var offset = ref[0];
@@ -1329,7 +1329,7 @@
               else {
                   colorPicker.inputActive = true;
                   activeColor.hsv = getWheelValueFromInput(props, x, y);
-                  props.onInput(inputType);
+                  props.onInput(inputType, props.id);
               }
           }
           // move is fired when the user has started dragging
@@ -1338,9 +1338,9 @@
               activeColor.hsv = getWheelValueFromInput(props, x, y);
           }
           // let the color picker fire input:start, input:move or input:end events
-          props.onInput(inputType);
+          props.onInput(inputType, props.id);
       }
-      return (h(IroComponentBase, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroWheel", width: width, height: width, style: rootStyles }),
+      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroWheel", width: width, height: width, style: rootStyles }),
           h("defs", null,
               h("radialGradient", { id: uid },
                   h("stop", { offset: "0%", "stop-color": "#fff" }),
@@ -1600,15 +1600,15 @@
        * @desc Handle input from a UI control element
        * @param type - event type
        */
-      IroColorPicker.prototype.emitInputEvent = function emitInputEvent (type) {
+      IroColorPicker.prototype.emitInputEvent = function emitInputEvent (type, originId) {
           if (type === 0 /* Start */) {
-              this.emit('input:start', this.color);
+              this.emit('input:start', this.color, originId);
           }
           else if (type === 1 /* Move */) {
-              this.emit('input:move', this.color);
+              this.emit('input:move', this.color, originId);
           }
           else if (type === 2 /* End */) {
-              this.emit('input:end', this.color);
+              this.emit('input:end', this.color, originId);
           }
       };
       IroColorPicker.prototype.render = function render (props, state) {
@@ -1662,7 +1662,7 @@
       var ui;
       (function (ui) {
           ui.h = h;
-          ui.ComponentBase = IroComponentBase;
+          ui.ComponentBase = IroComponentWrapper;
           ui.Handle = IroHandle;
           ui.Slider = IroSlider;
           ui.Wheel = IroWheel;
