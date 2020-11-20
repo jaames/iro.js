@@ -1,8 +1,7 @@
 import { Fragment, Component, h } from 'preact';
-import { IroColor, IroColorPickerOptions } from '@irojs/iro-core';
-import { IroColorPicker } from './ColorPicker';
+import { IroInputType } from './ComponentTypes';
 
-const enum EventType {
+const enum InputEventType {
   MouseDown = 'mousedown',
   MouseMove = 'mousemove',
   MouseUp = 'mouseup',
@@ -11,22 +10,7 @@ const enum EventType {
   TouchEnd = 'touchend'
 };
 
-export const enum IroInputType {
-  Start,
-  Move,
-  End
-};
-
-const SECONDARY_EVENTS = [EventType.MouseMove, EventType.TouchMove, EventType.MouseUp, EventType.TouchEnd];
-
-export interface IroComponentProps extends IroColorPickerOptions {
-  parent: IroColorPicker;
-  index: number; // component index
-  color: IroColor;
-  colors: IroColor[];
-  activeIndex?: number; // active color index (for optional overriding!)
-  onInput: (type: IroInputType) => void;
-}
+const SECONDARY_EVENTS = [InputEventType.MouseMove, InputEventType.TouchMove, InputEventType.MouseUp, InputEventType.TouchEnd];
 
 interface Props {
   onInput: (x: number, y: number, type: IroInputType) => void;
@@ -36,7 +20,7 @@ interface State {}
 
 // Base component class for iro UI components
 // This extends the Preact component class to allow them to react to mouse/touch input events by themselves
-export class IroComponentBase extends Component<Props, State> {
+export class IroComponentWrapper extends Component<Props, State> {
   public uid: string
   public base: HTMLElement;
 
@@ -93,19 +77,19 @@ export class IroComponentBase extends Component<Props, State> {
     const x = point.clientX - bounds.left;
     const y = point.clientY - bounds.top;
     switch (e.type) {
-      case EventType.MouseDown:
-      case EventType.TouchStart:
+      case InputEventType.MouseDown:
+      case InputEventType.TouchStart:
         SECONDARY_EVENTS.forEach(event => {
           document.addEventListener(event, this, { passive: false });
         });
         inputHandler(x, y, IroInputType.Start);
         break;
-      case EventType.MouseMove:
-      case EventType.TouchMove:
+      case InputEventType.MouseMove:
+      case InputEventType.TouchMove:
         inputHandler(x, y, IroInputType.Move);
         break;
-      case EventType.MouseUp:
-      case EventType.TouchEnd:
+      case InputEventType.MouseUp:
+      case InputEventType.TouchEnd:
         inputHandler(x, y, IroInputType.End);
         SECONDARY_EVENTS.forEach(event => {
           document.removeEventListener(event, this);

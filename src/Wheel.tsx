@@ -10,7 +10,8 @@ import {
   getHandleAtPoint
 } from '@irojs/iro-core';
 
-import { IroComponentBase, IroComponentProps, IroInputType } from './ComponentBase';
+import { IroComponentWrapper } from './ComponentWrapper';
+import { IroComponentProps, IroInputType } from './ComponentTypes';
 import { IroHandle } from './Handle';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
@@ -54,7 +55,7 @@ export function IroWheel(props: IroWheelProps) {
   }
 
   return (
-    <IroComponentBase {...props} onInput={ handleInput }>
+    <IroComponentWrapper {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg
           { ...rootProps }
@@ -128,6 +129,6 @@ export function IroWheel(props: IroWheelProps) {
           />
        </svg>
       )}
-    </IroComponentBase>
+    </IroComponentWrapper>
   );
 }

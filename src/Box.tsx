@@ -9,7 +9,8 @@ import {
   getHandleAtPoint
 } from '@irojs/iro-core';
 
-import { IroComponentBase, IroComponentProps, IroInputType } from './ComponentBase';
+import { IroComponentWrapper } from './ComponentWrapper';
+import { IroComponentProps, IroInputType } from './ComponentTypes';
 import { IroHandle } from './Handle';
 
 interface IroBoxProps extends IroComponentProps {
@@ -51,7 +52,7 @@ export function IroBox(props: IroBoxProps) {
   }
 
   return (
-    <IroComponentBase {...props} onInput={ handleInput }>
+    <IroComponentWrapper {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg 
           { ...rootProps }
@@ -111,6 +112,6 @@ export function IroBox(props: IroBoxProps) {
           />
         </svg>
       )}
-    </IroComponentBase>
+    </IroComponentWrapper>
   );
 }
