@@ -1347,11 +1347,6 @@ function IroWheel(props) {
         h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
 }
 
-// Turn a component into a widget
-// This returns a factory function that can be used to create an instance of the widget component
-// The first function param is a DOM element or CSS selector for the element to mount to,
-// The second param is for config options which are passed to the component as props
-// This factory function can also delay mounting the element into the DOM until the page is ready
 function createWidget(WidgetComponent) {
     var widgetFactory = function (parent, props) {
         var widget; // will become an instance of the widget component class

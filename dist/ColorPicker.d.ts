@@ -101,7 +101,7 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
     render(props: any, state: any): h.JSX.Element;
 }
 export declare const IroColorPickerWidget: {
-    (parent: string | HTMLElement, props: any): any;
+    (parent: string | HTMLElement, props: Partial<ColorPickerProps>): IroColorPicker;
     prototype: any;
     __component: import("preact").ComponentType<{}>;
 };

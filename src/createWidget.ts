@@ -1,14 +1,20 @@
-import { h, render, ComponentType } from 'preact';
+import { h, render, ComponentType, Attributes } from 'preact';
 
 // Turn a component into a widget
 // This returns a factory function that can be used to create an instance of the widget component
 // The first function param is a DOM element or CSS selector for the element to mount to,
 // The second param is for config options which are passed to the component as props
 // This factory function can also delay mounting the element into the DOM until the page is ready
-export function createWidget(WidgetComponent: ComponentType) {
 
-  const widgetFactory = function (parent: string | HTMLElement, props: any) {
-    let widget: any; // will become an instance of the widget component class
+export interface Widget {
+  base?: Element | Text;
+  onMount: (root: Element) => void;
+}
+
+export function createWidget<C extends Widget, P>(WidgetComponent: ComponentType) {
+
+  const widgetFactory = function (parent: string | HTMLElement, props: Partial<P>): C {
+    let widget: C; // will become an instance of the widget component class
     const widgetRoot = document.createElement('div');
 
     // Render widget into a temp DOM node
@@ -16,7 +22,7 @@ export function createWidget(WidgetComponent: ComponentType) {
       h(WidgetComponent, {
         ref: ref => widget = ref,
         ...props,
-      }),
+      } as Attributes),
       widgetRoot
     );
     

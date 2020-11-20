@@ -328,4 +328,4 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   }
 }
 
-export const IroColorPickerWidget = createWidget(IroColorPicker);
+export const IroColorPickerWidget = createWidget<IroColorPicker, ColorPickerProps>(IroColorPicker);
