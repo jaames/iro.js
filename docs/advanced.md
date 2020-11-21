@@ -186,7 +186,7 @@ If `sliderType` is set to `'kelvin'`, the temperature range can be set with thes
 
 | Option           | Purpose | Default Value |
 |:-----------------|:--------|:--------|
-| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `1000`) | `2200` |
+| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `2000`) | `2200` |
 | `maxTemperature` | Maximum color temperature, in Kelvin (largest value is `40000`) | `11000` |
 
 ##### `sliderShape`

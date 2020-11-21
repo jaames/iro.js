@@ -41,7 +41,7 @@
   var REGEX_HEX_6 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + '$');
   var REGEX_HEX_8 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + '$'); // Kelvin temperature bounds
 
-  var KELVIN_MIN = 1000;
+  var KELVIN_MIN = 2000;
   var KELVIN_MAX = 40000; // Math shorthands
 
   var log = Math.log;
