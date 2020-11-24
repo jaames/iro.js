@@ -98,6 +98,12 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
+There's a few optional box-specific config options that can be used:
+
+| Option           | Purpose | Default Value |
+|:-----------------|:--------|:--------|
+| `boxHeight`      | Height of the box, measured in pixels. If this isn't set, it will use the box's width as its height | `null` |
+
 #### Sliders
 
 <ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" layoutDirection="horizontal" :layout="[

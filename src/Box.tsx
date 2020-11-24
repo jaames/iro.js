@@ -77,7 +77,8 @@ export function IroBox(props: IroBoxProps) {
               <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#l' + uid )})`}></rect>
             </pattern>
           </defs>
-          <rect 
+          <rect
+            className="IroBoxBg"
             rx={ radius } 
             ry={ radius } 
             x={ props.borderWidth / 2 } 
