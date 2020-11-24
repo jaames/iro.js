@@ -98,6 +98,12 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
+There's a few optional box-specific config options that can be used:
+
+| 选项          | 用途                                                                                                  | 默认值    |
+|:----------- |:--------------------------------------------------------------------------------------------------- |:------ |
+| `boxHeight` | Height of the box, measured in pixels. If this isn't set, it will use the box's width as its height | `null` |
+
 #### Sliders 滑块
 
 <ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" layoutDirection="horizontal" :layout="[
@@ -183,10 +189,10 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 If `sliderType` is set to `'kelvin'`, the temperature range can be set with these options:
 
-| 选项               | 用途                        | 默认值     |
-|:---------------- |:------------------------- |:------- |
-| `minTemperature` | Kelvin最小色温值(最小值为 `1000`)  | `2200`  |
-| `maxTemperature` | Kelvin最大色温值(最大值是 `40000`) | `11000` |
+| Option           | Purpose                                                         | Default Value |
+|:---------------- |:--------------------------------------------------------------- |:------------- |
+| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `2000`) | `2200`        |
+| `maxTemperature` | Maximum color temperature, in Kelvin (largest value is `40000`) | `11000`       |
 
 ##### `sliderShape 滑块形状`
 
