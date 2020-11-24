@@ -25,6 +25,12 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
       }
     },
     {
+      component: iro.ui.Box,
+      options: {
+        boxHeight: 60
+      }
+    },
+    {
       component: iro.ui.Slider,
       options: {
         sliderType: 'red'

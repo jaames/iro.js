@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { IroColor, IroColorValue, IroColorPickerOptions, iroColorPickerOptionDefaults } from '@irojs/iro-core';
 
-import { IroInputType } from './ComponentBase';
+import { IroInputType } from './ComponentTypes';
 import { IroWheel } from './Wheel';
 import { IroSlider } from './Slider';
 import { createWidget } from './createWidget';
@@ -269,15 +269,15 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @desc Handle input from a UI control element
    * @param type - event type
    */
-  private emitInputEvent(type: IroInputType) {
+  private emitInputEvent(type: IroInputType, originId: string) {
     if (type === IroInputType.Start) {
-      this.emit('input:start', this.color);
+      this.emit('input:start', this.color, originId);
     }
     else if (type === IroInputType.Move) {
-      this.emit('input:move', this.color);
+      this.emit('input:move', this.color, originId);
     }
     else if (type === IroInputType.End) {
-      this.emit('input:end', this.color);
+      this.emit('input:end', this.color, originId);
     }
   }
 
@@ -328,4 +328,4 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   }
 }
 
-export const IroColorPickerWidget = createWidget(IroColorPicker);
+export const IroColorPickerWidget = createWidget<IroColorPicker, ColorPickerProps>(IroColorPicker);

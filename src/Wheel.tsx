@@ -10,7 +10,8 @@ import {
   getHandleAtPoint
 } from '@irojs/iro-core';
 
-import { IroComponentBase, IroComponentProps, IroInputType } from './ComponentBase';
+import { IroComponentWrapper } from './ComponentWrapper';
+import { IroComponentProps, IroInputType } from './ComponentTypes';
 import { IroHandle } from './Handle';
 
 const HUE_STEPS = Array.apply(null, {length: 360}).map((_, index) => index);
@@ -41,7 +42,7 @@ export function IroWheel(props: IroWheelProps) {
       else {
         colorPicker.inputActive = true;
         activeColor.hsv = getWheelValueFromInput(props, x, y);
-        props.onInput(inputType);
+        props.onInput(inputType, props.id);
       }
     }
     // move is fired when the user has started dragging
@@ -50,11 +51,11 @@ export function IroWheel(props: IroWheelProps) {
       activeColor.hsv = getWheelValueFromInput(props, x, y);
     }
     // let the color picker fire input:start, input:move or input:end events
-    props.onInput(inputType);
+    props.onInput(inputType, props.id);
   }
 
   return (
-    <IroComponentBase {...props} onInput={ handleInput }>
+    <IroComponentWrapper {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg
           { ...rootProps }
@@ -128,6 +129,6 @@ export function IroWheel(props: IroWheelProps) {
           />
        </svg>
       )}
-    </IroComponentBase>
+    </IroComponentWrapper>
   );
 }

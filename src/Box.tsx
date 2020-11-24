@@ -9,7 +9,8 @@ import {
   getHandleAtPoint
 } from '@irojs/iro-core';
 
-import { IroComponentBase, IroComponentProps, IroInputType } from './ComponentBase';
+import { IroComponentWrapper } from './ComponentWrapper';
+import { IroComponentProps, IroInputType } from './ComponentTypes';
 import { IroHandle } from './Handle';
 
 interface IroBoxProps extends IroComponentProps {
@@ -38,7 +39,7 @@ export function IroBox(props: IroBoxProps) {
       else {
         colorPicker.inputActive = true;
         activeColor.hsv = getBoxValueFromInput(props, x, y);
-        props.onInput(inputType);
+        props.onInput(inputType, props.id);
       }
     }
     // move is fired when the user has started dragging
@@ -47,11 +48,11 @@ export function IroBox(props: IroBoxProps) {
       activeColor.hsv = getBoxValueFromInput(props, x, y);
     }
     // let the color picker fire input:start, input:move or input:end events
-    props.onInput(inputType);
+    props.onInput(inputType, props.id);
   }
 
   return (
-    <IroComponentBase {...props} onInput={ handleInput }>
+    <IroComponentWrapper {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
         <svg 
           { ...rootProps }
@@ -76,7 +77,8 @@ export function IroBox(props: IroBoxProps) {
               <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#l' + uid )})`}></rect>
             </pattern>
           </defs>
-          <rect 
+          <rect
+            className="IroBoxBg"
             rx={ radius } 
             ry={ radius } 
             x={ props.borderWidth / 2 } 
@@ -111,6 +113,6 @@ export function IroBox(props: IroBoxProps) {
           />
         </svg>
       )}
-    </IroComponentBase>
+    </IroComponentWrapper>
   );
 }

@@ -1,6 +1,6 @@
 import { h as _h } from 'preact';
 import { IroColor } from '@irojs/iro-core';
-import { IroComponentBase } from './ComponentBase';
+import { IroComponentWrapper } from './ComponentWrapper';
 import { IroHandle } from './Handle';
 import { IroSlider } from './Slider';
 import { IroBox } from './Box';
@@ -17,7 +17,7 @@ namespace iro {
 
   export namespace ui {
     export const h = _h;
-    export const ComponentBase = IroComponentBase;
+    export const ComponentBase = IroComponentWrapper;
     export const Handle = IroHandle;
     export const Slider = IroSlider;
     export const Wheel = IroWheel;

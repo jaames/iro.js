@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { IroColor } from '@irojs/iro-core';
-import { IroComponentProps } from './ComponentBase';
+import { IroComponentProps } from './ComponentTypes';
 interface IroBoxProps extends IroComponentProps {
     colors: IroColor[];
 }
