@@ -98,6 +98,12 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
+There's a few optional box-specific config options that can be used:
+
+| Option           | Purpose | Default Value |
+|:-----------------|:--------|:--------|
+| `boxHeight`      | Height of the box, measured in pixels. If this isn't set, it will use the box's width as its height | `null` |
+
 #### Sliders
 
 <ColorPicker :width="240" :handleRadius="8" :sliderMargin="12" layoutDirection="horizontal" :layout="[
@@ -186,7 +192,7 @@ If `sliderType` is set to `'kelvin'`, the temperature range can be set with thes
 
 | Option           | Purpose | Default Value |
 |:-----------------|:--------|:--------|
-| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `1000`) | `2200` |
+| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `2000`) | `2200` |
 | `maxTemperature` | Maximum color temperature, in Kelvin (largest value is `40000`) | `11000` |
 
 ##### `sliderShape`
