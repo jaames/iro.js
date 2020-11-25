@@ -1,11 +1,47 @@
 /*!
- * iro.js v5.3.0
+ * iro.js v5.3.1
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
  */
 
 var n,u,t,i,r,o,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|^--/i;function s(n,l){for(var u in l){ n[u]=l[u]; }return n}function a(n){var l=n.parentNode;l&&l.removeChild(n);}function h(n,l,u){var t,i,r,o,f=arguments;if(l=s({},l),arguments.length>3){ for(u=[u],t=3;t<arguments.length;t++){ u.push(f[t]); } }if(null!=u&&(l.children=u),null!=n&&null!=n.defaultProps){ for(i in n.defaultProps){ void 0===l[i]&&(l[i]=n.defaultProps[i]); } }return o=l.key,null!=(r=l.ref)&&delete l.ref,null!=o&&delete l.key,v(n,l,o,r)}function v(l,u,t,i){var r={type:l,props:u,key:t,ref:i,__k:null,__p:null,__b:0,__e:null,l:null,__c:null,constructor:void 0};return n.vnode&&n.vnode(r),r}function d(n){return n.children}function y(n){if(null==n||"boolean"==typeof n){ return null; }if("string"==typeof n||"number"==typeof n){ return v(null,n,null,null); }if(null!=n.__e||null!=n.__c){var l=v(n.type,n.props,n.key,null);return l.__e=n.__e,l}return n}function m(n,l){this.props=n,this.context=l;}function w(n,l){if(null==l){ return n.__p?w(n.__p,n.__p.__k.indexOf(n)+1):null; }for(var u;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){ return u.__e; } }return "function"==typeof n.type?w(n):null}function g(n){var l,u;if(null!=(n=n.__p)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break} }return g(n)}}function k(l){(!l.__d&&(l.__d=!0)&&1===u.push(l)||i!==n.debounceRendering)&&(i=n.debounceRendering,(n.debounceRendering||t)(_));}function _(){var n,l,t,i,r,o,f,e;for(u.sort(function(n,l){return l.__v.__b-n.__v.__b});n=u.pop();){ n.__d&&(t=void 0,i=void 0,o=(r=(l=n).__v).__e,f=l.__P,e=l.u,l.u=!1,f&&(t=[],i=$(f,r,s({},r),l.__n,void 0!==f.ownerSVGElement,null,t,e,null==o?w(r):o),j(t,r),i!=o&&g(r))); }}function b(n,l,u,t,i,r,o,c,s){var h,v,p,d,y,m,g,k=u&&u.__k||e,_=k.length;if(c==f&&(c=null!=r?r[0]:_?w(u,0):null),h=0,l.__k=x(l.__k,function(u){if(null!=u){if(u.__p=l,u.__b=l.__b+1,null===(p=k[h])||p&&u.key==p.key&&u.type===p.type){ k[h]=void 0; }else { for(v=0;v<_;v++){if((p=k[v])&&u.key==p.key&&u.type===p.type){k[v]=void 0;break}p=null;} }if(d=$(n,u,p=p||f,t,i,r,o,null,c,s),(v=u.ref)&&p.ref!=v&&(g||(g=[])).push(v,u.__c||d,u),null!=d){if(null==m&&(m=d),null!=u.l){ d=u.l,u.l=null; }else if(r==p||d!=c||null==d.parentNode){n:if(null==c||c.parentNode!==n){ n.appendChild(d); }else{for(y=c,v=0;(y=y.nextSibling)&&v<_;v+=2){ if(y==d){ break n; } }n.insertBefore(d,c);}"option"==l.type&&(n.value="");}c=d.nextSibling,"function"==typeof l.type&&(l.l=d);}}return h++,u}),l.__e=m,null!=r&&"function"!=typeof l.type){ for(h=r.length;h--;){ null!=r[h]&&a(r[h]); } }for(h=_;h--;){ null!=k[h]&&D(k[h],k[h]); }if(g){ for(h=0;h<g.length;h++){ A(g[h],g[++h],g[++h]); } }}function x(n,l,u){if(null==u&&(u=[]),null==n||"boolean"==typeof n){ l&&u.push(l(null)); }else if(Array.isArray(n)){ for(var t=0;t<n.length;t++){ x(n[t],l,u); } }else { u.push(l?l(y(n)):n); }return u}function C(n,l,u,t,i){var r;for(r in u){ r in l||N(n,r,null,u[r],t); }for(r in l){ i&&"function"!=typeof l[r]||"value"===r||"checked"===r||u[r]===l[r]||N(n,r,l[r],u[r],t); }}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]="number"==typeof u&&!1===c.test(l)?u+"px":null==u?"":u;}function N(n,l,u,t,i){var r,o,f,e,c;if("key"===(l=i?"className"===l?"class":l:"class"===l?"className":l)||"children"===l);else if("style"===l){ if(r=n.style,"string"==typeof u){ r.cssText=u; }else{if("string"==typeof t&&(r.cssText="",t=null),t){ for(o in t){ u&&o in u||P(r,o,""); } }if(u){ for(f in u){ t&&u[f]===t[f]||P(r,f,u[f]); } }} }else{ "o"===l[0]&&"n"===l[1]?(e=l!==(l=l.replace(/Capture$/,"")),c=l.toLowerCase(),l=(c in n?c:l).slice(2),u?(t||n.addEventListener(l,T,e),(n.t||(n.t={}))[l]=u):n.removeEventListener(l,T,e)):"list"!==l&&"tagName"!==l&&"form"!==l&&!i&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/^xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u?n.removeAttribute(l):n.setAttribute(l,u)); }}function T(l){return this.t[l.type](n.event?n.event(l):l)}function $(l,u,t,i,r,o,f,e,c,a){var h,v,p,y,w,g,k,_,C,P,N=u.type;if(void 0!==u.constructor){ return null; }(h=n.__b)&&h(u);try{n:if("function"==typeof N){if(_=u.props,C=(h=N.contextType)&&i[h.__c],P=h?C?C.props.value:h.__p:i,t.__c?k=(v=u.__c=t.__c).__p=v.__E:("prototype"in N&&N.prototype.render?u.__c=v=new N(_,P):(u.__c=v=new m(_,P),v.constructor=N,v.render=H),C&&C.sub(v),v.props=_,v.state||(v.state={}),v.context=P,v.__n=i,p=v.__d=!0,v.__h=[]),null==v.__s&&(v.__s=v.state),null!=N.getDerivedStateFromProps&&s(v.__s==v.state?v.__s=s({},v.__s):v.__s,N.getDerivedStateFromProps(_,v.__s)),p){ null==N.getDerivedStateFromProps&&null!=v.componentWillMount&&v.componentWillMount(),null!=v.componentDidMount&&f.push(v); }else{if(null==N.getDerivedStateFromProps&&null==e&&null!=v.componentWillReceiveProps&&v.componentWillReceiveProps(_,P),!e&&null!=v.shouldComponentUpdate&&!1===v.shouldComponentUpdate(_,v.__s,P)){for(v.props=_,v.state=v.__s,v.__d=!1,v.__v=u,u.__e=null!=c?c!==t.__e?c:t.__e:null,u.__k=t.__k,h=0;h<u.__k.length;h++){ u.__k[h]&&(u.__k[h].__p=u); }break n}null!=v.componentWillUpdate&&v.componentWillUpdate(_,v.__s,P);}for(y=v.props,w=v.state,v.context=P,v.props=_,v.state=v.__s,(h=n.__r)&&h(u),v.__d=!1,v.__v=u,v.__P=l,h=v.render(v.props,v.state,v.context),u.__k=x(null!=h&&h.type==d&&null==h.key?h.props.children:h),null!=v.getChildContext&&(i=s(s({},i),v.getChildContext())),p||null==v.getSnapshotBeforeUpdate||(g=v.getSnapshotBeforeUpdate(y,w)),b(l,u,t,i,r,o,f,c,a),v.base=u.__e;h=v.__h.pop();){ v.__s&&(v.state=v.__s),h.call(v); }p||null==y||null==v.componentDidUpdate||v.componentDidUpdate(y,w,g),k&&(v.__E=v.__p=null);}else { u.__e=z(t.__e,u,t,i,r,o,f,a); }(h=n.diffed)&&h(u);}catch(l){n.__e(l,u,t);}return u.__e}function j(l,u){for(var t;t=l.pop();){ try{t.componentDidMount();}catch(l){n.__e(l,t.__v);} }n.__c&&n.__c(u);}function z(n,l,u,t,i,r,o,c){var s,a,h,v,p=u.props,d=l.props;if(i="svg"===l.type||i,null==n&&null!=r){ for(s=0;s<r.length;s++){ if(null!=(a=r[s])&&(null===l.type?3===a.nodeType:a.localName===l.type)){n=a,r[s]=null;break} } }if(null==n){if(null===l.type){ return document.createTextNode(d); }n=i?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type),r=null;}return null===l.type?p!==d&&(null!=r&&(r[r.indexOf(n)]=null),n.data=d):l!==u&&(null!=r&&(r=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,c||(v||h)&&(v&&h&&v.__html==h.__html||(n.innerHTML=v&&v.__html||"")),C(n,d,p,i,c),l.__k=l.props.children,v||b(n,l,u,t,"foreignObject"!==l.type&&i,r,o,f,c),c||("value"in d&&void 0!==d.value&&d.value!==n.value&&(n.value=null==d.value?"":d.value),"checked"in d&&void 0!==d.checked&&d.checked!==n.checked&&(n.checked=d.checked))),n}function A(l,u,t){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,t);}}function D(l,u,t){var i,r,o;if(n.unmount&&n.unmount(l),(i=l.ref)&&A(i,null,u),t||"function"==typeof l.type||(t=null!=(r=l.__e)),l.__e=l.l=null,null!=(i=l.__c)){if(i.componentWillUnmount){ try{i.componentWillUnmount();}catch(l){n.__e(l,u);} }i.base=i.__P=null;}if(i=l.__k){ for(o=0;o<i.length;o++){ i[o]&&D(i[o],u,t); } }null!=r&&a(r);}function H(n,l,u){return this.constructor(n,u)}function I(l,u,t){var i,o,c;n.__p&&n.__p(l,u),o=(i=t===r)?null:t&&t.__k||u.__k,l=h(d,null,[l]),c=[],$(u,i?u.__k=l:(t||u).__k=l,o||f,f,void 0!==u.ownerSVGElement,t&&!i?[t]:o?null:e.slice.call(u.childNodes),c,!1,t||f,i),j(c,l);}n={},m.prototype.setState=function(n,l){var u=this.__s!==this.state&&this.__s||(this.__s=s({},this.state));("function"!=typeof n||(n=n(u,this.props)))&&s(u,n),null!=n&&this.__v&&(this.u=!1,l&&this.__h.push(l),k(this));},m.prototype.forceUpdate=function(n){this.__v&&(n&&this.__h.push(n),this.u=!0,k(this));},m.prototype.render=d,u=[],t="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,i=n.debounceRendering,n.__e=function(n,l,u){for(var t;l=l.__p;){ if((t=l.__c)&&!t.__p){ try{if(t.constructor&&null!=t.constructor.getDerivedStateFromError){ t.setState(t.constructor.getDerivedStateFromError(n)); }else{if(null==t.componentDidCatch){ continue; }t.componentDidCatch(n);}return k(t.__E=t)}catch(l){n=l;} } }throw n},r=f,o=0;
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) { descriptor.writable = true; }
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) { _defineProperties(Constructor.prototype, protoProps); }
+  if (staticProps) { _defineProperties(Constructor, staticProps); }
+  return Constructor;
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    var arguments$1 = arguments;
+
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments$1[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
 
 // Some regular expressions for rgb() and hsl() Colors are borrowed from tinyColor
 // https://github.com/bgrins/TinyColor
@@ -38,9 +74,9 @@ var REGEX_HEX_8 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_I
 var KELVIN_MIN = 2000;
 var KELVIN_MAX = 40000; // Math shorthands
 
-var log = Math.log;
-var round = Math.round;
-var floor = Math.floor;
+var log = Math.log,
+    round = Math.round,
+    floor = Math.floor;
 /**
  * @desc Clamp a number between a min and max value
  * @param num - input value
@@ -78,565 +114,584 @@ function parseHexInt(str) {
  */
 
 
-function intToHex(int) {
-  return int.toString(16).padStart(2, '0');
+function intToHex(_int) {
+  return _int.toString(16).padStart(2, '0');
 }
 
-var IroColor = function IroColor(value, onChange) {
-  // The default Color value
-  this.$ = {
-    h: 0,
-    s: 0,
-    v: 0,
-    a: 1
-  };
-  if (value) { this.set(value); } // The watch callback function for this Color will be stored here
+var IroColor =
+/*#__PURE__*/
+function () {
+  /**
+    * @constructor Color object
+    * @param value - initial color value
+  */
+  function IroColor(value, onChange) {
+    // The default Color value
+    this.$ = {
+      h: 0,
+      s: 0,
+      v: 0,
+      a: 1
+    };
+    if (value) { this.set(value); } // The watch callback function for this Color will be stored here
 
-  this.onChange = onChange;
-  this.initialValue = Object.assign({}, this.$); // copy initial value
-};
-
-var prototypeAccessors = { hsv: { configurable: true },hsva: { configurable: true },hue: { configurable: true },saturation: { configurable: true },value: { configurable: true },alpha: { configurable: true },kelvin: { configurable: true },red: { configurable: true },green: { configurable: true },blue: { configurable: true },rgb: { configurable: true },rgba: { configurable: true },hsl: { configurable: true },hsla: { configurable: true },rgbString: { configurable: true },rgbaString: { configurable: true },hexString: { configurable: true },hex8String: { configurable: true },hslString: { configurable: true },hslaString: { configurable: true } };
-/**
-  * @desc Set the Color from any valid value
-  * @param value - new color value
-*/
+    this.onChange = onChange;
+    this.initialValue = _extends({}, this.$); // copy initial value
+  }
+  /**
+    * @desc Set the Color from any valid value
+    * @param value - new color value
+  */
 
 
-IroColor.prototype.set = function set (value) {
-  if (typeof value === 'string') {
-    if (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value)) {
-      this.hexString = value;
-    } else if (/^rgba?/.test(value)) {
-      this.rgbString = value;
-    } else if (/^hsla?/.test(value)) {
-      this.hslString = value;
+  var _proto = IroColor.prototype;
+
+  _proto.set = function set(value) {
+    if (typeof value === 'string') {
+      if (/^(?:#?|0x?)[0-9a-fA-F]{3,8}$/.test(value)) {
+        this.hexString = value;
+      } else if (/^rgba?/.test(value)) {
+        this.rgbString = value;
+      } else if (/^hsla?/.test(value)) {
+        this.hslString = value;
+      }
+    } else if (typeof value === 'object') {
+      if (value instanceof IroColor) {
+        this.hsv = value.hsv;
+      } else if (typeof value === 'object' && 'r' in value && 'g' in value && 'b' in value) {
+        this.rgb = value;
+      } else if (typeof value === 'object' && 'h' in value && 's' in value && 'v' in value) {
+        this.hsv = value;
+      } else if (typeof value === 'object' && 'h' in value && 's' in value && 'l' in value) {
+        this.hsl = value;
+      }
+    } else {
+      throw new Error('Invalid color value');
     }
-  } else if (typeof value === 'object') {
-    if (value instanceof IroColor) {
-      this.hsv = value.hsv;
-    } else if (typeof value === 'object' && 'r' in value && 'g' in value && 'b' in value) {
-      this.rgb = value;
-    } else if (typeof value === 'object' && 'h' in value && 's' in value && 'v' in value) {
+  }
+  /**
+    * @desc Shortcut to set a specific channel value
+    * @param format - hsv | hsl | rgb
+    * @param channel - individual channel to set, for example if model = hsl, chanel = h | s | l
+    * @param value - new value for the channel
+  */
+  ;
+
+  _proto.setChannel = function setChannel(format, channel, value) {
+    var _extends2;
+
+    this[format] = _extends({}, this[format], (_extends2 = {}, _extends2[channel] = value, _extends2));
+  }
+  /**
+   * @desc Reset color back to its initial value
+   */
+  ;
+
+  _proto.reset = function reset() {
+    this.hsva = this.initialValue;
+  }
+  /**
+    * @desc make new Color instance with the same value as this one
+  */
+  ;
+
+  _proto.clone = function clone() {
+    return new IroColor(this);
+  }
+  /**
+   * @desc remove color onChange
+   */
+  ;
+
+  _proto.unbind = function unbind() {
+    this.onChange = undefined;
+  }
+  /**
+    * @desc Convert hsv object to rgb
+    * @param hsv - hsv color object
+  */
+  ;
+
+  IroColor.hsvToRgb = function hsvToRgb(hsv) {
+    var h = hsv.h / 60;
+    var s = hsv.s / 100;
+    var v = hsv.v / 100;
+    var i = floor(h);
+    var f = h - i;
+    var p = v * (1 - s);
+    var q = v * (1 - f * s);
+    var t = v * (1 - (1 - f) * s);
+    var mod = i % 6;
+    var r = [v, q, p, p, t, v][mod];
+    var g = [t, v, v, q, p, p][mod];
+    var b = [p, p, t, v, v, q][mod];
+    return {
+      r: clamp(r * 255, 0, 255),
+      g: clamp(g * 255, 0, 255),
+      b: clamp(b * 255, 0, 255)
+    };
+  }
+  /**
+    * @desc Convert rgb object to hsv
+    * @param rgb - rgb object
+  */
+  ;
+
+  IroColor.rgbToHsv = function rgbToHsv(rgb) {
+    var r = rgb.r / 255;
+    var g = rgb.g / 255;
+    var b = rgb.b / 255;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var delta = max - min;
+    var hue = 0;
+    var value = max;
+    var saturation = max === 0 ? 0 : delta / max;
+
+    switch (max) {
+      case min:
+        hue = 0; // achromatic
+
+        break;
+
+      case r:
+        hue = (g - b) / delta + (g < b ? 6 : 0);
+        break;
+
+      case g:
+        hue = (b - r) / delta + 2;
+        break;
+
+      case b:
+        hue = (r - g) / delta + 4;
+        break;
+    }
+
+    return {
+      h: hue * 60 % 360,
+      s: clamp(saturation * 100, 0, 100),
+      v: clamp(value * 100, 0, 100)
+    };
+  }
+  /**
+    * @desc Convert hsv object to hsl
+    * @param hsv - hsv object
+  */
+  ;
+
+  IroColor.hsvToHsl = function hsvToHsl(hsv) {
+    var s = hsv.s / 100;
+    var v = hsv.v / 100;
+    var l = (2 - s) * v;
+    var divisor = l <= 1 ? l : 2 - l; // Avoid division by zero when lightness is close to zero
+
+    var saturation = divisor < 1e-9 ? 0 : s * v / divisor;
+    return {
+      h: hsv.h,
+      s: clamp(saturation * 100, 0, 100),
+      l: clamp(l * 50, 0, 100)
+    };
+  }
+  /**
+    * @desc Convert hsl object to hsv
+    * @param hsl - hsl object
+  */
+  ;
+
+  IroColor.hslToHsv = function hslToHsv(hsl) {
+    var l = hsl.l * 2;
+    var s = hsl.s * (l <= 100 ? l : 200 - l) / 100; // Avoid division by zero when l + s is near 0
+
+    var saturation = l + s < 1e-9 ? 0 : 2 * s / (l + s);
+    return {
+      h: hsl.h,
+      s: clamp(saturation * 100, 0, 100),
+      v: clamp((l + s) / 2, 0, 100)
+    };
+  }
+  /**
+    * @desc Convert a kelvin temperature to an approx, RGB value
+    * @param kelvin - kelvin temperature
+  */
+  ;
+
+  IroColor.kelvinToRgb = function kelvinToRgb(kelvin) {
+    var temp = kelvin / 100;
+    var r, g, b;
+
+    if (temp < 66) {
+      r = 255;
+      g = -155.25485562709179 - 0.44596950469579133 * (g = temp - 2) + 104.49216199393888 * log(g);
+      b = temp < 20 ? 0 : -254.76935184120902 + 0.8274096064007395 * (b = temp - 10) + 115.67994401066147 * log(b);
+    } else {
+      r = 351.97690566805693 + 0.114206453784165 * (r = temp - 55) - 40.25366309332127 * log(r);
+      g = 325.4494125711974 + 0.07943456536662342 * (g = temp - 50) - 28.0852963507957 * log(g);
+      b = 255;
+    }
+
+    return {
+      r: clamp(floor(r), 0, 255),
+      g: clamp(floor(g), 0, 255),
+      b: clamp(floor(b), 0, 255)
+    };
+  }
+  /**
+   * @desc Convert an RGB color to an approximate kelvin temperature
+   * @param kelvin - kelvin temperature
+  */
+  ;
+
+  IroColor.rgbToKelvin = function rgbToKelvin(rgb) {
+    var r = rgb.r,
+        b = rgb.b;
+    var eps = 0.4;
+    var minTemp = KELVIN_MIN;
+    var maxTemp = KELVIN_MAX;
+    var temp;
+
+    while (maxTemp - minTemp > eps) {
+      temp = (maxTemp + minTemp) * 0.5;
+
+      var _rgb = IroColor.kelvinToRgb(temp);
+
+      if (_rgb.b / _rgb.r >= b / r) {
+        maxTemp = temp;
+      } else {
+        minTemp = temp;
+      }
+    }
+
+    return temp;
+  };
+
+  _createClass(IroColor, [{
+    key: "hsv",
+    get: function get() {
+      // value is cloned to allow changes to be made to the values before passing them back
+      var value = this.$;
+      return {
+        h: value.h,
+        s: value.s,
+        v: value.v
+      };
+    },
+    set: function set(newValue) {
+      var oldValue = this.$;
+      newValue = _extends({}, oldValue, newValue); // If this Color is being watched for changes we need to compare the new and old values to check the difference
+      // Otherwise we can just be lazy
+
+      if (this.onChange) {
+        // Compute changed values
+        var changes = {
+          h: false,
+          v: false,
+          s: false,
+          a: false
+        };
+
+        for (var key in oldValue) {
+          changes[key] = newValue[key] != oldValue[key];
+        }
+
+        this.$ = newValue; // If the value has changed, call hook callback
+
+        if (changes.h || changes.s || changes.v || changes.a) { this.onChange(this, changes); }
+      } else {
+        this.$ = newValue;
+      }
+    }
+  }, {
+    key: "hsva",
+    get: function get() {
+      return _extends({}, this.$);
+    },
+    set: function set(value) {
       this.hsv = value;
-    } else if (typeof value === 'object' && 'h' in value && 's' in value && 'l' in value) {
+    }
+  }, {
+    key: "hue",
+    get: function get() {
+      return this.$.h;
+    },
+    set: function set(value) {
+      this.hsv = {
+        h: value
+      };
+    }
+  }, {
+    key: "saturation",
+    get: function get() {
+      return this.$.s;
+    },
+    set: function set(value) {
+      this.hsv = {
+        s: value
+      };
+    }
+  }, {
+    key: "value",
+    get: function get() {
+      return this.$.v;
+    },
+    set: function set(value) {
+      this.hsv = {
+        v: value
+      };
+    }
+  }, {
+    key: "alpha",
+    get: function get() {
+      return this.$.a;
+    },
+    set: function set(value) {
+      this.hsv = _extends({}, this.hsv, {
+        a: value
+      });
+    }
+  }, {
+    key: "kelvin",
+    get: function get() {
+      return IroColor.rgbToKelvin(this.rgb);
+    },
+    set: function set(value) {
+      this.rgb = IroColor.kelvinToRgb(value);
+    }
+  }, {
+    key: "red",
+    get: function get() {
+      var rgb = this.rgb;
+      return rgb.r;
+    },
+    set: function set(value) {
+      this.rgb = _extends({}, this.rgb, {
+        r: value
+      });
+    }
+  }, {
+    key: "green",
+    get: function get() {
+      var rgb = this.rgb;
+      return rgb.g;
+    },
+    set: function set(value) {
+      this.rgb = _extends({}, this.rgb, {
+        g: value
+      });
+    }
+  }, {
+    key: "blue",
+    get: function get() {
+      var rgb = this.rgb;
+      return rgb.b;
+    },
+    set: function set(value) {
+      this.rgb = _extends({}, this.rgb, {
+        b: value
+      });
+    }
+  }, {
+    key: "rgb",
+    get: function get() {
+      var _IroColor$hsvToRgb = IroColor.hsvToRgb(this.$),
+          r = _IroColor$hsvToRgb.r,
+          g = _IroColor$hsvToRgb.g,
+          b = _IroColor$hsvToRgb.b;
+
+      return {
+        r: round(r),
+        g: round(g),
+        b: round(b)
+      };
+    },
+    set: function set(value) {
+      this.hsv = _extends({}, IroColor.rgbToHsv(value), {
+        a: value.a === undefined ? 1 : value.a
+      });
+    }
+  }, {
+    key: "rgba",
+    get: function get() {
+      return _extends({}, this.rgb, {
+        a: this.alpha
+      });
+    },
+    set: function set(value) {
+      this.rgb = value;
+    }
+  }, {
+    key: "hsl",
+    get: function get() {
+      var _IroColor$hsvToHsl = IroColor.hsvToHsl(this.$),
+          h = _IroColor$hsvToHsl.h,
+          s = _IroColor$hsvToHsl.s,
+          l = _IroColor$hsvToHsl.l;
+
+      return {
+        h: round(h),
+        s: round(s),
+        l: round(l)
+      };
+    },
+    set: function set(value) {
+      this.hsv = _extends({}, IroColor.hslToHsv(value), {
+        a: value.a === undefined ? 1 : value.a
+      });
+    }
+  }, {
+    key: "hsla",
+    get: function get() {
+      return _extends({}, this.hsl, {
+        a: this.alpha
+      });
+    },
+    set: function set(value) {
       this.hsl = value;
     }
-  } else {
-    throw new Error('Invalid color value');
-  }
-};
-/**
-  * @desc Shortcut to set a specific channel value
-  * @param format - hsv | hsl | rgb
-  * @param channel - individual channel to set, for example if model = hsl, chanel = h | s | l
-  * @param value - new value for the channel
-*/
+  }, {
+    key: "rgbString",
+    get: function get() {
+      var rgb = this.rgb;
+      return "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
+    },
+    set: function set(value) {
+      var match;
+      var r,
+          g,
+          b,
+          a = 1;
 
+      if (match = REGEX_FUNCTIONAL_RGB.exec(value)) {
+        r = parseUnit(match[1], 255);
+        g = parseUnit(match[2], 255);
+        b = parseUnit(match[3], 255);
+      } else if (match = REGEX_FUNCTIONAL_RGBA.exec(value)) {
+        r = parseUnit(match[1], 255);
+        g = parseUnit(match[2], 255);
+        b = parseUnit(match[3], 255);
+        a = parseUnit(match[4], 1);
+      }
 
-IroColor.prototype.setChannel = function setChannel (format, channel, value) {
-    var obj;
-
-  this[format] = Object.assign({}, this[format],
-    ( obj = {}, obj[channel] = value, obj ));
-};
-/**
- * @desc Reset color back to its initial value
- */
-
-
-IroColor.prototype.reset = function reset () {
-  this.hsva = this.initialValue;
-};
-/**
-  * @desc make new Color instance with the same value as this one
-*/
-
-
-IroColor.prototype.clone = function clone () {
-  return new IroColor(this);
-};
-/**
- * @desc remove color onChange
- */
-
-
-IroColor.prototype.unbind = function unbind () {
-  this.onChange = undefined;
-};
-/**
-  * @desc Convert hsv object to rgb
-  * @param hsv - hsv color object
-*/
-
-
-IroColor.hsvToRgb = function hsvToRgb (hsv) {
-  var h = hsv.h / 60;
-  var s = hsv.s / 100;
-  var v = hsv.v / 100;
-  var i = floor(h);
-  var f = h - i;
-  var p = v * (1 - s);
-  var q = v * (1 - f * s);
-  var t = v * (1 - (1 - f) * s);
-  var mod = i % 6;
-  var r = [v, q, p, p, t, v][mod];
-  var g = [t, v, v, q, p, p][mod];
-  var b = [p, p, t, v, v, q][mod];
-  return {
-    r: clamp(r * 255, 0, 255),
-    g: clamp(g * 255, 0, 255),
-    b: clamp(b * 255, 0, 255)
-  };
-};
-/**
-  * @desc Convert rgb object to hsv
-  * @param rgb - rgb object
-*/
-
-
-IroColor.rgbToHsv = function rgbToHsv (rgb) {
-  var r = rgb.r / 255;
-  var g = rgb.g / 255;
-  var b = rgb.b / 255;
-  var max = Math.max(r, g, b);
-  var min = Math.min(r, g, b);
-  var delta = max - min;
-  var hue = 0;
-  var value = max;
-  var saturation = max === 0 ? 0 : delta / max;
-
-  switch (max) {
-    case min:
-      hue = 0; // achromatic
-
-      break;
-
-    case r:
-      hue = (g - b) / delta + (g < b ? 6 : 0);
-      break;
-
-    case g:
-      hue = (b - r) / delta + 2;
-      break;
-
-    case b:
-      hue = (r - g) / delta + 4;
-      break;
-  }
-
-  return {
-    h: hue * 60 % 360,
-    s: clamp(saturation * 100, 0, 100),
-    v: clamp(value * 100, 0, 100)
-  };
-};
-/**
-  * @desc Convert hsv object to hsl
-  * @param hsv - hsv object
-*/
-
-
-IroColor.hsvToHsl = function hsvToHsl (hsv) {
-  var s = hsv.s / 100;
-  var v = hsv.v / 100;
-  var l = (2 - s) * v;
-  var divisor = l <= 1 ? l : 2 - l; // Avoid division by zero when lightness is close to zero
-
-  var saturation = divisor < 1e-9 ? 0 : s * v / divisor;
-  return {
-    h: hsv.h,
-    s: clamp(saturation * 100, 0, 100),
-    l: clamp(l * 50, 0, 100)
-  };
-};
-/**
-  * @desc Convert hsl object to hsv
-  * @param hsl - hsl object
-*/
-
-
-IroColor.hslToHsv = function hslToHsv (hsl) {
-  var l = hsl.l * 2;
-  var s = hsl.s * (l <= 100 ? l : 200 - l) / 100; // Avoid division by zero when l + s is near 0
-
-  var saturation = l + s < 1e-9 ? 0 : 2 * s / (l + s);
-  return {
-    h: hsl.h,
-    s: clamp(saturation * 100, 0, 100),
-    v: clamp((l + s) / 2, 0, 100)
-  };
-};
-/**
-  * @desc Convert a kelvin temperature to an approx, RGB value
-  * @param kelvin - kelvin temperature
-*/
-
-
-IroColor.kelvinToRgb = function kelvinToRgb (kelvin) {
-  var temp = kelvin / 100;
-  var r, g, b;
-
-  if (temp < 66) {
-    r = 255;
-    g = -155.25485562709179 - 0.44596950469579133 * (g = temp - 2) + 104.49216199393888 * log(g);
-    b = temp < 20 ? 0 : -254.76935184120902 + 0.8274096064007395 * (b = temp - 10) + 115.67994401066147 * log(b);
-  } else {
-    r = 351.97690566805693 + 0.114206453784165 * (r = temp - 55) - 40.25366309332127 * log(r);
-    g = 325.4494125711974 + 0.07943456536662342 * (g = temp - 50) - 28.0852963507957 * log(g);
-    b = 255;
-  }
-
-  return {
-    r: clamp(floor(r), 0, 255),
-    g: clamp(floor(g), 0, 255),
-    b: clamp(floor(b), 0, 255)
-  };
-};
-/**
- * @desc Convert an RGB color to an approximate kelvin temperature
- * @param kelvin - kelvin temperature
-*/
-
-
-IroColor.rgbToKelvin = function rgbToKelvin (rgb) {
-  var r = rgb.r;
-    var b = rgb.b;
-  var eps = 0.4;
-  var minTemp = KELVIN_MIN;
-  var maxTemp = KELVIN_MAX;
-  var temp;
-
-  while (maxTemp - minTemp > eps) {
-    temp = (maxTemp + minTemp) * 0.5;
-    var rgb$1 = IroColor.kelvinToRgb(temp);
-
-    if (rgb$1.b / rgb$1.r >= b / r) {
-      maxTemp = temp;
-    } else {
-      minTemp = temp;
+      if (match) {
+        this.rgb = {
+          r: r,
+          g: g,
+          b: b,
+          a: a
+        };
+      } else {
+        throw new Error('Invalid rgb string');
+      }
     }
-  }
-
-  return temp;
-};
-
-prototypeAccessors.hsv.get = function () {
-  // value is cloned to allow changes to be made to the values before passing them back
-  var value = this.$;
-  return {
-    h: value.h,
-    s: value.s,
-    v: value.v
-  };
-};
-
-prototypeAccessors.hsv.set = function (newValue) {
-  var oldValue = this.$;
-  newValue = Object.assign({}, oldValue,
-    newValue); // If this Color is being watched for changes we need to compare the new and old values to check the difference
-  // Otherwise we can just be lazy
-
-  if (this.onChange) {
-    // Compute changed values
-    var changes = {
-      h: false,
-      v: false,
-      s: false,
-      a: false
-    };
-
-    for (var key in oldValue) {
-      changes[key] = newValue[key] != oldValue[key];
+  }, {
+    key: "rgbaString",
+    get: function get() {
+      var rgba = this.rgba;
+      return "rgba(" + rgba.r + ", " + rgba.g + ", " + rgba.b + ", " + rgba.a + ")";
+    },
+    set: function set(value) {
+      this.rgbString = value;
     }
+  }, {
+    key: "hexString",
+    get: function get() {
+      var rgb = this.rgb;
+      return "#" + intToHex(rgb.r) + intToHex(rgb.g) + intToHex(rgb.b);
+    },
+    set: function set(value) {
+      var match;
+      var r,
+          g,
+          b,
+          a = 255;
 
-    this.$ = newValue; // If the value has changed, call hook callback
+      if (match = REGEX_HEX_3.exec(value)) {
+        r = parseHexInt(match[1]) * 17;
+        g = parseHexInt(match[2]) * 17;
+        b = parseHexInt(match[3]) * 17;
+      } else if (match = REGEX_HEX_4.exec(value)) {
+        r = parseHexInt(match[1]) * 17;
+        g = parseHexInt(match[2]) * 17;
+        b = parseHexInt(match[3]) * 17;
+        a = parseHexInt(match[4]) * 17;
+      } else if (match = REGEX_HEX_6.exec(value)) {
+        r = parseHexInt(match[1]);
+        g = parseHexInt(match[2]);
+        b = parseHexInt(match[3]);
+      } else if (match = REGEX_HEX_8.exec(value)) {
+        r = parseHexInt(match[1]);
+        g = parseHexInt(match[2]);
+        b = parseHexInt(match[3]);
+        a = parseHexInt(match[4]);
+      }
 
-    if (changes.h || changes.s || changes.v || changes.a) { this.onChange(this, changes); }
-  } else {
-    this.$ = newValue;
-  }
-};
+      if (match) {
+        this.rgb = {
+          r: r,
+          g: g,
+          b: b,
+          a: a / 255
+        };
+      } else {
+        throw new Error('Invalid hex string');
+      }
+    }
+  }, {
+    key: "hex8String",
+    get: function get() {
+      var rgba = this.rgba;
+      return "#" + intToHex(rgba.r) + intToHex(rgba.g) + intToHex(rgba.b) + intToHex(floor(rgba.a * 255));
+    },
+    set: function set(value) {
+      this.hexString = value;
+    }
+  }, {
+    key: "hslString",
+    get: function get() {
+      var hsl = this.hsl;
+      return "hsl(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%)";
+    },
+    set: function set(value) {
+      var match;
+      var h,
+          s,
+          l,
+          a = 1;
 
-prototypeAccessors.hsva.get = function () {
-  return Object.assign({}, this.$);
-};
+      if (match = REGEX_FUNCTIONAL_HSL.exec(value)) {
+        h = parseUnit(match[1], 360);
+        s = parseUnit(match[2], 100);
+        l = parseUnit(match[3], 100);
+      } else if (match = REGEX_FUNCTIONAL_HSLA.exec(value)) {
+        h = parseUnit(match[1], 360);
+        s = parseUnit(match[2], 100);
+        l = parseUnit(match[3], 100);
+        a = parseUnit(match[4], 1);
+      }
 
-prototypeAccessors.hsva.set = function (value) {
-  this.hsv = value;
-};
+      if (match) {
+        this.hsl = {
+          h: h,
+          s: s,
+          l: l,
+          a: a
+        };
+      } else {
+        throw new Error('Invalid hsl string');
+      }
+    }
+  }, {
+    key: "hslaString",
+    get: function get() {
+      var hsla = this.hsla;
+      return "hsl(" + hsla.h + ", " + hsla.s + "%, " + hsla.l + "%, " + hsla.a + ")";
+    },
+    set: function set(value) {
+      this.hslString = value;
+    }
+  }]);
 
-prototypeAccessors.hue.get = function () {
-  return this.$.h;
-};
-
-prototypeAccessors.hue.set = function (value) {
-  this.hsv = {
-    h: value
-  };
-};
-
-prototypeAccessors.saturation.get = function () {
-  return this.$.s;
-};
-
-prototypeAccessors.saturation.set = function (value) {
-  this.hsv = {
-    s: value
-  };
-};
-
-prototypeAccessors.value.get = function () {
-  return this.$.v;
-};
-
-prototypeAccessors.value.set = function (value) {
-  this.hsv = {
-    v: value
-  };
-};
-
-prototypeAccessors.alpha.get = function () {
-  return this.$.a;
-};
-
-prototypeAccessors.alpha.set = function (value) {
-  this.hsv = Object.assign({}, this.hsv,
-    {a: value});
-};
-
-prototypeAccessors.kelvin.get = function () {
-  return IroColor.rgbToKelvin(this.rgb);
-};
-
-prototypeAccessors.kelvin.set = function (value) {
-  this.rgb = IroColor.kelvinToRgb(value);
-};
-
-prototypeAccessors.red.get = function () {
-  var rgb = this.rgb;
-  return rgb.r;
-};
-
-prototypeAccessors.red.set = function (value) {
-  this.rgb = Object.assign({}, this.rgb,
-    {r: value});
-};
-
-prototypeAccessors.green.get = function () {
-  var rgb = this.rgb;
-  return rgb.g;
-};
-
-prototypeAccessors.green.set = function (value) {
-  this.rgb = Object.assign({}, this.rgb,
-    {g: value});
-};
-
-prototypeAccessors.blue.get = function () {
-  var rgb = this.rgb;
-  return rgb.b;
-};
-
-prototypeAccessors.blue.set = function (value) {
-  this.rgb = Object.assign({}, this.rgb,
-    {b: value});
-};
-
-prototypeAccessors.rgb.get = function () {
-  var ref = IroColor.hsvToRgb(this.$);
-    var r = ref.r;
-    var g = ref.g;
-    var b = ref.b;
-  return {
-    r: round(r),
-    g: round(g),
-    b: round(b)
-  };
-};
-
-prototypeAccessors.rgb.set = function (value) {
-  this.hsv = Object.assign({}, IroColor.rgbToHsv(value),
-    {a: value.a === undefined ? 1 : value.a});
-};
-
-prototypeAccessors.rgba.get = function () {
-  return Object.assign({}, this.rgb,
-    {a: this.alpha});
-};
-
-prototypeAccessors.rgba.set = function (value) {
-  this.rgb = value;
-};
-
-prototypeAccessors.hsl.get = function () {
-  var ref = IroColor.hsvToHsl(this.$);
-    var h = ref.h;
-    var s = ref.s;
-    var l = ref.l;
-  return {
-    h: round(h),
-    s: round(s),
-    l: round(l)
-  };
-};
-
-prototypeAccessors.hsl.set = function (value) {
-  this.hsv = Object.assign({}, IroColor.hslToHsv(value),
-    {a: value.a === undefined ? 1 : value.a});
-};
-
-prototypeAccessors.hsla.get = function () {
-  return Object.assign({}, this.hsl,
-    {a: this.alpha});
-};
-
-prototypeAccessors.hsla.set = function (value) {
-  this.hsl = value;
-};
-
-prototypeAccessors.rgbString.get = function () {
-  var rgb = this.rgb;
-  return ("rgb(" + (rgb.r) + ", " + (rgb.g) + ", " + (rgb.b) + ")");
-};
-
-prototypeAccessors.rgbString.set = function (value) {
-  var match;
-  var r,
-      g,
-      b,
-      a = 1;
-
-  if (match = REGEX_FUNCTIONAL_RGB.exec(value)) {
-    r = parseUnit(match[1], 255);
-    g = parseUnit(match[2], 255);
-    b = parseUnit(match[3], 255);
-  } else if (match = REGEX_FUNCTIONAL_RGBA.exec(value)) {
-    r = parseUnit(match[1], 255);
-    g = parseUnit(match[2], 255);
-    b = parseUnit(match[3], 255);
-    a = parseUnit(match[4], 1);
-  }
-
-  if (match) {
-    this.rgb = {
-      r: r,
-      g: g,
-      b: b,
-      a: a
-    };
-  } else {
-    throw new Error('Invalid rgb string');
-  }
-};
-
-prototypeAccessors.rgbaString.get = function () {
-  var rgba = this.rgba;
-  return ("rgba(" + (rgba.r) + ", " + (rgba.g) + ", " + (rgba.b) + ", " + (rgba.a) + ")");
-};
-
-prototypeAccessors.rgbaString.set = function (value) {
-  this.rgbString = value;
-};
-
-prototypeAccessors.hexString.get = function () {
-  var rgb = this.rgb;
-  return ("#" + (intToHex(rgb.r)) + (intToHex(rgb.g)) + (intToHex(rgb.b)));
-};
-
-prototypeAccessors.hexString.set = function (value) {
-  var match;
-  var r,
-      g,
-      b,
-      a = 255;
-
-  if (match = REGEX_HEX_3.exec(value)) {
-    r = parseHexInt(match[1]) * 17;
-    g = parseHexInt(match[2]) * 17;
-    b = parseHexInt(match[3]) * 17;
-  } else if (match = REGEX_HEX_4.exec(value)) {
-    r = parseHexInt(match[1]) * 17;
-    g = parseHexInt(match[2]) * 17;
-    b = parseHexInt(match[3]) * 17;
-    a = parseHexInt(match[4]) * 17;
-  } else if (match = REGEX_HEX_6.exec(value)) {
-    r = parseHexInt(match[1]);
-    g = parseHexInt(match[2]);
-    b = parseHexInt(match[3]);
-  } else if (match = REGEX_HEX_8.exec(value)) {
-    r = parseHexInt(match[1]);
-    g = parseHexInt(match[2]);
-    b = parseHexInt(match[3]);
-    a = parseHexInt(match[4]);
-  }
-
-  if (match) {
-    this.rgb = {
-      r: r,
-      g: g,
-      b: b,
-      a: a / 255
-    };
-  } else {
-    throw new Error('Invalid hex string');
-  }
-};
-
-prototypeAccessors.hex8String.get = function () {
-  var rgba = this.rgba;
-  return ("#" + (intToHex(rgba.r)) + (intToHex(rgba.g)) + (intToHex(rgba.b)) + (intToHex(floor(rgba.a * 255))));
-};
-
-prototypeAccessors.hex8String.set = function (value) {
-  this.hexString = value;
-};
-
-prototypeAccessors.hslString.get = function () {
-  var hsl = this.hsl;
-  return ("hsl(" + (hsl.h) + ", " + (hsl.s) + "%, " + (hsl.l) + "%)");
-};
-
-prototypeAccessors.hslString.set = function (value) {
-  var match;
-  var h,
-      s,
-      l,
-      a = 1;
-
-  if (match = REGEX_FUNCTIONAL_HSL.exec(value)) {
-    h = parseUnit(match[1], 360);
-    s = parseUnit(match[2], 100);
-    l = parseUnit(match[3], 100);
-  } else if (match = REGEX_FUNCTIONAL_HSLA.exec(value)) {
-    h = parseUnit(match[1], 360);
-    s = parseUnit(match[2], 100);
-    l = parseUnit(match[3], 100);
-    a = parseUnit(match[4], 1);
-  }
-
-  if (match) {
-    this.hsl = {
-      h: h,
-      s: s,
-      l: l,
-      a: a
-    };
-  } else {
-    throw new Error('Invalid hsl string');
-  }
-};
-
-prototypeAccessors.hslaString.get = function () {
-  var hsla = this.hsla;
-  return ("hsl(" + (hsla.h) + ", " + (hsla.s) + "%, " + (hsla.l) + "%, " + (hsla.a) + ")");
-};
-
-prototypeAccessors.hslaString.set = function (value) {
-  this.hslString = value;
-};
-
-Object.defineProperties( IroColor.prototype, prototypeAccessors );
+  return IroColor;
+}();
 
 var sliderDefaultOptions = {
   sliderShape: 'bar',
@@ -650,15 +705,17 @@ var sliderDefaultOptions = {
  */
 
 function getSliderDimensions(props) {
-  var width = props.width;
-  var sliderSize = props.sliderSize;
-  var borderWidth = props.borderWidth;
-  var handleRadius = props.handleRadius;
-  var padding = props.padding;
-  var sliderShape = props.sliderShape;
+  var _sliderSize;
+
+  var width = props.width,
+      sliderSize = props.sliderSize,
+      borderWidth = props.borderWidth,
+      handleRadius = props.handleRadius,
+      padding = props.padding,
+      sliderShape = props.sliderShape;
   var ishorizontal = props.layoutDirection === 'horizontal'; // automatically calculate sliderSize if its not defined
 
-  sliderSize = sliderSize ? sliderSize : padding * 2 + handleRadius * 2 + borderWidth * 2;
+  sliderSize = (_sliderSize = sliderSize) != null ? _sliderSize : padding * 2 + handleRadius * 2 + borderWidth * 2;
 
   if (sliderShape === 'circle') {
     return {
@@ -706,8 +763,8 @@ function getCurrentSliderValue(props, color) {
       return hsva.a * 100;
 
     case 'kelvin':
-      var minTemperature = props.minTemperature;
-  var maxTemperature = props.maxTemperature;
+      var minTemperature = props.minTemperature,
+          maxTemperature = props.maxTemperature;
       var temperatureRange = maxTemperature - minTemperature;
       var percent = (color.kelvin - minTemperature) / temperatureRange * 100; // clmap percentage
 
@@ -732,9 +789,10 @@ function getCurrentSliderValue(props, color) {
  */
 
 function getSliderValueFromInput(props, x, y) {
-  var ref = getSliderDimensions(props);
-  var handleRange = ref.handleRange;
-  var handleStart = ref.handleStart;
+  var _getSliderDimensions = getSliderDimensions(props),
+      handleRange = _getSliderDimensions.handleRange,
+      handleStart = _getSliderDimensions.handleStart;
+
   var handlePos;
 
   if (props.layoutDirection === 'horizontal') {
@@ -749,8 +807,8 @@ function getSliderValueFromInput(props, x, y) {
 
   switch (props.sliderType) {
     case 'kelvin':
-      var minTemperature = props.minTemperature;
-  var maxTemperature = props.maxTemperature;
+      var minTemperature = props.minTemperature,
+          maxTemperature = props.maxTemperature;
       var temperatureRange = maxTemperature - minTemperature;
       return minTemperature + temperatureRange * (percent / 100);
 
@@ -776,11 +834,12 @@ function getSliderValueFromInput(props, x, y) {
  */
 
 function getSliderHandlePosition(props, color) {
-  var ref = getSliderDimensions(props);
-  var width = ref.width;
-  var height = ref.height;
-  var handleRange = ref.handleRange;
-  var handleStart = ref.handleStart;
+  var _getSliderDimensions2 = getSliderDimensions(props),
+      width = _getSliderDimensions2.width,
+      height = _getSliderDimensions2.height,
+      handleRange = _getSliderDimensions2.handleRange,
+      handleStart = _getSliderDimensions2.handleStart;
+
   var ishorizontal = props.layoutDirection === 'horizontal';
   var sliderValue = getCurrentSliderValue(props, color);
   var midPoint = ishorizontal ? width / 2 : height / 2;
@@ -807,16 +866,16 @@ function getSliderGradient(props, color) {
 
   switch (props.sliderType) {
     case 'red':
-      return [[0, ("rgb(" + (0) + "," + (rgb.g) + "," + (rgb.b) + ")")], [100, ("rgb(" + (255) + "," + (rgb.g) + "," + (rgb.b) + ")")]];
+      return [[0, "rgb(" + 0 + "," + rgb.g + "," + rgb.b + ")"], [100, "rgb(" + 255 + "," + rgb.g + "," + rgb.b + ")"]];
 
     case 'green':
-      return [[0, ("rgb(" + (rgb.r) + "," + (0) + "," + (rgb.b) + ")")], [100, ("rgb(" + (rgb.r) + "," + (255) + "," + (rgb.b) + ")")]];
+      return [[0, "rgb(" + rgb.r + "," + 0 + "," + rgb.b + ")"], [100, "rgb(" + rgb.r + "," + 255 + "," + rgb.b + ")"]];
 
     case 'blue':
-      return [[0, ("rgb(" + (rgb.r) + "," + (rgb.g) + "," + (0) + ")")], [100, ("rgb(" + (rgb.r) + "," + (rgb.g) + "," + (255) + ")")]];
+      return [[0, "rgb(" + rgb.r + "," + rgb.g + "," + 0 + ")"], [100, "rgb(" + rgb.r + "," + rgb.g + "," + 255 + ")"]];
 
     case 'alpha':
-      return [[0, ("rgba(" + (rgb.r) + "," + (rgb.g) + "," + (rgb.b) + ",0)")], [100, ("rgb(" + (rgb.r) + "," + (rgb.g) + "," + (rgb.b) + ")")]];
+      return [[0, "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0)"], [100, "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")"]];
 
     case 'kelvin':
       var stops = [];
@@ -826,11 +885,12 @@ function getSliderGradient(props, color) {
       var range = max - min;
 
       for (var kelvin = min, stop = 0; kelvin < max; kelvin += range / numStops, stop += 1) {
-        var ref = IroColor.kelvinToRgb(kelvin);
-        var r = ref.r;
-        var g = ref.g;
-        var b = ref.b;
-        stops.push([100 / numStops * stop, ("rgb(" + r + "," + g + "," + b + ")")]);
+        var _IroColor$kelvinToRgb = IroColor.kelvinToRgb(kelvin),
+            r = _IroColor$kelvinToRgb.r,
+            g = _IroColor$kelvinToRgb.g,
+            b = _IroColor$kelvinToRgb.b;
+
+        stops.push([100 / numStops * stop, "rgb(" + r + "," + g + "," + b + ")"]);
       }
 
       return stops;
@@ -849,7 +909,7 @@ function getSliderGradient(props, color) {
         s: 100,
         v: hsv.v
       });
-      return [[0, ("hsl(" + (noSat.h) + "," + (noSat.s) + "%," + (noSat.l) + "%)")], [100, ("hsl(" + (fullSat.h) + "," + (fullSat.s) + "%," + (fullSat.l) + "%)")]];
+      return [[0, "hsl(" + noSat.h + "," + noSat.s + "%," + noSat.l + "%)"], [100, "hsl(" + fullSat.h + "," + fullSat.s + "%," + fullSat.l + "%)"]];
 
     case 'value':
     default:
@@ -858,7 +918,7 @@ function getSliderGradient(props, color) {
         s: hsv.s,
         v: 100
       });
-      return [[0, '#000'], [100, ("hsl(" + (hsl.h) + "," + (hsl.s) + "%," + (hsl.l) + "%)")]];
+      return [[0, '#000'], [100, "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"]];
   }
 }
 /**
@@ -917,9 +977,11 @@ function translateWheelAngle(props, angle, invert) {
 
 function getWheelHandlePosition(props, color) {
   var hsv = color.hsv;
-  var ref = getWheelDimensions(props);
-  var cx = ref.cx;
-  var cy = ref.cy;
+
+  var _getWheelDimensions = getWheelDimensions(props),
+      cx = _getWheelDimensions.cx,
+      cy = _getWheelDimensions.cy;
+
   var handleRange = props.width / 2 - props.padding - props.handleRadius - props.borderWidth;
   var handleAngle = (180 + translateWheelAngle(props, hsv.h, true)) * (Math.PI / 180);
   var handleDist = hsv.s / 100 * handleRange;
@@ -937,9 +999,10 @@ function getWheelHandlePosition(props, color) {
  */
 
 function getWheelValueFromInput(props, x, y) {
-  var ref = getWheelDimensions(props);
-  var cx = ref.cx;
-  var cy = ref.cy;
+  var _getWheelDimensions2 = getWheelDimensions(props),
+      cx = _getWheelDimensions2.cx,
+      cy = _getWheelDimensions2.cy;
+
   var handleRange = props.width / 2 - props.padding - props.handleRadius - props.borderWidth;
   x = cx - x;
   y = cy - y; // Calculate the hue by converting the angle to radians
@@ -959,12 +1022,13 @@ function getWheelValueFromInput(props, x, y) {
  */
 
 function getBoxDimensions(props) {
-  var width = props.width;
-  var padding = props.padding;
-  var handleRadius = props.handleRadius;
+  var width = props.width,
+      boxHeight = props.boxHeight,
+      padding = props.padding,
+      handleRadius = props.handleRadius;
   return {
     width: width,
-    height: width,
+    height: boxHeight != null ? boxHeight : width,
     radius: padding + handleRadius
   };
 }
@@ -976,10 +1040,11 @@ function getBoxDimensions(props) {
  */
 
 function getBoxValueFromInput(props, x, y) {
-  var ref = getBoxDimensions(props);
-  var width = ref.width;
-  var height = ref.height;
-  var radius = ref.radius;
+  var _getBoxDimensions = getBoxDimensions(props),
+      width = _getBoxDimensions.width,
+      height = _getBoxDimensions.height,
+      radius = _getBoxDimensions.radius;
+
   var handleStart = radius;
   var handleRangeX = width - radius * 2;
   var handleRangeY = height - radius * 2;
@@ -997,10 +1062,11 @@ function getBoxValueFromInput(props, x, y) {
  */
 
 function getBoxHandlePosition(props, color) {
-  var ref = getBoxDimensions(props);
-  var width = ref.width;
-  var height = ref.height;
-  var radius = ref.radius;
+  var _getBoxDimensions2 = getBoxDimensions(props),
+      width = _getBoxDimensions2.width,
+      height = _getBoxDimensions2.height,
+      radius = _getBoxDimensions2.radius;
+
   var hsv = color.hsv;
   var handleStart = radius;
   var handleRangeX = width - radius * 2;
@@ -1019,7 +1085,7 @@ function getBoxHandlePosition(props, color) {
 function getBoxGradients(props, color) {
   var hue = color.hue;
   return [// saturation gradient
-  [[0, '#fff'], [100, ("hsl(" + hue + ",100%,50%)")]], // lightness gradient
+  [[0, '#fff'], [100, "hsl(" + hue + ",100%,50%)"]], // lightness gradient
   [[0, 'rgba(0,0,0,0)'], [100, '#000']]];
 }
 
@@ -1047,7 +1113,7 @@ function resolveSvgUrl(url) {
   var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   var isIos = /iPhone|iPod|iPad/i.test(ua);
   var location = window.location;
-  return (isSafari || isIos) && BASE_ELEMENTS.length > 0 ? ((location.protocol) + "//" + (location.host) + (location.pathname) + (location.search) + url) : url;
+  return (isSafari || isIos) && BASE_ELEMENTS.length > 0 ? location.protocol + "//" + location.host + location.pathname + location.search + url : url;
 }
 /**
  * @desc Get the path commands to draw an svg arc
@@ -1066,7 +1132,7 @@ function getSvgArcPath(cx, cy, radius, startAngle, endAngle) {
   var y1 = cy + radius * Math.sin(endAngle);
   var x2 = cx + radius * Math.cos(startAngle);
   var y2 = cy + radius * Math.sin(startAngle);
-  return ("M " + x1 + " " + y1 + " A " + radius + " " + radius + " 0 " + largeArcFlag + " 0 " + x2 + " " + y2);
+  return "M " + x1 + " " + y1 + " A " + radius + " " + radius + " 0 " + largeArcFlag + " 0 " + x2 + " " + y2;
 }
 /**
  * @desc Given a specifc (x, y) position, test if there's a handle there and return its index, else return null.
@@ -1093,23 +1159,24 @@ function getHandleAtPoint(props, x, y, handlePositions) {
 var iroColorPickerOptionDefaults = {
   width: 300,
   height: 300,
+  color: '#fff',
+  colors: [],
+  padding: 6,
+  layoutDirection: 'vertical',
+  borderColor: '#fff',
+  borderWidth: 0,
   handleRadius: 8,
   handleSvg: null,
   handleProps: {
     x: 0,
     y: 0
   },
-  color: '#fff',
-  colors: [],
-  borderColor: '#fff',
-  borderWidth: 0,
   wheelLightness: true,
   wheelAngle: 0,
   wheelDirection: 'anticlockwise',
-  layoutDirection: 'vertical',
   sliderSize: null,
   sliderMargin: 12,
-  padding: 6
+  boxHeight: null
 };
 
 var SECONDARY_EVENTS = ["mousemove" /* MouseMove */, "touchmove" /* TouchMove */, "mouseup" /* MouseUp */, "touchend" /* TouchEnd */];
@@ -1650,7 +1717,7 @@ var IroColorPickerWidget = createWidget(IroColorPicker);
 
 var iro;
 (function (iro) {
-    iro.version = "5.3.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
+    iro.version = "5.3.1"; // replaced by @rollup/plugin-replace; see rollup.config.js
     iro.Color = IroColor;
     iro.ColorPicker = IroColorPickerWidget;
     var ui;

@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.3.1
+
+Fixes https://github.com/jaames/iro.js/issues/145
+
 #### 5.3.0
 
 Added optional `boxHeight` option for setting the height of the box component. Added `id` option for all components, which will get passed to the `input:start`, `input:move` and `input:end` event callbacks as a second param (see https://github.com/jaames/iro.js/issues/140). Also mitigated an issue related to kelvin temperatures under 2000 (see https://github.com/jaames/iro.js/issues/138).
