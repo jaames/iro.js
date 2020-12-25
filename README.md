@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="#documentation">Documentation</a> | <a href="#special-thanks">Special Thanks</a>
+  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="https://iro.js.org/guide.html">Documentation</a> | <a href="#special-thanks">Special Thanks</a>
 </p>
 
 <br/>
@@ -134,6 +134,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | Option           | Purpose | Default Value |
 |:-----------------|:--------|:--------|
 | `width`          | Total width of the control UI. | `300` |
+| `boxHeight`      | Height of the color picker box. | `300` |
 | `color`          | The initial color value. This can be any [supported color format](https://iro.js.org/color_api.html#supported-color-formats). | `"#ffffff"` |
 | `colors`         | Initial color values used for [multi-color selections](https://iro.js.org/advanced.html#multi-color-selections). | null |
 | `display`        | CSS display value for the color picker root element. | `"block"` |
