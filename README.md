@@ -134,7 +134,6 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | Option           | Purpose | Default Value |
 |:-----------------|:--------|:--------|
 | `width`          | Total width of the control UI. | `300` |
-| `boxHeight`      | Height of the color picker box. | `300` |
 | `color`          | The initial color value. This can be any [supported color format](https://iro.js.org/color_api.html#supported-color-formats). | `"#ffffff"` |
 | `colors`         | Initial color values used for [multi-color selections](https://iro.js.org/advanced.html#multi-color-selections). | null |
 | `display`        | CSS display value for the color picker root element. | `"block"` |
@@ -152,6 +151,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
 | `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
 | `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
+| `boxHeight`     | Box control height. By default this will be the same as the `width`. | `undefined` |
 
 More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](https://iro.js.org/colorPicker_api.html).
 

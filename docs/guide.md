@@ -89,6 +89,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
 | `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
 | `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
+| `boxHeight`     | Box control height. By default this will be the same as the `width`. | `undefined` |
 
 More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](/colorPicker_api.html).
 
