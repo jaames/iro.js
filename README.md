@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="#documentation">Documentation</a> | <a href="#special-thanks">Special Thanks</a>
+  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="https://iro.js.org/guide.html">Documentation</a> | <a href="#special-thanks">Special Thanks</a>
 </p>
 
 <br/>
@@ -151,6 +151,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
 | `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
 | `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
+| `boxHeight`     | Box control height. By default this will be the same as the `width`. | `undefined` |
 
 More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](https://iro.js.org/colorPicker_api.html).
 

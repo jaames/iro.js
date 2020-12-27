@@ -115,6 +115,12 @@ Slider size, measued in pixels.
 
 **Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
 
+### `boxHeight`
+
+Box control height, measued in pixels.
+
+**Default value**: By default this will be the same value as `width`.
+
 ## Properties
 
 ### `color`
