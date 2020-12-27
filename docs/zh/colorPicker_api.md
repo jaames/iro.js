@@ -115,33 +115,39 @@ title: 颜色选择器 API
 
 **默认值**: 默认情况下，这将自动以 `padding` 和 `handleRadius` 计算。
 
+### `boxHeight`
+
+Box control height, measued in pixels.
+
+**Default value**: By default this will be the same value as `width`.
+
 ## 属性
 
 ### `color`
 
-[`iro.Color`](/colorPicker_api.html) 对象代表当前选中的颜色。 更新此颜色对象也会更新选择器中的选定颜色。
+An [`iro.Color`](/colorPicker_api.html) object representing the currently selected color. Updating this color object will also update the seclected color in the picker.
 
-<strong x-id =“ 1”>另请参见：</strong>[使用选定的颜色](/guide.html#颜色选择器选项)
+**See also:** [Using the Selected Color](/guide.html#color-picker-options)
 
 ### `colors`
 
-代表当前选定颜色的 [`iro.Color`](/colorPicker_api.html) 对象数组，用于[多颜色](/advanced.html#多颜色选择器)。 更新任何这些颜色对象也将更新选择器中的选定颜色。
+An array of [`iro.Color`](/colorPicker_api.html) objects representing the currently selected colors, used for [multicolor](/advanced.html#multicolor). Updating any of these color objects will also update the seclected color in the picker.
 
 ### `el`
 
-使用 HTML 元素作为颜色选择器容器。
+The HTML element being used as the color picker container.
 
 ### `base`
 
-使用 HTML 元素作为颜色选择器的基本元素。
+The HTML element being used as the color picker's base element.
 
 ### `props`
 
-初始配置选项传递到颜色选择器。
+The initial configeration options passed to the color picker.
 
 ### `id`
 
-将ID值传递到颜色选择器配置。
+The ID value passed to the color picker config.
 
 ## 事件方法
 
@@ -152,14 +158,14 @@ title: 颜色选择器 API
 
 ### `on`
 
-将监听器添加到颜色选择器事件中。
+Add a listener to a color picker event.
 
-**参数：**
+**Arguments:**
 
 * `{String | Array}` [事件类型](#事件)
 * `{Function}` 回调
 
-**示例︰**
+**Example:**
 
 ```js
 //做一个处理函数
@@ -174,14 +180,14 @@ example.on("color:change", colorChangeCallback);
 
 ### `off`
 
-删除在 `on` 上注册的事件侦听器。
+Remove event listeners that were registered with `on`.
 
-**参数：**
+**Arguments:**
 
 * `{String | Array}` [事件类型](#事件)
 * `{Function}` 回调
 
-**示例︰**
+**Example:**
 
 ```js
 //做一个处理函数
@@ -202,7 +208,7 @@ example.off("color:change", colorChangeCallback);
 
 ### `addColor`
 
-添加另一个可选择的颜色到颜色选择器。
+Add another selectable color to the color picker.
 
 **参数：**
 
@@ -211,7 +217,7 @@ example.off("color:change", colorChangeCallback);
 
 ### `removeColor`
 
-从颜色选择器中移除颜色。
+Remove a color from the color picker.
 
 **参数：**
 
@@ -219,7 +225,7 @@ example.off("color:change", colorChangeCallback);
 
 ### `setActiveColor`
 
-设置当前的“活动”颜色 (选定并高亮的颜色)。
+Set the currently 'active' color (the color that is selected and highlighted).
 
 **参数：**
 
@@ -227,7 +233,7 @@ example.off("color:change", colorChangeCallback);
 
 ### `setColors`
 
-将当前颜色选择器上的所有颜色替换为新的颜色。
+Replaces all the colors currently on the color picker with a new set of colors.
 
 **参数：**
 
@@ -237,23 +243,23 @@ example.off("color:change", colorChangeCallback);
 
 ### `resize`
 
-将颜色选择器设置为新的大小。
+Set the color picker to a new size.
 
-**参数：**
+**Arguments:**
 
 * `{Number}` width 宽度
 
 ### `reset`
 
-将颜色选择器重置为传递到颜色选择器配置的原始颜色值。
+Reset the color picker back to the original color value passed to the color picker config.
 
 ### `forceUpdate`
 
-强制选取颜色者重新渲染。
+Force the color picker to rerender.
 
 ### `emit`
 
-用于内部发送事件。 事件类型之后的所有函数参数都将传递给事件回调。
+Used internally to dispatch an event. All function arguments after the event type will be passed to the event callback.
 
 **参数：**
 
@@ -261,48 +267,48 @@ example.off("color:change", colorChangeCallback);
 
 ### `deferredEmit`
 
-用于内部发送延期事件。 延迟事件将被存储到事件监听器添加到 `on` 上。
+Used internally to dispatch an deferred event. Deferred events are stored until an event listener for them is added with `on`.
 
-**参数：**
+**Arguments:**
 
 * `{String}` [事件类型](#事件)
 
 ## 事件
 
-颜色选择器的 [on](#on) 方法可用于注册颜色选择器事件的回调，例如，当选定的颜色发生更改或用户开始与选择器进行交互时。 这些回调也可以使用 [off](#off) 方法被删除。
+The color picker's [on](#on) method can be used to register callbacks for color picker events, such as when the selected color changes or when the user begins interacting with the picker. These callbacks can also be removed with the [off](#off) method.
 
 ### `color:change`
 
-当颜色发生变化时 -- 当用户与控制器交互时，或者当它是通过代码设置时 -- 触发。 此事件的回调将收到更改的颜色对象，以及一个反映 h,s,v 频道改变的对象。 在回调中修改此事件的 `color` 对象是安全的。
+Fired whenever the color changes -- either when the user interacts with the controls, or when it is set via code. This event's callbacks will receive the color object that changed, as well as an object which reflects which h,s,v channels changed. It is safe to modify the `color` object within callbacks for this event.
 
 ### `input:change`
 
-类似于 `color:change`，除非这只是在颜色与 *直接用户输入* 改变时才触发的。 回调此事件接收的参数与 `color:change` 完全相同。 在回调中修改此事件的 `color` 对象也是安全的。
+Similar to `color:change`, except this is only fired whenever the color is changed with *direct user input*. Callbacks for this event recieve exactly the same parameters as `color:change`. It is also safe to modify the `color` object within callbacks for this event.
 
 ### `input:start`
 
-每当用户开始与色彩选择器控制交互时都会触发。 此事件的回调将收到当前的颜色对象。
+Fired whenever the users starts interacting with the color picker controls. 此事件的回调将收到当前的颜色对象。
 
 ### `input:move`
 
-当用户在开始交互后移动他们的指针/鼠标时触发。 此事件的回调将收到当前的颜色对象。
+Fired when the user moves their pointer/mouse after beginning interaction. This event's callbacks will receive the current color object.
 
 ### `input:end`
 
-每当用户停止与色彩选择器控件交互时触发。 此事件的回调将收到当前的颜色对象。
+Fired whenever the user stops interacting with the color picker controls. This event's callbacks will receive the current color object.
 
 ### `color:init`
 
-每次创建新颜色时都会触发。 此事件的回调将收到新的创建颜色对象。
+Fired whenever a new color is created. This event's callbacks will receive the new creat color object.
 
 ### `color:remove`
 
-当从颜色选择器中移除颜色时触发。 此事件的回调将接收删除的颜色对象。
+Fired when a color is removed from the color picker. This event's callbacks will receive the removed color object
 
 ### `color:setActive`
 
-切换“活动”颜色时触发。 此事件的回调将收到活动的颜色对象。
+Fired whenever the 'active' color is switched. This event's callbacks will receive the active color object.
 
 ### `mount`
 
-当颜色选择器的界面已安装到 DOM 并准备好用户交互时触发。 颜色选择器对象会传递到此事件的回调函数中。
+Fired when the colorPicker's UI has been mounted to the DOM and is ready for user interaction. The colorPicker object is passed to this event's callback function.
