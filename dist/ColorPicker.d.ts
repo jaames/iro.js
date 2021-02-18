@@ -49,7 +49,7 @@ export declare class IroColorPicker extends Component<ColorPickerProps, ColorPic
      * @desc Replace all of the current colorPicker colors
      * @param newColorValues list of new colors to add
      */
-    setColors(newColorValues: IroColorValue[]): void;
+    setColors(newColorValues: IroColorValue[], activeColorIndex?: number): void;
     /**
      * @desc Set a callback function for an event
      * @param eventList event(s) to listen to

@@ -1,5 +1,9 @@
 ### Changelog
 
+#### 5.3.2
+
+Adds optional second `activeColorIndex` param to `ColorPicker.setColors()` (https://github.com/jaames/iro.js/issues/162) and fixes IE11 event issue (https://github.com/jaames/iro.js/issues/163).
+
 #### 5.3.1
 
 Fixes https://github.com/jaames/iro.js/issues/145

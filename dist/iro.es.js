@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.3.1
+ * iro.js v5.3.2
  * 2016-2020 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -1245,7 +1245,7 @@ var IroComponentWrapper = /*@__PURE__*/(function (Component) {
             case "touchend" /* TouchEnd */:
                 inputHandler(x, y, 2 /* End */);
                 SECONDARY_EVENTS.forEach(function (event) {
-                    document.removeEventListener(event, this$1);
+                    document.removeEventListener(event, this$1, { passive: false });
                 });
                 break;
         }
@@ -1529,8 +1529,9 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
      * @desc Replace all of the current colorPicker colors
      * @param newColorValues list of new colors to add
      */
-    IroColorPicker.prototype.setColors = function setColors (newColorValues) {
+    IroColorPicker.prototype.setColors = function setColors (newColorValues, activeColorIndex) {
         var this$1 = this;
+        if ( activeColorIndex === void 0 ) activeColorIndex = 0;
 
         // Unbind color events
         this.colors.forEach(function (color) { return color.unbind(); });
@@ -1539,7 +1540,7 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
         // Add new colors
         newColorValues.forEach(function (colorValue) { return this$1.addColor(colorValue); });
         // Reset active color
-        this.setActiveColor(0);
+        this.setActiveColor(activeColorIndex);
         this.emit('color:setAll', this.colors);
     };
     // Public ColorPicker events API
@@ -1717,7 +1718,7 @@ var IroColorPickerWidget = createWidget(IroColorPicker);
 
 var iro;
 (function (iro) {
-    iro.version = "5.3.1"; // replaced by @rollup/plugin-replace; see rollup.config.js
+    iro.version = "5.3.2"; // replaced by @rollup/plugin-replace; see rollup.config.js
     iro.Color = IroColor;
     iro.ColorPicker = IroColorPickerWidget;
     var ui;

@@ -92,7 +92,7 @@ export class IroComponentWrapper extends Component<Props, State> {
       case InputEventType.TouchEnd:
         inputHandler(x, y, IroInputType.End);
         SECONDARY_EVENTS.forEach(event => {
-          document.removeEventListener(event, this);
+          document.removeEventListener(event, this, { passive: false } as EventListenerOptions);
         });
         break;
     }
