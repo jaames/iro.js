@@ -139,7 +139,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @desc Replace all of the current colorPicker colors
    * @param newColorValues list of new colors to add
    */
-  public setColors(newColorValues: IroColorValue[]) {
+  public setColors(newColorValues: IroColorValue[], activeColorIndex = 0) {
     // Unbind color events
     this.colors.forEach(color => color.unbind());
     // Destroy old colors
@@ -147,7 +147,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
     // Add new colors
     newColorValues.forEach(colorValue => this.addColor(colorValue));
     // Reset active color
-    this.setActiveColor(0);
+    this.setActiveColor(activeColorIndex);
     this.emit('color:setAll', this.colors);
   }
 
