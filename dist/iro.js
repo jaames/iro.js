@@ -1,6 +1,6 @@
 /*!
- * iro.js v5.3.2
- * 2016-2020 James Daniel
+ * iro.js v5.4.0
+ * 2016-2021 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
  */
@@ -721,12 +721,12 @@
         sliderShape = props.sliderShape;
     var ishorizontal = props.layoutDirection === 'horizontal'; // automatically calculate sliderSize if its not defined
 
-    sliderSize = (_sliderSize = sliderSize) != null ? _sliderSize : padding * 2 + handleRadius * 2 + borderWidth * 2;
+    sliderSize = (_sliderSize = sliderSize) != null ? _sliderSize : padding * 2 + handleRadius * 2;
 
     if (sliderShape === 'circle') {
       return {
         handleStart: props.padding + props.handleRadius,
-        handleRange: width - padding * 2 - handleRadius * 2 - borderWidth * 2,
+        handleRange: width - padding * 2 - handleRadius * 2,
         width: width,
         height: width,
         cx: width / 2,
@@ -927,20 +927,6 @@
         return [[0, '#000'], [100, "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"]];
     }
   }
-  /**
-   * @desc Get the gradient coords for a slider
-   * @param props - slider props
-   */
-
-  function getSliderGradientCoords(props) {
-    var ishorizontal = props.layoutDirection === 'horizontal';
-    return {
-      x1: '0%',
-      y1: ishorizontal ? '100%' : '0%',
-      x2: ishorizontal ? '0%' : '100%',
-      y2: '0%'
-    };
-  }
 
   /**
    * @desc Get the point as the center of the wheel
@@ -963,15 +949,13 @@
 
   function translateWheelAngle(props, angle, invert) {
     var wheelAngle = props.wheelAngle;
-    var wheelDirection = props.wheelDirection;
+    var wheelDirection = props.wheelDirection; // inverted and clockwisee
 
-    if (!invert && wheelDirection === 'clockwise' || invert && wheelDirection === 'anticlockwise') {
-      angle = (invert ? 180 : 360) - (wheelAngle - angle);
-    } else {
-      angle = wheelAngle + angle;
-    } // javascript's modulo operator doesn't produce positive numbers with negative input
+    if (invert && wheelDirection === 'clockwise') { angle = wheelAngle + angle; } // clockwise (input handling)
+    else if (wheelDirection === 'clockwise') { angle = 360 - wheelAngle + angle; } // inverted and anticlockwise
+      else if (invert && wheelDirection === 'anticlockwise') { angle = wheelAngle + 180 - angle; } // anticlockwise (input handling)
+        else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; } // javascript's modulo operator doesn't produce positive numbers with negative input
     // https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
-
 
     return (angle % 360 + 360) % 360;
   }
@@ -1122,25 +1106,6 @@
     return (isSafari || isIos) && BASE_ELEMENTS.length > 0 ? location.protocol + "//" + location.host + location.pathname + location.search + url : url;
   }
   /**
-   * @desc Get the path commands to draw an svg arc
-   * @props cx - arc center point x
-   * @props cy - arc center point y
-   * @props radius - arc radius
-   * @props startAngle - arc start angle
-   * @props endAngle - arc end angle
-   */
-
-  function getSvgArcPath(cx, cy, radius, startAngle, endAngle) {
-    var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-    startAngle *= Math.PI / 180;
-    endAngle *= Math.PI / 180;
-    var x1 = cx + radius * Math.cos(endAngle);
-    var y1 = cy + radius * Math.sin(endAngle);
-    var x2 = cx + radius * Math.cos(startAngle);
-    var y2 = cy + radius * Math.sin(startAngle);
-    return "M " + x1 + " " + y1 + " A " + radius + " " + radius + " 0 " + largeArcFlag + " 0 " + x2 + " " + y2;
-  }
-  /**
    * @desc Given a specifc (x, y) position, test if there's a handle there and return its index, else return null.
    *       This is used for components like the box and wheel which support multiple handles when multicolor is active
    * @props x - point x position
@@ -1160,6 +1125,24 @@
     }
 
     return null;
+  }
+
+  function cssBorderStyles(props) {
+    return {
+      boxSizing: 'border-box',
+      border: props.borderWidth + "px solid " + props.borderColor
+    };
+  }
+  function cssGradient(type, direction, stops) {
+    return type + "-gradient(" + direction + ", " + stops.map(function (_ref) {
+      var o = _ref[0],
+          col = _ref[1];
+      return col + " " + o + "%";
+    }).join(',') + ")";
+  }
+  function cssValue(value) {
+    if (typeof value === 'string') { return value; }
+    return value + "px";
   }
 
   var iroColorPickerOptionDefaults = {
@@ -1263,7 +1246,12 @@
   function IroHandle(props) {
       var radius = props.r;
       var url = props.url;
-      return (h("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), x: props.x, y: props.y, style: {
+      return (h("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), style: {
+              top: cssValue(props.y),
+              left: cssValue(props.x),
+              width: '1px',
+              height: '1px',
+              position: 'absolute',
               overflow: 'visible'
           } },
           url && (h("use", Object.assign({ xlinkHref: resolveSvgUrl(url) }, props.props))),
@@ -1288,29 +1276,28 @@
       var radius = ref.radius;
       var handlePos = getSliderHandlePosition(props, activeColor);
       var gradient = getSliderGradient(props, activeColor);
-      var isAlpha = props.sliderType === 'alpha';
       function handleInput(x, y, type) {
           var value = getSliderValueFromInput(props, x, y);
           props.parent.inputActive = true;
           activeColor[props.sliderType] = value;
           props.onInput(type, props.id);
       }
-      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroSlider", width: width, height: height, style: rootStyles }),
-          h("defs", null,
-              h("linearGradient", Object.assign({ id: 'g' + uid }, getSliderGradientCoords(props)), gradient.map(function (ref) {
-                  var offset = ref[0];
-                  var color = ref[1];
-
-                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
-          })),
-              isAlpha && (h("pattern", { id: 'b' + uid, width: "8", height: "8", patternUnits: "userSpaceOnUse" },
-                  h("rect", { x: "0", y: "0", width: "8", height: "8", fill: "#fff" }),
-                  h("rect", { x: "0", y: "0", width: "4", height: "4", fill: "#ccc" }),
-                  h("rect", { x: "4", y: "4", width: "4", height: "4", fill: "#ccc" }))),
-              isAlpha && (h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#b' + uid)) + ")") }),
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#g' + uid)) + ")") })))),
-          h("rect", { className: "IroSliderBg", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl((isAlpha ? '#f' : '#g') + uid)) + ")") }),
+      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("div", Object.assign({}, rootProps, { className: "IroSlider", style: Object.assign({}, {position: 'relative',
+              width: cssValue(width),
+              height: cssValue(height),
+              borderRadius: cssValue(radius),
+              // checkered bg to represent alpha
+              background: "conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0)",
+              backgroundSize: '8px 8px'},
+              rootStyles) }),
+          h("div", { className: "IroSliderGradient", style: Object.assign({}, {position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: cssValue(radius),
+                  background: cssGradient('linear', props.layoutDirection === 'horizontal' ? 'to top' : 'to right', gradient)},
+                  cssBorderStyles(props)) }),
           h(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
   }
   IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
@@ -1349,41 +1336,41 @@
           // let the color picker fire input:start, input:move or input:end events
           props.onInput(inputType, props.id);
       }
-      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroBox", width: width, height: height, style: rootStyles }),
-          h("defs", null,
-              h("linearGradient", { id: 's' + uid, x1: "0%", y1: "0%", x2: "100%", y2: "0%" }, gradients[0].map(function (ref) {
-                  var offset = ref[0];
-                  var color = ref[1];
-
-                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
-          })),
-              h("linearGradient", { id: 'l' + uid, x1: "0%", y1: "0%", x2: "0%", y2: "100%" }, gradients[1].map(function (ref) {
-                  var offset = ref[0];
-                  var color = ref[1];
-
-                  return (h("stop", { offset: (offset + "%"), "stop-color": color }));
-          })),
-              h("pattern", { id: 'f' + uid, width: "100%", height: "100%" },
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#s' + uid)) + ")") }),
-                  h("rect", { x: "0", y: "0", width: "100%", height: "100%", fill: ("url(" + (resolveSvgUrl('#l' + uid)) + ")") }))),
-          h("rect", { className: "IroBoxBg", rx: radius, ry: radius, x: props.borderWidth / 2, y: props.borderWidth / 2, width: width - props.borderWidth, height: height - props.borderWidth, "stroke-width": props.borderWidth, stroke: props.borderColor, fill: ("url(" + (resolveSvgUrl('#f' + uid)) + ")") }),
+      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("div", Object.assign({}, rootProps, { className: "IroBox", style: Object.assign({}, {width: cssValue(width),
+              height: cssValue(height),
+              position: 'relative'},
+              rootStyles) }),
+          h("div", { className: "IroBox", style: Object.assign({}, {width: '100%',
+                  height: '100%',
+                  borderRadius: cssValue(radius)},
+                  cssBorderStyles(props),
+                  {background: cssGradient('linear', 'to bottom', gradients[1])
+                      + ',' +
+                      cssGradient('linear', 'to right', gradients[0])}) }),
           colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
           h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
 
-  var HUE_STEPS = Array.apply(null, { length: 360 }).map(function (_, index) { return index; });
+  var HUE_GRADIENT_CLOCKWISE = 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)';
+  var HUE_GRADIENT_ANTICLOCKWISE = 'conic-gradient(red, magenta, blue, aqua, lime, yellow, red)';
   function IroWheel(props) {
       var ref = getWheelDimensions(props);
       var width = ref.width;
-      var radius = ref.radius;
-      var cx = ref.cx;
-      var cy = ref.cy;
       var colors = props.colors;
       var borderWidth = props.borderWidth;
       var colorPicker = props.parent;
       var activeColor = props.color;
       var hsv = activeColor.hsv;
       var handlePositions = colors.map(function (color) { return getWheelHandlePosition(props, color); });
+      var circleStyles = {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          borderRadius: '50%',
+          boxSizing: 'border-box'
+      };
       function handleInput(x, y, inputType) {
           if (inputType === 0 /* Start */) {
               // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
@@ -1407,15 +1394,20 @@
           // let the color picker fire input:start, input:move or input:end events
           props.onInput(inputType, props.id);
       }
-      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("svg", Object.assign({}, rootProps, { className: "IroWheel", width: width, height: width, style: rootStyles }),
-          h("defs", null,
-              h("radialGradient", { id: uid },
-                  h("stop", { offset: "0%", "stop-color": "#fff" }),
-                  h("stop", { offset: "100%", "stop-color": "#fff", "stop-opacity": "0" }))),
-          h("g", { className: "IroWheelHue", "stroke-width": radius, fill: "none" }, HUE_STEPS.map(function (angle) { return (h("path", { key: angle, d: getSvgArcPath(cx, cy, radius / 2, angle, angle + 1.5), stroke: ("hsl(" + (translateWheelAngle(props, angle)) + ", 100%, 50%)") })); })),
-          h("circle", { className: "IroWheelSaturation", cx: cx, cy: cy, r: radius, fill: ("url(" + (resolveSvgUrl('#' + uid)) + ")") }),
-          props.wheelLightness && (h("circle", { className: "IroWheelLightness", cx: cx, cy: cy, r: radius, fill: "#000", opacity: 1 - hsv.v / 100 })),
-          h("circle", { className: "IroWheelBorder", cx: cx, cy: cy, r: radius, fill: "none", stroke: props.borderColor, "stroke-width": borderWidth }),
+      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("div", Object.assign({}, rootProps, { className: "IroWheel", style: Object.assign({}, {width: cssValue(width),
+              height: cssValue(width),
+              position: 'relative'},
+              rootStyles) }),
+          h("div", { className: "IroWheelHue", style: Object.assign({}, circleStyles,
+                  {transform: ("rotateZ(" + (props.wheelAngle + 90) + "deg)"),
+                  background: props.wheelDirection === 'clockwise' ? HUE_GRADIENT_CLOCKWISE : HUE_GRADIENT_ANTICLOCKWISE}) }),
+          h("div", { className: "IroWheelSaturation", style: Object.assign({}, circleStyles,
+                  {background: 'radial-gradient(circle closest-side, #fff, transparent)'}) }),
+          props.wheelLightness && (h("div", { className: "IroWheelLightness", style: Object.assign({}, circleStyles,
+                  {background: '#000',
+                  opacity: 1 - hsv.v / 100}) })),
+          h("div", { className: "IroWheelBorder", style: Object.assign({}, circleStyles,
+                  cssBorderStyles(props)) }),
           colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
           h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
@@ -1724,7 +1716,7 @@
 
   var iro;
   (function (iro) {
-      iro.version = "5.3.2"; // replaced by @rollup/plugin-replace; see rollup.config.js
+      iro.version = "5.4.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
       iro.Color = IroColor;
       iro.ColorPicker = IroColorPickerWidget;
       var ui;

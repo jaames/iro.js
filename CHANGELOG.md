@@ -1,5 +1,15 @@
 ### Changelog
 
+#### 5.4.0
+
+Wow, thanks for 800 stars! I'm taking this milestone as a motivator to start working on iro.js again!
+
+This release just presents some internal refactoring around how iro.js draws its UI. Instead of SVG components are now comprised of regular HTML elements - aside from handles which will still be SVG for the foreseeable future.
+
+I'm hoping that this refactor will pave the way for making the library truly responsive in the near future. It should also make it a lot smoother and less resource-heavy overall, since we can now use conical gradients and all that nice CSS stuff instead of the hacky SVG equivalents.
+
+Watch this space! :)
+
 #### 5.3.2
 
 Adds optional second `activeColorIndex` param to `ColorPicker.setColors()` (https://github.com/jaames/iro.js/issues/162) and fixes IE11 event issue (https://github.com/jaames/iro.js/issues/163).

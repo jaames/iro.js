@@ -2,8 +2,8 @@ import { h } from 'preact';
 interface IroHandleProps {
     isActive: boolean;
     index: number;
-    x: number;
-    y: number;
+    x: number | string;
+    y: number | string;
     r: number;
     url: string;
     props: any;

@@ -1,12 +1,14 @@
 import { h } from 'preact';
 import {
   IroColor,
-  resolveSvgUrl,
   getBoxDimensions,
   getBoxGradients,
   getBoxValueFromInput,
   getBoxHandlePosition,
-  getHandleAtPoint
+  getHandleAtPoint,
+  cssBorderStyles,
+  cssGradient,
+  cssValue
 } from '@irojs/iro-core';
 
 import { IroComponentWrapper } from './ComponentWrapper';
@@ -54,40 +56,28 @@ export function IroBox(props: IroBoxProps) {
   return (
     <IroComponentWrapper {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
-        <svg 
+        <div
           { ...rootProps }
           className="IroBox"
-          width={ width }
-          height={ height }
-          style= { rootStyles }
+          style={{ 
+            width: cssValue(width),
+            height: cssValue(height),
+            position: 'relative',
+            ...rootStyles
+          }}
         >
-          <defs>
-            <linearGradient id={ 's' + uid } x1="0%" y1="0%" x2="100%" y2="0%">
-              { gradients[0].map(([ offset, color ]) => (
-                <stop offset={`${ offset }%`} stop-color={ color } />
-              ))}
-            </linearGradient>
-            <linearGradient id={ 'l' + uid } x1="0%" y1="0%" x2="0%" y2="100%">
-              { gradients[1].map(([ offset, color ]) => (
-                <stop offset={`${ offset }%`} stop-color={ color } />
-              ))}
-            </linearGradient>
-            <pattern id={ 'f' + uid } width="100%" height="100%">
-              <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#s' + uid )})`}></rect>
-              <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#l' + uid )})`}></rect>
-            </pattern>
-          </defs>
-          <rect
-            className="IroBoxBg"
-            rx={ radius } 
-            ry={ radius } 
-            x={ props.borderWidth / 2 } 
-            y={ props.borderWidth / 2 } 
-            width={ width - props.borderWidth } 
-            height={ height - props.borderWidth }
-            stroke-width={ props.borderWidth }
-            stroke={ props.borderColor }
-            fill={ `url(${resolveSvgUrl('#f' + uid )})` }
+          <div
+            className="IroBox"
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: cssValue(radius),
+              ...cssBorderStyles(props),
+              background: 
+                cssGradient('linear', 'to bottom', gradients[1]) 
+                + ',' + 
+                cssGradient('linear', 'to right', gradients[0]),
+            }}
           />
           { colors.filter(color => color !== activeColor).map(color => (
            <IroHandle 
@@ -111,7 +101,7 @@ export function IroBox(props: IroBoxProps) {
             x={ handlePositions[activeColor.index].x }
             y={ handlePositions[activeColor.index].y }
           />
-        </svg>
+        </div>
       )}
     </IroComponentWrapper>
   );

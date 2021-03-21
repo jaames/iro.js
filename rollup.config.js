@@ -16,7 +16,7 @@ const prod = build === "production";
 
 const banner = `/*!
  * iro.js v${version}
- * 2016-2020 James Daniel
+ * 2016-2021 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
  */

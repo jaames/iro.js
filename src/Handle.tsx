@@ -1,11 +1,11 @@
 import { h } from 'preact';
-import { resolveSvgUrl } from '@irojs/iro-core';
+import { resolveSvgUrl, cssValue } from '@irojs/iro-core';
 
 interface IroHandleProps {
   isActive: boolean;
   index: number;
-  x: number;
-  y: number;
+  x: number | string;
+  y: number | string;
   r: number;
   url: string;
   props: any;
@@ -19,9 +19,12 @@ export function IroHandle(props: IroHandleProps) {
   return (
     <svg 
       className={`IroHandle IroHandle--${props.index} ${props.isActive ? 'IroHandle--isActive' : ''}`}
-      x={ props.x }
-      y={ props.y }
       style={{
+        top: cssValue(props.y),
+        left: cssValue(props.x),
+        width: '1px',
+        height: '1px',
+        position: 'absolute',
         overflow: 'visible'
       }}
     >

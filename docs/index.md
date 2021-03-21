@@ -4,7 +4,7 @@ home: true
 ---
 
 ::: slot introduction
-A modern, SVG-based color picker widget for vanilla JavaScript.
+Modular, design-conscious color picker widget for JavaScript
 :::
 
 ::: slot feature-colors

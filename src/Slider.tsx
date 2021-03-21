@@ -4,12 +4,13 @@ import {
   SliderShape,
   SliderType,
   sliderDefaultOptions,
-  resolveSvgUrl,
   getSliderDimensions, 
   getSliderValueFromInput, 
   getSliderHandlePosition, 
   getSliderGradient,
-  getSliderGradientCoords,
+  cssBorderStyles,
+  cssGradient,
+  cssValue
 } from '@irojs/iro-core';
 
 import { IroComponentWrapper } from './ComponentWrapper';
@@ -29,7 +30,6 @@ export function IroSlider(props: IroSliderProps) {
   const { width, height, radius } = getSliderDimensions(props);
   const handlePos = getSliderHandlePosition(props, activeColor);
   const gradient = getSliderGradient(props, activeColor);
-  const isAlpha = props.sliderType === 'alpha';
 
   function handleInput(x: number, y: number, type: IroInputType) {
     const value = getSliderValueFromInput(props, x, y);
@@ -41,44 +41,36 @@ export function IroSlider(props: IroSliderProps) {
   return (
     <IroComponentWrapper {...props} onInput={ handleInput }>
       {(uid, rootProps, rootStyles) => (
-        <svg 
+        <div
           { ...rootProps }
           className="IroSlider"
-          width={ width }
-          height={ height }
-          style= { rootStyles }
+          style={{ 
+            position: 'relative',
+            width: cssValue(width),
+            height: cssValue(height),
+            borderRadius: cssValue(radius),
+            // checkered bg to represent alpha
+            background: `conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0)`,
+            backgroundSize: '8px 8px',
+            ...rootStyles
+          }}
         >
-          <defs>
-            <linearGradient id={ 'g' + uid } {...getSliderGradientCoords(props)}>
-              { gradient.map(([ offset, color ]) => (
-                <stop offset={`${ offset }%`} stop-color={ color } />
-              ))}
-            </linearGradient>
-            { isAlpha && (
-              <pattern id={ 'b' + uid } width="8" height="8" patternUnits="userSpaceOnUse">
-                <rect x="0" y="0" width="8" height="8" fill="#fff"/>
-                <rect x="0" y="0" width="4" height="4" fill="#ccc"/>
-                <rect x="4" y="4" width="4" height="4" fill="#ccc"/>
-              </pattern>
-            )}
-            { isAlpha && (
-              <pattern id={ 'f' + uid } width="100%" height="100%">
-                <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#b' + uid )})`}></rect>
-                <rect x="0" y="0" width="100%" height="100%" fill={`url(${resolveSvgUrl( '#g' + uid )})`}></rect>
-              </pattern>
-            )}
-          </defs>
-          <rect 
-            className="IroSliderBg"
-            rx={ radius } 
-            ry={ radius } 
-            x={ props.borderWidth / 2 } 
-            y={ props.borderWidth / 2 } 
-            width={ width - props.borderWidth } 
-            height={ height - props.borderWidth }
-            stroke-width={ props.borderWidth }
-            stroke={ props.borderColor }
-            fill={ `url(${resolveSvgUrl( (isAlpha ? '#f' : '#g') + uid )})` }
+          <div
+            className="IroSliderGradient"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: `100%`,
+              height: `100%`,
+              borderRadius: cssValue(radius),
+              background: cssGradient(
+                'linear', 
+                props.layoutDirection === 'horizontal' ? 'to top' : 'to right',
+                gradient
+              ),
+              ...cssBorderStyles(props)
+            }}
           />
           <IroHandle
             isActive={ true }
@@ -87,9 +79,9 @@ export function IroSlider(props: IroSliderProps) {
             url={ props.handleSvg }
             props={ props.handleProps }
             x={ handlePos.x }
-            y={ handlePos.y }
+            y={ handlePos.y } // todo: use percentage
           />
-        </svg>
+        </div>
       )}
     </IroComponentWrapper>
   );

@@ -1,7 +1,7 @@
 <h1 align="center"><a href="//iro.js.org" target="blank"><img height="340" src="https://raw.githubusercontent.com/jaames/iro.js/master/assets/screenshot.png"/><br/>iro.js</a></h1>
 
 <p align="center">
-  <b>Modular color picker widget for JavaScript, with an SVG-based UI and support for a bunch of color formats | <a href="//iro.js.org" target="blank">iro.js.org</a></b>
+  <b>Modular, design-conscious color picker widget for JavaScript - with support for a bunch of color formats | <a href="//iro.js.org" target="blank">iro.js.org</a></b>
 </p>
 
 <p align="center">
