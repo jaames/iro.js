@@ -3,7 +3,7 @@ layout: 首页
 home: true
 ---
 
-::: slot introduction A modern, SVG-based color picker widget for vanilla JavaScript. :::
+::: slot introduction Modular, design-conscious color picker widget for JavaScript :::
 
 ::: slot feature-colors Work with colors in hex, RGB, HSV and HSL formats (plus kelvin temperatures!) in one simple, frictionless API. :::
 
