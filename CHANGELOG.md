@@ -1,5 +1,19 @@
 ### Changelog
 
+#### 5.5.0
+
+##### Additions
+
+- Added `activeHandleRadius` ColorPicker option for overriding the radius of active color handles. See https://github.com/jaames/iro.js/issues/166
+
+- Added `kelvin` object option for a Color's constructor and `set()` method. See https://github.com/jaames/iro.js/issues/149
+
+##### Fixes
+
+- Fixed an issue where calling a ColorPicker's `resize()` or `setOptions()` methods directly after another state update (e.g `addColor`, `removeColor`, `setColors`, etc) would cause the color picker to lock up. See https://github.com/jaames/iro.js/issues/156.
+
+- Prevented ColorWheel events from being registered if they began inside the wheel's square hitbox, but not inside the circular boundaries of the wheel.
+
 #### 5.4.0
 
 Wow, thanks for 800 stars! I'm taking this milestone as a motivator to start working on iro.js again!

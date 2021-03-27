@@ -3,6 +3,7 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
   width: 290,
   height: 360,
   handleRadius: 8,
+  activeHandleRadius: 10,
   handleUrl: null,
   // handleUrl: "#test",
   handleOrigin: {y: 0, x: 0},

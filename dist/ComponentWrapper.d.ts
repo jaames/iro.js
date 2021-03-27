@@ -1,7 +1,7 @@
 import { Component, h } from 'preact';
 import { IroInputType } from './ComponentTypes';
 interface Props {
-    onInput: (x: number, y: number, type: IroInputType) => void;
+    onInput: (x: number, y: number, type: IroInputType) => boolean | void;
 }
 interface State {
 }

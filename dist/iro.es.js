@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.4.0
+ * iro.js v5.5.0
  * 2016-2021 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -158,12 +158,14 @@ function () {
     } else if (typeof value === 'object') {
       if (value instanceof IroColor) {
         this.hsv = value.hsv;
-      } else if (typeof value === 'object' && 'r' in value && 'g' in value && 'b' in value) {
+      } else if ('r' in value && 'g' in value && 'b' in value) {
         this.rgb = value;
-      } else if (typeof value === 'object' && 'h' in value && 's' in value && 'v' in value) {
+      } else if ('h' in value && 's' in value && 'v' in value) {
         this.hsv = value;
-      } else if (typeof value === 'object' && 'h' in value && 's' in value && 'l' in value) {
+      } else if ('h' in value && 's' in value && 'l' in value) {
         this.hsl = value;
+      } else if ('kelvin' in value) {
+        this.kelvin = value.kelvin;
       }
     } else {
       throw new Error('Invalid color value');
@@ -922,17 +924,54 @@ function getSliderGradient(props, color) {
   }
 }
 
+var TAU = Math.PI * 2; // javascript's modulo operator doesn't produce positive numbers with negative input
+// https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
+
+var mod = function mod(a, n) {
+  return (a % n + n) % n;
+}; // distance between points (x, y) and (0, 0)
+
+
+var dist = function dist(x, y) {
+  return Math.sqrt(x * x + y * y);
+};
+/**
+ * @param props - wheel props
+ * @internal
+ */
+
+
+function getHandleRange(props) {
+  return props.width / 2 - props.padding - props.handleRadius - props.borderWidth;
+}
+/**
+ * Returns true if point (x, y) lands inside the wheel
+ * @param props - wheel props
+ * @param x
+ * @param y
+ */
+
+
+function isInputInsideWheel(props, x, y) {
+  var _getWheelDimensions = getWheelDimensions(props),
+      cx = _getWheelDimensions.cx,
+      cy = _getWheelDimensions.cy;
+
+  var r = props.width / 2;
+  return dist(cx - x, cy - y) < r;
+}
 /**
  * @desc Get the point as the center of the wheel
  * @param props - wheel props
  */
+
 function getWheelDimensions(props) {
-  var rad = props.width / 2;
+  var r = props.width / 2;
   return {
     width: props.width,
-    radius: rad - props.borderWidth,
-    cx: rad,
-    cy: rad
+    radius: r - props.borderWidth,
+    cx: r,
+    cy: r
   };
 }
 /**
@@ -948,10 +987,8 @@ function translateWheelAngle(props, angle, invert) {
   if (invert && wheelDirection === 'clockwise') { angle = wheelAngle + angle; } // clockwise (input handling)
   else if (wheelDirection === 'clockwise') { angle = 360 - wheelAngle + angle; } // inverted and anticlockwise
     else if (invert && wheelDirection === 'anticlockwise') { angle = wheelAngle + 180 - angle; } // anticlockwise (input handling)
-      else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; } // javascript's modulo operator doesn't produce positive numbers with negative input
-  // https://dev.to/maurobringolf/a-neat-trick-to-compute-modulo-of-negative-numbers-111e
-
-  return (angle % 360 + 360) % 360;
+      else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; }
+  return mod(angle, 360);
 }
 /**
  * @desc Get the current handle position for a given color
@@ -962,12 +999,12 @@ function translateWheelAngle(props, angle, invert) {
 function getWheelHandlePosition(props, color) {
   var hsv = color.hsv;
 
-  var _getWheelDimensions = getWheelDimensions(props),
-      cx = _getWheelDimensions.cx,
-      cy = _getWheelDimensions.cy;
+  var _getWheelDimensions2 = getWheelDimensions(props),
+      cx = _getWheelDimensions2.cx,
+      cy = _getWheelDimensions2.cy;
 
-  var handleRange = props.width / 2 - props.padding - props.handleRadius - props.borderWidth;
-  var handleAngle = (180 + translateWheelAngle(props, hsv.h, true)) * (Math.PI / 180);
+  var handleRange = getHandleRange(props);
+  var handleAngle = (180 + translateWheelAngle(props, hsv.h, true)) * (TAU / 360);
   var handleDist = hsv.s / 100 * handleRange;
   var direction = props.wheelDirection === 'clockwise' ? -1 : 1;
   return {
@@ -983,18 +1020,18 @@ function getWheelHandlePosition(props, color) {
  */
 
 function getWheelValueFromInput(props, x, y) {
-  var _getWheelDimensions2 = getWheelDimensions(props),
-      cx = _getWheelDimensions2.cx,
-      cy = _getWheelDimensions2.cy;
+  var _getWheelDimensions3 = getWheelDimensions(props),
+      cx = _getWheelDimensions3.cx,
+      cy = _getWheelDimensions3.cy;
 
-  var handleRange = props.width / 2 - props.padding - props.handleRadius - props.borderWidth;
+  var handleRange = getHandleRange(props);
   x = cx - x;
   y = cy - y; // Calculate the hue by converting the angle to radians
 
-  var hue = translateWheelAngle(props, Math.atan2(-y, -x) * (180 / Math.PI)); // Find the point's distance from the center of the wheel
+  var hue = translateWheelAngle(props, Math.atan2(-y, -x) * (360 / TAU)); // Find the point's distance from the center of the wheel
   // This is used to show the saturation level
 
-  var handleDist = Math.min(Math.sqrt(x * x + y * y), handleRange);
+  var handleDist = Math.min(dist(x, y), handleRange);
   return {
     h: Math.round(hue),
     s: Math.round(100 / handleRange * handleDist)
@@ -1149,6 +1186,7 @@ var iroColorPickerOptionDefaults = {
   borderColor: '#fff',
   borderWidth: 0,
   handleRadius: 8,
+  activeHandleRadius: null,
   handleSvg: null,
   handleProps: {
     x: 0,
@@ -1215,10 +1253,12 @@ var IroComponentWrapper = /*@__PURE__*/(function (Component) {
         switch (e.type) {
             case "mousedown" /* MouseDown */:
             case "touchstart" /* TouchStart */:
-                SECONDARY_EVENTS.forEach(function (event) {
-                    document.addEventListener(event, this$1, { passive: false });
-                });
-                inputHandler(x, y, 0 /* Start */);
+                var result = inputHandler(x, y, 0 /* Start */);
+                if (result !== false) {
+                    SECONDARY_EVENTS.forEach(function (event) {
+                        document.addEventListener(event, this$1, { passive: false });
+                    });
+                }
                 break;
             case "mousemove" /* MouseMove */:
             case "touchmove" /* TouchMove */:
@@ -1342,7 +1382,7 @@ function IroBox(props) {
                     + ',' +
                     cssGradient('linear', 'to right', gradients[0])}) }),
         colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-        h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+        h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.activeHandleRadius || props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
 }
 
 var HUE_GRADIENT_CLOCKWISE = 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)';
@@ -1367,6 +1407,12 @@ function IroWheel(props) {
     };
     function handleInput(x, y, inputType) {
         if (inputType === 0 /* Start */) {
+            // input hitbox is a square, 
+            // so we want to ignore any initial clicks outside the circular shape of the wheel
+            if (!isInputInsideWheel(props, x, y)) {
+                // returning false will cease all event handling for this interaction
+                return false;
+            }
             // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
             var activeHandle = getHandleAtPoint(props, x, y, handlePositions);
             // If the input hit a handle, set it as the active handle, but don't update the color
@@ -1403,7 +1449,7 @@ function IroWheel(props) {
         h("div", { className: "IroWheelBorder", style: Object.assign({}, circleStyles,
                 cssBorderStyles(props)) }),
         colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-        h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+        h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.activeHandleRadius || props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
 }
 
 function createWidget(WidgetComponent) {
@@ -1612,7 +1658,7 @@ var IroColorPicker = /*@__PURE__*/(function (Component) {
     };
     // Public utility methods
     IroColorPicker.prototype.setOptions = function setOptions (newOptions) {
-        this.setState(Object.assign({}, this.state, newOptions));
+        this.setState(newOptions);
     };
     /**
      * @desc Resize the color picker
@@ -1710,7 +1756,7 @@ var IroColorPickerWidget = createWidget(IroColorPicker);
 
 var iro;
 (function (iro) {
-    iro.version = "5.4.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
+    iro.version = "5.5.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
     iro.Color = IroColor;
     iro.ColorPicker = IroColorPickerWidget;
     var ui;
