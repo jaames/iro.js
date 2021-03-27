@@ -221,7 +221,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   // Public utility methods
 
   public setOptions(newOptions: Partial<ColorPickerState>) {
-    this.setState({ ...this.state, ...newOptions });
+    this.setState(newOptions);
   }
 
   /**
@@ -229,7 +229,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
    * @param width - new width
    */
   public resize(width: number) {
-    this.setOptions({ width })
+    this.setOptions({ width });
   }
 
   /**
