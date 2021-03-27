@@ -95,7 +95,7 @@ export function IroBox(props: IroBoxProps) {
             isActive={ true }
             index={ activeColor.index }
             fill={ activeColor.hslString }
-            r={ props.handleRadius }
+            r={ props.activeHandleRadius || props.handleRadius }
             url={ props.handleSvg }
             props={ props.handleProps }
             x={ handlePositions[activeColor.index].x }
