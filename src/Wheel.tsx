@@ -3,6 +3,7 @@ import {
   IroColor,
   cssGradient,
   cssBorderStyles,
+  isInputInsideWheel,
   getWheelDimensions,
   getWheelHandlePosition,
   getWheelValueFromInput,
@@ -42,6 +43,12 @@ export function IroWheel(props: IroWheelProps) {
 
   function handleInput(x: number, y: number, inputType: IroInputType) {
     if (inputType === IroInputType.Start) {
+      // input hitbox is a square, 
+      // so we want to ignore any initial clicks outside the circular shape of the wheel
+      if (!isInputInsideWheel(props, x, y)) {
+        // returning false will cease all event handling for this interaction
+        return false;
+      }
       // getHandleAtPoint() returns the index for the handle if the point 'hits' it, or null otherwise
       const activeHandle = getHandleAtPoint(props, x, y, handlePositions);
       // If the input hit a handle, set it as the active handle, but don't update the color

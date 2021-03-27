@@ -13,7 +13,7 @@ const enum InputEventType {
 const SECONDARY_EVENTS = [InputEventType.MouseMove, InputEventType.TouchMove, InputEventType.MouseUp, InputEventType.TouchEnd];
 
 interface Props {
-  onInput: (x: number, y: number, type: IroInputType) => void;
+  onInput: (x: number, y: number, type: IroInputType) => boolean | void;
 }
 
 interface State {}
@@ -79,10 +79,12 @@ export class IroComponentWrapper extends Component<Props, State> {
     switch (e.type) {
       case InputEventType.MouseDown:
       case InputEventType.TouchStart:
-        SECONDARY_EVENTS.forEach(event => {
-          document.addEventListener(event, this, { passive: false });
-        });
-        inputHandler(x, y, IroInputType.Start);
+        const result = inputHandler(x, y, IroInputType.Start);
+        if (result !== false) {
+          SECONDARY_EVENTS.forEach(event => {
+            document.addEventListener(event, this, { passive: false });
+          });
+        }
         break;
       case InputEventType.MouseMove:
       case InputEventType.TouchMove:
