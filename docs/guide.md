@@ -83,6 +83,7 @@ var colorPicker = new iro.ColorPicker("#picker", {
 | `borderWidth`    | Width of the border around the controls. Set to `0` for no border. | `0` |
 | `borderColor`    | Color of the border. Any valid CSS color is supported. | `"#ffffff"` |
 | `handleRadius`   | Radius of the control handles. | `8` |
+| `activeHandleRadius` | Radius of the control handle for the currently selected color. | Inherits `handleRadius` |
 | `handleSvg`      | Custom handle SVG, used for [custom handles](/advanced.html#custom-handles). | `null` |
 | `handleProps`    | Custom handle properties, used for [custom handles](/advanced.html#custom-handles). | `{x:0, y:0}` |
 | `wheelLightness` | If set to `false`, the color wheel will not fade to black when the lightness decreases. | `true` |
