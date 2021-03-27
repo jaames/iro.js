@@ -79,41 +79,47 @@ title: 颜色选择器 API
 
 **默认值**: `8`
 
+### `activeHandleRadius`
+
+Overrides `handleRadius` for the handle of the currently selected color.
+
+**Default value**: Inherits `handleRadius` value by default
+
 ### `handleSvg`
 
-[自定义手柄](/advanced.html#自定义手柄)的SVG参考。 这应该是一个与您的手柄SVG匹配的ID选择器。
+SVG reference for [Custom Handles](/advanced.html#custom-handles). This should be an ID selector that matches your handle SVG.
 
-**默认值**: `null` (使用默认手柄)
+**Default value**: `null` (default handle is used)
 
 ### `handleProps`
 
-[自定义手柄](/advanced.html#自定义手柄) 的属性。
+Properties for [Custom Handles](/advanced.html#custom-handles).
 
-**默认值**: `{ x: 0, y: 0 }`
+**Default value**: `{ x: 0, y: 0 }`
 
 ### `wheelLightness`
 
-如果设置为 `false`，当亮度降低时，颜色轮将不会变成黑色。
+If set to `false`, the color wheel will not fade to black when the lightness decreases.
 
-**默认值**: `true`
+**Default value**: `true`
 
 ### `wheelAngle`
 
-色轮的色调渐变的起始角度，以度为单位。
+Starting angle of the color wheel's hue gradient, measured in degrees.
 
-**默认值**: `0`
+**Default value**: `0`
 
 ### `wheelDirection`
 
-颜色轮的色调渐变方向，可选 顺时针`"clockwise"` 或 逆时针`"anticlockwise"`。
+Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlockwise"`.
 
-**默认值**: `"anticlockwise"`
+**Default value**: `"anticlockwise"`
 
 ### `sliderSize`
 
-滑块大小，以像素为单位。
+Slider size, measued in pixels.
 
-**默认值**: 默认情况下，这将自动以 `padding` 和 `handleRadius` 计算。
+**Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
 
 ### `boxHeight`
 
@@ -151,7 +157,7 @@ The ID value passed to the color picker config.
 
 ## 事件方法
 
-**参数：**
+**Arguments:**
 
 * `{Number}` width 宽度
 * `{Number}` height 高度
@@ -235,7 +241,7 @@ Set the currently 'active' color (the color that is selected and highlighted).
 
 Replaces all the colors currently on the color picker with a new set of colors.
 
-**参数：**
+**Arguments:**
 
 * `{Color []}` 新的颜色值
 
@@ -261,7 +267,7 @@ Force the color picker to rerender.
 
 Used internally to dispatch an event. All function arguments after the event type will be passed to the event callback.
 
-**参数：**
+**Arguments:**
 
 * `{String}` [事件类型](#事件)
 
@@ -287,7 +293,7 @@ Similar to `color:change`, except this is only fired whenever the color is chang
 
 ### `input:start`
 
-Fired whenever the users starts interacting with the color picker controls. 此事件的回调将收到当前的颜色对象。
+Fired whenever the users starts interacting with the color picker controls. This event's callbacks will receive the current color object.
 
 ### `input:move`
 
