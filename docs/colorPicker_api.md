@@ -79,6 +79,12 @@ Radius of the control handles, measued in pixels.
 
 **Default value**: `8`
 
+### `activeHandleRadius`
+
+Overrides `handleRadius` for the handle of the currently selected color.
+
+**Default value**: Inherits `handleRadius` value by default
+
 ### `handleSvg`
 
 SVG reference for [Custom Handles](/advanced.html#custom-handles). This should be an ID selector that matches your handle SVG.
