@@ -17,6 +17,7 @@ module.exports = {
     ['meta', { name: 'twitter:image', property: 'og:image', content: 'https://iro.js.org/assets/social.png' }],
     ['meta', { name: 'twitter:image:width', property: 'og:image:width', content: '800' }],
     ['meta', { name: 'twitter:image:height', property: 'og:image:height', content: '400' }],
+    ['script', { async: true, defer: true, 'data-domain': 'iro.js.org', src: 'https://st2.jamesdaniel.dev/js/index.js' }],
   ],
   locales: {
     // The key is the path for the locale to be nested under.
@@ -90,12 +91,6 @@ module.exports = {
           '/zh/': '提示'
         }
       },
-    ],
-    [
-      '@vuepress/plugin-google-analytics', 
-      {
-        'ga': 'UA-52026208-5'
-      }
     ]
   ],
   configureWebpack: {
