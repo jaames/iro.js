@@ -75,10 +75,12 @@ module.exports = {
     },
     sidebarLinks: [
       ['https://github.com/jaames/iro.js', 'iro.js on GitHub'],
-      ['https://codepen.io/rakujira/pen/WZOeNq?editors=0010', 'Codepen Demo'],
-      ['https://github.com/jaames/iro.js/issues', 'Open an Issue / Feature Request'],
+      ['https://codepen.io/collection/XQgGRB', 'Codepen Examples'],
+      ['https://github.com/jaames/iro.js/discussions', 'Forum'],
+      ['https://github.com/jaames/iro.js/discussions/categories/feature-requests', 'Feature Requests'],
+      ['https://github.com/jaames/iro.js/issues', 'Issues'],
       ['https://github.com/sponsors/jaames', 'Become a Sponsor'],
-      ['https://twitter.com/rakujira', 'Follow me on Twitter'],
+      ['https://twitter.com/rakujira', 'Yell at me on Twitter'],
     ]
   },
   plugins: [
