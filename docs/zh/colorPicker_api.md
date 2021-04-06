@@ -81,7 +81,7 @@ title: 颜色选择器 API
 
 ### `activeHandleRadius`
 
-Overrides `handleRadius` for the handle of the currently selected color.
+为当前选择的颜色重写 `手柄半径`。
 
 **Default value**: Inherits `handleRadius` value by default
 
