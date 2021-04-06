@@ -98,11 +98,11 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-There's a few optional box-specific config options that can be used:
+可以使用一些可选的特定于盒子的配置选项：
 
-| 选项          | 用途                                                                                                  | 默认值    |
-|:----------- |:--------------------------------------------------------------------------------------------------- |:------ |
-| `boxHeight` | Height of the box, measured in pixels. If this isn't set, it will use the box's width as its height | `null` |
+| 选项          | 用途                                  | 默认值    |
+|:----------- |:----------------------------------- |:------ |
+| `boxHeight` | 方框的高度，以像素为单位。 如果没有设置，它将使用盒子的宽度作为其高度 | `null` |
 
 #### Sliders 滑块
 
@@ -167,11 +167,11 @@ There's a few optional box-specific config options that can be used:
   
 ]"/> -->
 
-Sliders allow the user to adjust a specific color channel. There are multiple slider types available, covering **hue**, **saturation**, **value**, **red**, **green**, **blue**, **alpha** and **kelvin temperature**.
+滑块允许用户调整特定的颜色通道。 有多种滑块类型可用，包括**色调**，**饱和度**，**值**，**红色**，**绿色**，**蓝色**，**alpha **和**冷暖值（开尔文温度）**。
 
 ##### `sliderType 滑块类型`
 
-The type of slider can be specified with the `sliderType` option:
+可以使用 `sliderType` 选项指定滑块类型：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -179,7 +179,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
     { 
       component: iro.ui.Slider,
       options: {
-        // can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'
+        // 也可以是'saturation', 'value', 'red', 'green', 'blue', 'alpha' 或 'kelvin'
         sliderType: 'hue'
       }
     },
@@ -187,16 +187,16 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-If `sliderType` is set to `'kelvin'`, the temperature range can be set with these options:
+如果 `sliderType` 设置为 `kelvin`, 色温范围可以用这些选项设置：
 
-| Option           | Purpose                                                         | Default Value |
-|:---------------- |:--------------------------------------------------------------- |:------------- |
-| `minTemperature` | Minimum color temperature, in Kelvin (smallest value is `2000`) | `2200`        |
-| `maxTemperature` | Maximum color temperature, in Kelvin (largest value is `40000`) | `11000`       |
+| 选项               | 用途                        | 默认值     |
+|:---------------- |:------------------------- |:------- |
+| `minTemperature` | Kelvin最小色温值(最小值为 `2000`)  | `2200`  |
+| `maxTemperature` | Kelvin最大色温值(最大值是 `40000`) | `11000` |
 
 ##### `sliderShape 滑块形状`
 
-The `sliderShape` option can also be used to make the slider circular:
+`sliderShape` 选项也可用于使滑块变为圆形：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -213,11 +213,11 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 ## 多颜色选择器
 
-iro.js supports having more than one selectable colors on the same color picker at any time, which can be useful for situations where you want the user to be able to work with color themes or harmonies!
+iro.js支持随时在同一颜色选择器上具有多种可选颜色，这对于希望用户能够处理颜色主题的情况非常有用！
 
 ### 设置
 
-The `colors` [config option](/guide.html#color-picker-options) can be used to provide an intial list of colors to the color picker. Any [supported color format](/color_api.html#supported-color-formats) will work here:
+`colors` [配置选项](/guide.html#颜色选择器选项) 可以用来为颜色选择器提供一份颜色列表。 任何 [支持的颜色格式](/color_api.html#支持的颜色格式) 将在这里工作：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -231,9 +231,9 @@ var colorPicker = new iro.ColorPicker('#picker', {
 
 ### 使用多个颜色
 
-An array of color objects which can be used to **get** and **set** the value of each color can be found on the color picker's `colors` property. This array will be in the same order as the colors passed to the color picker during [setup](#setup).
+颜色对象数组可用于** get **和** set **，每种颜色的值可以在颜色选择器的` colors `属性中找到。 此数组将在 [设置](#设置) 期间以相同的颜色传递给颜色选择器。
 
-It's worth checking out the [working with colors guide](/guide.html#working-with-colors) to learn more about how these individual color objects work, but here's a quick overview:
+值得查阅[使用颜色指南](/guide.html#使用颜色)，以了解有关这些单个颜色对象如何工作的更多信息，但这里有一个简要概述：
 
 ```js
 //将第一种颜色设置为新值
@@ -250,7 +250,7 @@ colorPicker.colors.forEach(function (color) {
 
 ### 事件
 
-When working with [events](/guide.html#color-picker-events), it's important to remember that all of the color-change events (like `color:change`, `input:change`, `input:start`, etc) will fire for every color. To find which color fired the event, you can use the color's `index` property:
+在处理[事件](/guide.html#颜色选择事件)时，请务必记住所有颜色更改事件将针对每种颜色触发 (例如` color:change ` ，` input:change `，` input:start `等)。 要找到触发事件的颜色，您可以使用颜色的 `index` 属性：
 
 ```js
 colorPicker.on('color:change', function(color) {
@@ -265,7 +265,7 @@ colorPicker.on('color:change', function(color) {
 
 ### 活动颜色
 
-The 'active' color refers to the color that was most recently selected by the user. When working with multiple colors on the same color picker, the colorPicker's `color` property will always reflect the currently active color:
+“活动”颜色是指最近由用户选择的颜色。 当在同一颜色选择器上使用多个颜色时，颜色选择器的 `color` 属性将永远反映当前活动的颜色：
 
 ```js
 //记录活动颜色的十六进制值
@@ -275,7 +275,7 @@ console.log(colorPicker.color.hexString);
 var activeColorIndex = colorPicker.color.index;
 ```
 
-Whenever the active color changes, the `color:setActive` event will fire:
+当活动颜色改变时， `color:setActive` 事件将会触发：
 
 ```js
 colorPicker.on('color:setActive', function(color) {
@@ -283,27 +283,27 @@ colorPicker.on('color:setActive', function(color) {
 });
 ```
 
-It's also possible to programmatically set the active color, by passing the index of the desired color to the `setActiveColor` method:
+也可以通过将所需颜色的索引传递到 `setActiveColor` 方法来设置活动颜色：
 
 ```js
 colorPicker.setActiveColor(1);
 ```
 
-### Components Using the Active Color
+### 使用活动颜色的组件
 
-By default, Silder and Box components will reflect whichever color is currently active. However this can be manually overriden with their `activeIndex` option:
+默认情况下，Silder 和 Box 组件将反映当前激活的任何颜色。 然而，这可以用他们的 `活动索引` 选项手动覆盖：
 
 ```js
 var colorPicker = new iro.ColorPicker("#demoWheel", {
   layout: [
-    // default slider, will reflect whichever color is currently active
+    // 默认滑块，将反映当前处于活动状态的任何颜色
     {
       component: iro.ui.Slider,
       options: {
         sliderType: 'value'
       }
     },
-    // this slider will always reflect the color at index 2
+    // 此滑块将始终反映索引2处的颜色
     {
       component: iro.ui.Slider,
       options: {
@@ -315,24 +315,24 @@ var colorPicker = new iro.ColorPicker("#demoWheel", {
 });
 ```
 
-### Adding and Removing Colors
+### 添加和删除颜色
 
-Colors can be added and removed from the color picker at any time:
+颜色可以随时从颜色选择器中添加和删除：
 
 ```js
-// add a color to the color picker
-// this will add the color to the end of the colors array
+//为颜色选择器添加颜色
+//这会将颜色添加到colors数组的末尾
 colorPicker.addColor('rgb(100%, 100%, 100%)');
 
-// you can also specify an index for the new color
-// add a color at index 0
+//您还可以为新颜色指定索引
+//在索引0添加颜色
 colorPicker.addColor('rgb(100%, 100%, 100%)', 0);
 
-// remove the color at index 1
+//删除索引1处的颜色
 colorPicker.removeColor(1);
 ```
 
-You can also replace all of the colors at once with the `setColors` method:
+您也可以用 `setColors` 方法一次性替换所有颜色：
 
 ```js
 colorPicker.setColors([
@@ -344,23 +344,19 @@ colorPicker.setColors([
 
 ## 自定义手柄
 
-By default, the color picker uses circular control handles which can be adjusted with the `handleRadius` option. However, it's possible to override this and use your own SVGs to create custom handles.
+默认情况下，颜色选择器使用圆形控制手柄，可以使用 `handleRadius` 选项进行调整。 然而，可以覆盖这个并使用你自己的SVG来创建自定义手柄。
 
-Handle SVGs need to be placed somewhere within the page HTML, and the SVG content also needs to be wrapped inside a `<g>` tag with a unique `id`, which itself is wrapped in a `<defs>` tag:
+手柄的SVG需要放置在页面HTML内的某处，并且SVG内容也需要包装在具有唯一 `id` 的 `<g>` 标签内，该标签本身包装在 `<defs>` 标签中：
 
 ```svg
 <svg>
   <defs>
-    <g id="handle">
-      <!-- this is where the handle svg content starts -->
-      <rect x="0" y="0" width="8" height="8"></rect>
-      <!-- this is where the handle svg content ends -->
-    </g>
+    <g id="handle"><!-- 手柄的svg内容开始 --><rect x="0" y="0" width="8" height="8"></rect><!-- 手柄的svg内容结束 --></g>
   </defs>
 </svg>
 ```
 
-Then when the color picker is created, make sure the `handleSvg` option is an **id selector** which matches the handle SVG:
+然后，在创建颜色选择器时，确保` handleSvg `选项是与手柄SVG匹配的 **id选择器 **：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -368,7 +364,7 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-The custom handle SVG will be drawn as if the center point is at `x 0, y 0`, but if you need to adjust the position of the handle, the `handleProps` option can be used to change the center point:
+自定义手柄SVG将被绘制为中心点在 `x 0, y 0` ，但是如果需要调整手柄的位置，` handleProps` 选项用于更改中心点：
 
 ```js
 var colorPicker = new iro.ColorPicker('#picker', {
@@ -377,4 +373,4 @@ var colorPicker = new iro.ColorPicker('#picker', {
 });
 ```
 
-It's recommended to check out the interactive [Custom Handle Demo](https://codepen.io/rakujira/pen/vbeENp?editors=1010) on Codepen to get a better understanding of how this feature works.
+建议在 Codepen 上查看交互式 [自定义手柄演示](https://codepen.io/rakujira/pen/vbeENp?editors=1010) 以更好地了解此功能的运作方式。
