@@ -1,5 +1,13 @@
 ### Changelog
 
+#### 5.5.1
+
+##### Fixes
+
+- Fixed an issue introduced in v5.4.0 where the color picker handles were glitching out on certain devices, causing the handle width/height to skew randomly as they moved around the wheel. Likely a browser bug, but it can be avoided. 
+
+As a bonus, this also should make UI interactions a little less choppy
+
 #### 5.5.0
 
 ##### Additions
@@ -8,7 +16,7 @@
 
 - Added `kelvin` object option for a Color's constructor and `set()` method. See https://github.com/jaames/iro.js/issues/149
 
-##### Fixes
+##### Additions
 
 - Fixed an issue where calling a ColorPicker's `resize()` or `setOptions()` methods directly after another state update (e.g `addColor`, `removeColor`, `setColors`, etc) would cause the color picker to lock up. See https://github.com/jaames/iro.js/issues/156.
 

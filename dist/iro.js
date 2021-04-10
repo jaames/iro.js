@@ -1,11 +1,10 @@
 /*!
- * iro.js v5.5.0
+ * iro.js v5.5.1
  * 2016-2021 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
  */
 
-(function(l, r) { if (l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (window.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.head.appendChild(r) })(window.document);
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -1287,17 +1286,21 @@
   function IroHandle(props) {
       var radius = props.r;
       var url = props.url;
+      var cx = radius;
+      var cy = radius;
       return (h("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), style: {
-              top: cssValue(props.y),
-              left: cssValue(props.x),
-              width: '1px',
-              height: '1px',
+              transform: ("translate(" + (cssValue(props.x)) + ", " + (cssValue(props.y)) + ")"),
+              willChange: 'transform',
+              top: cssValue(-radius),
+              left: cssValue(-radius),
+              width: cssValue(radius * 2),
+              height: cssValue(radius * 2),
               position: 'absolute',
               overflow: 'visible'
           } },
           url && (h("use", Object.assign({ xlinkHref: resolveSvgUrl(url) }, props.props))),
-          !url && (h("circle", { r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
-          !url && (h("circle", { r: radius - 2, fill: props.fill, "stroke-width": 2, stroke: "#fff" }))));
+          !url && (h("circle", { cx: cx, cy: cy, r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
+          !url && (h("circle", { cx: cx, cy: cy, r: radius - 2, fill: props.fill, "stroke-width": 2, stroke: "#fff" }))));
   }
   IroHandle.defaultProps = {
       fill: 'none',
@@ -1763,7 +1766,7 @@
 
   var iro;
   (function (iro) {
-      iro.version = "5.5.0"; // replaced by @rollup/plugin-replace; see rollup.config.js
+      iro.version = "5.5.1"; // replaced by @rollup/plugin-replace; see rollup.config.js
       iro.Color = IroColor;
       iro.ColorPicker = IroColorPickerWidget;
       var ui;
@@ -1781,4 +1784,3 @@
   return iro$1;
 
 }));
-//# sourceMappingURL=iro.js.map

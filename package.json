@@ -1,6 +1,6 @@
 {
   "name": "@jaames/iro",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "description": "Modular, design-conscious color picker widget for JavaScript",
   "module": "dist/iro.es.js",
   "main": "dist/iro.js",
