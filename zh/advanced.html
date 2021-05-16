@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>高级使用 | iro.js</title>
+    <meta name="description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+    <meta name="generator" content="VuePress 1.3.1">
+    <link rel="icon" type="image/png" href="https://iro.js.org/assets/favicon.png?v=4">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://iro.js.org">
+  <meta property="og:site_name" content="iro.js">
+  <meta name="twitter:title" property="og:title" content="iro.js">
+  <meta name="twitter:description" property="og:description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+  <meta name="twitter:image" property="og:image" content="https://iro.js.org/assets/social.png">
+  <meta name="twitter:image:width" property="og:image:width" content="800">
+  <meta name="twitter:image:height" property="og:image:height" content="400">
+  <script async="true" defer="true" data-domain="iro.js.org" src="https://st2.jamesdaniel.dev/js/index.js"></script>
+    
+    <link rel="preload" href="/assets/css/0.styles.c2784a0e.css" as="style"><link rel="preload" href="/assets/js/app.f4f8dc1f.js" as="script"><link rel="preload" href="/assets/js/3.fb0ca3ea.js" as="script"><link rel="preload" href="/assets/js/15.719bdefd.js" as="script"><link rel="preload" href="/assets/js/6.12593c1e.js" as="script"><link rel="prefetch" href="/assets/js/10.7f638b15.js"><link rel="prefetch" href="/assets/js/11.95b52d68.js"><link rel="prefetch" href="/assets/js/12.a41bce12.js"><link rel="prefetch" href="/assets/js/13.c900a353.js"><link rel="prefetch" href="/assets/js/14.e1704a53.js"><link rel="prefetch" href="/assets/js/16.ea5586f2.js"><link rel="prefetch" href="/assets/js/17.99807cef.js"><link rel="prefetch" href="/assets/js/18.efca62a9.js"><link rel="prefetch" href="/assets/js/19.44704363.js"><link rel="prefetch" href="/assets/js/2.d9745ba1.js"><link rel="prefetch" href="/assets/js/20.2c277c6c.js"><link rel="prefetch" href="/assets/js/21.91a27ef0.js"><link rel="prefetch" href="/assets/js/22.0ccc4717.js"><link rel="prefetch" href="/assets/js/4.d9fda26a.js"><link rel="prefetch" href="/assets/js/5.412dfb2e.js"><link rel="prefetch" href="/assets/js/7.60e50b6e.js"><link rel="prefetch" href="/assets/js/8.f8e9960a.js"><link rel="prefetch" href="/assets/js/9.2ecbd8e4.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.c2784a0e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="Page"><div class="Sidebar"><header class="SidebarHeader"><a href="/" class="ProjectTitle router-link-active"><h1>iro.js <sub>v5</sub></h1></a> <div class="SidebarHeader__sidebarToggle"><span class="menuIcon"></span></div></header> <aside class="Menu SidebarBody"><div class="MenuPanel"><h6 class="MenuPanel__title">Documentation</h6> <div class="MenuItem"><a href="/zh/introduction.html" class="MenuItem__link">
+        简介
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/guide.html" class="MenuItem__link">
+        开始使用
+      </a> <!----> <!----></div><div class="MenuItem MenuItem__active"><!----> <span class="MenuItem__link">
+        高级使用
+      </span> <ul class="MenuItem__subItemList"><li class="MenuItem__subItem"><a href="/zh/advanced.html#自定义-ui-布局" class="MenuItem__subLink">自定义 UI 布局</a></li><!----><li class="MenuItem__subItem"><a href="/zh/advanced.html#多颜色选择器" class="MenuItem__subLink">多颜色选择器</a></li><!----><!----><!----><!----><!----><li class="MenuItem__subItem"><a href="/zh/advanced.html#自定义手柄" class="MenuItem__subLink">自定义手柄</a></li></ul></div><div class="MenuItem"><a href="/zh/colorPicker_api.html" class="MenuItem__link">
+        颜色选择器 API
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/color_api.html" class="MenuItem__link">
+        颜色 API
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/migrating.html" class="MenuItem__link">
+        迁移指南
+      </a> <!----> <!----></div></div> <div class="MenuPanel"><h6 class="MenuPanel__title">Links</h6> <div class="MenuItem"><a href="https://github.com/jaames/iro.js" class="MenuItem__link">
+        iro.js on GitHub
+      </a></div><div class="MenuItem"><a href="https://codepen.io/collection/XQgGRB" class="MenuItem__link">
+        Codepen Examples
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions" class="MenuItem__link">
+        Forum
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions/categories/feature-requests" class="MenuItem__link">
+        Feature Requests
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/issues" class="MenuItem__link">
+        Issues
+      </a></div><div class="MenuItem"><a href="https://github.com/sponsors/jaames" class="MenuItem__link">
+        Become a Sponsor
+      </a></div><div class="MenuItem"><a href="https://twitter.com/rakujira" class="MenuItem__link">
+        Yell at me on Twitter
+      </a></div></div></aside></div> <main class="Content"><div class="Content__nav"><nav class="Navbar Content__search"><div class="search-box SearchBox"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div></nav> <div class="Content__language LanguageSelect"><div class="LanguageSelect__button">
+    选择语言 ▼
+  </div> <div class="LanguageSelect__list" style="display:none;"><a href="/advanced.html" class="LanguageSelect__listItem">
+      English
+    </a><a href="/zh/advanced.html" class="LanguageSelect__listItem router-link-exact-active router-link-active">
+      简体中文
+    </a></div></div></div> <header class="ArticleHeader"><h1 class="ArticleHeader__title">
+    高级使用
+  </h1></header> <article class="Article"><div class="Markdown Markdown--invert-alt content__default"><h2 id="自定义-ui-布局"><a href="#自定义-ui-布局" class="header-anchor">#</a> 自定义 UI 布局</h2> <p>iro.js带有各种内置UI组件。 使用颜色选择器的<code>layout</code>选项，可以根据需要将它们组合在一起。</p> <p>布局使用颜色选择器的 <code>layout</code> 选项配置。 这应该是一个数组，每个元素都是具有 <code>component</code> 属性的对象。 <code>component</code> 属性指定了要使用的组件类型，可以是 <code>iro.ui.Wheel</code>, <code>iro.ui.Box</code> 或者 <code>iro.ui.Slider</code>.</p> <p>例如，此处默认布局的组件定义(颜色轮和值滑块) 将会是这样的：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Wheel<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>组件定义还可以包含一个 <code>选项</code> 属性来提供 <a href="/guide.html#颜色选择器设置">配置选项</a> 覆盖个别组件。 在这个示例中，滚轮和滑块的边框宽度都是2，但是边框颜色不同：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#color-picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  borderWidth<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Wheel<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        borderColor<span class="token operator">:</span> <span class="token string">'#ffffff'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        borderColor<span class="token operator">:</span> <span class="token string">'#000000'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="可选组件"><a href="#可选组件" class="header-anchor">#</a> 可选组件</h3> <h4 id="wheel-轮子"><a href="#wheel-轮子" class="header-anchor">#</a> Wheel 轮子</h4> <div class="ColorPicker" data-v-dac5589a></div> <p>轮子允许用户调整颜色的 <strong>色调</strong> 和 <strong>饱和度</strong>. 它们还支持 <a href="#%E5%A4%9A%E9%A2%9C%E8%89%B2%E9%80%89%E6%8B%A9%E5%99%A8">同时显示多个可选颜色</a>。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Wheel<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>有几个可选的轮子专用配置选项可以使用：</p> <table><thead><tr><th style="text-align:left;">选项</th> <th style="text-align:left;">用途</th> <th style="text-align:left;">默认值</th></tr></thead> <tbody><tr><td style="text-align:left;"><code>wheelLightness</code></td> <td style="text-align:left;">如果设置为 <code>false</code>, 当亮度降低时，颜色轮将不会变成黑色.</td> <td style="text-align:left;"><code>true</code></td></tr> <tr><td style="text-align:left;"><code>wheelAngle</code></td> <td style="text-align:left;">色轮的色调渐变的起始角度，以度为单位。</td> <td style="text-align:left;"><code>0</code></td></tr> <tr><td style="text-align:left;"><code>wheelDirection</code></td> <td style="text-align:left;">颜色轮的色调渐变方向；可选 顺时针<code>&quot;clockwise&quot;</code> 或 逆时针<code>&quot;anticlockwise&quot;</code>。</td> <td style="text-align:left;"><code>&quot;anticlockwise&quot;</code></td></tr></tbody></table> <h4 id="box-盒子"><a href="#box-盒子" class="header-anchor">#</a> Box 盒子</h4> <div class="ColorPicker" data-v-dac5589a></div> <p>盒子允许用户调整颜色的 <strong>饱和度</strong> 和 <strong>值</strong>。 它们还支持 <a href="#%E5%A4%9A%E9%A2%9C%E8%89%B2%E9%80%89%E6%8B%A9%E5%99%A8">同时显示多个可选颜色</a>。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Box<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4 id="sliders-滑块"><a href="#sliders-滑块" class="header-anchor">#</a> Sliders 滑块</h4> <div class="ColorPicker" data-v-dac5589a></div> <div class="ColorPicker" data-v-dac5589a></div> <p>滑块允许用户调整特定的颜色通道。 当前有多种类型的滑块可用，包括 色调 <strong>hue</strong>，饱和度 <strong>saturation</strong>，值 <strong>value</strong>，透明通道 <strong>alpha</strong> 和 冷暖值（开尔文温度） <strong>kelvin temperature</strong>.</p> <h5 id="slidertype-滑块类型"><a href="#slidertype-滑块类型" class="header-anchor">#</a> <code>sliderType 滑块类型</code></h5> <p>可以使用 <code>sliderType</code> 选项指定滑块类型：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        sliderType<span class="token operator">:</span> <span class="token string">'hue'</span> <span class="token comment">//也可以是 'saturation', 'value', 'alpha' 或 'kelvin'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>如果 <code>sliderType</code> 设置为 <code>kelvin</code>, 色温范围可以用这些选项设置：</p> <table><thead><tr><th style="text-align:left;">选项</th> <th style="text-align:left;">用途</th> <th style="text-align:left;">默认值</th></tr></thead> <tbody><tr><td style="text-align:left;"><code>minTemperature</code></td> <td style="text-align:left;">Kelvin最小色温值(最小值为 <code>1000</code>)</td> <td style="text-align:left;"><code>2200</code></td></tr> <tr><td style="text-align:left;"><code>maxTemperature</code></td> <td style="text-align:left;">Kelvin最大色温值(最大值是 <code>40000</code>)</td> <td style="text-align:left;"><code>11000</code></td></tr></tbody></table> <h5 id="slidershape-滑块形状"><a href="#slidershape-滑块形状" class="header-anchor">#</a> <code>sliderShape 滑块形状</code></h5> <p><code>sliderShape</code> 选项也可用于使滑块变为圆形：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        sliderShape<span class="token operator">:</span> <span class="token string">'circle'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="多颜色选择器"><a href="#多颜色选择器" class="header-anchor">#</a> 多颜色选择器</h2> <p>iro.js支持随时在同一颜色选择器上具有多种可选颜色，这对于希望用户能够处理颜色主题的情况非常有用！</p> <h3 id="设置"><a href="#设置" class="header-anchor">#</a> 设置</h3> <p><code>colors</code> <a href="/guide.html#颜色选择器选项">配置选项</a> 可以用来为颜色选择器提供一份颜色列表。 任何 <a href="/color_api.html#支持的颜色格式">支持的颜色格式</a> 将在这里工作：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  colors<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">'rgb(100%, 0, 0)'</span><span class="token punctuation">,</span> <span class="token comment">//纯红色</span>
+    <span class="token string">'rgb(0, 100%, 0)'</span><span class="token punctuation">,</span> <span class="token comment">//纯绿色</span>
+    <span class="token string">'rgb(0, 0, 100%)'</span><span class="token punctuation">,</span> <span class="token comment">//纯蓝色</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="使用多个颜色"><a href="#使用多个颜色" class="header-anchor">#</a> 使用多个颜色</h3> <p>颜色对象数组可用于** get <strong>和</strong> set **，每种颜色的值可以在颜色选择器的<code>colors</code>属性中找到。 此数组将在 <a href="#%E8%AE%BE%E7%BD%AE">设置</a> 期间以相同的颜色传递给颜色选择器。</p> <p>值得查阅<a href="/guide.html#使用颜色">使用颜色指南</a>，以了解有关这些单个颜色对象如何工作的更多信息，但这里有一个简要概述：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">//将第一种颜色设置为新值</span>
+colorPicker<span class="token punctuation">.</span>colors<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>rgbString <span class="token operator">=</span> <span class="token string">'rgb(0%, 0%, 0%)'</span><span class="token punctuation">;</span>
+
+<span class="token comment">//获得第二种颜色的饱和度</span>
+<span class="token keyword">var</span> saturation <span class="token operator">=</span> colorPicker<span class="token punctuation">.</span>colors<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>saturation<span class="token punctuation">;</span>
+
+<span class="token comment">//我们还可以遍历颜色数组</span>
+colorPicker<span class="token punctuation">.</span>colors<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>color<span class="token punctuation">.</span>hexString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="事件"><a href="#事件" class="header-anchor">#</a> 事件</h3> <p>在处理<a href="/guide.html#颜色选择事件">事件</a>时，请务必记住所有颜色更改事件将针对每种颜色触发 (例如<code>color:change</code> ，<code>input:change</code>，<code>input:start</code>等)。 要找到触发事件的颜色，您可以使用颜色的 <code>index</code> 属性：</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'color:change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token comment">//如果第一种颜色改变了</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>color<span class="token punctuation">.</span>index <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'颜色0变了！'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//记录颜色索引和十六进制值</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>color<span class="token punctuation">.</span>index<span class="token punctuation">,</span> color<span class="token punctuation">.</span>hexString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="活动颜色"><a href="#活动颜色" class="header-anchor">#</a> 活动颜色</h3> <p>“活动”颜色是指最近由用户选择的颜色。 当在同一颜色选择器上使用多个颜色时，颜色选择器的 <code>color</code> 属性将永远反映当前活动的颜色：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">//记录活动颜色的十六进制值</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>colorPicker<span class="token punctuation">.</span>color<span class="token punctuation">.</span>hexString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">//您还可以使用color.index来获取活动的颜色索引！</span>
+<span class="token keyword">var</span> activeColorIndex <span class="token operator">=</span> colorPicker<span class="token punctuation">.</span>color<span class="token punctuation">.</span>index<span class="token punctuation">;</span>
+</code></pre></div><p>当活动颜色改变时， <code>color:setActive</code> 事件将会触发：</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'color:setActive'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'新的活动颜色：'</span><span class="token punctuation">,</span> color<span class="token punctuation">.</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>也可以通过将所需颜色的索引传递到 <code>setActiveColor</code> 方法来设置活动颜色：</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">setActiveColor</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="添加和删除颜色"><a href="#添加和删除颜色" class="header-anchor">#</a> 添加和删除颜色</h3> <p>颜色可以随时从颜色选择器中添加和删除：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">//为颜色选择器添加颜色</span>
+<span class="token comment">//这会将颜色添加到colors数组的末尾</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">addColor</span><span class="token punctuation">(</span><span class="token string">'rgb(100%, 100%, 100%)'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">//您还可以为新颜色指定索引</span>
+<span class="token comment">//在索引0添加颜色</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">addColor</span><span class="token punctuation">(</span><span class="token string">'rgb(100%, 100%, 100%)'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">//删除索引1处的颜色</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">removeColor</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>您也可以用 <code>setColors</code> 方法一次性替换所有颜色：</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">setColors</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+  <span class="token string">'rgba(100%, 0%, 100%)'</span>
+  <span class="token string">'rgba(0%, 0%, 0%)'</span>
+  <span class="token string">'rgba(0%, 100%, 100%)'</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="自定义手柄"><a href="#自定义手柄" class="header-anchor">#</a> 自定义手柄</h2> <p>默认情况下，颜色选择器使用圆形控制手柄，可以使用 <code>handleRadius</code> 选项进行调整。 然而，可以覆盖这个并使用你自己的SVG来创建自定义手柄。</p> <p>手柄的SVG需要放置在页面HTML内的某处，并且SVG内容也需要包装在具有唯一 <code>id</code> 的 <code>&lt;g&gt;</code> 标签内，该标签本身包装在 <code>&lt;defs&gt;</code> 标签中：</p> <div class="language-svg extra-class"><pre class="language-svg"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>svg</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>defs</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>g</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>handle<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token comment">&lt;!-- 手柄的svg内容开始 --&gt;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>rect</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>0<span class="token punctuation">&quot;</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>0<span class="token punctuation">&quot;</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>8<span class="token punctuation">&quot;</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>rect</span><span class="token punctuation">&gt;</span></span><span class="token comment">&lt;!-- 手柄的svg内容结束 --&gt;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>g</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>defs</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>svg</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>然后，在创建颜色选择器时，确保<code>handleSvg</code>选项是与手柄SVG匹配的 **id选择器 **：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  handleSvg<span class="token operator">:</span> <span class="token string">'#handle'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>自定义手柄SVG将被绘制为中心点在 <code>x 0, y 0</code> ，但是如果需要调整手柄的位置，<code>handleProps</code> 选项用于更改中心点：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  handleSvg<span class="token operator">:</span> <span class="token string">'#handle'</span><span class="token punctuation">,</span>
+  handleProps<span class="token operator">:</span> <span class="token punctuation">{</span> x<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">4</span><span class="token punctuation">,</span> y<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">4</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>建议在 Codepen 上查看交互式 <a href="https://codepen.io/rakujira/pen/vbeENp?editors=1010" target="_blank" rel="noopener noreferrer">自定义手柄演示<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 以更好地了解此功能的运作方式。</p></div></article> <footer class="ArticleFooter"><div class="ArticleNav"><a href="/zh/guide.html" class="ArticleNav__prev">← 开始使用</a> <a href="/zh/colorPicker_api.html" class="ArticleNav__next">颜色选择器 API →</a></div> <p class="ArticleFooter__editInfo">
+    Caught a mistake or want to contribute to the documentation? <a href="https://github.com/jaames/iro.js/edit/master/docs/zh/advanced.md" title="Edit page">Edit this page on github!</a></p></footer></main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.f4f8dc1f.js" defer></script><script src="/assets/js/3.fb0ca3ea.js" defer></script><script src="/assets/js/15.719bdefd.js" defer></script><script src="/assets/js/6.12593c1e.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Advanced Usage | iro.js</title>
+    <meta name="description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+    <meta name="generator" content="VuePress 1.3.1">
+    <link rel="icon" type="image/png" href="https://iro.js.org/assets/favicon.png?v=4">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://iro.js.org">
+  <meta property="og:site_name" content="iro.js">
+  <meta name="twitter:title" property="og:title" content="iro.js">
+  <meta name="twitter:description" property="og:description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+  <meta name="twitter:image" property="og:image" content="https://iro.js.org/assets/social.png">
+  <meta name="twitter:image:width" property="og:image:width" content="800">
+  <meta name="twitter:image:height" property="og:image:height" content="400">
+  <script async="true" defer="true" data-domain="iro.js.org" src="https://st2.jamesdaniel.dev/js/index.js"></script>
+    
+    <link rel="preload" href="/assets/css/0.styles.c2784a0e.css" as="style"><link rel="preload" href="/assets/js/app.f4f8dc1f.js" as="script"><link rel="preload" href="/assets/js/3.fb0ca3ea.js" as="script"><link rel="preload" href="/assets/js/8.f8e9960a.js" as="script"><link rel="preload" href="/assets/js/6.12593c1e.js" as="script"><link rel="prefetch" href="/assets/js/10.7f638b15.js"><link rel="prefetch" href="/assets/js/11.95b52d68.js"><link rel="prefetch" href="/assets/js/12.a41bce12.js"><link rel="prefetch" href="/assets/js/13.c900a353.js"><link rel="prefetch" href="/assets/js/14.e1704a53.js"><link rel="prefetch" href="/assets/js/15.719bdefd.js"><link rel="prefetch" href="/assets/js/16.ea5586f2.js"><link rel="prefetch" href="/assets/js/17.99807cef.js"><link rel="prefetch" href="/assets/js/18.efca62a9.js"><link rel="prefetch" href="/assets/js/19.44704363.js"><link rel="prefetch" href="/assets/js/2.d9745ba1.js"><link rel="prefetch" href="/assets/js/20.2c277c6c.js"><link rel="prefetch" href="/assets/js/21.91a27ef0.js"><link rel="prefetch" href="/assets/js/22.0ccc4717.js"><link rel="prefetch" href="/assets/js/4.d9fda26a.js"><link rel="prefetch" href="/assets/js/5.412dfb2e.js"><link rel="prefetch" href="/assets/js/7.60e50b6e.js"><link rel="prefetch" href="/assets/js/9.2ecbd8e4.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.c2784a0e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="Page"><div class="Sidebar"><header class="SidebarHeader"><a href="/" class="ProjectTitle router-link-active"><h1>iro.js <sub>v5</sub></h1></a> <div class="SidebarHeader__sidebarToggle"><span class="menuIcon"></span></div></header> <aside class="Menu SidebarBody"><div class="MenuPanel"><h6 class="MenuPanel__title">Documentation</h6> <div class="MenuItem"><a href="/introduction.html" class="MenuItem__link">
+        Introduction
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/guide.html" class="MenuItem__link">
+        Get Started
+      </a> <!----> <!----></div><div class="MenuItem MenuItem__active"><!----> <span class="MenuItem__link">
+        Advanced Usage
+      </span> <ul class="MenuItem__subItemList"><li class="MenuItem__subItem"><a href="/advanced.html#custom-ui-layouts" class="MenuItem__subLink">Custom UI Layouts</a></li><!----><li class="MenuItem__subItem"><a href="/advanced.html#multi-color-selections" class="MenuItem__subLink">Multi-Color Selections</a></li><!----><!----><!----><!----><!----><!----><li class="MenuItem__subItem"><a href="/advanced.html#custom-handles" class="MenuItem__subLink">Custom Handles</a></li></ul></div><div class="MenuItem"><a href="/colorPicker_api.html" class="MenuItem__link">
+        ColorPicker API
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/color_api.html" class="MenuItem__link">
+        Color API
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/migrating.html" class="MenuItem__link">
+        Migration Guide
+      </a> <!----> <!----></div></div> <div class="MenuPanel"><h6 class="MenuPanel__title">Links</h6> <div class="MenuItem"><a href="https://github.com/jaames/iro.js" class="MenuItem__link">
+        iro.js on GitHub
+      </a></div><div class="MenuItem"><a href="https://codepen.io/collection/XQgGRB" class="MenuItem__link">
+        Codepen Examples
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions" class="MenuItem__link">
+        Forum
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions/categories/feature-requests" class="MenuItem__link">
+        Feature Requests
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/issues" class="MenuItem__link">
+        Issues
+      </a></div><div class="MenuItem"><a href="https://github.com/sponsors/jaames" class="MenuItem__link">
+        Become a Sponsor
+      </a></div><div class="MenuItem"><a href="https://twitter.com/rakujira" class="MenuItem__link">
+        Yell at me on Twitter
+      </a></div></div></aside></div> <main class="Content"><div class="Content__nav"><nav class="Navbar Content__search"><div class="search-box SearchBox"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div></nav> <div class="Content__language LanguageSelect"><div class="LanguageSelect__button">
+    Languages ▼
+  </div> <div class="LanguageSelect__list" style="display:none;"><a href="/advanced.html" class="LanguageSelect__listItem router-link-exact-active router-link-active">
+      English
+    </a><a href="/zh/advanced.html" class="LanguageSelect__listItem">
+      简体中文
+    </a></div></div></div> <header class="ArticleHeader"><h1 class="ArticleHeader__title">
+    Advanced Usage
+  </h1></header> <article class="Article"><div class="Markdown Markdown--invert-alt content__default"><h2 id="custom-ui-layouts"><a href="#custom-ui-layouts" class="header-anchor">#</a> Custom UI Layouts</h2> <p>iro.js comes with a variety of built-in UI components. With the color picker's <code>layout</code> option, these can be combined together however you'd like.</p> <p>Layouts are configured with the color picker's <code>layout</code> option. This should be an array where each item is an object with a <code>component</code> property. The <code>component</code> property specifies the type of component to use, which can be either <code>iro.ui.Wheel</code>, <code>iro.ui.Box</code> or <code>iro.ui.Slider</code>.</p> <p>For example, here's what the component definitions for the default layout (a color wheel and a value slider) would look like:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Wheel<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>Component definitions can also include an <code>options</code> property to provide <a href="/guide.html#color-picker-options">config option</a> overrides to individual components. In this example, the wheel and slider will both have the same border width of 2, but different border colors:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#color-picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  borderWidth<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Wheel<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        borderColor<span class="token operator">:</span> <span class="token string">'#ffffff'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        borderColor<span class="token operator">:</span> <span class="token string">'#000000'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="available-components"><a href="#available-components" class="header-anchor">#</a> Available Components</h3> <h4 id="wheel"><a href="#wheel" class="header-anchor">#</a> Wheel</h4> <div class="ColorPicker" data-v-dac5589a></div> <p>Wheels allow the user to adjust the color's <strong>hue</strong> and <strong>saturation</strong>. They can also support showing <a href="#multi-color-selections">more than one selectable color at once</a>.</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Wheel<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>There's a few optional wheel-specific config options that can be used:</p> <table><thead><tr><th style="text-align:left;">Option</th> <th style="text-align:left;">Purpose</th> <th style="text-align:left;">Default Value</th></tr></thead> <tbody><tr><td style="text-align:left;"><code>wheelLightness</code></td> <td style="text-align:left;">If set to <code>false</code>, the color wheel will not fade to black when the lightness decreases.</td> <td style="text-align:left;"><code>true</code></td></tr> <tr><td style="text-align:left;"><code>wheelAngle</code></td> <td style="text-align:left;">Starting angle of the color wheel's hue gradient, measured in degrees.</td> <td style="text-align:left;"><code>0</code></td></tr> <tr><td style="text-align:left;"><code>wheelDirection</code></td> <td style="text-align:left;">Direction of the color wheel's hue gradient; either <code>&quot;clockwise&quot;</code> or <code>&quot;anticlockwise&quot;</code>.</td> <td style="text-align:left;"><code>&quot;anticlockwise&quot;</code></td></tr></tbody></table> <h4 id="box"><a href="#box" class="header-anchor">#</a> Box</h4> <div class="ColorPicker" data-v-dac5589a></div> <p>Boxes allow the user to adjust the color's <strong>saturation</strong> and <strong>value</strong>. They can also support showing <a href="#multi-color-selections">more than one selectable color at once</a>.</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Box<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>There's a few optional box-specific config options that can be used:</p> <table><thead><tr><th style="text-align:left;">Option</th> <th style="text-align:left;">Purpose</th> <th style="text-align:left;">Default Value</th></tr></thead> <tbody><tr><td style="text-align:left;"><code>boxHeight</code></td> <td style="text-align:left;">Height of the box, measured in pixels. If this isn't set, it will use the box's width as its height</td> <td style="text-align:left;"><code>null</code></td></tr></tbody></table> <h4 id="sliders"><a href="#sliders" class="header-anchor">#</a> Sliders</h4> <div class="ColorPicker" data-v-dac5589a></div> <p>Sliders allow the user to adjust a specific color channel. There are multiple slider types available, covering <strong>hue</strong>, <strong>saturation</strong>, <strong>value</strong>, <strong>red</strong>, <strong>green</strong>, <strong>blue</strong>, <strong>alpha</strong> and <strong>kelvin temperature</strong>.</p> <h5 id="slidertype"><a href="#slidertype" class="header-anchor">#</a> <code>sliderType</code></h5> <p>The type of slider can be specified with the <code>sliderType</code> option:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token comment">// can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'</span>
+        sliderType<span class="token operator">:</span> <span class="token string">'hue'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>If <code>sliderType</code> is set to <code>'kelvin'</code>, the temperature range can be set with these options:</p> <table><thead><tr><th style="text-align:left;">Option</th> <th style="text-align:left;">Purpose</th> <th style="text-align:left;">Default Value</th></tr></thead> <tbody><tr><td style="text-align:left;"><code>minTemperature</code></td> <td style="text-align:left;">Minimum color temperature, in Kelvin (smallest value is <code>2000</code>)</td> <td style="text-align:left;"><code>2200</code></td></tr> <tr><td style="text-align:left;"><code>maxTemperature</code></td> <td style="text-align:left;">Maximum color temperature, in Kelvin (largest value is <code>40000</code>)</td> <td style="text-align:left;"><code>11000</code></td></tr></tbody></table> <h5 id="slidershape"><a href="#slidershape" class="header-anchor">#</a> <code>sliderShape</code></h5> <p>The <code>sliderShape</code> option can also be used to make the slider circular:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> 
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        sliderShape<span class="token operator">:</span> <span class="token string">'circle'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="multi-color-selections"><a href="#multi-color-selections" class="header-anchor">#</a> Multi-Color Selections</h2> <p>iro.js supports having more than one selectable colors on the same color picker at any time, which can be useful for situations where you want the user to be able to work with color themes or harmonies!</p> <h3 id="setup"><a href="#setup" class="header-anchor">#</a> Setup</h3> <p>The <code>colors</code> <a href="/guide.html#color-picker-options">config option</a> can be used to provide an intial list of colors to the color picker. Any <a href="/color_api.html#supported-color-formats">supported color format</a> will work here:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  colors<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">'rgb(100%, 0, 0)'</span><span class="token punctuation">,</span> <span class="token comment">// pure red</span>
+    <span class="token string">'rgb(0, 100%, 0)'</span><span class="token punctuation">,</span> <span class="token comment">// pure green</span>
+    <span class="token string">'rgb(0, 0, 100%)'</span><span class="token punctuation">,</span> <span class="token comment">// pure blue</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="working-with-multiple-colors"><a href="#working-with-multiple-colors" class="header-anchor">#</a> Working with Multiple Colors</h3> <p>An array of color objects which can be used to <strong>get</strong> and <strong>set</strong> the value of each color can be found on the color picker's <code>colors</code> property. This array will be in the same order as the colors passed to the color picker during <a href="#setup">setup</a>.</p> <p>It's worth checking out the <a href="/guide.html#working-with-colors">working with colors guide</a> to learn more about how these individual color objects work, but here's a quick overview:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// set the first color to a new value</span>
+colorPicker<span class="token punctuation">.</span>colors<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>rgbString <span class="token operator">=</span> <span class="token string">'rgb(0%, 0%, 0%)'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// get the saturation of the second color</span>
+<span class="token keyword">var</span> saturation <span class="token operator">=</span> colorPicker<span class="token punctuation">.</span>colors<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>saturation<span class="token punctuation">;</span>
+
+<span class="token comment">// we can also loop through the colors array</span>
+colorPicker<span class="token punctuation">.</span>colors<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>color<span class="token punctuation">.</span>hexString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="events"><a href="#events" class="header-anchor">#</a> Events</h3> <p>When working with <a href="/guide.html#color-picker-events">events</a>, it's important to remember that all of the color-change events (like <code>color:change</code>, <code>input:change</code>, <code>input:start</code>, etc) will fire for every color. To find which color fired the event, you can use the color's <code>index</code> property:</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'color:change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// if the first color changed</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>color<span class="token punctuation">.</span>index <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'color 0 changed!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// log the color index and hex value</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>color<span class="token punctuation">.</span>index<span class="token punctuation">,</span> color<span class="token punctuation">.</span>hexString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="the-active-color"><a href="#the-active-color" class="header-anchor">#</a> The Active Color</h3> <p>The 'active' color refers to the color that was most recently selected by the user. When working with multiple colors on the same color picker, the colorPicker's <code>color</code> property will always reflect the currently active color:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// log the active color's hex value</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>colorPicker<span class="token punctuation">.</span>color<span class="token punctuation">.</span>hexString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// you can also use color.index to get the active color index!</span>
+<span class="token keyword">var</span> activeColorIndex <span class="token operator">=</span> colorPicker<span class="token punctuation">.</span>color<span class="token punctuation">.</span>index<span class="token punctuation">;</span>
+</code></pre></div><p>Whenever the active color changes, the <code>color:setActive</code> event will fire:</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'color:setActive'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'New active color:'</span><span class="token punctuation">,</span> color<span class="token punctuation">.</span>index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>It's also possible to programmatically set the active color, by passing the index of the desired color to the <code>setActiveColor</code> method:</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">setActiveColor</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="components-using-the-active-color"><a href="#components-using-the-active-color" class="header-anchor">#</a> Components Using the Active Color</h3> <p>By default, Silder and Box components will reflect whichever color is currently active. However this can be manually overriden with their <code>activeIndex</code> option:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">&quot;#demoWheel&quot;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  layout<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token comment">// default slider, will reflect whichever color is currently active</span>
+    <span class="token punctuation">{</span>
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        sliderType<span class="token operator">:</span> <span class="token string">'value'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment">// this slider will always reflect the color at index 2</span>
+    <span class="token punctuation">{</span>
+      component<span class="token operator">:</span> iro<span class="token punctuation">.</span>ui<span class="token punctuation">.</span>Slider<span class="token punctuation">,</span>
+      options<span class="token operator">:</span> <span class="token punctuation">{</span>
+        sliderType<span class="token operator">:</span> <span class="token string">'value'</span><span class="token punctuation">,</span>
+        activeIndex<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="adding-and-removing-colors"><a href="#adding-and-removing-colors" class="header-anchor">#</a> Adding and Removing Colors</h3> <p>Colors can be added and removed from the color picker at any time:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// add a color to the color picker</span>
+<span class="token comment">// this will add the color to the end of the colors array</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">addColor</span><span class="token punctuation">(</span><span class="token string">'rgb(100%, 100%, 100%)'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// you can also specify an index for the new color</span>
+<span class="token comment">// add a color at index 0</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">addColor</span><span class="token punctuation">(</span><span class="token string">'rgb(100%, 100%, 100%)'</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// remove the color at index 1</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">removeColor</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>You can also replace all of the colors at once with the <code>setColors</code> method:</p> <div class="language-js extra-class"><pre class="language-js"><code>colorPicker<span class="token punctuation">.</span><span class="token function">setColors</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+  <span class="token string">'rgba(100%, 0%, 100%)'</span>
+  <span class="token string">'rgba(0%, 0%, 0%)'</span>
+  <span class="token string">'rgba(0%, 100%, 100%)'</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="custom-handles"><a href="#custom-handles" class="header-anchor">#</a> Custom Handles</h2> <p>By default, the color picker uses circular control handles which can be adjusted with the <code>handleRadius</code> option. However, it's possible to override this and use your own SVGs to create custom handles.</p> <p>Handle SVGs need to be placed somewhere within the page HTML, and the SVG content also needs to be wrapped inside a <code>&lt;g&gt;</code> tag with a unique <code>id</code>, which itself is wrapped in a <code>&lt;defs&gt;</code> tag:</p> <div class="language-svg extra-class"><pre class="language-svg"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>svg</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>defs</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>g</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>handle<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token comment">&lt;!-- this is where the handle svg content starts --&gt;</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>rect</span> <span class="token attr-name">x</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>0<span class="token punctuation">&quot;</span></span> <span class="token attr-name">y</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>0<span class="token punctuation">&quot;</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>8<span class="token punctuation">&quot;</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>rect</span><span class="token punctuation">&gt;</span></span>
+      <span class="token comment">&lt;!-- this is where the handle svg content ends --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>g</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>defs</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>svg</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>Then when the color picker is created, make sure the <code>handleSvg</code> option is an <strong>id selector</strong> which matches the handle SVG:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  handleSvg<span class="token operator">:</span> <span class="token string">'#handle'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>The custom handle SVG will be drawn as if the center point is at <code>x 0, y 0</code>, but if you need to adjust the position of the handle, the <code>handleProps</code> option can be used to change the center point:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> colorPicker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">iro<span class="token punctuation">.</span>ColorPicker</span><span class="token punctuation">(</span><span class="token string">'#picker'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  handleSvg<span class="token operator">:</span> <span class="token string">'#handle'</span><span class="token punctuation">,</span>
+  handleProps<span class="token operator">:</span> <span class="token punctuation">{</span> x<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">4</span><span class="token punctuation">,</span> y<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">4</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>It's recommended to check out the interactive <a href="https://codepen.io/rakujira/pen/vbeENp?editors=1010" target="_blank" rel="noopener noreferrer">Custom Handle Demo<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> on Codepen to get a better understanding of how this feature works.</p></div></article> <footer class="ArticleFooter"><div class="ArticleNav"><a href="/guide.html" class="ArticleNav__prev">← Get Started</a> <a href="/colorPicker_api.html" class="ArticleNav__next">ColorPicker API →</a></div> <p class="ArticleFooter__editInfo">
+    Caught a mistake or want to contribute to the documentation? <a href="https://github.com/jaames/iro.js/edit/master/docs/advanced.md" title="Edit page">Edit this page on github!</a></p></footer></main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.f4f8dc1f.js" defer></script><script src="/assets/js/3.fb0ca3ea.js" defer></script><script src="/assets/js/8.f8e9960a.js" defer></script><script src="/assets/js/6.12593c1e.js" defer></script>
+  </body>
+</html>

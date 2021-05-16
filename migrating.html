@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Migration Guide | iro.js</title>
+    <meta name="description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+    <meta name="generator" content="VuePress 1.3.1">
+    <link rel="icon" type="image/png" href="https://iro.js.org/assets/favicon.png?v=4">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://iro.js.org">
+  <meta property="og:site_name" content="iro.js">
+  <meta name="twitter:title" property="og:title" content="iro.js">
+  <meta name="twitter:description" property="og:description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+  <meta name="twitter:image" property="og:image" content="https://iro.js.org/assets/social.png">
+  <meta name="twitter:image:width" property="og:image:width" content="800">
+  <meta name="twitter:image:height" property="og:image:height" content="400">
+  <script async="true" defer="true" data-domain="iro.js.org" src="https://st2.jamesdaniel.dev/js/index.js"></script>
+    
+    <link rel="preload" href="/assets/css/0.styles.c2784a0e.css" as="style"><link rel="preload" href="/assets/js/app.f4f8dc1f.js" as="script"><link rel="preload" href="/assets/js/3.fb0ca3ea.js" as="script"><link rel="preload" href="/assets/js/14.e1704a53.js" as="script"><link rel="prefetch" href="/assets/js/10.7f638b15.js"><link rel="prefetch" href="/assets/js/11.95b52d68.js"><link rel="prefetch" href="/assets/js/12.a41bce12.js"><link rel="prefetch" href="/assets/js/13.c900a353.js"><link rel="prefetch" href="/assets/js/15.719bdefd.js"><link rel="prefetch" href="/assets/js/16.ea5586f2.js"><link rel="prefetch" href="/assets/js/17.99807cef.js"><link rel="prefetch" href="/assets/js/18.efca62a9.js"><link rel="prefetch" href="/assets/js/19.44704363.js"><link rel="prefetch" href="/assets/js/2.d9745ba1.js"><link rel="prefetch" href="/assets/js/20.2c277c6c.js"><link rel="prefetch" href="/assets/js/21.91a27ef0.js"><link rel="prefetch" href="/assets/js/22.0ccc4717.js"><link rel="prefetch" href="/assets/js/4.d9fda26a.js"><link rel="prefetch" href="/assets/js/5.412dfb2e.js"><link rel="prefetch" href="/assets/js/6.12593c1e.js"><link rel="prefetch" href="/assets/js/7.60e50b6e.js"><link rel="prefetch" href="/assets/js/8.f8e9960a.js"><link rel="prefetch" href="/assets/js/9.2ecbd8e4.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.c2784a0e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="Page"><div class="Sidebar"><header class="SidebarHeader"><a href="/" class="ProjectTitle router-link-active"><h1>iro.js <sub>v5</sub></h1></a> <div class="SidebarHeader__sidebarToggle"><span class="menuIcon"></span></div></header> <aside class="Menu SidebarBody"><div class="MenuPanel"><h6 class="MenuPanel__title">Documentation</h6> <div class="MenuItem"><a href="/introduction.html" class="MenuItem__link">
+        Introduction
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/guide.html" class="MenuItem__link">
+        Get Started
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/advanced.html" class="MenuItem__link">
+        Advanced Usage
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/colorPicker_api.html" class="MenuItem__link">
+        ColorPicker API
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/color_api.html" class="MenuItem__link">
+        Color API
+      </a> <!----> <!----></div><div class="MenuItem MenuItem__active"><!----> <span class="MenuItem__link">
+        Migration Guide
+      </span> <ul class="MenuItem__subItemList"><li class="MenuItem__subItem"><a href="/migrating.html#migrating-from-v4" class="MenuItem__subLink">Migrating from v4</a></li><!----><!----></ul></div></div> <div class="MenuPanel"><h6 class="MenuPanel__title">Links</h6> <div class="MenuItem"><a href="https://github.com/jaames/iro.js" class="MenuItem__link">
+        iro.js on GitHub
+      </a></div><div class="MenuItem"><a href="https://codepen.io/collection/XQgGRB" class="MenuItem__link">
+        Codepen Examples
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions" class="MenuItem__link">
+        Forum
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions/categories/feature-requests" class="MenuItem__link">
+        Feature Requests
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/issues" class="MenuItem__link">
+        Issues
+      </a></div><div class="MenuItem"><a href="https://github.com/sponsors/jaames" class="MenuItem__link">
+        Become a Sponsor
+      </a></div><div class="MenuItem"><a href="https://twitter.com/rakujira" class="MenuItem__link">
+        Yell at me on Twitter
+      </a></div></div></aside></div> <main class="Content"><div class="Content__nav"><nav class="Navbar Content__search"><div class="search-box SearchBox"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div></nav> <div class="Content__language LanguageSelect"><div class="LanguageSelect__button">
+    Languages ▼
+  </div> <div class="LanguageSelect__list" style="display:none;"><a href="/migrating.html" class="LanguageSelect__listItem router-link-exact-active router-link-active">
+      English
+    </a><a href="/zh/migrating.html" class="LanguageSelect__listItem">
+      简体中文
+    </a></div></div></div> <header class="ArticleHeader"><h1 class="ArticleHeader__title">
+    Migration Guide
+  </h1></header> <article class="Article"><div class="Markdown Markdown--invert-alt content__default"><h2 id="migrating-from-v4"><a href="#migrating-from-v4" class="header-anchor">#</a> Migrating from v4</h2> <p>iro.js version 5.0.0 mostly adds new features, with minimal changes that won't affect most people using the library. However, if for whatever reason you need to use v4, the latest v4 build has been preserved in the <a href="https://github.com/jaames/iro.js/tree/v4" target="_blank" rel="noopener noreferrer">v4 branch<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>.</p> <h3 id="color-picker-options"><a href="#color-picker-options" class="header-anchor">#</a> Color Picker Options</h3> <ul><li><code>sliderHeight</code> option has been renamed to <code>sliderSize</code>.</li> <li><code>handleOrigin</code> option has been renamed to <code>handleProps</code>.</li></ul> <h3 id="plugins"><a href="#plugins" class="header-anchor">#</a> Plugins</h3> <p>The plugin API introduced in v4 has been deprecated, along with the <a href="https://github.com/irojs/iro-dynamic-css" target="_blank" rel="noopener noreferrer">iro-dynamic-css<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> and <a href="https://github.com/irojs/iro-transparency-plugin" target="_blank" rel="noopener noreferrer">iro-transparency-plugin<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> plugins. The transparency slider is now part of the core iro.js library, and the overall functionality of the dynamic CSS plugin can be easily replicated with <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties" target="_blank" rel="noopener noreferrer">CSS variables<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>.</p> <h4 id="dynamic-css-plugin-replacement"><a href="#dynamic-css-plugin-replacement" class="header-anchor">#</a> Dynamic CSS Plugin Replacement</h4> <p>Set up some JavaScript to update the <code>--iro-color-value</code> variable when the color changes:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> rootStyle <span class="token operator">=</span> document<span class="token punctuation">.</span>documentElement<span class="token punctuation">.</span>style<span class="token punctuation">;</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'color:init'</span><span class="token punctuation">,</span> <span class="token string">'color:change'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  rootStyle<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">'--iro-color-value'</span><span class="token punctuation">,</span> color<span class="token punctuation">.</span>rgbString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>Then use <code>--iro-color-value</code> in any of the styles you want to update based on the current color:</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">body</span> <span class="token punctuation">{</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--iro-color-value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div></div></article> <footer class="ArticleFooter"><div class="ArticleNav"><a href="/color_api.html" class="ArticleNav__prev">← Color API</a> <!----></div> <p class="ArticleFooter__editInfo">
+    Caught a mistake or want to contribute to the documentation? <a href="https://github.com/jaames/iro.js/edit/master/docs/migrating.md" title="Edit page">Edit this page on github!</a></p></footer></main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.f4f8dc1f.js" defer></script><script src="/assets/js/3.fb0ca3ea.js" defer></script><script src="/assets/js/14.e1704a53.js" defer></script>
+  </body>
+</html>

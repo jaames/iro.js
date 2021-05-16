@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>迁移指南 | iro.js</title>
+    <meta name="description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+    <meta name="generator" content="VuePress 1.3.1">
+    <link rel="icon" type="image/png" href="https://iro.js.org/assets/favicon.png?v=4">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://iro.js.org">
+  <meta property="og:site_name" content="iro.js">
+  <meta name="twitter:title" property="og:title" content="iro.js">
+  <meta name="twitter:description" property="og:description" content="An HSV color picker widget for JavaScript, with a modern SVG-based user interface">
+  <meta name="twitter:image" property="og:image" content="https://iro.js.org/assets/social.png">
+  <meta name="twitter:image:width" property="og:image:width" content="800">
+  <meta name="twitter:image:height" property="og:image:height" content="400">
+  <script async="true" defer="true" data-domain="iro.js.org" src="https://st2.jamesdaniel.dev/js/index.js"></script>
+    
+    <link rel="preload" href="/assets/css/0.styles.c2784a0e.css" as="style"><link rel="preload" href="/assets/js/app.f4f8dc1f.js" as="script"><link rel="preload" href="/assets/js/3.fb0ca3ea.js" as="script"><link rel="preload" href="/assets/js/21.91a27ef0.js" as="script"><link rel="prefetch" href="/assets/js/10.7f638b15.js"><link rel="prefetch" href="/assets/js/11.95b52d68.js"><link rel="prefetch" href="/assets/js/12.a41bce12.js"><link rel="prefetch" href="/assets/js/13.c900a353.js"><link rel="prefetch" href="/assets/js/14.e1704a53.js"><link rel="prefetch" href="/assets/js/15.719bdefd.js"><link rel="prefetch" href="/assets/js/16.ea5586f2.js"><link rel="prefetch" href="/assets/js/17.99807cef.js"><link rel="prefetch" href="/assets/js/18.efca62a9.js"><link rel="prefetch" href="/assets/js/19.44704363.js"><link rel="prefetch" href="/assets/js/2.d9745ba1.js"><link rel="prefetch" href="/assets/js/20.2c277c6c.js"><link rel="prefetch" href="/assets/js/22.0ccc4717.js"><link rel="prefetch" href="/assets/js/4.d9fda26a.js"><link rel="prefetch" href="/assets/js/5.412dfb2e.js"><link rel="prefetch" href="/assets/js/6.12593c1e.js"><link rel="prefetch" href="/assets/js/7.60e50b6e.js"><link rel="prefetch" href="/assets/js/8.f8e9960a.js"><link rel="prefetch" href="/assets/js/9.2ecbd8e4.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.c2784a0e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="Page"><div class="Sidebar"><header class="SidebarHeader"><a href="/" class="ProjectTitle router-link-active"><h1>iro.js <sub>v5</sub></h1></a> <div class="SidebarHeader__sidebarToggle"><span class="menuIcon"></span></div></header> <aside class="Menu SidebarBody"><div class="MenuPanel"><h6 class="MenuPanel__title">Documentation</h6> <div class="MenuItem"><a href="/zh/introduction.html" class="MenuItem__link">
+        简介
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/guide.html" class="MenuItem__link">
+        开始使用
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/advanced.html" class="MenuItem__link">
+        高级使用
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/colorPicker_api.html" class="MenuItem__link">
+        颜色选择器 API
+      </a> <!----> <!----></div><div class="MenuItem"><a href="/zh/color_api.html" class="MenuItem__link">
+        颜色 API
+      </a> <!----> <!----></div><div class="MenuItem MenuItem__active"><!----> <span class="MenuItem__link">
+        迁移指南
+      </span> <ul class="MenuItem__subItemList"><li class="MenuItem__subItem"><a href="/zh/migrating.html#从-v4-迁移" class="MenuItem__subLink">从 v4 迁移</a></li><!----><!----></ul></div></div> <div class="MenuPanel"><h6 class="MenuPanel__title">Links</h6> <div class="MenuItem"><a href="https://github.com/jaames/iro.js" class="MenuItem__link">
+        iro.js on GitHub
+      </a></div><div class="MenuItem"><a href="https://codepen.io/collection/XQgGRB" class="MenuItem__link">
+        Codepen Examples
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions" class="MenuItem__link">
+        Forum
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/discussions/categories/feature-requests" class="MenuItem__link">
+        Feature Requests
+      </a></div><div class="MenuItem"><a href="https://github.com/jaames/iro.js/issues" class="MenuItem__link">
+        Issues
+      </a></div><div class="MenuItem"><a href="https://github.com/sponsors/jaames" class="MenuItem__link">
+        Become a Sponsor
+      </a></div><div class="MenuItem"><a href="https://twitter.com/rakujira" class="MenuItem__link">
+        Yell at me on Twitter
+      </a></div></div></aside></div> <main class="Content"><div class="Content__nav"><nav class="Navbar Content__search"><div class="search-box SearchBox"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div></nav> <div class="Content__language LanguageSelect"><div class="LanguageSelect__button">
+    选择语言 ▼
+  </div> <div class="LanguageSelect__list" style="display:none;"><a href="/migrating.html" class="LanguageSelect__listItem">
+      English
+    </a><a href="/zh/migrating.html" class="LanguageSelect__listItem router-link-exact-active router-link-active">
+      简体中文
+    </a></div></div></div> <header class="ArticleHeader"><h1 class="ArticleHeader__title">
+    迁移指南
+  </h1></header> <article class="Article"><div class="Markdown Markdown--invert-alt content__default"><h2 id="从-v4-迁移"><a href="#从-v4-迁移" class="header-anchor">#</a> 从 v4 迁移</h2> <p>iro.js 5.0.0版本添加了很多新功能，最小的更改不会影响大多数使用库的人。 然而，如果你需要使用 v4，那么最新的 v4 版本已经在 <a href="https://github.com/jaames/iro.js/tree/v4" target="_blank" rel="noopener noreferrer">v4 分支<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 中保存。</p> <h3 id="颜色选择器选项"><a href="#颜色选择器选项" class="header-anchor">#</a> 颜色选择器选项</h3> <ul><li><code>sliderHeight</code> 选项已重命名为 <code>sliderSize</code>。</li> <li><code>handleOrigin</code> 选项已改名为 <code>handleProps</code>。</li></ul> <h3 id="插件"><a href="#插件" class="header-anchor">#</a> 插件</h3> <p>在 v4 中引入的插件 API 以及 <a href="https://github.com/irojs/iro-dynamic-css" target="_blank" rel="noopener noreferrer">iro-dynamic-css<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 和 <a href="https://github.com/irojs/iro-transparency-plugin" target="_blank" rel="noopener noreferrer">iro-obligy-plugin<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 插件已被废弃。 透明度滑块现在是核心iro.js库的一部分，动态CSS插件的整体功能可以轻松地通过 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties" target="_blank" rel="noopener noreferrer">CSS变量<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 复制</p> <h4 id="动态-css-插件替换"><a href="#动态-css-插件替换" class="header-anchor">#</a> 动态 CSS 插件替换</h4> <p>设置一些JavaScript，以在颜色更改时更新 <code>--iro-color-value</code> 变量：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> rootStyle <span class="token operator">=</span> document<span class="token punctuation">.</span>documentElement<span class="token punctuation">.</span>style<span class="token punctuation">;</span>
+colorPicker<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'color:init'</span><span class="token punctuation">,</span> <span class="token string">'color:change'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">color</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  rootStyle<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">'--iro-color-value'</span><span class="token punctuation">,</span> color<span class="token punctuation">.</span>rgbString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>然后以您要基于当前颜色更新的任何样式使用 <code>--iro-color-value</code> ：</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">body</span> <span class="token punctuation">{</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--iro-color-value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div></div></article> <footer class="ArticleFooter"><div class="ArticleNav"><a href="/zh/color_api.html" class="ArticleNav__prev">← 颜色 API</a> <!----></div> <p class="ArticleFooter__editInfo">
+    Caught a mistake or want to contribute to the documentation? <a href="https://github.com/jaames/iro.js/edit/master/docs/zh/migrating.md" title="Edit page">Edit this page on github!</a></p></footer></main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.f4f8dc1f.js" defer></script><script src="/assets/js/3.fb0ca3ea.js" defer></script><script src="/assets/js/21.91a27ef0.js" defer></script>
+  </body>
+</html>
