@@ -2,10 +2,8 @@ name: markdown-autodocs
 
 on:
   push:
-    branches:
-      - master
-    tags:
-      - latest
+    branches:    
+      - '**'        # matches every branch
 
 jobs:        
   auto-update-readme:
