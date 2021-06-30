@@ -351,7 +351,11 @@ colorPicker.setColors([
 ```svg
 <svg>
   <defs>
-    <g id="handle"><!-- 手柄的svg内容开始 --><rect x="0" y="0" width="8" height="8"></rect><!-- 手柄的svg内容结束 --></g>
+    <g id="handle">
+      <!-- 手柄的svg内容开始 -->
+      <rect x="0" y="0" width="8" height="8"></rect>
+      <!-- 手柄的svg内容结束 -->
+    </g>
   </defs>
 </svg>
 ```
