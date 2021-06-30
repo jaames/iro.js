@@ -1,0 +1,12 @@
+name: markdown-autodocs
+
+on:
+  push:
+
+jobs:        
+  auto-update-readme:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - name: Markdown autodocs
+          uses: dineshsonachalam/markdown-autodocs@v1.0.2

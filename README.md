@@ -52,25 +52,17 @@
 
 ### Install with NPM
 
-```bash
-$ npm install @jaames/iro --save
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/install.sh) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 If you are using a module bundler like Webpack or Rollup, import iro.js into your project: 
-
-```javascript
-// Using ES6 module syntax
-import iro from '@jaames/iro';
-
-// Using CommonJS modules
-const iro = require('@jaames/iro');
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/install.js) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 ### Using the jsDelivr CDN
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/install.html) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 When you manually include the library like this, iro.js will be made globally available on window.iro.
 
@@ -120,38 +112,13 @@ You can also use a DOM object instead of a CSS selector here -- this might be mo
 
 The color picker can be customized by passing a set of options to the second `iro.ColorPicker` parameter:
 
-```js
-var colorPicker = new iro.ColorPicker("#picker", {
-  // Set the size of the color picker
-  width: 320,
-  // Set the initial color to pure red
-  color: "#f00"
-});
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/colorPickerOptions.js) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 ### Available Options
 
-| Option           | Purpose | Default Value |
-|:-----------------|:--------|:--------|
-| `width`          | Total width of the control UI. | `300` |
-| `color`          | The initial color value. This can be any [supported color format](https://iro.js.org/color_api.html#supported-color-formats). | `"#ffffff"` |
-| `colors`         | Initial color values used for [multi-color selections](https://iro.js.org/advanced.html#multi-color-selections). | null |
-| `display`        | CSS display value for the color picker root element. | `"block"` |
-| `id`             | HTML ID for the color picker root element. | `null` |
-| `layout`         | Used for customising the [UI component layout](https://iro.js.org/advanced.html#custom-ui-layouts). | `null` |
-| `layoutDirection` | UI component stacking direction; either `"vertical"` or `"horizontal"`. | `"vertical"` |
-| `padding`        | Padding around the control handles. | `6` |
-| `margin`         | Gap between individual components. | `12` |
-| `borderWidth`    | Width of the border around the controls. Set to `0` for no border. | `0` |
-| `borderColor`    | Color of the border. Any valid CSS color is supported. | `"#ffffff"` |
-| `handleRadius`   | Radius of the control handles. | `8` |
-| `handleSvg`      | Custom handle SVG, used for [custom handles](https://iro.js.org/advanced.html#custom-handles). | `null` |
-| `handleProps`    | Custom handle properties, used for [custom handles](https://iro.js.org/advanced.html#custom-handles). | `{x:0, y:0}` |
-| `wheelLightness` | If set to `false`, the color wheel will not fade to black when the lightness decreases. | `true` |
-| `wheelAngle`     | Starting angle of the color wheel's hue gradient, measured in degrees. | `0` |
-| `wheelDirection` | Direction of the color wheel's hue gradient; either `"clockwise"` or `"anticlockwise"`. | `"anticlockwise"` |
-| `sliderSize`     | Slider control size. By default this will be calculated automatically. | `undefined` |
-| `boxHeight`     | Box control height. By default this will be the same as the `width`. | `undefined` |
+<!-- MARKDOWN-AUTO-DOCS:START (JSON_TO_HTML_TABLE:src=./examples/readme/availableOptions.json) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 More details about color picker options, properties, and methods can be found on the [colorPicker API documentation](https://iro.js.org/colorPicker_api.html).
 
@@ -181,28 +148,8 @@ colorPicker.color.hsl = { h: 180, s: 100, l: 50 };
 
 The color object has properties which cover all of the most common web color formats (HEX, RGB, HSL and HSV), as well as some extras:
 
-| Property    | Example Format     |
-|:------------|:-------------------|
-| `hexString` | `"#ff0000"` |
-| `hex8String` | `"#ff0000ff"` |
-| `rgb`       | `{ r: 255, g: 0, b: 0 }` |
-| `rgba`       | `{ r: 255, g: 0, b: 0, a: 1 }` |
-| `rgbString` | `"rgb(255, 0, 0)"` |
-| `rgbaString` | `"rgb(255, 0, 0, 1)"` |
-| `hsl`       | `{ h: 360, s: 100, l: 50 }` |
-| `hsla`       | `{ h: 360, s: 100, l: 50, a: 1 }` |
-| `hslString` | `"hsl(360, 100%, 50%)"` |
-| `hslaString` | `"hsla(360, 100%, 50%, 1)"` |
-| `hsv`       | `{ h: 360, s: 100, v: 100 }` |
-| `hsva`       | `{ h: 360, s: 100, v: 100, a: 1 }` |
-| `red`       | `0` to `255` |
-| `green`       | `0` to `255` |
-| `blue`       | `0` to `255` |
-| `alpha`       | `0` to `1` |
-| `hue`       | `0` to `360` |
-| `saturation` | `0` to `100` |
-| `value`       | `0` to `100` |
-| `kelvin`       | `1000` to `40000` |
+<!-- MARKDOWN-AUTO-DOCS:START (JSON_TO_HTML_TABLE:src=./examples/readme/colorProperties.json) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 For more details about color objects, check out the [Color API documentation](https://iro.js.org/color_api.html).
 
@@ -214,39 +161,18 @@ Events let you to run your own code after certain things have happened, like whe
 
 The color picker's [`on`](https://iro.js.org/colorPicker_api.html#on) method can be used to attach functions that will be called whenever a particular event is fired. In this example, we add a listener for the `color:change` event:
 
-```js
-// listen to a color picker's color:change event
-// color:change callbacks receive the current color
-colorPicker.on('color:change', function(color) {
-  // log the current color as a HEX string
-  console.log(color.hexString);
-});
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/colorPickerEventsExample1.js) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 The [`on`](https://iro.js.org/colorPicker_api.html#on) method can also take an array of event names, in case you want to listen to multiple events with one function:
 
-```js
-// listen to a color picker's color:init and color:change events
-colorPicker.on(['color:init', 'color:change'], function(color) {
-  // log the current color as a HEX string
-  console.log(color.hexString);
-});
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/colorPickerEventsExample2.js) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 Event listeners can also be removed at any time by passing the same function to the color picker's [`off`](https://iro.js.org/colorPicker_api.html#off) method:
 
-```js
-// create a callback function
-function onColorChange(color) {
-  console.log(color.hexString);
-}
-
-// add color:change listener
-colorPicker.on('color:change', onColorChange);
-
-// later, if we want to stop listening to color:change...
-colorPicker.off('color:change', onColorChange);
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/colorPickerEventsExample3.js) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 ### Available Events
 
@@ -259,14 +185,8 @@ Fired whenever the selected color changes -- either when the user interacts with
 
 It is safe to modify the `color` object within callbacks for this event. This can be helpful if you want to limit the range or a certain color channel, for example:
 
-```js
-colorPicker.on('color:change', function(color) {
-  // don't let the color saturation fall below 50!
-  if (color.saturation < 50) {
-    color.saturation = 50;
-  }
-});
-```
+<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./examples/readme/colorChange.js) -->
+<!-- MARKDOWN-AUTO-DOCS:END -->
 
 ##### `input:change`
 

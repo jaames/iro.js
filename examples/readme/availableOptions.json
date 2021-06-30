@@ -1,0 +1,95 @@
+[{
+    "Option": "<code>width</code>",
+    "Purpose": "Total width of the control UI.",
+    "Default Value": "<code>300</code>"
+},
+{
+    "Option": "<code>color</code>",
+    "Purpose": "The initial color value. This can be any [supported color format](https://iro.js.org/color_api.html#supported-color-formats).",
+    "Default Value": "<code>#ffffff</code>"
+},
+{
+    "Option": "<code>colors</code>",
+    "Purpose": "Initial color values used for [multi-color selections](https://iro.js.org/advanced.html#multi-color-selections).",
+    "Default Value": "null"
+},
+{
+    "Option": "<code>display</code>",
+    "Purpose": "CSS display value for the color picker root element.",
+    "Default Value": "<code>block</code>"
+},
+{
+    "Option": "<code>id</code>",
+    "Purpose": "HTML ID for the color picker root element.",
+    "Default Value": "<code>null</code>"
+},
+{
+    "Option": "<code>layout</code>",
+    "Purpose": "Used for customising the [UI component layout](https://iro.js.org/advanced.html#custom-ui-layouts).",
+    "Default Value": "<code>null</code>"
+},
+{
+    "Option": "<code>layoutDirection</code>",
+    "Purpose": "UI component stacking direction; either <code>vertical</code> or <code>horizontal</code>.",
+    "Default Value": "<code>vertical</code>"
+},
+{
+    "Option": "<code>padding</code>",
+    "Purpose": "Padding around the control handles.",
+    "Default Value": "<code>6</code>"
+},
+{
+    "Option": "<code>margin</code>",
+    "Purpose": "Gap between individual components.",
+    "Default Value": "<code>12</code>"
+},
+{
+    "Option": "<code>borderWidth</code>",
+    "Purpose": "Width of the border around the controls. Set to <code>0</code> for no border.",
+    "Default Value": "<code>0</code>"
+},
+{
+    "Option": "<code>borderColor</code>",
+    "Purpose": "Color of the border. Any valid CSS color is supported.",
+    "Default Value": "<code>#ffffff</code>"
+},
+{
+    "Option": "<code>handleRadius</code>",
+    "Purpose": "Radius of the control handles.",
+    "Default Value": "<code>8</code>"
+},
+{
+    "Option": "<code>handleSvg</code>",
+    "Purpose": "Custom handle SVG, used for [custom handles](https://iro.js.org/advanced.html#custom-handles).",
+    "Default Value": "<code>null</code>"
+},
+{
+    "Option": "<code>handleProps</code>",
+    "Purpose": "Custom handle properties, used for [custom handles](https://iro.js.org/advanced.html#custom-handles).",
+    "Default Value": "<code>{x:0, y:0}</code>"
+},
+{
+    "Option": "<code>wheelLightness</code>",
+    "Purpose": "If set to <code>false</code>, the color wheel will not fade to black when the lightness decreases.",
+    "Default Value": "<code>true</code>"
+},
+{
+    "Option": "<code>wheelAngle</code>",
+    "Purpose": "Starting angle of the color wheel's hue gradient, measured in degrees.",
+    "Default Value": "<code>0</code>"
+},
+{
+    "Option": "<code>wheelDirection</code>",
+    "Purpose": "Direction of the color wheel's hue gradient; either <code>clockwise</code> or <code>anticlockwise</code>.",
+    "Default Value": "<code>anticlockwise</code>"
+},
+{
+    "Option": "<code>sliderSize</code>",
+    "Purpose": "Slider control size. By default this will be calculated automatically.",
+    "Default Value": "<code>undefined</code>"
+},
+{
+    "Option": "<code>boxHeight</code>",
+    "Purpose": "Box control height. By default this will be the same as the <code>width</code>.",
+    "Default Value": "<code>undefined</code>"
+}]
