@@ -1,0 +1,80 @@
+[{
+    "Property": "<code>hexString</code>",
+    "Example Format": "<code>#ff0000</code>"
+},
+{
+    "Property": "<code>hex8String</code>",
+    "Example Format": "<code>#ff0000ff</code>"
+},
+{
+    "Property": "<code>rgb</code>",
+    "Example Format": "<code>{ r: 255, g: 0, b: 0 }</code>"
+},
+{
+    "Property": "<code>rgba</code>",
+    "Example Format": "<code>{ r: 255, g: 0, b: 0, a: 1 }</code>"
+},
+{
+    "Property": "<code>rgbString</code>",
+    "Example Format": "<code>rgb(255, 0, 0)</code>"
+},
+{
+    "Property": "<code>rgbaString</code>",
+    "Example Format": "<code>rgb(255, 0, 0, 1)</code>"
+},
+{
+    "Property": "<code>hsl</code>",
+    "Example Format": "<code>{ h: 360, s: 100, l: 50 }</code>"
+},
+{
+    "Property": "<code>hsla</code>",
+    "Example Format": "<code>{ h: 360, s: 100, l: 50, a: 1 }</code>"
+},
+{
+    "Property": "<code>hslString</code>",
+    "Example Format": "<code>hsl(360, 100%, 50%)</code>"
+},
+{
+    "Property": "<code>hslaString</code>",
+    "Example Format": "<code>hsla(360, 100%, 50%, 1)</code>"
+},
+{
+    "Property": "<code>hsv</code>",
+    "Example Format": "<code>{ h: 360, s: 100, v: 100 }</code>"
+},
+{
+    "Property": "<code>hsva</code>",
+    "Example Format": "<code>{ h: 360, s: 100, v: 100, a: 1 }</code>"
+},
+{
+    "Property": "<code>red</code>",
+    "Example Format": "<code>0</code> to <code>255</code>"
+},
+{
+    "Property": "<code>green</code>",
+    "Example Format": "<code>0</code> to <code>255</code>"
+},
+{
+    "Property": "<code>blue</code>",
+    "Example Format": "<code>0</code> to <code>255</code>"
+},
+{
+    "Property": "<code>alpha</code>",
+    "Example Format": "<code>0</code> to <code>1</code>"
+},
+{
+    "Property": "<code>hue</code>",
+    "Example Format": "<code>0</code> to <code>360</code>"
+},
+{
+    "Property": "<code>saturation</code>",
+    "Example Format": "<code>0</code> to <code>100</code>"
+},
+{
+    "Property": "<code>value</code>",
+    "Example Format": "<code>0</code> to <code>100</code>"
+},
+{
+    "Property": "<code>kelvin</code>",
+    "Example Format": "<code>1000</code> to <code>40000</code>"
+}]
