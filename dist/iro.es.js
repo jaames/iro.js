@@ -1,5 +1,5 @@
 /*!
- * iro.js v5.5.1
+ * iro.js v5.5.2
  * 2016-2021 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro.js
@@ -157,7 +157,7 @@ function () {
       }
     } else if (typeof value === 'object') {
       if (value instanceof IroColor) {
-        this.hsv = value.hsv;
+        this.hsva = value.hsva;
       } else if ('r' in value && 'g' in value && 'b' in value) {
         this.rgb = value;
       } else if ('h' in value && 's' in value && 'v' in value) {
@@ -685,7 +685,7 @@ function () {
     key: "hslaString",
     get: function get() {
       var hsla = this.hsla;
-      return "hsl(" + hsla.h + ", " + hsla.s + "%, " + hsla.l + "%, " + hsla.a + ")";
+      return "hsla(" + hsla.h + ", " + hsla.s + "%, " + hsla.l + "%, " + hsla.a + ")";
     },
     set: function set(value) {
       this.hslString = value;
@@ -1283,6 +1283,7 @@ function IroHandle(props) {
     var cx = radius;
     var cy = radius;
     return (h("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), style: {
+            '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0);',
             transform: ("translate(" + (cssValue(props.x)) + ", " + (cssValue(props.y)) + ")"),
             willChange: 'transform',
             top: cssValue(-radius),
@@ -1760,7 +1761,7 @@ var IroColorPickerWidget = createWidget(IroColorPicker);
 
 var iro;
 (function (iro) {
-    iro.version = "5.5.1"; // replaced by @rollup/plugin-replace; see rollup.config.js
+    iro.version = "5.5.2"; // replaced by @rollup/plugin-replace; see rollup.config.js
     iro.Color = IroColor;
     iro.ColorPicker = IroColorPickerWidget;
     var ui;

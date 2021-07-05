@@ -1,5 +1,12 @@
 ### Changelog
 
+#### 5.5.2
+
+##### Fixes
+
+- Fixed an issue where the alpha channel wasn't being copied over when creating a new iro.Color instance from the value of an old one (see https://github.com/jaames/iro.js/issues/193)
+- Fixed an issue where the iro.Color hslaString attribute wasn't returning a hsla string (see https://github.com/jaames/iro.js/issues/194)
+
 #### 5.5.1
 
 ##### Fixes

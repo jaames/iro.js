@@ -7,7 +7,7 @@ import { IroBox } from './Box';
 import { IroWheel } from './Wheel';
 import { IroColorPicker } from './ColorPicker';
 declare namespace iro {
-    const version = "5.5.1";
+    const version = "5.5.2";
     type Color = IroColor;
     const Color: typeof IroColor;
     type ColorPicker = IroColorPicker;
