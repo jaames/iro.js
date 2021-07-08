@@ -20,6 +20,9 @@
   <a href="">
     <img src="https://badgen.net/badge/jQuery/none/F8AE55" alt="no jQuery" />
   </a>
+  <a href="https://github.com/jaames/iro.js/actions/workflows/markdown-autodocs.yml" target="_blank">
+     <img src="https://github.com/jaames/iro.js/workflows/markdown-autodocs/badge.svg" alt="Deployment">
+  </a>
 </p>
 
 <p align="center">
