@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> | <a href="#demo">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#plugins">Plugins</a> | <a href="https://iro.js.org/guide.html">Documentation</a> | <a href="#special-thanks">Special Thanks</a> | <a href="https://github.com/jaames/iro.js/discussions">Forum</a>
+  <a href="#features">Features</a> | <a href="#codepen-demos">Demo</a> | <a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="https://iro.js.org/guide.html">Documentation</a> | <a href="#special-thanks">Special Thanks</a> | <a href="https://github.com/jaames/iro.js/discussions">Forum</a>
 </p>
 
 <br/>
