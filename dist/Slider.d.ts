@@ -6,6 +6,8 @@ interface IroSliderProps extends IroComponentProps {
     sliderShape: SliderShape;
     minTemperature: number;
     maxTemperature: number;
+    showInput: boolean;
+    disabled: boolean;
 }
 export declare function IroSlider(props: IroSliderProps): h.JSX.Element;
 export declare namespace IroSlider {
