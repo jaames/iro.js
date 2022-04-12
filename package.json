@@ -6,7 +6,7 @@
   "main": "dist/iro.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@irojs/iro-core": "^1.2.1",
+    "@irojs/iro-core": "file:../iro-core",
     "preact": "^10.0.0"
   },
   "devDependencies": {

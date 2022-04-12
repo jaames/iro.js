@@ -26,6 +26,9 @@
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) { _defineProperties(Constructor.prototype, protoProps); }
     if (staticProps) { _defineProperties(Constructor, staticProps); }
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -124,9 +127,7 @@
     return _int.toString(16).padStart(2, '0');
   }
 
-  var IroColor =
-  /*#__PURE__*/
-  function () {
+  var IroColor = /*#__PURE__*/function () {
     /**
       * @constructor Color object
       * @param value - initial color value
@@ -836,6 +837,90 @@
     }
   }
   /**
+   * @desc Clamp slider value between min and max values
+   * @param type - props.sliderType
+   * @param value - value to clamp
+   */
+
+  function clampSliderValue(type, value) {
+    function clamp(num, min, max) {
+      return Math.min(Math.max(num, min), max);
+    }
+
+    switch (type) {
+      case 'hue':
+        return clamp(value, 0, 360);
+
+      case 'saturation':
+      case 'value':
+        return clamp(value, 0, 100);
+
+      case 'red':
+      case 'green':
+      case 'blue':
+        return clamp(value, 0, 255);
+
+      case 'alpha':
+        return clamp(value, 0, 1);
+
+      case 'kelvin':
+        // TODO
+        return 0;
+    }
+  }
+  /**
+   * @desc Get the current slider value from input field input
+   * @param props - slider props
+   * @param e - KeyboardEvent
+   */
+
+  function getSliderValueFromInputField(props, e) {
+    // regex for digit or dot (.)
+    if (!/^([0-9]|\.)$/i.test(e.key)) {
+      return 0;
+    }
+
+    var maxlen;
+
+    if (props.sliderType === 'alpha') {
+      maxlen = 4;
+    } else if (props.sliderType === 'kelvin') {
+      maxlen = 10;
+    } else {
+      maxlen = 3;
+    }
+
+    var target = e.target;
+    var valueString = target.value.toString();
+
+    if (target.selectionStart !== undefined) {
+      valueString = valueString.substring(0, target.selectionStart) + e.key.toString() + valueString.substring(target.selectionEnd);
+    } else {
+      valueString = valueString.length + 1 > maxlen ? valueString : valueString + e.key.toString();
+    }
+
+    var valueNum = +valueString;
+    return clampSliderValue(props.sliderType, valueNum);
+  }
+  /**
+   * @desc Get the current slider value from clipboard data
+   * @param props - slider props
+   * @param e - ClipboardEvent
+   */
+
+  function getSliderValueFromClipboard(props, e) {
+    // allow only whole or decimal numbers
+    var r = /^[+]?([.]\d+|\d+([.]\d+)?)$/i;
+    var valueString = e.clipboardData.getData('text');
+
+    if (!r.test(valueString)) {
+      return 0;
+    }
+
+    var valueNum = +valueString;
+    return clampSliderValue(props.sliderType, valueNum);
+  }
+  /**
    * @desc Get the current handle position for a given color
    * @param props - slider props
    * @param color
@@ -992,8 +1077,8 @@
 
     if (invert && wheelDirection === 'clockwise') { angle = wheelAngle + angle; } // clockwise (input handling)
     else if (wheelDirection === 'clockwise') { angle = 360 - wheelAngle + angle; } // inverted and anticlockwise
-      else if (invert && wheelDirection === 'anticlockwise') { angle = wheelAngle + 180 - angle; } // anticlockwise (input handling)
-        else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; }
+    else if (invert && wheelDirection === 'anticlockwise') { angle = wheelAngle + 180 - angle; } // anticlockwise (input handling)
+    else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; }
     return mod(angle, 360);
   }
   /**
@@ -1313,6 +1398,48 @@
 
   var t$1,u$1,r$1,o$1=0,i=[],c$1=l.__b,f$1=l.__r,e$1=l.diffed,a$1=l.__c,v$1=l.unmount;function l$1(t,r){l.__h&&l.__h(u$1,t,o$1||r),o$1=0;var i=u$1.__H||(u$1.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function m$1(n){return o$1=1,p(w$1,n)}function p(n,r,o){var i=l$1(t$1++,2);return i.t=n,i.__c||(i.__=[o?o(r):w$1(void 0,r),function(n){var t=i.t(i.__[0],n);i.__[0]!==t&&(i.__=[t,i.__[1]],i.__c.setState({}));}],i.__c=u$1),i.__}function _$1(n,u){var r=l$1(t$1++,7);return k$1(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function A(n,t){return o$1=8,_$1(function(){return n},t)}function x$1(){for(var t;t=i.shift();){ if(t.__P){ try{t.__H.__h.forEach(g$1),t.__H.__h.forEach(j$1),t.__H.__h=[];}catch(u){t.__H.__h=[],l.__e(u,t.__v);} } }}l.__b=function(n){u$1=null,c$1&&c$1(n);},l.__r=function(n){f$1&&f$1(n),t$1=0;var r=(u$1=n.__c).__H;r&&(r.__h.forEach(g$1),r.__h.forEach(j$1),r.__h=[]);},l.diffed=function(t){e$1&&e$1(t);var o=t.__c;o&&o.__H&&o.__H.__h.length&&(1!==i.push(o)&&r$1===l.requestAnimationFrame||((r$1=l.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),b$1&&cancelAnimationFrame(t),setTimeout(n);},r=setTimeout(u,100);b$1&&(t=requestAnimationFrame(u));})(x$1)),u$1=null;},l.__c=function(t,u){u.some(function(t){try{t.__h.forEach(g$1),t.__h=t.__h.filter(function(n){return !n.__||j$1(n)});}catch(r){u.some(function(n){n.__h&&(n.__h=[]);}),u=[],l.__e(r,t.__v);}}),a$1&&a$1(t,u);},l.unmount=function(t){v$1&&v$1(t);var u,r=t.__c;r&&r.__H&&(r.__H.__.forEach(function(n){try{g$1(n);}catch(n$1){u=n$1;}}),u&&l.__e(u,r.__v));};var b$1="function"==typeof requestAnimationFrame;function g$1(n){var t=u$1,r=n.__c;"function"==typeof r&&(n.__c=void 0,r()),u$1=t;}function j$1(n){var t=u$1;n.__c=n.__(),u$1=t;}function k$1(n,t){return !n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}function w$1(n,t){return "function"==typeof t?t(n):t}
 
+  function IroInput(props) {
+      var disabled = props.disabled;
+      var type = props.sliderType;
+      var name = type[0].toUpperCase();
+      var activeColor = props.activeColor;
+      var ref = m$1(activeColor[props.sliderType]);
+      var sliderValue = ref[0];
+      var setSliderValue = ref[1];
+      var val = (type === 'alpha') ? activeColor[props.sliderType].toFixed(2) : Math.round(activeColor[props.sliderType]);
+      setSliderValue(val);
+      var onKeypress = A(function (e) {
+          e.preventDefault();
+          var value = getSliderValueFromInputField(props, e);
+          activeColor[props.sliderType] = value;
+          return value;
+      }, [setSliderValue, props.sliderType]);
+      var onPaste = A(function (e) {
+          e.preventDefault();
+          var value = getSliderValueFromClipboard(props, e);
+          activeColor[props.sliderType] = value;
+          return value;
+      }, [setSliderValue, props.sliderType]);
+      return (v("div", { className: "IroSliderValue" },
+          v("span", { className: "IroSliderLabel", style: {
+                  display: 'inline-block',
+                  marginLeft: props.layoutDirection === 'vertical' ?
+                      cssValue(props.handleRadius) : cssValue(0),
+                  width: cssValue(10)
+              } }, name),
+          v("input", { onKeyPress: onKeypress, onPaste: onPaste, className: "IroSliderInput", style: {
+                  display: 'inline-block',
+                  width: cssValue(33),
+                  height: cssValue(18),
+                  fontSize: '12px',
+                  marginLeft: props.layoutDirection === 'vertical' ?
+                      cssValue(5) : cssValue(0)
+              }, type: "text", disabled: disabled, value: sliderValue })));
+  }
+  IroInput.defaultProps = {
+      disabled: false
+  };
+
   function IroSlider(props) {
       var activeIndex = props.activeIndex;
       var activeColor = (activeIndex !== undefined && activeIndex < props.colors.length) ? props.colors[activeIndex] : props.color;
@@ -1322,69 +1449,12 @@
       var radius = ref.radius;
       var handlePos = getSliderHandlePosition(props, activeColor);
       var gradient = getSliderGradient(props, activeColor);
-      var ref$1 = m$1(activeColor[props.sliderType]);
-      var sliderValue = ref$1[0];
-      var setSliderValue = ref$1[1];
-      setSliderValue(activeColor[props.sliderType]);
       function handleInput(x, y, type) {
           var value = getSliderValueFromInput(props, x, y);
           props.parent.inputActive = true;
           activeColor[props.sliderType] = value;
-          if (props.sliderType === 'alpha') {
-              setSliderValue(value.toFixed(2));
-          }
-          else {
-              setSliderValue(Math.round(value));
-          }
           props.onInput(type, props.id);
       }
-      var handleSliderValue = A(function (e) {
-          e.preventDefault();
-          // regex for digit or dot (.)
-          if (!/^([0-9]|\.)$/i.test(e.key)) {
-              return;
-          }
-          var maxlen;
-          if (props.sliderType === 'alpha') {
-              maxlen = 4;
-          }
-          else if (props.sliderType === 'kelvin') {
-              maxlen = 10;
-          }
-          else {
-              maxlen = 3;
-          }
-          var value = e.target.value.toString();
-          var valueString = value.length + 1 > maxlen ? value : value + e.key.toString();
-          var clampedValue;
-          function clamp(num, min, max) {
-              return Math.min(Math.max(num, min), max);
-          }
-          switch (props.sliderType) {
-              case 'hue':
-                  clampedValue = clamp(+valueString, 0, 360);
-                  break;
-              case 'saturation':
-              case 'value':
-                  clampedValue = clamp(+valueString, 0, 100);
-                  break;
-              case 'red':
-              case 'green':
-              case 'blue':
-                  clampedValue = clamp(+valueString, 0, 255);
-                  break;
-              case 'alpha':
-                  if (valueString === '0.') {
-                      clampedValue = 0.01;
-                  }
-                  else {
-                      clampedValue = clamp(+valueString, 0, 1);
-                  }
-                  break;
-          }
-          activeColor[props.sliderType] = +clampedValue;
-          return clampedValue;
-      }, [setSliderValue, props.sliderType]);
       return (v(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (
       // add wrapper element
       v("div", { className: "IroSliderWrapper", style: Object.assign({}, {width: 'max-content',
@@ -1410,20 +1480,7 @@
                       background: cssGradient('linear', props.layoutDirection === 'horizontal' ? 'to top' : 'to right', gradient)},
                       cssBorderStyles(props)) }),
               v(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y })),
-          v("span", { className: "IroSliderLabel", style: {
-                  display: props.showInput ? 'block' : 'none',
-                  marginLeft: props.layoutDirection === 'vertical' ?
-                      cssValue(props.handleRadius) : cssValue(0),
-                  width: cssValue(10)
-              } }, props.sliderType[0].toUpperCase()),
-          v("input", { onKeyPress: handleSliderValue, className: "IroSliderInput", style: {
-                  display: props.showInput ? 'block' : 'none',
-                  width: cssValue(33),
-                  height: cssValue(18),
-                  fontSize: '12px',
-                  marginLeft: props.layoutDirection === 'vertical' ?
-                      cssValue(5) : cssValue(0)
-              }, type: "text", disabled: props.disabled, value: sliderValue }))); }));
+          props.showInput && (v(IroInput, { disabled: props.disabled, sliderType: props.sliderType, activeColor: activeColor, handleRadius: props.handleRadius, layoutDirection: props.layoutDirection })))); }));
   }
   IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
 
