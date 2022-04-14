@@ -7,6 +7,8 @@ interface IroInputProps {
     layoutDirection: LayoutDirection;
     handleRadius: number;
     disabled: boolean;
+    minTemperature: number;
+    maxTemperature: number;
 }
 export declare function IroInput(props: IroInputProps): h.JSX.Element;
 export declare namespace IroInput {

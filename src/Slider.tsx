@@ -102,6 +102,8 @@ export function IroSlider(props: IroSliderProps) {
               activeColor={ activeColor }
               handleRadius={ props.handleRadius }
               layoutDirection={ props.layoutDirection }
+              minTemperature={ props.minTemperature }
+              maxTemperature={ props.maxTemperature }
             />
           )}
         </div>

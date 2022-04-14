@@ -14,8 +14,8 @@ interface IroInputProps {
   layoutDirection: LayoutDirection;
   handleRadius: number;
   disabled: boolean;
-  // minTemperature: number;
-  // maxTemperature: number;
+  minTemperature: number;
+  maxTemperature: number;
 }
 
 export function IroInput(props: IroInputProps) {
@@ -60,7 +60,7 @@ export function IroInput(props: IroInputProps) {
         className="IroSliderInput"
         style={{
           display: 'inline-block',
-          width: cssValue(33),
+          width: type === 'kelvin' ? cssValue(40) : cssValue(33),
           height: cssValue(18),
           fontSize: '12px',
           marginLeft: props.layoutDirection === 'vertical' ?
