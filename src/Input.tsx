@@ -30,7 +30,11 @@ export function IroInput(props: IroInputProps) {
   const onKeypress = useCallback((e: KeyboardEvent) => {
     e.preventDefault();
     const value = getSliderValueFromInputField(props, e);
-    activeColor[props.sliderType] = value;
+    if (type === 'kelvin' && value < props.minTemperature) {
+      activeColor[props.sliderType] = props.minTemperature;
+    } else {
+      activeColor[props.sliderType] = value;
+    }
     return value;
   }, [setSliderValue, props.sliderType]);
 

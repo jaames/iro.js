@@ -460,10 +460,25 @@
     }, {
       key: "kelvin",
       get: function get() {
-        return IroColor.rgbToKelvin(this.rgb);
+        /** Rgb to kelvin conversion is a little funky, producing results
+         * that differ from the original value.
+         * Check if rgb values are equal and return RGB to kelvin conversion
+         * only if necessary
+         */
+        var res;
+        var rgb = IroColor.kelvinToRgb(this._kelvin);
+
+        if (rgb.r === this.rgb.r && rgb.g === this.rgb.g && rgb.b === this.rgb.b) {
+          res = this._kelvin;
+        } else {
+          res = IroColor.rgbToKelvin(this.rgb);
+        }
+
+        return res;
       },
       set: function set(value) {
         this.rgb = IroColor.kelvinToRgb(value);
+        this._kelvin = value;
       }
     }, {
       key: "red",
@@ -1423,7 +1438,12 @@
       var onKeypress = A(function (e) {
           e.preventDefault();
           var value = getSliderValueFromInputField(props, e);
-          activeColor[props.sliderType] = value;
+          if (type === 'kelvin' && value < props.minTemperature) {
+              activeColor[props.sliderType] = props.minTemperature;
+          }
+          else {
+              activeColor[props.sliderType] = value;
+          }
           return value;
       }, [setSliderValue, props.sliderType]);
       var onPaste = A(function (e) {
@@ -1465,6 +1485,9 @@
           var value = getSliderValueFromInput(props, x, y);
           props.parent.inputActive = true;
           activeColor[props.sliderType] = value;
+          if (props.sliderType === 'kelvin') {
+              activeColor._kelvin = value;
+          }
           props.onInput(type, props.id);
       }
       return (v(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (
