@@ -80,11 +80,7 @@
   var REGEX_HEX_6 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + '$');
   var REGEX_HEX_8 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + '$'); // Kelvin temperature bounds
 
-  var KELVIN_MIN = 2000;
-  var KELVIN_MAX = 40000; // Math shorthands
-
-  var log = Math.log,
-      round = Math.round,
+  var round = Math.round,
       floor = Math.floor;
   /**
    * @desc Clamp a number between a min and max value
@@ -325,23 +321,51 @@
     ;
 
     IroColor.kelvinToRgb = function kelvinToRgb(kelvin) {
-      var temp = kelvin / 100;
+      var temperature = kelvin / 100.0;
       var r, g, b;
 
-      if (temp < 66) {
+      if (temperature < 66.0) {
         r = 255;
-        g = -155.25485562709179 - 0.44596950469579133 * (g = temp - 2) + 104.49216199393888 * log(g);
-        b = temp < 20 ? 0 : -254.76935184120902 + 0.8274096064007395 * (b = temp - 10) + 115.67994401066147 * log(b);
       } else {
-        r = 351.97690566805693 + 0.114206453784165 * (r = temp - 55) - 40.25366309332127 * log(r);
-        g = 325.4494125711974 + 0.07943456536662342 * (g = temp - 50) - 28.0852963507957 * log(g);
+        r = temperature - 55.0;
+        r = 351.97690566805693 + 0.114206453784165 * r - 40.25366309332127 * Math.log(r);
+        if (r < 0) { r = 0; }
+        if (r > 255) { r = 255; }
+      }
+      /* Calculate g */
+
+
+      if (temperature < 66.0) {
+        g = temperature - 2;
+        g = -155.25485562709179 - 0.44596950469579133 * g + 104.49216199393888 * Math.log(g);
+        if (g < 0) { g = 0; }
+        if (g > 255) { g = 255; }
+      } else {
+        g = temperature - 50.0;
+        g = 325.4494125711974 + 0.07943456536662342 * g - 28.0852963507957 * Math.log(g);
+        if (g < 0) { g = 0; }
+        if (g > 255) { g = 255; }
+      }
+      /* Calculate b */
+
+
+      if (temperature >= 66.0) {
         b = 255;
+      } else {
+        if (temperature <= 20.0) {
+          b = 0;
+        } else {
+          b = temperature - 10;
+          b = -254.76935184120902 + 0.8274096064007395 * b + 115.67994401066147 * Math.log(b);
+          if (b < 0) { b = 0; }
+          if (b > 255) { b = 255; }
+        }
       }
 
       return {
-        r: clamp(floor(r), 0, 255),
-        g: clamp(floor(g), 0, 255),
-        b: clamp(floor(b), 0, 255)
+        r: r,
+        b: b,
+        g: g
       };
     }
     /**
@@ -351,26 +375,23 @@
     ;
 
     IroColor.rgbToKelvin = function rgbToKelvin(rgb) {
-      var r = rgb.r,
-          b = rgb.b;
-      var eps = 0.4;
-      var minTemp = KELVIN_MIN;
-      var maxTemp = KELVIN_MAX;
-      var temp;
+      var temperature, testRGB;
+      var epsilon = 0.4;
+      var minTemperature = 1000;
+      var maxTemperature = 40000;
 
-      while (maxTemp - minTemp > eps) {
-        temp = (maxTemp + minTemp) * 0.5;
+      while (maxTemperature - minTemperature > epsilon) {
+        temperature = (maxTemperature + minTemperature) / 2;
+        testRGB = IroColor.kelvinToRgb(temperature);
 
-        var _rgb = IroColor.kelvinToRgb(temp);
-
-        if (_rgb.b / _rgb.r >= b / r) {
-          maxTemp = temp;
+        if (testRGB.b / testRGB.r >= rgb.b / rgb.r) {
+          maxTemperature = temperature;
         } else {
-          minTemp = temp;
+          minTemperature = temperature;
         }
       }
 
-      return temp;
+      return temperature;
     };
 
     _createClass(IroColor, [{
@@ -460,25 +481,10 @@
     }, {
       key: "kelvin",
       get: function get() {
-        /** Rgb to kelvin conversion is a little funky, producing results
-         * that differ from the original value.
-         * Check if rgb values are equal and return RGB to kelvin conversion
-         * only if necessary
-         */
-        var res;
-        var rgb = IroColor.kelvinToRgb(this._kelvin);
-
-        if (rgb.r === this.rgb.r && rgb.g === this.rgb.g && rgb.b === this.rgb.b) {
-          res = this._kelvin;
-        } else {
-          res = IroColor.rgbToKelvin(this.rgb);
-        }
-
-        return res;
+        return round(IroColor.rgbToKelvin(this.raw_rgb));
       },
       set: function set(value) {
         this.rgb = IroColor.kelvinToRgb(value);
-        this._kelvin = value;
       }
     }, {
       key: "red",
@@ -531,6 +537,20 @@
         this.hsv = _extends({}, IroColor.rgbToHsv(value), {
           a: value.a === undefined ? this.alpha : value.a
         });
+      }
+    }, {
+      key: "raw_rgb",
+      get: function get() {
+        var _IroColor$hsvToRgb2 = IroColor.hsvToRgb(this.$),
+            r = _IroColor$hsvToRgb2.r,
+            g = _IroColor$hsvToRgb2.g,
+            b = _IroColor$hsvToRgb2.b;
+
+        return {
+          r: r,
+          g: g,
+          b: b
+        };
       }
     }, {
       key: "rgba",
