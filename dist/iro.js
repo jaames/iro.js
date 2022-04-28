@@ -1003,7 +1003,6 @@
         return clamp(value, 0, 1);
 
       case 'kelvin':
-        // TODO
         var minTemperature = props.minTemperature,
             maxTemperature = props.maxTemperature;
         return clamp(value, minTemperature, maxTemperature);
@@ -1015,33 +1014,25 @@
    * @param e - KeyboardEvent
    */
 
-  function getSliderValueFromInputField(props, e) {
-    // regex for digit or dot (.)
-    if (!/^([0-9]|\.)$/i.test(e.key)) {
-      return 0;
-    }
-
-    var maxlen;
-
-    if (props.sliderType === 'alpha') {
-      maxlen = 4;
-    } else if (props.sliderType === 'kelvin') {
-      maxlen = 5;
-    } else {
-      maxlen = 3;
-    }
-
+  function getSliderValueFromInputField(e) {
     var target = e.target;
+    var valueNum = parseInt(target.value); // regex for digit or dot (.)
+
+    if (!/^([0-9]|\.)$/i.test(e.key)) {
+      e.preventDefault();
+      return valueNum;
+    }
+
     var valueString = target.value.toString();
 
     if (target.selectionStart !== undefined) {
+      // cursor position
       valueString = valueString.substring(0, target.selectionStart) + e.key.toString() + valueString.substring(target.selectionEnd);
     } else {
-      valueString = valueString.length + 1 > maxlen ? valueString : valueString + e.key.toString();
+      valueString = valueString + e.key.toString();
     }
 
-    var valueNum = +valueString;
-    return clampSliderValue(props, valueNum);
+    return +valueString;
   }
   /**
    * @desc Get the current slider value from clipboard data
@@ -1456,13 +1447,33 @@
       var val = (type === 'alpha') ? activeColor[props.sliderType].toFixed(2) : Math.round(activeColor[props.sliderType]);
       setSliderValue(val);
       var onKeypress = A(function (e) {
-          e.preventDefault();
-          var value = getSliderValueFromInputField(props, e);
-          if (type === 'kelvin' && value < props.minTemperature) {
-              activeColor[props.sliderType] = props.minTemperature;
+          var value = getSliderValueFromInputField(e);
+          if (type === 'kelvin') {
+              var strlen = value.toString().length, minlen = props.minTemperature.toString().length, maxlen = props.maxTemperature.toString().length;
+              if (strlen > maxlen) {
+                  e.preventDefault();
+                  activeColor[props.sliderType] = props.maxTemperature;
+              }
+              else if (strlen >= minlen) {
+                  if (value < props.minTemperature) {
+                      if (maxlen === minlen) {
+                          e.preventDefault();
+                          activeColor[props.sliderType] = props.minTemperature;
+                      }
+                  }
+                  else if (value > props.maxTemperature) {
+                      e.preventDefault();
+                      activeColor[props.sliderType] = props.maxTemperature;
+                  }
+                  else {
+                      e.preventDefault();
+                      activeColor[props.sliderType] = value;
+                  }
+              }
           }
           else {
-              activeColor[props.sliderType] = value;
+              e.preventDefault();
+              activeColor[props.sliderType] = clampSliderValue(props, value);
           }
           return value;
       }, [setSliderValue, props.sliderType]);

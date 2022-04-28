@@ -5,7 +5,8 @@ import {
   IroColor,
   SliderType,
   getSliderValueFromInputField,
-  getSliderValueFromClipboard
+  getSliderValueFromClipboard,
+  clampSliderValue
 } from '@irojs/iro-core';
 
 interface IroInputProps {
@@ -28,12 +29,33 @@ export function IroInput(props: IroInputProps) {
   setSliderValue(val);
 
   const onKeypress = useCallback((e: KeyboardEvent) => {
-    e.preventDefault();
-    const value = getSliderValueFromInputField(props, e);
-    if (type === 'kelvin' && value < props.minTemperature) {
-      activeColor[props.sliderType] = props.minTemperature;
+    const value = getSliderValueFromInputField(e);
+
+    if (type === 'kelvin') {
+      let strlen = value.toString().length,
+        minlen = props.minTemperature.toString().length,
+        maxlen = props.maxTemperature.toString().length;
+
+      if (strlen > maxlen) {
+        e.preventDefault();
+        activeColor[props.sliderType] = props.maxTemperature;
+      } else if (strlen >= minlen) {
+        if (value < props.minTemperature) {
+          if (maxlen === minlen) {
+            e.preventDefault();
+            activeColor[props.sliderType] = props.minTemperature;
+          }
+        } else if (value > props.maxTemperature) {
+          e.preventDefault();
+          activeColor[props.sliderType] = props.maxTemperature;
+        } else {
+          e.preventDefault();
+          activeColor[props.sliderType] = value;
+        }
+      }
     } else {
-      activeColor[props.sliderType] = value;
+      e.preventDefault();
+      activeColor[props.sliderType] = clampSliderValue(props, value);
     }
     return value;
   }, [setSliderValue, props.sliderType]);
