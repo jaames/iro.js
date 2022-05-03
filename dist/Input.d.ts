@@ -3,6 +3,7 @@ import { LayoutDirection } from '@irojs/iro-core';
 import { IroColor, SliderType } from '@irojs/iro-core';
 interface IroInputProps {
     sliderType: SliderType;
+    sliderSize: number;
     activeColor: IroColor;
     layoutDirection: LayoutDirection;
     handleRadius: number;

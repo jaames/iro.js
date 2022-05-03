@@ -6,11 +6,13 @@ import {
   SliderType,
   getSliderValueFromInputField,
   getSliderValueFromClipboard,
+  getInputDimensions,
   clampSliderValue
 } from '@irojs/iro-core';
 
 interface IroInputProps {
   sliderType: SliderType;
+  sliderSize: number;
   activeColor: IroColor;
   layoutDirection: LayoutDirection;
   handleRadius: number;
@@ -22,7 +24,7 @@ interface IroInputProps {
 export function IroInput(props: IroInputProps) {
   const disabled = props.disabled;
   const type = props.sliderType;
-  const name = type[0].toUpperCase();
+  const {inputWidth, fontSize} = getInputDimensions(props);
   const activeColor = props.activeColor;
   const [sliderValue, setSliderValue] = useState(activeColor[props.sliderType]);
   const val = (type === 'alpha') ? activeColor[props.sliderType].toFixed(2) : Math.round(activeColor[props.sliderType]);
@@ -69,28 +71,16 @@ export function IroInput(props: IroInputProps) {
 
   return (
     <div className="IroSliderValue">
-      <span
-        className="IroSliderLabel"
-        style={{
-          display: 'inline-block',
-          marginLeft: props.layoutDirection === 'vertical' ?
-                      cssValue(props.handleRadius) : cssValue(0),
-          width: cssValue(10)
-        }}
-      >
-        {name}
-      </span>
       <input
         onKeyPress={ onKeypress }
         onPaste={ onPaste }
         className="IroSliderInput"
         style={{
           display: 'inline-block',
-          width: type === 'kelvin' ? cssValue(40) : cssValue(33),
+          width: type === 'kelvin' ? cssValue(40) : inputWidth,
           height: cssValue(18),
-          fontSize: '12px',
-          marginLeft: props.layoutDirection === 'vertical' ?
-                      cssValue(5) : cssValue(0)
+          fontSize: fontSize,
+          padding: cssValue(2)
         }}
         type="text"
         disabled={ disabled }

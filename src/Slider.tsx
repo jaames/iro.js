@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import {
-  IroColor,
   SliderShape,
   SliderType,
   sliderDefaultOptions,
@@ -17,13 +16,16 @@ import { IroComponentWrapper } from './ComponentWrapper';
 import { IroComponentProps, IroInputType } from './ComponentTypes';
 import { IroHandle } from './Handle';
 import { IroInput } from './Input';
+import { IroLabel } from './Label';
 
 interface IroSliderProps extends IroComponentProps {
   sliderType: SliderType;
   sliderShape: SliderShape;
+  sliderSize: number;
   minTemperature: number;
   maxTemperature: number;
   showInput: boolean; // show input fields for manual value input
+  showLabel: boolean; // show label for slider
   disabled: boolean; // enable / disable manual value input
 };
 
@@ -51,9 +53,11 @@ export function IroSlider(props: IroSliderProps) {
         <div
           className="IroSliderWrapper"
           style={{
-            width: 'max-content',
+            width: props.layoutDirection === 'vertical' ? cssValue(props.width) : 'unset',
+            height: props.layoutDirection === 'horizontal' ? cssValue(props.width) : 'unset',
             flexDirection: props.layoutDirection === 'horizontal' ? 'column' : 'row',
-            alignItems: 'baseline',
+            alignItems: props.layoutDirection === 'horizontal' ? 'center': 'baseline',
+            justifyContent: 'space-between',
             ...rootStyles
           }}
         >
@@ -98,10 +102,17 @@ export function IroSlider(props: IroSliderProps) {
               y={ handlePos.y } // todo: use percentage
             />
           </div>
+          {props.showLabel && (<IroLabel
+              sliderType={props.sliderType}
+              layoutDirection={ props.layoutDirection }
+              handleRadius={ props.handleRadius }
+            />
+          )}
           {props.showInput && (
             <IroInput
               disabled={ props.disabled }
               sliderType={ props.sliderType }
+              sliderSize={ props.sliderSize }
               activeColor={ activeColor }
               handleRadius={ props.handleRadius }
               layoutDirection={ props.layoutDirection }

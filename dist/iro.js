@@ -737,6 +737,108 @@
     return IroColor;
   }();
 
+  /**
+   * @desc Get input field dimensions
+   * @param props - InputOptions
+   */
+  function getInputDimensions(props) {
+    var sliderSize = props.sliderSize,
+        layoutDirection = props.layoutDirection;
+    var inputWidth;
+    var fontSize;
+
+    if (layoutDirection === 'vertical') {
+      inputWidth = 30;
+      fontSize = 12;
+    } else {
+      inputWidth = sliderSize <= 30 ? 26 : sliderSize;
+      fontSize = sliderSize <= 30 ? 10 : 12;
+    }
+
+    return {
+      inputWidth: inputWidth,
+      inputHeight: 18,
+      fontSize: fontSize
+    };
+  }
+  /**
+   * @desc Clamp slider value between min and max values
+   * @param type - props.sliderType
+   * @param value - value to clamp
+   */
+
+  function clampSliderValue(props, value) {
+    function clamp(num, min, max) {
+      return Math.min(Math.max(num, min), max);
+    }
+
+    switch (props.sliderType) {
+      case 'hue':
+        return clamp(value, 0, 360);
+
+      case 'saturation':
+      case 'value':
+        return clamp(value, 0, 100);
+
+      case 'red':
+      case 'green':
+      case 'blue':
+        return clamp(value, 0, 255);
+
+      case 'alpha':
+        return clamp(value, 0, 1);
+
+      case 'kelvin':
+        var minTemperature = props.minTemperature,
+            maxTemperature = props.maxTemperature;
+        return clamp(value, minTemperature, maxTemperature);
+    }
+  }
+  /**
+   * @desc Get the current slider value from input field input
+   * @param props - slider props
+   * @param e - KeyboardEvent
+   */
+
+  function getSliderValueFromInputField(e) {
+    var target = e.target;
+    var valueNum = parseInt(target.value); // regex for digit or dot (.)
+
+    if (!/^([0-9]|\.)$/i.test(e.key)) {
+      e.preventDefault();
+      return valueNum;
+    }
+
+    var valueString = target.value.toString();
+
+    if (target.selectionStart !== undefined) {
+      // cursor position
+      valueString = valueString.substring(0, target.selectionStart) + e.key.toString() + valueString.substring(target.selectionEnd);
+    } else {
+      valueString = valueString + e.key.toString();
+    }
+
+    return +valueString;
+  }
+  /**
+   * @desc Get the current slider value from clipboard data
+   * @param props - slider props
+   * @param e - ClipboardEvent
+   */
+
+  function getSliderValueFromClipboard(props, e) {
+    // allow only whole or decimal numbers
+    var r = /^[+]?([.]\d+|\d+([.]\d+)?)$/i;
+    var valueString = e.clipboardData.getData('text');
+
+    if (!r.test(valueString)) {
+      return 0;
+    }
+
+    var valueNum = +valueString;
+    return clampSliderValue(props, valueNum);
+  }
+
   var sliderDefaultOptions = {
     sliderShape: 'bar',
     sliderType: 'value',
@@ -757,17 +859,30 @@
         handleRadius = props.handleRadius,
         padding = props.padding,
         sliderShape = props.sliderShape;
+    var ishorizontal = props.layoutDirection === 'horizontal';
     var length;
 
-    if (props.showInput) {
-      length = width - 55;
+    if (props.sliderLength) {
+      length = props.sliderLength;
     } else {
-      var _props$sliderLength;
+      // automatically calculate slider length
+      length = width - handleRadius;
 
-      length = (_props$sliderLength = props.sliderLength) != null ? _props$sliderLength : width;
-    }
+      if (props.showInput) {
+        var _getInputDimensions = getInputDimensions(props),
+            inputWidth = _getInputDimensions.inputWidth,
+            inputHeight = _getInputDimensions.inputHeight;
 
-    var ishorizontal = props.layoutDirection === 'horizontal'; // automatically calculate sliderSize if its not defined
+        length -= ishorizontal ? inputHeight : inputWidth;
+        length -= 3; // padding
+      }
+
+      if (props.showLabel) {
+        length -= ishorizontal ? 12 : 10;
+        length -= 3; // padding
+      }
+    } // automatically calculate sliderSize if its not defined
+
 
     sliderSize = (_sliderSize = sliderSize) != null ? _sliderSize : padding * 2 + handleRadius * 2;
 
@@ -820,7 +935,7 @@
         var minTemperature = props.minTemperature,
             maxTemperature = props.maxTemperature;
         var temperatureRange = maxTemperature - minTemperature;
-        var percent = (color.kelvin - minTemperature) / temperatureRange * 100; // clmap percentage
+        var percent = (color.kelvin - minTemperature) / temperatureRange * 100; // clamp percentage
 
         return Math.max(0, Math.min(percent, 100));
 
@@ -974,83 +1089,6 @@
         });
         return [[0, '#000'], [100, "hsl(" + hsl.h + "," + hsl.s + "%," + hsl.l + "%)"]];
     }
-  }
-
-  /**
-   * @desc Clamp slider value between min and max values
-   * @param type - props.sliderType
-   * @param value - value to clamp
-   */
-  function clampSliderValue(props, value) {
-    function clamp(num, min, max) {
-      return Math.min(Math.max(num, min), max);
-    }
-
-    switch (props.sliderType) {
-      case 'hue':
-        return clamp(value, 0, 360);
-
-      case 'saturation':
-      case 'value':
-        return clamp(value, 0, 100);
-
-      case 'red':
-      case 'green':
-      case 'blue':
-        return clamp(value, 0, 255);
-
-      case 'alpha':
-        return clamp(value, 0, 1);
-
-      case 'kelvin':
-        var minTemperature = props.minTemperature,
-            maxTemperature = props.maxTemperature;
-        return clamp(value, minTemperature, maxTemperature);
-    }
-  }
-  /**
-   * @desc Get the current slider value from input field input
-   * @param props - slider props
-   * @param e - KeyboardEvent
-   */
-
-  function getSliderValueFromInputField(e) {
-    var target = e.target;
-    var valueNum = parseInt(target.value); // regex for digit or dot (.)
-
-    if (!/^([0-9]|\.)$/i.test(e.key)) {
-      e.preventDefault();
-      return valueNum;
-    }
-
-    var valueString = target.value.toString();
-
-    if (target.selectionStart !== undefined) {
-      // cursor position
-      valueString = valueString.substring(0, target.selectionStart) + e.key.toString() + valueString.substring(target.selectionEnd);
-    } else {
-      valueString = valueString + e.key.toString();
-    }
-
-    return +valueString;
-  }
-  /**
-   * @desc Get the current slider value from clipboard data
-   * @param props - slider props
-   * @param e - ClipboardEvent
-   */
-
-  function getSliderValueFromClipboard(props, e) {
-    // allow only whole or decimal numbers
-    var r = /^[+]?([.]\d+|\d+([.]\d+)?)$/i;
-    var valueString = e.clipboardData.getData('text');
-
-    if (!r.test(valueString)) {
-      return 0;
-    }
-
-    var valueNum = +valueString;
-    return clampSliderValue(props, valueNum);
   }
 
   var TAU = Math.PI * 2; // javascript's modulo operator doesn't produce positive numbers with negative input
@@ -1439,11 +1477,13 @@
   function IroInput(props) {
       var disabled = props.disabled;
       var type = props.sliderType;
-      var name = type[0].toUpperCase();
+      var ref = getInputDimensions(props);
+      var inputWidth = ref.inputWidth;
+      var fontSize = ref.fontSize;
       var activeColor = props.activeColor;
-      var ref = m$1(activeColor[props.sliderType]);
-      var sliderValue = ref[0];
-      var setSliderValue = ref[1];
+      var ref$1 = m$1(activeColor[props.sliderType]);
+      var sliderValue = ref$1[0];
+      var setSliderValue = ref$1[1];
       var val = (type === 'alpha') ? activeColor[props.sliderType].toFixed(2) : Math.round(activeColor[props.sliderType]);
       setSliderValue(val);
       var onKeypress = A(function (e) {
@@ -1484,24 +1524,28 @@
           return value;
       }, [setSliderValue, props.sliderType]);
       return (v("div", { className: "IroSliderValue" },
-          v("span", { className: "IroSliderLabel", style: {
-                  display: 'inline-block',
-                  marginLeft: props.layoutDirection === 'vertical' ?
-                      cssValue(props.handleRadius) : cssValue(0),
-                  width: cssValue(10)
-              } }, name),
           v("input", { onKeyPress: onKeypress, onPaste: onPaste, className: "IroSliderInput", style: {
                   display: 'inline-block',
-                  width: type === 'kelvin' ? cssValue(40) : cssValue(33),
+                  width: type === 'kelvin' ? cssValue(40) : inputWidth,
                   height: cssValue(18),
-                  fontSize: '12px',
-                  marginLeft: props.layoutDirection === 'vertical' ?
-                      cssValue(5) : cssValue(0)
+                  fontSize: fontSize,
+                  padding: cssValue(2)
               }, type: "text", disabled: disabled, value: sliderValue })));
   }
   IroInput.defaultProps = {
       disabled: false
   };
+
+  function IroLabel(props) {
+      var name = props.sliderType[0].toUpperCase();
+      return (v("div", { className: "IroSliderLabel", style: {
+              display: 'inline-block',
+              width: cssValue(10),
+              height: cssValue(12),
+              lineHeight: cssValue(12),
+              fontSize: props.layoutDirection === 'horizontal' ? cssValue(12) : cssValue(14)
+          } }, name));
+  }
 
   function IroSlider(props) {
       var activeIndex = props.activeIndex;
@@ -1523,9 +1567,11 @@
       }
       return (v(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (
       // add wrapper element
-      v("div", { className: "IroSliderWrapper", style: Object.assign({}, {width: 'max-content',
+      v("div", { className: "IroSliderWrapper", style: Object.assign({}, {width: props.layoutDirection === 'vertical' ? cssValue(props.width) : 'unset',
+              height: props.layoutDirection === 'horizontal' ? cssValue(props.width) : 'unset',
               flexDirection: props.layoutDirection === 'horizontal' ? 'column' : 'row',
-              alignItems: 'baseline'},
+              alignItems: props.layoutDirection === 'horizontal' ? 'center' : 'baseline',
+              justifyContent: 'space-between'},
               rootStyles) },
           v("div", Object.assign({}, rootProps, { className: "IroSlider", style: {
                   position: 'relative',
@@ -1546,7 +1592,8 @@
                       background: cssGradient('linear', props.layoutDirection === 'horizontal' ? 'to top' : 'to right', gradient)},
                       cssBorderStyles(props)) }),
               v(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y })),
-          props.showInput && (v(IroInput, { disabled: props.disabled, sliderType: props.sliderType, activeColor: activeColor, handleRadius: props.handleRadius, layoutDirection: props.layoutDirection, minTemperature: props.minTemperature, maxTemperature: props.maxTemperature })))); }));
+          props.showLabel && (v(IroLabel, { sliderType: props.sliderType, layoutDirection: props.layoutDirection, handleRadius: props.handleRadius })),
+          props.showInput && (v(IroInput, { disabled: props.disabled, sliderType: props.sliderType, sliderSize: props.sliderSize, activeColor: activeColor, handleRadius: props.handleRadius, layoutDirection: props.layoutDirection, minTemperature: props.minTemperature, maxTemperature: props.maxTemperature })))); }));
   }
   IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
 
@@ -1949,7 +1996,8 @@
               }
           }
           return (v("div", { class: "IroColorPicker", id: state.id, style: {
-                  display: state.display
+                  display: state.display,
+                  flexDirection: props.layoutDirection === 'horizontal' ? 'row' : 'column'
               } }, layout.map(function (ref, componentIndex) {
                   var UiComponent = ref.component;
                   var options = ref.options;
@@ -1962,7 +2010,7 @@
   }(_));
   IroColorPicker.defaultProps = Object.assign({}, iroColorPickerOptionDefaults,
       {colors: [],
-      display: 'block',
+      display: 'flex',
       id: null,
       layout: 'default',
       margin: null});
