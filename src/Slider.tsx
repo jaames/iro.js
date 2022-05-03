@@ -56,7 +56,7 @@ export function IroSlider(props: IroSliderProps) {
             width: props.layoutDirection === 'vertical' ? cssValue(props.width) : 'unset',
             height: props.layoutDirection === 'horizontal' ? cssValue(props.width) : 'unset',
             flexDirection: props.layoutDirection === 'horizontal' ? 'column' : 'row',
-            alignItems: props.layoutDirection === 'horizontal' ? 'center': 'baseline',
+            alignItems: 'center',
             justifyContent: 'space-between',
             ...rootStyles
           }}
