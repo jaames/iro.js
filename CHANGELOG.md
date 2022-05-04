@@ -1,5 +1,24 @@
 ### Changelog
 
+#### 5.6.0
+
+##### Fixes
+
+- Fixed an issue where alpha value was reset to 1 after sliding both alpha and
+any of the r/g/b sliders (#227).
+- Fixed an issue with inaccurate kelvin conversion (replaced with more accurate script).
+
+##### Additions
+
+- Added optional label and input elements. Picker color can now be set via input field.
+- Added optional `showInput`, `showLabel` and `disabled` slider options for displaying an input field and/or label field next to a slider.
+- Added optional `sliderLength` slider option to set each slider's dimension seperately.
+
+##### Changes
+- Utilize display:flex on the entire wrapper component.
+- Wrap Slider components in a flex wrapper for easy positioning of elements.
+- Add IroColor.raw_rgb getter for kelvin conversion issues (returns float numbers instead of int).
+
 #### 5.5.2
 
 ##### Fixes
