@@ -3,9 +3,13 @@ layout: 首页
 home: true
 ---
 
-::: slot introduction 适用于JavaScript的模块化、注重设计的拾色器小部件 :::
+::: slot introduction
+适用于JavaScript的模块化、注重设计的拾色器小部件
+:::
 
-::: slot feature-colors 通过一个简单，无摩擦的API处理十六进制，RGB，HSV和HSL格式的颜色(还有开尔文温度！)。 :::
+::: slot feature-colors
+通过一个简单，无摩擦的API处理十六进制，RGB，HSV和HSL格式的颜色(还有开尔文温度！)。
+:::
 
 ::: slot feature-colors-example
 ```js
@@ -25,9 +29,13 @@ color.color.kelvin = 6000;
 ```
 :::
 
-::: slot feature-multicolor 将多个颜色添加到同一个选取器以选择主题。 :::
+::: slot feature-multicolor
+将多个颜色添加到同一个选取器以选择主题。
+:::
 
-::: slot feature-components 从预构建界面组件中创建完美的颜色选择器。 :::
+::: slot feature-components
+从预构建界面组件中创建完美的颜色选择器。
+:::
 
 ::: slot tutorial-iro-js
 ### 安装
