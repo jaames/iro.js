@@ -28,6 +28,12 @@
 
 <br/>
 
+---
+
+> NOTE: this project is currently on **[hiatus](https://github.com/jaames/iro.js/issues/217#issuecomment-1214403290)** until further notice, as working on open source projects is becoming unsustainable for the maintainer.
+
+---
+
 ## Features
 
  * Work with colors in hex, RGB, HSV and HSL formats (plus kelvin temperatures!) in one simple, frictionless API
