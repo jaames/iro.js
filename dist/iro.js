@@ -9,9 +9,9 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = global || self, global.iro = factory());
-}(this, function () { 'use strict';
+}(this, (function () { 'use strict';
 
-  var n,u,t,i,r,o,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|^--/i;function s(n,l){for(var u in l){ n[u]=l[u]; }return n}function a(n){var l=n.parentNode;l&&l.removeChild(n);}function h(n,l,u){var t,i,r,o,f=arguments;if(l=s({},l),arguments.length>3){ for(u=[u],t=3;t<arguments.length;t++){ u.push(f[t]); } }if(null!=u&&(l.children=u),null!=n&&null!=n.defaultProps){ for(i in n.defaultProps){ void 0===l[i]&&(l[i]=n.defaultProps[i]); } }return o=l.key,null!=(r=l.ref)&&delete l.ref,null!=o&&delete l.key,v(n,l,o,r)}function v(l,u,t,i){var r={type:l,props:u,key:t,ref:i,__k:null,__p:null,__b:0,__e:null,l:null,__c:null,constructor:void 0};return n.vnode&&n.vnode(r),r}function d(n){return n.children}function y(n){if(null==n||"boolean"==typeof n){ return null; }if("string"==typeof n||"number"==typeof n){ return v(null,n,null,null); }if(null!=n.__e||null!=n.__c){var l=v(n.type,n.props,n.key,null);return l.__e=n.__e,l}return n}function m(n,l){this.props=n,this.context=l;}function w(n,l){if(null==l){ return n.__p?w(n.__p,n.__p.__k.indexOf(n)+1):null; }for(var u;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){ return u.__e; } }return "function"==typeof n.type?w(n):null}function g(n){var l,u;if(null!=(n=n.__p)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break} }return g(n)}}function k(l){(!l.__d&&(l.__d=!0)&&1===u.push(l)||i!==n.debounceRendering)&&(i=n.debounceRendering,(n.debounceRendering||t)(_));}function _(){var n,l,t,i,r,o,f,e;for(u.sort(function(n,l){return l.__v.__b-n.__v.__b});n=u.pop();){ n.__d&&(t=void 0,i=void 0,o=(r=(l=n).__v).__e,f=l.__P,e=l.u,l.u=!1,f&&(t=[],i=$(f,r,s({},r),l.__n,void 0!==f.ownerSVGElement,null,t,e,null==o?w(r):o),j(t,r),i!=o&&g(r))); }}function b(n,l,u,t,i,r,o,c,s){var h,v,p,d,y,m,g,k=u&&u.__k||e,_=k.length;if(c==f&&(c=null!=r?r[0]:_?w(u,0):null),h=0,l.__k=x(l.__k,function(u){if(null!=u){if(u.__p=l,u.__b=l.__b+1,null===(p=k[h])||p&&u.key==p.key&&u.type===p.type){ k[h]=void 0; }else { for(v=0;v<_;v++){if((p=k[v])&&u.key==p.key&&u.type===p.type){k[v]=void 0;break}p=null;} }if(d=$(n,u,p=p||f,t,i,r,o,null,c,s),(v=u.ref)&&p.ref!=v&&(g||(g=[])).push(v,u.__c||d,u),null!=d){if(null==m&&(m=d),null!=u.l){ d=u.l,u.l=null; }else if(r==p||d!=c||null==d.parentNode){n:if(null==c||c.parentNode!==n){ n.appendChild(d); }else{for(y=c,v=0;(y=y.nextSibling)&&v<_;v+=2){ if(y==d){ break n; } }n.insertBefore(d,c);}"option"==l.type&&(n.value="");}c=d.nextSibling,"function"==typeof l.type&&(l.l=d);}}return h++,u}),l.__e=m,null!=r&&"function"!=typeof l.type){ for(h=r.length;h--;){ null!=r[h]&&a(r[h]); } }for(h=_;h--;){ null!=k[h]&&D(k[h],k[h]); }if(g){ for(h=0;h<g.length;h++){ A(g[h],g[++h],g[++h]); } }}function x(n,l,u){if(null==u&&(u=[]),null==n||"boolean"==typeof n){ l&&u.push(l(null)); }else if(Array.isArray(n)){ for(var t=0;t<n.length;t++){ x(n[t],l,u); } }else { u.push(l?l(y(n)):n); }return u}function C(n,l,u,t,i){var r;for(r in u){ r in l||N(n,r,null,u[r],t); }for(r in l){ i&&"function"!=typeof l[r]||"value"===r||"checked"===r||u[r]===l[r]||N(n,r,l[r],u[r],t); }}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]="number"==typeof u&&!1===c.test(l)?u+"px":null==u?"":u;}function N(n,l,u,t,i){var r,o,f,e,c;if("key"===(l=i?"className"===l?"class":l:"class"===l?"className":l)||"children"===l);else if("style"===l){ if(r=n.style,"string"==typeof u){ r.cssText=u; }else{if("string"==typeof t&&(r.cssText="",t=null),t){ for(o in t){ u&&o in u||P(r,o,""); } }if(u){ for(f in u){ t&&u[f]===t[f]||P(r,f,u[f]); } }} }else{ "o"===l[0]&&"n"===l[1]?(e=l!==(l=l.replace(/Capture$/,"")),c=l.toLowerCase(),l=(c in n?c:l).slice(2),u?(t||n.addEventListener(l,T,e),(n.t||(n.t={}))[l]=u):n.removeEventListener(l,T,e)):"list"!==l&&"tagName"!==l&&"form"!==l&&!i&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/^xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u?n.removeAttribute(l):n.setAttribute(l,u)); }}function T(l){return this.t[l.type](n.event?n.event(l):l)}function $(l,u,t,i,r,o,f,e,c,a){var h,v,p,y,w,g,k,_,C,P,N=u.type;if(void 0!==u.constructor){ return null; }(h=n.__b)&&h(u);try{n:if("function"==typeof N){if(_=u.props,C=(h=N.contextType)&&i[h.__c],P=h?C?C.props.value:h.__p:i,t.__c?k=(v=u.__c=t.__c).__p=v.__E:("prototype"in N&&N.prototype.render?u.__c=v=new N(_,P):(u.__c=v=new m(_,P),v.constructor=N,v.render=H),C&&C.sub(v),v.props=_,v.state||(v.state={}),v.context=P,v.__n=i,p=v.__d=!0,v.__h=[]),null==v.__s&&(v.__s=v.state),null!=N.getDerivedStateFromProps&&s(v.__s==v.state?v.__s=s({},v.__s):v.__s,N.getDerivedStateFromProps(_,v.__s)),p){ null==N.getDerivedStateFromProps&&null!=v.componentWillMount&&v.componentWillMount(),null!=v.componentDidMount&&f.push(v); }else{if(null==N.getDerivedStateFromProps&&null==e&&null!=v.componentWillReceiveProps&&v.componentWillReceiveProps(_,P),!e&&null!=v.shouldComponentUpdate&&!1===v.shouldComponentUpdate(_,v.__s,P)){for(v.props=_,v.state=v.__s,v.__d=!1,v.__v=u,u.__e=null!=c?c!==t.__e?c:t.__e:null,u.__k=t.__k,h=0;h<u.__k.length;h++){ u.__k[h]&&(u.__k[h].__p=u); }break n}null!=v.componentWillUpdate&&v.componentWillUpdate(_,v.__s,P);}for(y=v.props,w=v.state,v.context=P,v.props=_,v.state=v.__s,(h=n.__r)&&h(u),v.__d=!1,v.__v=u,v.__P=l,h=v.render(v.props,v.state,v.context),u.__k=x(null!=h&&h.type==d&&null==h.key?h.props.children:h),null!=v.getChildContext&&(i=s(s({},i),v.getChildContext())),p||null==v.getSnapshotBeforeUpdate||(g=v.getSnapshotBeforeUpdate(y,w)),b(l,u,t,i,r,o,f,c,a),v.base=u.__e;h=v.__h.pop();){ v.__s&&(v.state=v.__s),h.call(v); }p||null==y||null==v.componentDidUpdate||v.componentDidUpdate(y,w,g),k&&(v.__E=v.__p=null);}else { u.__e=z(t.__e,u,t,i,r,o,f,a); }(h=n.diffed)&&h(u);}catch(l){n.__e(l,u,t);}return u.__e}function j(l,u){for(var t;t=l.pop();){ try{t.componentDidMount();}catch(l){n.__e(l,t.__v);} }n.__c&&n.__c(u);}function z(n,l,u,t,i,r,o,c){var s,a,h,v,p=u.props,d=l.props;if(i="svg"===l.type||i,null==n&&null!=r){ for(s=0;s<r.length;s++){ if(null!=(a=r[s])&&(null===l.type?3===a.nodeType:a.localName===l.type)){n=a,r[s]=null;break} } }if(null==n){if(null===l.type){ return document.createTextNode(d); }n=i?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type),r=null;}return null===l.type?p!==d&&(null!=r&&(r[r.indexOf(n)]=null),n.data=d):l!==u&&(null!=r&&(r=e.slice.call(n.childNodes)),h=(p=u.props||f).dangerouslySetInnerHTML,v=d.dangerouslySetInnerHTML,c||(v||h)&&(v&&h&&v.__html==h.__html||(n.innerHTML=v&&v.__html||"")),C(n,d,p,i,c),l.__k=l.props.children,v||b(n,l,u,t,"foreignObject"!==l.type&&i,r,o,f,c),c||("value"in d&&void 0!==d.value&&d.value!==n.value&&(n.value=null==d.value?"":d.value),"checked"in d&&void 0!==d.checked&&d.checked!==n.checked&&(n.checked=d.checked))),n}function A(l,u,t){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,t);}}function D(l,u,t){var i,r,o;if(n.unmount&&n.unmount(l),(i=l.ref)&&A(i,null,u),t||"function"==typeof l.type||(t=null!=(r=l.__e)),l.__e=l.l=null,null!=(i=l.__c)){if(i.componentWillUnmount){ try{i.componentWillUnmount();}catch(l){n.__e(l,u);} }i.base=i.__P=null;}if(i=l.__k){ for(o=0;o<i.length;o++){ i[o]&&D(i[o],u,t); } }null!=r&&a(r);}function H(n,l,u){return this.constructor(n,u)}function I(l,u,t){var i,o,c;n.__p&&n.__p(l,u),o=(i=t===r)?null:t&&t.__k||u.__k,l=h(d,null,[l]),c=[],$(u,i?u.__k=l:(t||u).__k=l,o||f,f,void 0!==u.ownerSVGElement,t&&!i?[t]:o?null:e.slice.call(u.childNodes),c,!1,t||f,i),j(c,l);}n={},m.prototype.setState=function(n,l){var u=this.__s!==this.state&&this.__s||(this.__s=s({},this.state));("function"!=typeof n||(n=n(u,this.props)))&&s(u,n),null!=n&&this.__v&&(this.u=!1,l&&this.__h.push(l),k(this));},m.prototype.forceUpdate=function(n){this.__v&&(n&&this.__h.push(n),this.u=!0,k(this));},m.prototype.render=d,u=[],t="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,i=n.debounceRendering,n.__e=function(n,l,u){for(var t;l=l.__p;){ if((t=l.__c)&&!t.__p){ try{if(t.constructor&&null!=t.constructor.getDerivedStateFromError){ t.setState(t.constructor.getDerivedStateFromError(n)); }else{if(null==t.componentDidCatch){ continue; }t.componentDidCatch(n);}return k(t.__E=t)}catch(l){n=l;} } }throw n},r=f,o=0;
+  var n,l,u,t,o,r,f,e={},c=[],s=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function a(n,l){for(var u in l){ n[u]=l[u]; }return n}function h(n){var l=n.parentNode;l&&l.removeChild(n);}function v(l,u,i){var t,o,r,f={};for(r in u){ "key"==r?t=u[r]:"ref"==r?o=u[r]:f[r]=u[r]; }if(arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):i),"function"==typeof l&&null!=l.defaultProps){ for(r in l.defaultProps){ void 0===f[r]&&(f[r]=l.defaultProps[r]); } }return y(l,f,t,o,null)}function y(n,i,t,o,r){var f={type:n,props:i,key:t,ref:o,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==r?++u:r};return null==r&&null!=l.vnode&&l.vnode(f),f}function d(n){return n.children}function _(n,l){this.props=n,this.context=l;}function k(n,l){if(null==l){ return n.__?k(n.__,n.__.__k.indexOf(n)+1):null; }for(var u;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){ return u.__e; } }return "function"==typeof n.type?k(n):null}function b(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++){ if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break} }return b(n)}}function m(n){(!n.__d&&(n.__d=!0)&&t.push(n)&&!g.__r++||r!==l.debounceRendering)&&((r=l.debounceRendering)||o)(g);}function g(){for(var n;g.__r=t.length;){ n=t.sort(function(n,l){return n.__v.__b-l.__v.__b}),t=[],n.some(function(n){var l,u,i,t,o,r;n.__d&&(o=(t=(l=n).__v).__e,(r=l.__P)&&(u=[],(i=a({},t)).__v=t.__v+1,j(r,t,i,l.__n,void 0!==r.ownerSVGElement,null!=t.__h?[o]:null,u,null==o?k(t):o,t.__h),z(u,t),t.__e!=o&&b(t)));}); }}function w(n,l,u,i,t,o,r,f,s,a){var h,v,p,_,b,m,g,w=i&&i.__k||c,A=w.length;for(u.__k=[],h=0;h<l.length;h++){ if(null!=(_=u.__k[h]=null==(_=l[h])||"boolean"==typeof _?null:"string"==typeof _||"number"==typeof _||"bigint"==typeof _?y(null,_,null,null,_):Array.isArray(_)?y(d,{children:_},null,null,null):_.__b>0?y(_.type,_.props,_.key,null,_.__v):_)){if(_.__=u,_.__b=u.__b+1,null===(p=w[h])||p&&_.key==p.key&&_.type===p.type){ w[h]=void 0; }else { for(v=0;v<A;v++){if((p=w[v])&&_.key==p.key&&_.type===p.type){w[v]=void 0;break}p=null;} }j(n,_,p=p||e,t,o,r,f,s,a),b=_.__e,(v=_.ref)&&p.ref!=v&&(g||(g=[]),p.ref&&g.push(p.ref,null,_),g.push(v,_.__c||b,_)),null!=b?(null==m&&(m=b),"function"==typeof _.type&&_.__k===p.__k?_.__d=s=x(_,s,n):s=P(n,_,p,w,b,s),"function"==typeof u.type&&(u.__d=s)):s&&p.__e==s&&s.parentNode!=n&&(s=k(p));} }for(u.__e=m,h=A;h--;){ null!=w[h]&&("function"==typeof u.type&&null!=w[h].__e&&w[h].__e==u.__d&&(u.__d=k(i,h+1)),N(w[h],w[h])); }if(g){ for(h=0;h<g.length;h++){ M(g[h],g[++h],g[++h]); } }}function x(n,l,u){for(var i,t=n.__k,o=0;t&&o<t.length;o++){ (i=t[o])&&(i.__=n,l="function"==typeof i.type?x(i,l,u):P(u,i,i,t,i.__e,l)); }return l}function P(n,l,u,i,t,o){var r,f,e;if(void 0!==l.__d){ r=l.__d,l.__d=void 0; }else if(null==u||t!=o||null==t.parentNode){ n:if(null==o||o.parentNode!==n){ n.appendChild(t),r=null; }else {for(f=o,e=0;(f=f.nextSibling)&&e<i.length;e+=2){ if(f==t){ break n; } }n.insertBefore(t,o),r=o;} }return void 0!==r?r:t.nextSibling}function C(n,l,u,i,t){var o;for(o in u){ "children"===o||"key"===o||o in l||H(n,o,null,u[o],i); }for(o in l){ t&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||H(n,o,l[o],u[o],i); }}function $(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||s.test(l)?u:u+"px";}function H(n,l,u,i,t){var o;n:if("style"===l){ if("string"==typeof u){ n.style.cssText=u; }else {if("string"==typeof i&&(n.style.cssText=i=""),i){ for(l in i){ u&&l in u||$(n.style,l,""); } }if(u){ for(l in u){ i&&u[l]===i[l]||$(n.style,l,u[l]); } }} }else if("o"===l[0]&&"n"===l[1]){ o=l!==(l=l.replace(/Capture$/,"")),l=l.toLowerCase()in n?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+o]=u,u?i||n.addEventListener(l,o?T:I,o):n.removeEventListener(l,o?T:I,o); }else if("dangerouslySetInnerHTML"!==l){if(t){ l=l.replace(/xlink(H|:h)/,"h").replace(/sName$/,"s"); }else if("href"!==l&&"list"!==l&&"form"!==l&&"tabIndex"!==l&&"download"!==l&&l in n){ try{n[l]=null==u?"":u;break n}catch(n$1){} }"function"==typeof u||(null!=u&&(!1!==u||"a"===l[0]&&"r"===l[1])?n.setAttribute(l,u):n.removeAttribute(l));}}function I(n){this.l[n.type+!1](l.event?l.event(n):n);}function T(n){this.l[n.type+!0](l.event?l.event(n):n);}function j(n,u,i,t,o,r,f,e,c){var s,h,v,y,p,k,b,m,g,x,A,P=u.type;if(void 0!==u.constructor){ return null; }null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,r=[e]),(s=l.__b)&&s(u);try{n:if("function"==typeof P){if(m=u.props,g=(s=P.contextType)&&t[s.__c],x=s?g?g.props.value:s.__:t,i.__c?b=(h=u.__c=i.__c).__=h.__E:("prototype"in P&&P.prototype.render?u.__c=h=new P(m,x):(u.__c=h=new _(m,x),h.constructor=P,h.render=O),g&&g.sub(h),h.props=m,h.state||(h.state={}),h.context=x,h.__n=t,v=h.__d=!0,h.__h=[]),null==h.__s&&(h.__s=h.state),null!=P.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=a({},h.__s)),a(h.__s,P.getDerivedStateFromProps(m,h.__s))),y=h.props,p=h.state,v){ null==P.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),null!=h.componentDidMount&&h.__h.push(h.componentDidMount); }else {if(null==P.getDerivedStateFromProps&&m!==y&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(m,x),!h.__e&&null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(m,h.__s,x)||u.__v===i.__v){h.props=m,h.state=h.__s,u.__v!==i.__v&&(h.__d=!1),h.__v=u,u.__e=i.__e,u.__k=i.__k,u.__k.forEach(function(n){n&&(n.__=u);}),h.__h.length&&f.push(h);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(m,h.__s,x),null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(y,p,k);});}h.context=x,h.props=m,h.state=h.__s,(s=l.__r)&&s(u),h.__d=!1,h.__v=u,h.__P=n,s=h.render(h.props,h.state,h.context),h.state=h.__s,null!=h.getChildContext&&(t=a(a({},t),h.getChildContext())),v||null==h.getSnapshotBeforeUpdate||(k=h.getSnapshotBeforeUpdate(y,p)),A=null!=s&&s.type===d&&null==s.key?s.props.children:s,w(n,Array.isArray(A)?A:[A],u,i,t,o,r,f,e,c),h.base=u.__e,u.__h=null,h.__h.length&&f.push(h),b&&(h.__E=h.__=null),h.__e=!1;}else { null==r&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=L(i.__e,u,i,t,o,r,f,c); }(s=l.diffed)&&s(u);}catch(n$1){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),l.__e(n$1,u,i);}}function z(n,u){l.__c&&l.__c(u,n),n.some(function(u){try{n=u.__h,u.__h=[],n.some(function(n){n.call(u);});}catch(n$1){l.__e(n$1,u.__v);}});}function L(l,u,i,t,o,r,f,c){var s,a,v,y=i.props,p=u.props,d=u.type,_=0;if("svg"===d&&(o=!0),null!=r){ for(;_<r.length;_++){ if((s=r[_])&&"setAttribute"in s==!!d&&(d?s.localName===d:3===s.nodeType)){l=s,r[_]=null;break} } }if(null==l){if(null===d){ return document.createTextNode(p); }l=o?document.createElementNS("http://www.w3.org/2000/svg",d):document.createElement(d,p.is&&p),r=null,c=!1;}if(null===d){ y===p||c&&l.data===p||(l.data=p); }else {if(r=r&&n.call(l.childNodes),a=(y=i.props||e).dangerouslySetInnerHTML,v=p.dangerouslySetInnerHTML,!c){if(null!=r){ for(y={},_=0;_<l.attributes.length;_++){ y[l.attributes[_].name]=l.attributes[_].value; } }(v||a)&&(v&&(a&&v.__html==a.__html||v.__html===l.innerHTML)||(l.innerHTML=v&&v.__html||""));}if(C(l,p,y,o,c),v){ u.__k=[]; }else if(_=u.props.children,w(l,Array.isArray(_)?_:[_],u,i,t,o&&"foreignObject"!==d,r,f,r?r[0]:i.__k&&k(i,0),c),null!=r){ for(_=r.length;_--;){ null!=r[_]&&h(r[_]); } }c||("value"in p&&void 0!==(_=p.value)&&(_!==l.value||"progress"===d&&!_||"option"===d&&_!==y.value)&&H(l,"value",_,y.value,!1),"checked"in p&&void 0!==(_=p.checked)&&_!==l.checked&&H(l,"checked",_,y.checked,!1));}return l}function M(n,u,i){try{"function"==typeof n?n(u):n.current=u;}catch(n$1){l.__e(n$1,i);}}function N(n,u,i){var t,o;if(l.unmount&&l.unmount(n),(t=n.ref)&&(t.current&&t.current!==n.__e||M(t,null,u)),null!=(t=n.__c)){if(t.componentWillUnmount){ try{t.componentWillUnmount();}catch(n$1){l.__e(n$1,u);} }t.base=t.__P=null;}if(t=n.__k){ for(o=0;o<t.length;o++){ t[o]&&N(t[o],u,"function"!=typeof n.type); } }i||null==n.__e||h(n.__e),n.__e=n.__d=void 0;}function O(n,l,u){return this.constructor(n,u)}function S(u,i,t){var o,r,f;l.__&&l.__(u,i),r=(o="function"==typeof t)?null:t&&t.__k||i.__k,f=[],j(i,u=(!o&&t||i).__k=v(d,null,[u]),r||e,e,void 0!==i.ownerSVGElement,!o&&t?[t]:r?null:i.firstChild?n.call(i.childNodes):null,f,!o&&t?t:r?r.__e:i.firstChild,o),z(f,u);}n=c.slice,l={__e:function(n,l,u,i){for(var t,o,r;l=l.__;){ if((t=l.__c)&&!t.__){ try{if((o=t.constructor)&&null!=o.getDerivedStateFromError&&(t.setState(o.getDerivedStateFromError(n)),r=t.__d),null!=t.componentDidCatch&&(t.componentDidCatch(n,i||{}),r=t.__d),r){ return t.__E=t }}catch(l$1){n=l$1;} } }throw n}},u=0,_.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=a({},this.state),"function"==typeof n&&(n=n(a({},u),this.props)),n&&a(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),m(this));},_.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),m(this));},_.prototype.render=d,t=[],o="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,g.__r=0,f=0;
 
   function _defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
@@ -26,6 +26,9 @@
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) { _defineProperties(Constructor.prototype, protoProps); }
     if (staticProps) { _defineProperties(Constructor, staticProps); }
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -77,11 +80,7 @@
   var REGEX_HEX_6 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + '$');
   var REGEX_HEX_8 = new RegExp(HEX_START + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + HEX_INT_DOUBLE + '$'); // Kelvin temperature bounds
 
-  var KELVIN_MIN = 2000;
-  var KELVIN_MAX = 40000; // Math shorthands
-
-  var log = Math.log,
-      round = Math.round,
+  var round = Math.round,
       floor = Math.floor;
   /**
    * @desc Clamp a number between a min and max value
@@ -124,9 +123,7 @@
     return _int.toString(16).padStart(2, '0');
   }
 
-  var IroColor =
-  /*#__PURE__*/
-  function () {
+  var IroColor = /*#__PURE__*/function () {
     /**
       * @constructor Color object
       * @param value - initial color value
@@ -324,23 +321,51 @@
     ;
 
     IroColor.kelvinToRgb = function kelvinToRgb(kelvin) {
-      var temp = kelvin / 100;
+      var temperature = kelvin / 100.0;
       var r, g, b;
 
-      if (temp < 66) {
+      if (temperature < 66.0) {
         r = 255;
-        g = -155.25485562709179 - 0.44596950469579133 * (g = temp - 2) + 104.49216199393888 * log(g);
-        b = temp < 20 ? 0 : -254.76935184120902 + 0.8274096064007395 * (b = temp - 10) + 115.67994401066147 * log(b);
       } else {
-        r = 351.97690566805693 + 0.114206453784165 * (r = temp - 55) - 40.25366309332127 * log(r);
-        g = 325.4494125711974 + 0.07943456536662342 * (g = temp - 50) - 28.0852963507957 * log(g);
+        r = temperature - 55.0;
+        r = 351.97690566805693 + 0.114206453784165 * r - 40.25366309332127 * Math.log(r);
+        if (r < 0) { r = 0; }
+        if (r > 255) { r = 255; }
+      }
+      /* Calculate g */
+
+
+      if (temperature < 66.0) {
+        g = temperature - 2;
+        g = -155.25485562709179 - 0.44596950469579133 * g + 104.49216199393888 * Math.log(g);
+        if (g < 0) { g = 0; }
+        if (g > 255) { g = 255; }
+      } else {
+        g = temperature - 50.0;
+        g = 325.4494125711974 + 0.07943456536662342 * g - 28.0852963507957 * Math.log(g);
+        if (g < 0) { g = 0; }
+        if (g > 255) { g = 255; }
+      }
+      /* Calculate b */
+
+
+      if (temperature >= 66.0) {
         b = 255;
+      } else {
+        if (temperature <= 20.0) {
+          b = 0;
+        } else {
+          b = temperature - 10;
+          b = -254.76935184120902 + 0.8274096064007395 * b + 115.67994401066147 * Math.log(b);
+          if (b < 0) { b = 0; }
+          if (b > 255) { b = 255; }
+        }
       }
 
       return {
-        r: clamp(floor(r), 0, 255),
-        g: clamp(floor(g), 0, 255),
-        b: clamp(floor(b), 0, 255)
+        r: r,
+        b: b,
+        g: g
       };
     }
     /**
@@ -350,26 +375,23 @@
     ;
 
     IroColor.rgbToKelvin = function rgbToKelvin(rgb) {
-      var r = rgb.r,
-          b = rgb.b;
-      var eps = 0.4;
-      var minTemp = KELVIN_MIN;
-      var maxTemp = KELVIN_MAX;
-      var temp;
+      var temperature, testRGB;
+      var epsilon = 0.4;
+      var minTemperature = 1000;
+      var maxTemperature = 40000;
 
-      while (maxTemp - minTemp > eps) {
-        temp = (maxTemp + minTemp) * 0.5;
+      while (maxTemperature - minTemperature > epsilon) {
+        temperature = (maxTemperature + minTemperature) / 2;
+        testRGB = IroColor.kelvinToRgb(temperature);
 
-        var _rgb = IroColor.kelvinToRgb(temp);
-
-        if (_rgb.b / _rgb.r >= b / r) {
-          maxTemp = temp;
+        if (testRGB.b / testRGB.r >= rgb.b / rgb.r) {
+          maxTemperature = temperature;
         } else {
-          minTemp = temp;
+          minTemperature = temperature;
         }
       }
 
-      return temp;
+      return temperature;
     };
 
     _createClass(IroColor, [{
@@ -459,7 +481,7 @@
     }, {
       key: "kelvin",
       get: function get() {
-        return IroColor.rgbToKelvin(this.rgb);
+        return round(IroColor.rgbToKelvin(this.raw_rgb));
       },
       set: function set(value) {
         this.rgb = IroColor.kelvinToRgb(value);
@@ -513,8 +535,22 @@
       },
       set: function set(value) {
         this.hsv = _extends({}, IroColor.rgbToHsv(value), {
-          a: value.a === undefined ? 1 : value.a
+          a: value.a === undefined ? this.alpha : value.a
         });
+      }
+    }, {
+      key: "raw_rgb",
+      get: function get() {
+        var _IroColor$hsvToRgb2 = IroColor.hsvToRgb(this.$),
+            r = _IroColor$hsvToRgb2.r,
+            g = _IroColor$hsvToRgb2.g,
+            b = _IroColor$hsvToRgb2.b;
+
+        return {
+          r: r,
+          g: g,
+          b: b
+        };
       }
     }, {
       key: "rgba",
@@ -542,7 +578,7 @@
       },
       set: function set(value) {
         this.hsv = _extends({}, IroColor.hslToHsv(value), {
-          a: value.a === undefined ? 1 : value.a
+          a: value.a === undefined ? this.alpha : value.a
         });
       }
     }, {
@@ -701,6 +737,108 @@
     return IroColor;
   }();
 
+  /**
+   * @desc Get input field dimensions
+   * @param props - InputOptions
+   */
+  function getInputDimensions(props) {
+    var sliderSize = props.sliderSize,
+        layoutDirection = props.layoutDirection;
+    var inputWidth;
+    var fontSize;
+
+    if (layoutDirection === 'vertical') {
+      inputWidth = 30;
+      fontSize = 12;
+    } else {
+      inputWidth = sliderSize <= 30 ? 26 : sliderSize;
+      fontSize = sliderSize <= 30 ? 10 : 12;
+    }
+
+    return {
+      inputWidth: inputWidth,
+      inputHeight: 18,
+      fontSize: fontSize
+    };
+  }
+  /**
+   * @desc Clamp slider value between min and max values
+   * @param type - props.sliderType
+   * @param value - value to clamp
+   */
+
+  function clampSliderValue(props, value) {
+    function clamp(num, min, max) {
+      return Math.min(Math.max(num, min), max);
+    }
+
+    switch (props.sliderType) {
+      case 'hue':
+        return clamp(value, 0, 360);
+
+      case 'saturation':
+      case 'value':
+        return clamp(value, 0, 100);
+
+      case 'red':
+      case 'green':
+      case 'blue':
+        return clamp(value, 0, 255);
+
+      case 'alpha':
+        return clamp(value, 0, 1);
+
+      case 'kelvin':
+        var minTemperature = props.minTemperature,
+            maxTemperature = props.maxTemperature;
+        return clamp(value, minTemperature, maxTemperature);
+    }
+  }
+  /**
+   * @desc Get the current slider value from input field input
+   * @param props - slider props
+   * @param e - KeyboardEvent
+   */
+
+  function getSliderValueFromInputField(e) {
+    var target = e.target;
+    var valueNum = parseInt(target.value); // regex for digit or dot (.)
+
+    if (!/^([0-9]|\.)$/i.test(e.key)) {
+      e.preventDefault();
+      return valueNum;
+    }
+
+    var valueString = target.value.toString();
+
+    if (target.selectionStart !== undefined) {
+      // cursor position
+      valueString = valueString.substring(0, target.selectionStart) + e.key.toString() + valueString.substring(target.selectionEnd);
+    } else {
+      valueString = valueString + e.key.toString();
+    }
+
+    return +valueString;
+  }
+  /**
+   * @desc Get the current slider value from clipboard data
+   * @param props - slider props
+   * @param e - ClipboardEvent
+   */
+
+  function getSliderValueFromClipboard(props, e) {
+    // allow only whole or decimal numbers
+    var r = /^[+]?([.]\d+|\d+([.]\d+)?)$/i;
+    var valueString = e.clipboardData.getData('text');
+
+    if (!r.test(valueString)) {
+      return 0;
+    }
+
+    var valueNum = +valueString;
+    return clampSliderValue(props, valueNum);
+  }
+
   var sliderDefaultOptions = {
     sliderShape: 'bar',
     sliderType: 'value',
@@ -721,7 +859,30 @@
         handleRadius = props.handleRadius,
         padding = props.padding,
         sliderShape = props.sliderShape;
-    var ishorizontal = props.layoutDirection === 'horizontal'; // automatically calculate sliderSize if its not defined
+    var ishorizontal = props.layoutDirection === 'horizontal';
+    var length;
+
+    if (props.sliderLength) {
+      length = props.sliderLength;
+    } else {
+      // automatically calculate slider length
+      length = width - handleRadius;
+
+      if (props.showInput) {
+        var _getInputDimensions = getInputDimensions(props),
+            inputWidth = _getInputDimensions.inputWidth,
+            inputHeight = _getInputDimensions.inputHeight;
+
+        length -= ishorizontal ? inputHeight : inputWidth;
+        length -= 3; // padding
+      }
+
+      if (props.showLabel) {
+        length -= ishorizontal ? 12 : 10;
+        length -= 3; // padding
+      }
+    } // automatically calculate sliderSize if its not defined
+
 
     sliderSize = (_sliderSize = sliderSize) != null ? _sliderSize : padding * 2 + handleRadius * 2;
 
@@ -738,12 +899,12 @@
     } else {
       return {
         handleStart: sliderSize / 2,
-        handleRange: width - sliderSize,
+        handleRange: length - sliderSize,
         radius: sliderSize / 2,
         x: 0,
         y: 0,
-        width: ishorizontal ? sliderSize : width,
-        height: ishorizontal ? width : sliderSize
+        width: ishorizontal ? sliderSize : length,
+        height: ishorizontal ? length : sliderSize
       };
     }
   }
@@ -774,7 +935,7 @@
         var minTemperature = props.minTemperature,
             maxTemperature = props.maxTemperature;
         var temperatureRange = maxTemperature - minTemperature;
-        var percent = (color.kelvin - minTemperature) / temperatureRange * 100; // clmap percentage
+        var percent = (color.kelvin - minTemperature) / temperatureRange * 100; // clamp percentage
 
         return Math.max(0, Math.min(percent, 100));
 
@@ -992,8 +1153,8 @@
 
     if (invert && wheelDirection === 'clockwise') { angle = wheelAngle + angle; } // clockwise (input handling)
     else if (wheelDirection === 'clockwise') { angle = 360 - wheelAngle + angle; } // inverted and anticlockwise
-      else if (invert && wheelDirection === 'anticlockwise') { angle = wheelAngle + 180 - angle; } // anticlockwise (input handling)
-        else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; }
+    else if (invert && wheelDirection === 'anticlockwise') { angle = wheelAngle + 180 - angle; } // anticlockwise (input handling)
+    else if (wheelDirection === 'anticlockwise') { angle = wheelAngle - angle; }
     return mod(angle, 360);
   }
   /**
@@ -1232,13 +1393,13 @@
           var margin = props.margin === null ? props.sliderMargin : props.margin;
           var rootStyles = {
               overflow: 'visible',
-              display: isHorizontal ? 'inline-block' : 'block'
+              display: isHorizontal ? 'inline-flex' : 'flex'
           };
           // first component shouldn't have any margin
           if (props.index > 0) {
               rootStyles[isHorizontal ? 'marginLeft' : 'marginTop'] = margin;
           }
-          return (h(d, null, props.children(this.uid, rootProps, rootStyles)));
+          return (v(d, null, props.children(this.uid, rootProps, rootStyles)));
       };
       // More info on handleEvent:
       // https://medium.com/@WebReflection/dom-handleevent-a-cross-platform-standard-since-year-2000-5bf17287fd38
@@ -1281,15 +1442,14 @@
       };
 
       return IroComponentWrapper;
-  }(m));
+  }(_));
 
   function IroHandle(props) {
       var radius = props.r;
       var url = props.url;
       var cx = radius;
       var cy = radius;
-      return (h("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), style: {
-              '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0);',
+      return (v("svg", { className: ("IroHandle IroHandle--" + (props.index) + " " + (props.isActive ? 'IroHandle--isActive' : '')), style: {
               transform: ("translate(" + (cssValue(props.x)) + ", " + (cssValue(props.y)) + ")"),
               willChange: 'transform',
               top: cssValue(-radius),
@@ -1299,9 +1459,9 @@
               position: 'absolute',
               overflow: 'visible'
           } },
-          url && (h("use", Object.assign({ xlinkHref: resolveSvgUrl(url) }, props.props))),
-          !url && (h("circle", { cx: cx, cy: cy, r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
-          !url && (h("circle", { cx: cx, cy: cy, r: radius - 2, fill: props.fill, "stroke-width": 2, stroke: "#fff" }))));
+          url && (v("use", Object.assign({ xlinkHref: resolveSvgUrl(url) }, props.props))),
+          !url && (v("circle", { cx: cx, cy: cy, r: radius, fill: "none", "stroke-width": 2, stroke: "#000" })),
+          !url && (v("circle", { cx: cx, cy: cy, r: radius - 2, fill: props.fill, "stroke-width": 2, stroke: "#fff" }))));
   }
   IroHandle.defaultProps = {
       fill: 'none',
@@ -1311,6 +1471,81 @@
       url: null,
       props: { x: 0, y: 0 }
   };
+
+  var t$1,u$1,r$1,o$1=0,i=[],c$1=l.__b,f$1=l.__r,e$1=l.diffed,a$1=l.__c,v$1=l.unmount;function l$1(t,r){l.__h&&l.__h(u$1,t,o$1||r),o$1=0;var i=u$1.__H||(u$1.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function m$1(n){return o$1=1,p(w$1,n)}function p(n,r,o){var i=l$1(t$1++,2);return i.t=n,i.__c||(i.__=[o?o(r):w$1(void 0,r),function(n){var t=i.t(i.__[0],n);i.__[0]!==t&&(i.__=[t,i.__[1]],i.__c.setState({}));}],i.__c=u$1),i.__}function _$1(n,u){var r=l$1(t$1++,7);return k$1(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function A(n,t){return o$1=8,_$1(function(){return n},t)}function x$1(){for(var t;t=i.shift();){ if(t.__P){ try{t.__H.__h.forEach(g$1),t.__H.__h.forEach(j$1),t.__H.__h=[];}catch(u){t.__H.__h=[],l.__e(u,t.__v);} } }}l.__b=function(n){u$1=null,c$1&&c$1(n);},l.__r=function(n){f$1&&f$1(n),t$1=0;var r=(u$1=n.__c).__H;r&&(r.__h.forEach(g$1),r.__h.forEach(j$1),r.__h=[]);},l.diffed=function(t){e$1&&e$1(t);var o=t.__c;o&&o.__H&&o.__H.__h.length&&(1!==i.push(o)&&r$1===l.requestAnimationFrame||((r$1=l.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),b$1&&cancelAnimationFrame(t),setTimeout(n);},r=setTimeout(u,100);b$1&&(t=requestAnimationFrame(u));})(x$1)),u$1=null;},l.__c=function(t,u){u.some(function(t){try{t.__h.forEach(g$1),t.__h=t.__h.filter(function(n){return !n.__||j$1(n)});}catch(r){u.some(function(n){n.__h&&(n.__h=[]);}),u=[],l.__e(r,t.__v);}}),a$1&&a$1(t,u);},l.unmount=function(t){v$1&&v$1(t);var u,r=t.__c;r&&r.__H&&(r.__H.__.forEach(function(n){try{g$1(n);}catch(n$1){u=n$1;}}),u&&l.__e(u,r.__v));};var b$1="function"==typeof requestAnimationFrame;function g$1(n){var t=u$1,r=n.__c;"function"==typeof r&&(n.__c=void 0,r()),u$1=t;}function j$1(n){var t=u$1;n.__c=n.__(),u$1=t;}function k$1(n,t){return !n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}function w$1(n,t){return "function"==typeof t?t(n):t}
+
+  function IroInput(props) {
+      var disabled = props.disabled;
+      var type = props.sliderType;
+      var ref = getInputDimensions(props);
+      var inputWidth = ref.inputWidth;
+      var fontSize = ref.fontSize;
+      var activeColor = props.activeColor;
+      var ref$1 = m$1(activeColor[props.sliderType]);
+      var sliderValue = ref$1[0];
+      var setSliderValue = ref$1[1];
+      var val = (type === 'alpha') ? activeColor[props.sliderType].toFixed(2) : Math.round(activeColor[props.sliderType]);
+      setSliderValue(val);
+      var onKeypress = A(function (e) {
+          var value = getSliderValueFromInputField(e);
+          if (type === 'kelvin') {
+              var strlen = value.toString().length, minlen = props.minTemperature.toString().length, maxlen = props.maxTemperature.toString().length;
+              if (strlen > maxlen) {
+                  e.preventDefault();
+                  activeColor[props.sliderType] = props.maxTemperature;
+              }
+              else if (strlen >= minlen) {
+                  if (value < props.minTemperature) {
+                      if (maxlen === minlen) {
+                          e.preventDefault();
+                          activeColor[props.sliderType] = props.minTemperature;
+                      }
+                  }
+                  else if (value > props.maxTemperature) {
+                      e.preventDefault();
+                      activeColor[props.sliderType] = props.maxTemperature;
+                  }
+                  else {
+                      e.preventDefault();
+                      activeColor[props.sliderType] = value;
+                  }
+              }
+          }
+          else {
+              e.preventDefault();
+              activeColor[props.sliderType] = clampSliderValue(props, value);
+          }
+          return value;
+      }, [setSliderValue, props.sliderType]);
+      var onPaste = A(function (e) {
+          e.preventDefault();
+          var value = getSliderValueFromClipboard(props, e);
+          activeColor[props.sliderType] = value;
+          return value;
+      }, [setSliderValue, props.sliderType]);
+      return (v("div", { className: "IroSliderValue" },
+          v("input", { onKeyPress: onKeypress, onPaste: onPaste, className: "IroSliderInput", style: {
+                  display: 'inline-block',
+                  width: type === 'kelvin' ? cssValue(40) : inputWidth,
+                  height: cssValue(18),
+                  fontSize: fontSize,
+                  padding: cssValue(2)
+              }, type: "text", disabled: disabled, value: sliderValue })));
+  }
+  IroInput.defaultProps = {
+      disabled: false
+  };
+
+  function IroLabel(props) {
+      var name = props.sliderType[0].toUpperCase();
+      return (v("div", { className: "IroSliderLabel", style: {
+              display: 'inline-block',
+              width: cssValue(10),
+              height: cssValue(12),
+              lineHeight: cssValue(12),
+              fontSize: props.layoutDirection === 'horizontal' ? cssValue(12) : cssValue(14)
+          } }, name));
+  }
 
   function IroSlider(props) {
       var activeIndex = props.activeIndex;
@@ -1325,25 +1560,40 @@
           var value = getSliderValueFromInput(props, x, y);
           props.parent.inputActive = true;
           activeColor[props.sliderType] = value;
+          if (props.sliderType === 'kelvin') {
+              activeColor._kelvin = value;
+          }
           props.onInput(type, props.id);
       }
-      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("div", Object.assign({}, rootProps, { className: "IroSlider", style: Object.assign({}, {position: 'relative',
-              width: cssValue(width),
-              height: cssValue(height),
-              borderRadius: cssValue(radius),
-              // checkered bg to represent alpha
-              background: "conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0)",
-              backgroundSize: '8px 8px'},
-              rootStyles) }),
-          h("div", { className: "IroSliderGradient", style: Object.assign({}, {position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
+      return (v(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (
+      // add wrapper element
+      v("div", { className: "IroSliderWrapper", style: Object.assign({}, {width: props.layoutDirection === 'vertical' ? cssValue(props.width) : 'unset',
+              height: props.layoutDirection === 'horizontal' ? cssValue(props.width) : 'unset',
+              flexDirection: props.layoutDirection === 'horizontal' ? 'column' : 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'},
+              rootStyles) },
+          v("div", Object.assign({}, rootProps, { className: "IroSlider", style: {
+                  position: 'relative',
+                  display: 'block',
+                  width: cssValue(width),
+                  height: cssValue(height),
                   borderRadius: cssValue(radius),
-                  background: cssGradient('linear', props.layoutDirection === 'horizontal' ? 'to top' : 'to right', gradient)},
-                  cssBorderStyles(props)) }),
-          h(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y }))); }));
+                  // checkered bg to represent alpha
+                  background: "conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0)",
+                  backgroundSize: '8px 8px',
+              } }),
+              v("div", { className: "IroSliderGradient", style: Object.assign({}, {position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: cssValue(radius),
+                      background: cssGradient('linear', props.layoutDirection === 'horizontal' ? 'to top' : 'to right', gradient)},
+                      cssBorderStyles(props)) }),
+              v(IroHandle, { isActive: true, index: activeColor.index, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePos.x, y: handlePos.y })),
+          props.showLabel && (v(IroLabel, { sliderType: props.sliderType, layoutDirection: props.layoutDirection, handleRadius: props.handleRadius })),
+          props.showInput && (v(IroInput, { disabled: props.disabled, sliderType: props.sliderType, sliderSize: props.sliderSize, activeColor: activeColor, handleRadius: props.handleRadius, layoutDirection: props.layoutDirection, minTemperature: props.minTemperature, maxTemperature: props.maxTemperature })))); }));
   }
   IroSlider.defaultProps = Object.assign({}, sliderDefaultOptions);
 
@@ -1381,19 +1631,19 @@
           // let the color picker fire input:start, input:move or input:end events
           props.onInput(inputType, props.id);
       }
-      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("div", Object.assign({}, rootProps, { className: "IroBox", style: Object.assign({}, {width: cssValue(width),
+      return (v(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (v("div", Object.assign({}, rootProps, { className: "IroBox", style: Object.assign({}, {width: cssValue(width),
               height: cssValue(height),
               position: 'relative'},
               rootStyles) }),
-          h("div", { className: "IroBox", style: Object.assign({}, {width: '100%',
+          v("div", { className: "IroBox", style: Object.assign({}, {width: '100%',
                   height: '100%',
                   borderRadius: cssValue(radius)},
                   cssBorderStyles(props),
                   {background: cssGradient('linear', 'to bottom', gradients[1])
                       + ',' +
                       cssGradient('linear', 'to right', gradients[0])}) }),
-          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-          h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.activeHandleRadius || props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (v(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
+          v(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.activeHandleRadius || props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
 
   var HUE_GRADIENT_CLOCKWISE = 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)';
@@ -1445,22 +1695,22 @@
           // let the color picker fire input:start, input:move or input:end events
           props.onInput(inputType, props.id);
       }
-      return (h(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (h("div", Object.assign({}, rootProps, { className: "IroWheel", style: Object.assign({}, {width: cssValue(width),
+      return (v(IroComponentWrapper, Object.assign({}, props, { onInput: handleInput }), function (uid, rootProps, rootStyles) { return (v("div", Object.assign({}, rootProps, { className: "IroWheel", style: Object.assign({}, {width: cssValue(width),
               height: cssValue(width),
               position: 'relative'},
               rootStyles) }),
-          h("div", { className: "IroWheelHue", style: Object.assign({}, circleStyles,
+          v("div", { className: "IroWheelHue", style: Object.assign({}, circleStyles,
                   {transform: ("rotateZ(" + (props.wheelAngle + 90) + "deg)"),
                   background: props.wheelDirection === 'clockwise' ? HUE_GRADIENT_CLOCKWISE : HUE_GRADIENT_ANTICLOCKWISE}) }),
-          h("div", { className: "IroWheelSaturation", style: Object.assign({}, circleStyles,
+          v("div", { className: "IroWheelSaturation", style: Object.assign({}, circleStyles,
                   {background: 'radial-gradient(circle closest-side, #fff, transparent)'}) }),
-          props.wheelLightness && (h("div", { className: "IroWheelLightness", style: Object.assign({}, circleStyles,
+          props.wheelLightness && (v("div", { className: "IroWheelLightness", style: Object.assign({}, circleStyles,
                   {background: '#000',
                   opacity: 1 - hsv.v / 100}) })),
-          h("div", { className: "IroWheelBorder", style: Object.assign({}, circleStyles,
+          v("div", { className: "IroWheelBorder", style: Object.assign({}, circleStyles,
                   cssBorderStyles(props)) }),
-          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (h(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
-          h(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.activeHandleRadius || props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
+          colors.filter(function (color) { return color !== activeColor; }).map(function (color) { return (v(IroHandle, { isActive: false, index: color.index, fill: color.hslString, r: props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[color.index].x, y: handlePositions[color.index].y })); }),
+          v(IroHandle, { isActive: true, index: activeColor.index, fill: activeColor.hslString, r: props.activeHandleRadius || props.handleRadius, url: props.handleSvg, props: props.handleProps, x: handlePositions[activeColor.index].x, y: handlePositions[activeColor.index].y }))); }));
   }
 
   function createWidget(WidgetComponent) {
@@ -1468,7 +1718,7 @@
           var widget; // will become an instance of the widget component class
           var widgetRoot = document.createElement('div');
           // Render widget into a temp DOM node
-          I(h(WidgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
+          S(v(WidgetComponent, Object.assign({}, {ref: function (ref) { return widget = ref; }},
               props)), widgetRoot);
           function mountWidget() {
               var container = parent instanceof Element ? parent : document.querySelector(parent);
@@ -1745,21 +1995,22 @@
                   });
               }
           }
-          return (h("div", { class: "IroColorPicker", id: state.id, style: {
-                  display: state.display
+          return (v("div", { class: "IroColorPicker", id: state.id, style: {
+                  display: state.display,
+                  flexDirection: props.layoutDirection === 'horizontal' ? 'row' : 'column'
               } }, layout.map(function (ref, componentIndex) {
                   var UiComponent = ref.component;
                   var options = ref.options;
 
-                  return (h(UiComponent, Object.assign({}, state, options, { ref: undefined, onInput: this$1.emitInputEvent.bind(this$1), parent: this$1, index: componentIndex })));
+                  return (v(UiComponent, Object.assign({}, state, options, { ref: undefined, onInput: this$1.emitInputEvent.bind(this$1), parent: this$1, index: componentIndex })));
           })));
       };
 
       return IroColorPicker;
-  }(m));
+  }(_));
   IroColorPicker.defaultProps = Object.assign({}, iroColorPickerOptionDefaults,
       {colors: [],
-      display: 'block',
+      display: 'flex',
       id: null,
       layout: 'default',
       margin: null});
@@ -1772,7 +2023,7 @@
       iro.ColorPicker = IroColorPickerWidget;
       var ui;
       (function (ui) {
-          ui.h = h;
+          ui.h = v;
           ui.ComponentBase = IroComponentWrapper;
           ui.Handle = IroHandle;
           ui.Slider = IroSlider;
@@ -1784,4 +2035,4 @@
 
   return iro$1;
 
-}));
+})));

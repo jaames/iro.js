@@ -45,7 +45,7 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
   public static defaultProps: ColorPickerProps = {
     ...iroColorPickerOptionDefaults,
     colors: [],
-    display: 'block',
+    display: 'flex',
     id: null,
     layout: 'default',
     margin: null
@@ -310,7 +310,8 @@ export class IroColorPicker extends Component<ColorPickerProps, ColorPickerState
         class="IroColorPicker"
         id={ state.id }
         style={{
-          display: state.display
+          display: state.display,
+          flexDirection: props.layoutDirection === 'horizontal' ? 'row' : 'column'
         }}
       >
         { layout.map(({component: UiComponent, options: options }, componentIndex: number) => (

@@ -47,7 +47,7 @@ export class IroComponentWrapper extends Component<Props, State> {
 
     const rootStyles = {
       overflow: 'visible',
-      display: isHorizontal ? 'inline-block' : 'block'
+      display: isHorizontal ? 'inline-flex' : 'flex'
     };
 
     // first component shouldn't have any margin
