@@ -168,7 +168,7 @@ Set a specific color channel to a new value. `format` can be either `hsv` or `rg
 color.setChannel('rgb', 'r', 255);
 
 // set the hsv hue channel to 180:
-color.setChannel('hsv', 'h', 255);
+color.setChannel('hsv', 'h', 180);
 ```
 
 ### `clone`
