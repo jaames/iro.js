@@ -75,7 +75,7 @@ Gap between individual components.
 
 ### `handleRadius`
 
-Radius of the control handles, measued in pixels.
+Radius of the control handles, measured in pixels.
 
 **Default value**: `8`
 
@@ -117,13 +117,13 @@ Direction of the color wheel's hue gradient, either `"clockwise"` or `"anticlock
 
 ### `sliderSize`
 
-Slider size, measued in pixels.
+Slider size, measured in pixels.
 
 **Default value**: By default this will be calculated automatically from `padding` and `handleRadius`.
 
 ### `boxHeight`
 
-Box control height, measued in pixels.
+Box control height, measured in pixels.
 
 **Default value**: By default this will be the same value as `width`.
 
